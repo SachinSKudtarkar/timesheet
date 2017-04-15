@@ -1,0 +1,40 @@
+## In case bad request redirect to login page
+#ErrorDocument 400 https://%{HTTP_HOST}/login
+
+#Set anti-framing and restricted resource headers
+<IfModule mod_headers.c>
+ #Header set X-Frame-Options "DENY"
+ #Header set X-Content-Type-Options "nosniff"
+ #Header always set Strict-Transport-Security "max-age=63072000; includeSubDomains"
+ #Header set Content-Security-Policy "default-src *;script-src https://10.137.32.108 'unsafe-inline';style-src * 'unsafe-inline';connect-src https://10.137.32.108;"
+ #Header set Content-Security-Policy "default-src 'none';script-src 'self' https://seal.godaddy.com 'unsafe-inline' 'unsafe-eval';style-src * 'unsafe-inline' https://fonts.googleapis.com ;connect-src 'self'; img-src 'self' https://seal.godaddy.com; font-src 'self' https://fonts.gstatic.com; media-src 'self'; object-src 'self';"
+</IfModule>
+
+##Set php.ini values
+#<IfModule mod_php5.c>
+ #php_value max_execution_time 259200
+ #php_value expose_php off
+ #php_value session.cookie_httponly true
+#</IfModule>
+
+RewriteEngine on
+
+RewriteCond %{REQUEST_METHOD} ^(TRACE|TRACK)
+RewriteRule .* - [F]
+
+##Force SSL
+#RewriteCond %{SERVER_PORT} !443
+#RewriteRule .* https://%{HTTP_HOST}%{REQUEST_URI} [R=307,L]
+
+#RewriteCond %{HTTP_HOST} ^rjilauto\.com [NC]
+#RewriteCond %{SERVER_PORT} !443 
+#RewriteRule ^(.*)$ https://www.rjilauto.com/$1 [R,L]
+
+#RewriteCond %{REQUEST_URI} !=/server-status
+
+# if a directory or a file exists, use it directly
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# otherwise forward it to index.php
+RewriteRule . index.php
