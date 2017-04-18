@@ -64,7 +64,7 @@ class DayCommentController extends Controller {
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
-                'actions' => array('admin', 'delete', 'testMail', 'home'),
+                'actions' => array('admin', 'delete', 'testMail', 'home','test'),
                 'users' => array('*'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -85,6 +85,36 @@ class DayCommentController extends Controller {
                 'filename' => 'dailyStatus.csv',
                 'csvDelimiter' => ',', //i.e. Excel friendly csv delimiter
         ));
+    }
+    public function actionTest(){
+      $pid = 9;
+        echo "<pre>";
+        $userId = 46;
+        $query ="select st.sub_project_id,sp.sub_project_name,st.stask_id  from tbl_sub_task as st inner join tbl_pid_approval as pa on (st.pid_approval_id = pa.pid_id) inner join tbl_sub_project as sp on (sp.spid = st.sub_project_id)
+where st.project_id = {$pid} and st.emp_id = {$userId} group by st.stask_id";
+
+        $res = Yii::app()->db->createCommand($query)->queryAll();
+
+        $hours = array();
+    if (isset($res)) {
+        foreach ($res as $ke => $val) {
+             $query1 = "select sec_to_time(sum(time_to_sec(hours))) as hours,est_hrs 
+                        from tbl_sub_task as st 
+                        inner join tbl_day_comment as dc on (st.stask_id =dc.stask_id) 
+                        where st.emp_id ={$userId} and dc.stask_id ={$val['stask_id']}
+                        group by st.stask_id";
+             $res1 = Yii::app()->db->createCommand($query1)->queryRow();
+            echo $hr = explode(":",$res1['hours'])[0];
+             if($hr < $res1['est_hrs']){
+                unset($val);
+             }
+
+             $newData[] = $val;
+
+         }
+     }
+     print_r($newData);
+        
     }
 
     public function actiontestMail() {
@@ -796,62 +826,44 @@ class DayCommentController extends Controller {
         //$pid = 9;
         //echo "<pre>";
         $userId = Yii::app()->session['login']['user_id'];
-        //tbl_resource_allocation_project_work ,tbl_task_allocation
-  //       $query = "select sb.spid,sb.sub_project_name,sb.total_hr_estimation_hour from tbl_sub_project as sb inner join tbl_task_allocation  as ra on(sb.pid=ra.pid) where ra.pid={$pid} AND sb.is_deleted =0
-		// and FIND_IN_SET($userId,ra.allocated_resource) and sb.spid = ra.spid "; // and sb.spid = ra.spid
-        $query ="select st.sub_project_id,sp.sub_project_name,sp.total_hr_estimation_hour  from tbl_sub_task as st inner join tbl_pid_approval as pa on (st.pid_approval_id = pa.pid_id) inner join tbl_sub_project as sp on (sp.spid = st.sub_project_id)
-where st.project_id = {$pid} and st.emp_id = {$userId} group by st.sub_project_id";
+        
+        $query ="select st.sub_project_id,sp.sub_project_name,st.stask_id  from tbl_sub_task as st inner join tbl_pid_approval as pa on (st.pid_approval_id = pa.pid_id) inner join tbl_sub_project as sp on (sp.spid = st.sub_project_id)
+where st.project_id = {$pid} and st.emp_id = {$userId} group by st.stask_id";
 
         $res = Yii::app()->db->createCommand($query)->queryAll();
 
 		$hours = array();
-    
+    if (isset($res)) {
 		foreach ($res as $ke => $val) {
-            $res2 = Yii::app()->db->createCommand("select spid from tbl_day_comment where spid ={$val['sub_project_id']} and emp_id = {$userId}")->queryRow();
-
-        
-            if (!empty($res2['spid'])) {
-
-         
-
-                $query = "SELECT sum(hours) as hours ,sb.total_hr_estimation_hour,sb.spid,sb.sub_project_name
-from tbl_day_comment as da right join tbl_sub_project as sb on (da.spid=sb.spid ) right join
-tbl_project_management as pm on (da.pid=pm.pid) right join tbl_employee em on (da.emp_id=em.emp_id)
-WHERE  da.emp_id ={$userId} and da.spid = {$val['sub_project_id']} 
-               group by da.spid order by em.emp_id"; // and sb.spid = ra.spid
-
-
-//                $query ="SELECT sum(hours) as hours ,ta.est_hrs,sb.spid,sb.sub_project_name
-// from tbl_day_comment as da right join tbl_sub_project as sb on (da.spid=sb.spid ) right join
-// tbl_project_management as pm on (da.pid=pm.pid) right join tbl_employee em on (da.emp_id=em.emp_id) left join tbl_sub_task as ta on(da.pid =ta.project_id)
-// WHERE  da.emp_id ={$userId} and da.spid = {$val['spid']} 
-//                group by da.spid order by em.emp_id";
-                $res1 = Yii::app()->db->createCommand($query)->queryRow();
-                $newData[] = $res1;
-				
-            } elseif (empty($res2['spid'])) {
-                $nn[] = $val;
-				$hours[$val['sub_project_id']] = 0;
-				
-            }
-        }
-		foreach ($newData as $key => $val) {
+             $query1 = "select sec_to_time(sum(time_to_sec(hours))) as hours,est_hrs 
+                        from tbl_sub_task as st 
+                        inner join tbl_day_comment as dc on (st.stask_id =dc.stask_id) 
+                        where st.emp_id ={$userId} and dc.stask_id ={$val['stask_id']}
+                        group by st.stask_id";
+             $res1 = Yii::app()->db->createCommand($query1)->queryRow();
+             $hr = explode(":",$res1['hours'])[0];
+             if(!empty($res1)){
+                if($hr > $res1['est_hrs']){
+                unset($val);
+             } 
+             }
             
-			if (empty($val)) {
-                continue;
-            }
-            if (empty($val['hours'])) {
-                continue;
-            }
-            if($val['hours'] <= $val['total_hr_estimation_hour']){
+             $newData[] = $val;
 
-            $nn[] = $val;
-            }
+         }
+     }
+
+
+
+		foreach (array_filter($newData) as $key => $val) {
+            
+			  $nn[] = $val;
+            
 			$hours[$val['sub_project_id']] = $val['hours'];
         }
-        $list = CHtml::listData($nn, 'spid', 'sub_project_name');
+        $list = CHtml::listData($nn, 'sub_project_id', 'sub_project_name');
         $data['result'] = $list;
-		$data['workhours'] = $hours;
+		//$data['workhours'] = $hours;
         $data['status'] = 'SUCCESS';
         echo json_encode($data);
         die();
