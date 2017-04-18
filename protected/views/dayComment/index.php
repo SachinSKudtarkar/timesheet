@@ -313,7 +313,7 @@ Yii::app()->clientScript->registerCssFile(
 		var _this = $(this).parent().parent().parent();
 
 		var oldId = _this.find('select').attr('id');
-
+		//alert(oldId);
 		var newArr = oldId.split('_');
 		var newId = newArr[0]+'_'+newArr[1]+'_'+newArr[2]+'_'+(+newArr[3]+1);
 
@@ -325,6 +325,10 @@ Yii::app()->clientScript->registerCssFile(
 
 		clonned.find('#subproclass'+oldId).each(function() {
 			$(this).attr('id',$(this).attr('id').replace('subproclass'+oldId,'subproclass'+newId));
+		});
+		
+		clonned.find('#subtasks'+oldId).each(function() {
+			$(this).attr('id',$(this).attr('id').replace('subtasks'+oldId,'subtasks'+newId));
 		});
 
 		clonned.find('#wrkhrs'+oldId).each(function() {
@@ -348,6 +352,9 @@ Yii::app()->clientScript->registerCssFile(
        	{
        		var thisId = $(this).attr('id');           
            	var sub_id=$(this).val();
+           	var nextcls = $(this).attr('nxt');
+
+           	//alert(nextcls);
        		$(this).parents('.row').find('.wrkhrsClass').removeAttr('disabled');
        		$(this).parents('.row').find('.wrkmntClass').removeAttr('disabled');
        		$.ajax({
@@ -363,16 +370,17 @@ Yii::app()->clientScript->registerCssFile(
                //  },
 	           success: function(data)
 	               {
+					 
 	                   	if(data.status=='SUCCESS')
 	                   	{
 	                        var dropDown = '<option value=>Please Select Sub Project</option>';
-							var workhours = data.workhours;
+							//var workhours = data.workhours;
 	                        $.each(data.result, function(key, val) {
 	                            dropDown+='<option value='+key+'>'+val+'</option>';
-								localStorage.setItem( 'hours-'+key, workhours[key] );								
+								//localStorage.setItem( 'hours-'+key, workhours[key] );								
 
 	                        });
-							// console.log(dropDown);
+							//console.log(dropDown);
 							// console.log($(this).closest('.sub-project').length);
 							// $(this).parent('div').next().html('dsds');
 							//$(this).closest('select').html('test');
@@ -425,7 +433,7 @@ Yii::app()->clientScript->registerCssFile(
            var thisId = $(this).attr('id');
            
            var sub_id=$(this).val();
-         // alert('subproclass'+thisId);
+          //alert('subproclass'+thisId);
            $('#subproclass'+thisId).removeAttr('disabled');
            $.ajax({
                url: BASE_URL+'/daycomment/fetchSubProject',
@@ -440,6 +448,7 @@ Yii::app()->clientScript->registerCssFile(
                //  },
                success: function(data)
                {
+				  // alert(data);
                    if(data.status=='SUCCESS')
                    {
                         var dropDown = '<option value=>Please Select Sub Project</option>';
@@ -468,7 +477,7 @@ Yii::app()->clientScript->registerCssFile(
          	var thisId = $(this).attr('id');
            var is = thisId.substr(11, 11);
            var sub_id=$(this).val(); 
-              
+             // alert(is);
            $('#subtasks'+is).removeAttr('disabled');
            $.ajax({
                url: BASE_URL+'/daycomment/fetchSubTask',
@@ -495,10 +504,10 @@ Yii::app()->clientScript->registerCssFile(
 							//console.log('ddddddddddd'+localStorage.getItem( 'hours-'+key ) );
 
                         });
-						$(this).parents('.row').find('.sub-task').html(dropDown);
-						$(this).parents('.row').find('.sub-task').removeAttr('disabled');
-                        //$('#subtasks'+is).html(dropDown);
-                        //$('#subtasks'+is).removeAttr('disabled');
+						// $(this).parents('.row').find('.sub-task').html(dropDown);
+						// $(this).parents('.row').find('.sub-task').removeAttr('disabled');
+                        $('#subtasks'+is).html(dropDown);
+                        $('#subtasks'+is).removeAttr('disabled');
                    }
                },
                error: function(XMLHttpRequest, data, errorThrown){
@@ -565,7 +574,7 @@ Yii::app()->clientScript->registerCssFile(
                	    $.each(val,function(data){
           console.log(data);     
 });
-               	alert(data);
+               	//alert(data);
                    if(data.status=='UNSUCCESS')
                    {
                        alert('your hours are exceeded');
