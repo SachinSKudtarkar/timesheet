@@ -24,8 +24,8 @@ class SubProject extends CActiveRecord
 		public $Task_ID;// for display purpose
 		public $name;
 		public $hours;
-        public $allocated_resource;
-        public $Allocate_Hours;
+                public $allocated_resource;
+                public $Allocate_Hours;
 		public $Program;
 		public $Project;
 		public $Aproved_hour;
@@ -48,7 +48,7 @@ class SubProject extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('pid, sub_project_name, sub_project_description, requester, status,Priority', 'required'),
+			array('pid, sub_project_name, sub_project_description, requester', 'required'),
 			array('pid, created_by, updated_by, is_deleted', 'numerical', 'integerOnly'=>true),
 			array('sub_project_name, sub_project_description, requester', 'length', 'max'=>250), 
                         array('total_hr_estimation_hour', 'numerical' ),

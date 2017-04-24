@@ -362,12 +362,7 @@ Yii::app()->clientScript->registerCssFile(
                type: 'POST',
                dataType: 'json',
                data:{ pid:sub_id},
-               // beforeSend:function(){
-               //      $('.custom-loader').show();
-               //  },
-               //  complete:function(){
-               //     $('.custom-loader').hide();
-               //  },
+             
 	           success: function(data)
 	               {
 					 

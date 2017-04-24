@@ -20,7 +20,7 @@ class PidApproval extends CActiveRecord
 {
         public $project_description;
         public $sub_project_name;
-		public $emp_id;
+	public $emp_id;
         public $task_id;
         public $sub_task_id;
         public $est_hrs;
@@ -31,7 +31,7 @@ class PidApproval extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'db_rjilautots_dev.tbl_pid_approval';
+		return 'tbl_pid_approval';
 	}
 
 	/**

@@ -64,7 +64,7 @@ class DayCommentController extends Controller {
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
-                'actions' => array('admin', 'delete', 'testMail', 'home','test'),
+                'actions' => array('admin', 'delete', 'testMail', 'home','test','comments_add'),
                 'users' => array('*'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -266,6 +266,73 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.stask_id";
         }
     }
 
+    
+    public function actionComments_add(){
+        if (isset(Yii::app()->session['login']['user_id'])) {
+            $current_user_id = Yii::app()->session['login']['user_id'];
+            $projectData = $combinearray = array();
+
+            $dataProvider = new CActiveDataProvider('DayComment');
+            $model = new DayComment();
+            if(isset($_REQUEST['selecting_date'])){
+            $model->from = $_REQUEST['selecting_date'];
+            $model->to = date('Y-m-d', strtotime("+6 day", strtotime($_REQUEST['selecting_date'])));
+            }else{
+                
+            $model->from = '';
+            $model->to = '';
+            }
+            $dataProvider1 = $model->search(false);
+             if(Yii::app()->session['login']['user_id'] == 46) {
+            echo "<pre>";
+            print_r($dataProvider1);exit;
+            }
+            $arrData = $arrSubmitted = array();
+            $is_submitted = 0;
+            if (count($dataProvider1->getData())) {
+                $dayNo = 0;
+
+                foreach ($dataProvider1->getData() as $k => $v) {
+
+                    $day = date('Y_m_d', strtotime($v->day));
+                    $arrData[$day][$dayNo]['id'] = $v->id;
+                    $arrData[$day][$dayNo]['pid'] = $v->pid;
+                    $arrData[$day][$dayNo]['spid']['result'] = $this->getSubProjectByProjectId2($v->pid);
+                    $arrData[$day][$dayNo]['spid']['selected'] = $v->spid;
+                    $arrData[$day][$dayNo]['stask_id']['selected'] =$v->stask_id;
+                    $arrData[$day][$dayNo]['emp_id'] = $v->emp_id;
+                    $arrData[$day][$dayNo]['day'] = $v->day;
+                    $arrData[$day][$dayNo]['comment'] = $v->comment;
+                    list($hrs, $mnts) = explode(':', $v->hours);
+                    $arrData[$day][$dayNo]['hrs'] = $hrs;
+                    $arrData[$day][$dayNo]['mnts'] = $mnts;
+                    $arrData[$day][$dayNo]['is_submitted'] = $v->is_submitted;
+
+                    
+
+                   /* if ($arrSubmitted[date('Y-m-d', strtotime("monday this week", strtotime($v->day)))] == 0)
+                    */    $arrSubmitted[date('Y-m-d', strtotime("monday this week", strtotime($v->day)))] = $v->is_submitted;
+
+                    $dayNo++;
+                }
+                  
+            }
+
+              if(Yii::app()->session['login']['user_id'] == 46) {
+           //echo "<pre>";
+          // print_r($arrData);exit;
+           }
+
+            $query = "SELECT pid FROM tbl_resource_allocation_project_work WHERE allocated_resource like '%," . $current_user_id . "'
+                        OR allocated_resource like '%," . $current_user_id . ",%' OR allocated_resource like '" . $current_user_id . ",%' OR allocated_resource = " . $current_user_id;
+            $result = Yii::app()->db->createCommand($query)->queryAll();
+            $combinearray = array_column($result, 'pid');
+           // $combinearray[] = "109";  //109 for common task
+            $pidString = implode("','", $combinearray);
+            $projectData = Yii::app()->db->createCommand("SELECT pid,project_name,project_description FROM tbl_project_management WHERE pid IN('" . $pidString . "')")->queryAll();
+            $this->render('comments_add', array('dataProvider' => $dataProvider, 'allProjects' => $projectData, 'arrData' => $arrData, 'arrSubmitted' => $arrSubmitted));
+        }
+    }
     /**
      * Manages all models.
      */
@@ -862,6 +929,8 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.stask_id";
 			$hours[$val['sub_project_id']] = $val['hours'];
         }
         $list = CHtml::listData($nn, 'sub_project_id', 'sub_project_name');
+        
+        //CHelper::debug($list);
         $data['result'] = $list;
 		//$data['workhours'] = $hours;
         $data['status'] = 'SUCCESS';

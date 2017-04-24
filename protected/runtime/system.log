@@ -6297,3 +6297,269 @@ REQUEST_URI=/timesheet/
 in /var/www/html/timesheet/protected/views/dayComment/index.php (200)
 in /var/www/html/timesheet/protected/controllers/DayCommentController.php (235)
 in /var/www/html/timesheet/index.php (35)
+2017/04/18 11:13:44 [error] [system.db.CDbCommand] CDbCommand::fetchAll() failed: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'db_rjilautots_dev.tbl_pid_approval' doesn't exist. The SQL statement executed was: SHOW FULL COLUMNS FROM `db_rjilautots_dev`.`tbl_pid_approval`.
+in /var/www/html/timesheet/protected/controllers/PidApprovalController.php (68)
+in /var/www/html/timesheet/index.php (35)
+2017/04/18 11:13:44 [error] [exception.CDbException] exception 'CDbException' with message 'The table "db_rjilautots_dev.tbl_pid_approval" for active record class "PidApproval" cannot be found in the database.' in /var/www/html/timesheet/yii/framework/db/ar/CActiveRecord.php:2362
+Stack trace:
+#0 /var/www/html/timesheet/yii/framework/db/ar/CActiveRecord.php(411): CActiveRecordMetaData->__construct(Object(PidApproval))
+#1 /var/www/html/timesheet/yii/framework/db/ar/CActiveRecord.php(79): CActiveRecord->getMetaData()
+#2 /var/www/html/timesheet/protected/controllers/PidApprovalController.php(68): CActiveRecord->__construct()
+#3 /var/www/html/timesheet/yii/framework/web/actions/CInlineAction.php(49): PidApprovalController->actionCreate()
+#4 /var/www/html/timesheet/yii/framework/web/CController.php(308): CInlineAction->runWithParams(Array)
+#5 /var/www/html/timesheet/yii/framework/web/filters/CFilterChain.php(133): CController->runAction(Object(CInlineAction))
+#6 /var/www/html/timesheet/yii/framework/web/filters/CFilter.php(40): CFilterChain->run()
+#7 /var/www/html/timesheet/yii/framework/web/CController.php(1145): CFilter->filter(Object(CFilterChain))
+#8 /var/www/html/timesheet/yii/framework/web/filters/CInlineFilter.php(58): CController->filterAccessControl(Object(CFilterChain))
+#9 /var/www/html/timesheet/yii/framework/web/filters/CFilterChain.php(130): CInlineFilter->filter(Object(CFilterChain))
+#10 /var/www/html/timesheet/yii/framework/web/CController.php(291): CFilterChain->run()
+#11 /var/www/html/timesheet/yii/framework/web/CController.php(265): CController->runActionWithFilters(Object(CInlineAction), Array)
+#12 /var/www/html/timesheet/yii/framework/web/CWebApplication.php(282): CController->run('create')
+#13 /var/www/html/timesheet/yii/framework/web/CWebApplication.php(141): CWebApplication->runController('pidapproval/cre...')
+#14 /var/www/html/timesheet/yii/framework/base/CApplication.php(180): CWebApplication->processRequest()
+#15 /var/www/html/timesheet/index.php(35): CApplication->run()
+#16 {main}
+REQUEST_URI=/timesheet/index.php/pidapproval/create
+---
+2017/04/18 11:41:08 [error] [system.db.CDbCommand] CDbCommand::fetchAll() failed: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'db_rjilautots_dev.tbl_pid_approval' doesn't exist. The SQL statement executed was: SHOW FULL COLUMNS FROM `db_rjilautots_dev`.`tbl_pid_approval`.
+in /var/www/html/timesheet/protected/controllers/PidApprovalController.php (68)
+in /var/www/html/timesheet/index.php (35)
+2017/04/18 11:41:08 [error] [exception.CDbException] exception 'CDbException' with message 'The table "db_rjilautots_dev.tbl_pid_approval" for active record class "PidApproval" cannot be found in the database.' in /var/www/html/timesheet/yii/framework/db/ar/CActiveRecord.php:2362
+Stack trace:
+#0 /var/www/html/timesheet/yii/framework/db/ar/CActiveRecord.php(411): CActiveRecordMetaData->__construct(Object(PidApproval))
+#1 /var/www/html/timesheet/yii/framework/db/ar/CActiveRecord.php(79): CActiveRecord->getMetaData()
+#2 /var/www/html/timesheet/protected/controllers/PidApprovalController.php(68): CActiveRecord->__construct()
+#3 /var/www/html/timesheet/yii/framework/web/actions/CInlineAction.php(49): PidApprovalController->actionCreate()
+#4 /var/www/html/timesheet/yii/framework/web/CController.php(308): CInlineAction->runWithParams(Array)
+#5 /var/www/html/timesheet/yii/framework/web/filters/CFilterChain.php(133): CController->runAction(Object(CInlineAction))
+#6 /var/www/html/timesheet/yii/framework/web/filters/CFilter.php(40): CFilterChain->run()
+#7 /var/www/html/timesheet/yii/framework/web/CController.php(1145): CFilter->filter(Object(CFilterChain))
+#8 /var/www/html/timesheet/yii/framework/web/filters/CInlineFilter.php(58): CController->filterAccessControl(Object(CFilterChain))
+#9 /var/www/html/timesheet/yii/framework/web/filters/CFilterChain.php(130): CInlineFilter->filter(Object(CFilterChain))
+#10 /var/www/html/timesheet/yii/framework/web/CController.php(291): CFilterChain->run()
+#11 /var/www/html/timesheet/yii/framework/web/CController.php(265): CController->runActionWithFilters(Object(CInlineAction), Array)
+#12 /var/www/html/timesheet/yii/framework/web/CWebApplication.php(282): CController->run('create')
+#13 /var/www/html/timesheet/yii/framework/web/CWebApplication.php(141): CWebApplication->runController('pidapproval/cre...')
+#14 /var/www/html/timesheet/yii/framework/base/CApplication.php(180): CWebApplication->processRequest()
+#15 /var/www/html/timesheet/index.php(35): CApplication->run()
+#16 {main}
+REQUEST_URI=/timesheet/index.php/pidapproval/create
+---
+2017/04/18 11:41:10 [error] [system.db.CDbCommand] CDbCommand::fetchAll() failed: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'db_rjilautots_dev.tbl_pid_approval' doesn't exist. The SQL statement executed was: SHOW FULL COLUMNS FROM `db_rjilautots_dev`.`tbl_pid_approval`.
+in /var/www/html/timesheet/protected/controllers/PidApprovalController.php (68)
+in /var/www/html/timesheet/index.php (35)
+2017/04/18 11:41:10 [error] [exception.CDbException] exception 'CDbException' with message 'The table "db_rjilautots_dev.tbl_pid_approval" for active record class "PidApproval" cannot be found in the database.' in /var/www/html/timesheet/yii/framework/db/ar/CActiveRecord.php:2362
+Stack trace:
+#0 /var/www/html/timesheet/yii/framework/db/ar/CActiveRecord.php(411): CActiveRecordMetaData->__construct(Object(PidApproval))
+#1 /var/www/html/timesheet/yii/framework/db/ar/CActiveRecord.php(79): CActiveRecord->getMetaData()
+#2 /var/www/html/timesheet/protected/controllers/PidApprovalController.php(68): CActiveRecord->__construct()
+#3 /var/www/html/timesheet/yii/framework/web/actions/CInlineAction.php(49): PidApprovalController->actionCreate()
+#4 /var/www/html/timesheet/yii/framework/web/CController.php(308): CInlineAction->runWithParams(Array)
+#5 /var/www/html/timesheet/yii/framework/web/filters/CFilterChain.php(133): CController->runAction(Object(CInlineAction))
+#6 /var/www/html/timesheet/yii/framework/web/filters/CFilter.php(40): CFilterChain->run()
+#7 /var/www/html/timesheet/yii/framework/web/CController.php(1145): CFilter->filter(Object(CFilterChain))
+#8 /var/www/html/timesheet/yii/framework/web/filters/CInlineFilter.php(58): CController->filterAccessControl(Object(CFilterChain))
+#9 /var/www/html/timesheet/yii/framework/web/filters/CFilterChain.php(130): CInlineFilter->filter(Object(CFilterChain))
+#10 /var/www/html/timesheet/yii/framework/web/CController.php(291): CFilterChain->run()
+#11 /var/www/html/timesheet/yii/framework/web/CController.php(265): CController->runActionWithFilters(Object(CInlineAction), Array)
+#12 /var/www/html/timesheet/yii/framework/web/CWebApplication.php(282): CController->run('create')
+#13 /var/www/html/timesheet/yii/framework/web/CWebApplication.php(141): CWebApplication->runController('pidapproval/cre...')
+#14 /var/www/html/timesheet/yii/framework/base/CApplication.php(180): CWebApplication->processRequest()
+#15 /var/www/html/timesheet/index.php(35): CApplication->run()
+#16 {main}
+REQUEST_URI=/timesheet/index.php/pidapproval/create
+---
+2017/04/18 11:47:00 [error] [system.db.CDbCommand] CDbCommand::fetchAll() failed: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'db_rjilautots_dev.tbl_pid_approval' doesn't exist. The SQL statement executed was: SHOW FULL COLUMNS FROM `db_rjilautots_dev`.`tbl_pid_approval`.
+in /var/www/html/timesheet/protected/controllers/PidApprovalController.php (68)
+in /var/www/html/timesheet/index.php (35)
+2017/04/18 11:47:00 [error] [exception.CDbException] exception 'CDbException' with message 'The table "db_rjilautots_dev.tbl_pid_approval" for active record class "PidApproval" cannot be found in the database.' in /var/www/html/timesheet/yii/framework/db/ar/CActiveRecord.php:2362
+Stack trace:
+#0 /var/www/html/timesheet/yii/framework/db/ar/CActiveRecord.php(411): CActiveRecordMetaData->__construct(Object(PidApproval))
+#1 /var/www/html/timesheet/yii/framework/db/ar/CActiveRecord.php(79): CActiveRecord->getMetaData()
+#2 /var/www/html/timesheet/protected/controllers/PidApprovalController.php(68): CActiveRecord->__construct()
+#3 /var/www/html/timesheet/yii/framework/web/actions/CInlineAction.php(49): PidApprovalController->actionCreate()
+#4 /var/www/html/timesheet/yii/framework/web/CController.php(308): CInlineAction->runWithParams(Array)
+#5 /var/www/html/timesheet/yii/framework/web/filters/CFilterChain.php(133): CController->runAction(Object(CInlineAction))
+#6 /var/www/html/timesheet/yii/framework/web/filters/CFilter.php(40): CFilterChain->run()
+#7 /var/www/html/timesheet/yii/framework/web/CController.php(1145): CFilter->filter(Object(CFilterChain))
+#8 /var/www/html/timesheet/yii/framework/web/filters/CInlineFilter.php(58): CController->filterAccessControl(Object(CFilterChain))
+#9 /var/www/html/timesheet/yii/framework/web/filters/CFilterChain.php(130): CInlineFilter->filter(Object(CFilterChain))
+#10 /var/www/html/timesheet/yii/framework/web/CController.php(291): CFilterChain->run()
+#11 /var/www/html/timesheet/yii/framework/web/CController.php(265): CController->runActionWithFilters(Object(CInlineAction), Array)
+#12 /var/www/html/timesheet/yii/framework/web/CWebApplication.php(282): CController->run('create')
+#13 /var/www/html/timesheet/yii/framework/web/CWebApplication.php(141): CWebApplication->runController('pidapproval/cre...')
+#14 /var/www/html/timesheet/yii/framework/base/CApplication.php(180): CWebApplication->processRequest()
+#15 /var/www/html/timesheet/index.php(35): CApplication->run()
+#16 {main}
+REQUEST_URI=/timesheet/index.php/pidapproval/create
+---
+2017/04/18 11:49:10 [error] [system.db.CDbCommand] CDbCommand::fetchAll() failed: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'db_rjilautots_dev.tbl_pid_approval' doesn't exist. The SQL statement executed was: SHOW FULL COLUMNS FROM `db_rjilautots_dev`.`tbl_pid_approval`.
+in /var/www/html/timesheet/protected/controllers/PidApprovalController.php (68)
+in /var/www/html/timesheet/index.php (35)
+2017/04/18 11:49:10 [error] [exception.CDbException] exception 'CDbException' with message 'The table "db_rjilautots_dev.tbl_pid_approval" for active record class "PidApproval" cannot be found in the database.' in /var/www/html/timesheet/yii/framework/db/ar/CActiveRecord.php:2362
+Stack trace:
+#0 /var/www/html/timesheet/yii/framework/db/ar/CActiveRecord.php(411): CActiveRecordMetaData->__construct(Object(PidApproval))
+#1 /var/www/html/timesheet/yii/framework/db/ar/CActiveRecord.php(79): CActiveRecord->getMetaData()
+#2 /var/www/html/timesheet/protected/controllers/PidApprovalController.php(68): CActiveRecord->__construct()
+#3 /var/www/html/timesheet/yii/framework/web/actions/CInlineAction.php(49): PidApprovalController->actionCreate()
+#4 /var/www/html/timesheet/yii/framework/web/CController.php(308): CInlineAction->runWithParams(Array)
+#5 /var/www/html/timesheet/yii/framework/web/filters/CFilterChain.php(133): CController->runAction(Object(CInlineAction))
+#6 /var/www/html/timesheet/yii/framework/web/filters/CFilter.php(40): CFilterChain->run()
+#7 /var/www/html/timesheet/yii/framework/web/CController.php(1145): CFilter->filter(Object(CFilterChain))
+#8 /var/www/html/timesheet/yii/framework/web/filters/CInlineFilter.php(58): CController->filterAccessControl(Object(CFilterChain))
+#9 /var/www/html/timesheet/yii/framework/web/filters/CFilterChain.php(130): CInlineFilter->filter(Object(CFilterChain))
+#10 /var/www/html/timesheet/yii/framework/web/CController.php(291): CFilterChain->run()
+#11 /var/www/html/timesheet/yii/framework/web/CController.php(265): CController->runActionWithFilters(Object(CInlineAction), Array)
+#12 /var/www/html/timesheet/yii/framework/web/CWebApplication.php(282): CController->run('create')
+#13 /var/www/html/timesheet/yii/framework/web/CWebApplication.php(141): CWebApplication->runController('pidapproval/cre...')
+#14 /var/www/html/timesheet/yii/framework/base/CApplication.php(180): CWebApplication->processRequest()
+#15 /var/www/html/timesheet/index.php(35): CApplication->run()
+#16 {main}
+REQUEST_URI=/timesheet/index.php/pidapproval/create
+---
+2017/04/18 11:53:27 [error] [system.db.CDbCommand] CDbCommand::fetchAll() failed: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'db_rjilautots_dev.tbl_pid_approval' doesn't exist. The SQL statement executed was: SHOW FULL COLUMNS FROM `db_rjilautots_dev`.`tbl_pid_approval`.
+in /var/www/html/timesheet/protected/controllers/PidApprovalController.php (68)
+in /var/www/html/timesheet/index.php (35)
+2017/04/18 11:53:27 [error] [exception.CDbException] exception 'CDbException' with message 'The table "db_rjilautots_dev.tbl_pid_approval" for active record class "PidApproval" cannot be found in the database.' in /var/www/html/timesheet/yii/framework/db/ar/CActiveRecord.php:2362
+Stack trace:
+#0 /var/www/html/timesheet/yii/framework/db/ar/CActiveRecord.php(411): CActiveRecordMetaData->__construct(Object(PidApproval))
+#1 /var/www/html/timesheet/yii/framework/db/ar/CActiveRecord.php(79): CActiveRecord->getMetaData()
+#2 /var/www/html/timesheet/protected/controllers/PidApprovalController.php(68): CActiveRecord->__construct()
+#3 /var/www/html/timesheet/yii/framework/web/actions/CInlineAction.php(49): PidApprovalController->actionCreate()
+#4 /var/www/html/timesheet/yii/framework/web/CController.php(308): CInlineAction->runWithParams(Array)
+#5 /var/www/html/timesheet/yii/framework/web/filters/CFilterChain.php(133): CController->runAction(Object(CInlineAction))
+#6 /var/www/html/timesheet/yii/framework/web/filters/CFilter.php(40): CFilterChain->run()
+#7 /var/www/html/timesheet/yii/framework/web/CController.php(1145): CFilter->filter(Object(CFilterChain))
+#8 /var/www/html/timesheet/yii/framework/web/filters/CInlineFilter.php(58): CController->filterAccessControl(Object(CFilterChain))
+#9 /var/www/html/timesheet/yii/framework/web/filters/CFilterChain.php(130): CInlineFilter->filter(Object(CFilterChain))
+#10 /var/www/html/timesheet/yii/framework/web/CController.php(291): CFilterChain->run()
+#11 /var/www/html/timesheet/yii/framework/web/CController.php(265): CController->runActionWithFilters(Object(CInlineAction), Array)
+#12 /var/www/html/timesheet/yii/framework/web/CWebApplication.php(282): CController->run('create')
+#13 /var/www/html/timesheet/yii/framework/web/CWebApplication.php(141): CWebApplication->runController('pidapproval/cre...')
+#14 /var/www/html/timesheet/yii/framework/base/CApplication.php(180): CWebApplication->processRequest()
+#15 /var/www/html/timesheet/index.php(35): CApplication->run()
+#16 {main}
+REQUEST_URI=/timesheet/index.php/pidapproval/create
+---
+2017/04/18 12:23:15 [error] [system.db.CDbCommand] CDbCommand::fetchAll() failed: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'db_rjilautots_dev.tbl_pid_approval' doesn't exist. The SQL statement executed was: SHOW FULL COLUMNS FROM `db_rjilautots_dev`.`tbl_pid_approval`.
+in /var/www/html/timesheet/protected/controllers/PidApprovalController.php (68)
+in /var/www/html/timesheet/index.php (35)
+2017/04/18 12:23:15 [error] [exception.CDbException] exception 'CDbException' with message 'The table "db_rjilautots_dev.tbl_pid_approval" for active record class "PidApproval" cannot be found in the database.' in /var/www/html/timesheet/yii/framework/db/ar/CActiveRecord.php:2362
+Stack trace:
+#0 /var/www/html/timesheet/yii/framework/db/ar/CActiveRecord.php(411): CActiveRecordMetaData->__construct(Object(PidApproval))
+#1 /var/www/html/timesheet/yii/framework/db/ar/CActiveRecord.php(79): CActiveRecord->getMetaData()
+#2 /var/www/html/timesheet/protected/controllers/PidApprovalController.php(68): CActiveRecord->__construct()
+#3 /var/www/html/timesheet/yii/framework/web/actions/CInlineAction.php(49): PidApprovalController->actionCreate()
+#4 /var/www/html/timesheet/yii/framework/web/CController.php(308): CInlineAction->runWithParams(Array)
+#5 /var/www/html/timesheet/yii/framework/web/filters/CFilterChain.php(133): CController->runAction(Object(CInlineAction))
+#6 /var/www/html/timesheet/yii/framework/web/filters/CFilter.php(40): CFilterChain->run()
+#7 /var/www/html/timesheet/yii/framework/web/CController.php(1145): CFilter->filter(Object(CFilterChain))
+#8 /var/www/html/timesheet/yii/framework/web/filters/CInlineFilter.php(58): CController->filterAccessControl(Object(CFilterChain))
+#9 /var/www/html/timesheet/yii/framework/web/filters/CFilterChain.php(130): CInlineFilter->filter(Object(CFilterChain))
+#10 /var/www/html/timesheet/yii/framework/web/CController.php(291): CFilterChain->run()
+#11 /var/www/html/timesheet/yii/framework/web/CController.php(265): CController->runActionWithFilters(Object(CInlineAction), Array)
+#12 /var/www/html/timesheet/yii/framework/web/CWebApplication.php(282): CController->run('create')
+#13 /var/www/html/timesheet/yii/framework/web/CWebApplication.php(141): CWebApplication->runController('pidapproval/cre...')
+#14 /var/www/html/timesheet/yii/framework/base/CApplication.php(180): CWebApplication->processRequest()
+#15 /var/www/html/timesheet/index.php(35): CApplication->run()
+#16 {main}
+REQUEST_URI=/timesheet/index.php/pidapproval/create
+---
+2017/04/19 12:22:10 [error] [system.db.CDbCommand] CDbCommand::execute() failed: SQLSTATE[22001]: String data, right truncated: 1406 Data too long for column 'status' at row 1. The SQL statement executed was: INSERT INTO `tbl_sub_project` (`is_deleted`, `pid`, `sub_project_name`, `sub_project_description`, `requester`, `status`, `Priority`, `created_date`, `created_by`) VALUES (:yp0, :yp1, :yp2, :yp3, :yp4, :yp5, :yp6, :yp7, :yp8). Bound with :yp0=0, :yp1=9, :yp2='testing', :yp3='testing', :yp4='sachin', :yp5='Newly Created', :yp6=3, :yp7='2017-04-19 12:22:10', :yp8=46.
+in /var/www/html/timesheet/protected/controllers/SubProjectController.php (74)
+in /var/www/html/timesheet/index.php (35)
+2017/04/19 12:22:10 [error] [exception.CDbException] exception 'CDbException' with message 'CDbCommand failed to execute the SQL statement: SQLSTATE[22001]: String data, right truncated: 1406 Data too long for column 'status' at row 1. The SQL statement executed was: INSERT INTO `tbl_sub_project` (`is_deleted`, `pid`, `sub_project_name`, `sub_project_description`, `requester`, `status`, `Priority`, `created_date`, `created_by`) VALUES (:yp0, :yp1, :yp2, :yp3, :yp4, :yp5, :yp6, :yp7, :yp8). Bound with :yp0=0, :yp1=9, :yp2='testing', :yp3='testing', :yp4='sachin', :yp5='Newly Created', :yp6=3, :yp7='2017-04-19 12:22:10', :yp8=46' in /var/www/html/timesheet/yii/framework/db/CDbCommand.php:358
+Stack trace:
+#0 /var/www/html/timesheet/yii/framework/db/ar/CActiveRecord.php(1077): CDbCommand->execute()
+#1 /var/www/html/timesheet/yii/framework/db/ar/CActiveRecord.php(806): CActiveRecord->insert(NULL)
+#2 /var/www/html/timesheet/protected/controllers/SubProjectController.php(74): CActiveRecord->save()
+#3 /var/www/html/timesheet/yii/framework/web/actions/CInlineAction.php(49): SubProjectController->actionCreate()
+#4 /var/www/html/timesheet/yii/framework/web/CController.php(308): CInlineAction->runWithParams(Array)
+#5 /var/www/html/timesheet/yii/framework/web/filters/CFilterChain.php(133): CController->runAction(Object(CInlineAction))
+#6 /var/www/html/timesheet/yii/framework/web/filters/CFilter.php(40): CFilterChain->run()
+#7 /var/www/html/timesheet/yii/framework/web/CController.php(1145): CFilter->filter(Object(CFilterChain))
+#8 /var/www/html/timesheet/yii/framework/web/filters/CInlineFilter.php(58): CController->filterAccessControl(Object(CFilterChain))
+#9 /var/www/html/timesheet/yii/framework/web/filters/CFilterChain.php(130): CInlineFilter->filter(Object(CFilterChain))
+#10 /var/www/html/timesheet/yii/framework/web/CController.php(291): CFilterChain->run()
+#11 /var/www/html/timesheet/yii/framework/web/CController.php(265): CController->runActionWithFilters(Object(CInlineAction), Array)
+#12 /var/www/html/timesheet/yii/framework/web/CWebApplication.php(282): CController->run('create')
+#13 /var/www/html/timesheet/yii/framework/web/CWebApplication.php(141): CWebApplication->runController('subproject/crea...')
+#14 /var/www/html/timesheet/yii/framework/base/CApplication.php(180): CWebApplication->processRequest()
+#15 /var/www/html/timesheet/index.php(35): CApplication->run()
+#16 {main}
+REQUEST_URI=/timesheet/index.php/subproject/create
+HTTP_REFERER=http://localhost/timesheet/index.php/subproject/create
+---
+2017/04/19 12:22:53 [warning] [application] Failed to set unsafe attribute "status" of "SubProject".
+in /var/www/html/timesheet/protected/controllers/SubProjectController.php (71)
+in /var/www/html/timesheet/index.php (35)
+2017/04/19 12:22:53 [warning] [application] Failed to set unsafe attribute "Priority" of "SubProject".
+in /var/www/html/timesheet/protected/controllers/SubProjectController.php (71)
+in /var/www/html/timesheet/index.php (35)
+2017/04/21 15:45:03 [error] [exception.CException] exception 'CException' with message 'SubProjectController cannot find the requested view "index".' in /var/www/html/timesheet/yii/framework/web/CController.php:878
+Stack trace:
+#0 /var/www/html/timesheet/yii/framework/web/CController.php(782): CController->renderPartial('index', Array, true)
+#1 /var/www/html/timesheet/protected/controllers/SubProjectController.php(132): CController->render('index', Array)
+#2 /var/www/html/timesheet/yii/framework/web/actions/CInlineAction.php(49): SubProjectController->actionIndex()
+#3 /var/www/html/timesheet/yii/framework/web/CController.php(308): CInlineAction->runWithParams(Array)
+#4 /var/www/html/timesheet/yii/framework/web/filters/CFilterChain.php(133): CController->runAction(Object(CInlineAction))
+#5 /var/www/html/timesheet/yii/framework/web/filters/CFilter.php(40): CFilterChain->run()
+#6 /var/www/html/timesheet/yii/framework/web/CController.php(1145): CFilter->filter(Object(CFilterChain))
+#7 /var/www/html/timesheet/yii/framework/web/filters/CInlineFilter.php(58): CController->filterAccessControl(Object(CFilterChain))
+#8 /var/www/html/timesheet/yii/framework/web/filters/CFilterChain.php(130): CInlineFilter->filter(Object(CFilterChain))
+#9 /var/www/html/timesheet/yii/framework/web/CController.php(291): CFilterChain->run()
+#10 /var/www/html/timesheet/yii/framework/web/CController.php(265): CController->runActionWithFilters(Object(CInlineAction), Array)
+#11 /var/www/html/timesheet/yii/framework/web/CWebApplication.php(282): CController->run('')
+#12 /var/www/html/timesheet/yii/framework/web/CWebApplication.php(141): CWebApplication->runController('subproject')
+#13 /var/www/html/timesheet/yii/framework/base/CApplication.php(180): CWebApplication->processRequest()
+#14 /var/www/html/timesheet/index.php(35): CApplication->run()
+#15 {main}
+REQUEST_URI=/timesheet/index.php/subproject/
+---
+2017/04/21 15:45:14 [error] [system.db.CDbCommand] CDbCommand::fetchAll() failed: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'db_rjilautots_dev.tbl_pid_approval' doesn't exist. The SQL statement executed was: SHOW FULL COLUMNS FROM `db_rjilautots_dev`.`tbl_pid_approval`.
+in /var/www/html/timesheet/protected/views/pidApproval/index.php (20)
+in /var/www/html/timesheet/protected/controllers/PidApprovalController.php (221)
+in /var/www/html/timesheet/index.php (35)
+2017/04/21 15:45:14 [error] [exception.CDbException] exception 'CDbException' with message 'The table "db_rjilautots_dev.tbl_pid_approval" for active record class "PidApproval" cannot be found in the database.' in /var/www/html/timesheet/yii/framework/db/ar/CActiveRecord.php:2362
+Stack trace:
+#0 /var/www/html/timesheet/yii/framework/db/ar/CActiveRecord.php(411): CActiveRecordMetaData->__construct(Object(PidApproval))
+#1 /var/www/html/timesheet/yii/framework/db/ar/CActiveRecord.php(658): CActiveRecord->getMetaData()
+#2 /var/www/html/timesheet/yii/framework/db/ar/CActiveRecord.php(1601): CActiveRecord->getTableSchema()
+#3 /var/www/html/timesheet/yii/framework/web/CActiveDataProvider.php(228): CActiveRecord->count(Object(CDbCriteria))
+#4 /var/www/html/timesheet/yii/framework/web/CDataProvider.php(224): CActiveDataProvider->calculateTotalItemCount()
+#5 /var/www/html/timesheet/yii/framework/web/CActiveDataProvider.php(178): CDataProvider->getTotalItemCount()
+#6 /var/www/html/timesheet/yii/framework/web/CDataProvider.php(168): CActiveDataProvider->fetchData()
+#7 /var/www/html/timesheet/yii/framework/zii/widgets/CBaseListView.php(111): CDataProvider->getData()
+#8 /var/www/html/timesheet/yii/framework/zii/widgets/CListView.php(211): CBaseListView->init()
+#9 /var/www/html/timesheet/yii/framework/web/CBaseController.php(147): CListView->init()
+#10 /var/www/html/timesheet/yii/framework/web/CBaseController.php(172): CBaseController->createWidget('zii.widgets.CLi...', Array)
+#11 /var/www/html/timesheet/protected/views/pidApproval/index.php(20): CBaseController->widget('zii.widgets.CLi...', Array)
+#12 /var/www/html/timesheet/yii/framework/web/CBaseController.php(126): require('/var/www/html/t...')
+#13 /var/www/html/timesheet/yii/framework/web/CBaseController.php(95): CBaseController->renderInternal('/var/www/html/t...', Array, true)
+#14 /var/www/html/timesheet/yii/framework/web/CController.php(869): CBaseController->renderFile('/var/www/html/t...', Array, true)
+#15 /var/www/html/timesheet/yii/framework/web/CController.php(782): CController->renderPartial('index', Array, true)
+#16 /var/www/html/timesheet/protected/controllers/PidApprovalController.php(221): CController->render('index', Array)
+#17 /var/www/html/timesheet/yii/framework/web/actions/CInlineAction.php(49): PidApprovalController->actionIndex()
+#18 /var/www/html/timesheet/yii/framework/web/CController.php(308): CInlineAction->runWithParams(Array)
+#19 /var/www/html/timesheet/yii/framework/web/filters/CFilterChain.php(133): CController->runAction(Object(CInlineAction))
+#20 /var/www/html/timesheet/yii/framework/web/filters/CFilter.php(40): CFilterChain->run()
+#21 /var/www/html/timesheet/yii/framework/web/CController.php(1145): CFilter->filter(Object(CFilterChain))
+#22 /var/www/html/timesheet/yii/framework/web/filters/CInlineFilter.php(58): CController->filterAccessControl(Object(CFilterChain))
+#23 /var/www/html/timesheet/yii/framework/web/filters/CFilterChain.php(130): CInlineFilter->filter(Object(CFilterChain))
+#24 /var/www/html/timesheet/yii/framework/web/CController.php(291): CFilterChain->run()
+#25 /var/www/html/timesheet/yii/framework/web/CController.php(265): CController->runActionWithFilters(Object(CInlineAction), Array)
+#26 /var/www/html/timesheet/yii/framework/web/CWebApplication.php(282): CController->run('')
+#27 /var/www/html/timesheet/yii/framework/web/CWebApplication.php(141): CWebApplication->runController('pidapproval')
+#28 /var/www/html/timesheet/yii/framework/base/CApplication.php(180): CWebApplication->processRequest()
+#29 /var/www/html/timesheet/index.php(35): CApplication->run()
+#30 {main}
+REQUEST_URI=/timesheet/index.php/pidapproval/
+---
+2017/04/24 11:01:58 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "DayCommet/index.php".' in /var/www/html/timesheet/yii/framework/web/CWebApplication.php:286
+Stack trace:
+#0 /var/www/html/timesheet/yii/framework/web/CWebApplication.php(141): CWebApplication->runController('DayCommet/index...')
+#1 /var/www/html/timesheet/yii/framework/base/CApplication.php(180): CWebApplication->processRequest()
+#2 /var/www/html/timesheet/index.php(35): CApplication->run()
+#3 {main}
+REQUEST_URI=/timesheet/index.php/DayCommet/index.php
+---

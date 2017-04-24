@@ -148,7 +148,7 @@ class FeatureRequests extends CActiveRecord
  else {
      return "No";
  }
-        }
+        
     }
 
     public function renderApproveDisapprove($model) {

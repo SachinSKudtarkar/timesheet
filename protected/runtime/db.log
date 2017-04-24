@@ -306,3 +306,31 @@ WHERE  da.emp_id =46 and da.spid =
                group by da.spid order by em.emp_id.
 in /var/www/html/timesheet/protected/controllers/DayCommentController.php (829)
 in /var/www/html/timesheet/index.php (35)
+2017/04/18 11:13:44 [error] [system.db.CDbCommand] CDbCommand::fetchAll() failed: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'db_rjilautots_dev.tbl_pid_approval' doesn't exist. The SQL statement executed was: SHOW FULL COLUMNS FROM `db_rjilautots_dev`.`tbl_pid_approval`.
+in /var/www/html/timesheet/protected/controllers/PidApprovalController.php (68)
+in /var/www/html/timesheet/index.php (35)
+2017/04/18 11:41:08 [error] [system.db.CDbCommand] CDbCommand::fetchAll() failed: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'db_rjilautots_dev.tbl_pid_approval' doesn't exist. The SQL statement executed was: SHOW FULL COLUMNS FROM `db_rjilautots_dev`.`tbl_pid_approval`.
+in /var/www/html/timesheet/protected/controllers/PidApprovalController.php (68)
+in /var/www/html/timesheet/index.php (35)
+2017/04/18 11:41:10 [error] [system.db.CDbCommand] CDbCommand::fetchAll() failed: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'db_rjilautots_dev.tbl_pid_approval' doesn't exist. The SQL statement executed was: SHOW FULL COLUMNS FROM `db_rjilautots_dev`.`tbl_pid_approval`.
+in /var/www/html/timesheet/protected/controllers/PidApprovalController.php (68)
+in /var/www/html/timesheet/index.php (35)
+2017/04/18 11:47:00 [error] [system.db.CDbCommand] CDbCommand::fetchAll() failed: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'db_rjilautots_dev.tbl_pid_approval' doesn't exist. The SQL statement executed was: SHOW FULL COLUMNS FROM `db_rjilautots_dev`.`tbl_pid_approval`.
+in /var/www/html/timesheet/protected/controllers/PidApprovalController.php (68)
+in /var/www/html/timesheet/index.php (35)
+2017/04/18 11:49:10 [error] [system.db.CDbCommand] CDbCommand::fetchAll() failed: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'db_rjilautots_dev.tbl_pid_approval' doesn't exist. The SQL statement executed was: SHOW FULL COLUMNS FROM `db_rjilautots_dev`.`tbl_pid_approval`.
+in /var/www/html/timesheet/protected/controllers/PidApprovalController.php (68)
+in /var/www/html/timesheet/index.php (35)
+2017/04/18 11:53:27 [error] [system.db.CDbCommand] CDbCommand::fetchAll() failed: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'db_rjilautots_dev.tbl_pid_approval' doesn't exist. The SQL statement executed was: SHOW FULL COLUMNS FROM `db_rjilautots_dev`.`tbl_pid_approval`.
+in /var/www/html/timesheet/protected/controllers/PidApprovalController.php (68)
+in /var/www/html/timesheet/index.php (35)
+2017/04/18 12:23:15 [error] [system.db.CDbCommand] CDbCommand::fetchAll() failed: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'db_rjilautots_dev.tbl_pid_approval' doesn't exist. The SQL statement executed was: SHOW FULL COLUMNS FROM `db_rjilautots_dev`.`tbl_pid_approval`.
+in /var/www/html/timesheet/protected/controllers/PidApprovalController.php (68)
+in /var/www/html/timesheet/index.php (35)
+2017/04/19 12:22:10 [error] [system.db.CDbCommand] CDbCommand::execute() failed: SQLSTATE[22001]: String data, right truncated: 1406 Data too long for column 'status' at row 1. The SQL statement executed was: INSERT INTO `tbl_sub_project` (`is_deleted`, `pid`, `sub_project_name`, `sub_project_description`, `requester`, `status`, `Priority`, `created_date`, `created_by`) VALUES (:yp0, :yp1, :yp2, :yp3, :yp4, :yp5, :yp6, :yp7, :yp8). Bound with :yp0=0, :yp1=9, :yp2='testing', :yp3='testing', :yp4='sachin', :yp5='Newly Created', :yp6=3, :yp7='2017-04-19 12:22:10', :yp8=46.
+in /var/www/html/timesheet/protected/controllers/SubProjectController.php (74)
+in /var/www/html/timesheet/index.php (35)
+2017/04/21 15:45:14 [error] [system.db.CDbCommand] CDbCommand::fetchAll() failed: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'db_rjilautots_dev.tbl_pid_approval' doesn't exist. The SQL statement executed was: SHOW FULL COLUMNS FROM `db_rjilautots_dev`.`tbl_pid_approval`.
+in /var/www/html/timesheet/protected/views/pidApproval/index.php (20)
+in /var/www/html/timesheet/protected/controllers/PidApprovalController.php (221)
+in /var/www/html/timesheet/index.php (35)
