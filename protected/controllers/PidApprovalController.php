@@ -349,39 +349,75 @@ class PidApprovalController extends Controller
 		$model=new PidApproval('search');
 		$model->unsetAttributes();  // clear any default values
                 
-		if(isset($_GET['PidApproval']))
-			$model->attributes=$_GET['PidApproval'];
-                //
-                $sql = "select t.* from tbl_pid_approval t ";
+		// if(isset($_GET['PidApproval']))
+		// 	$model->attributes=$_GET['PidApproval'];
+
+		if (isset($_REQUEST['PidApproval'])) {
+                    
+            $condition = $_REQUEST['PidApproval'];
+            
+            $whrcondition = '';
+            if ($condition['emp_id'] != '')
+                $whrcondition .= " AND em.first_name like '" . $condition['emp_id'] . "%' or em.last_name like '" . $condition['emp_id'] . "%'";
+            if ($condition['sub_project_id'] != '')
+                $whrcondition .= " AND sp.sub_project_name like '" . $condition['sub_project_id'] . "%'";
+            if ($condition['project_name'] != '')
+                $whrcondition .= " AND pm.project_name like '" . $condition['project_id'] . "'";
+			if(	$condition['sub_task_name'] != '')
+				$whrcondition .= " AND st.sub_task_name like  '" . $condition['sub_task_name'] . "%'";
+			if(	$condition['sr'] != '')
+				$whrcondition .= " AND st.pid_approval_id like '" . $condition['sr'] . "%'";
+			if(	$condition['task_id'] != '')
+				$whrcondition .= " AND tt.task_name like '" . $condition['task_id'] . "%'";
+			if(	$condition['inception_date'] != '')
+				$whrcondition .= " AND pa.inception_date like '" . $condition['inception_date'] . "%'";
+			if(	$condition['approved'] != '')
+				$whrcondition .= " AND pa.approved like '" . $condition['approved'] . "%'";
+        } else
+            $whrcondition = '';
+
+             if (isset($_REQUEST['PidApproval'])) {
+
+ 	$pid_approval_id ='';
+			 	$sql1 = "select st.pid_approval_id,st.project_id,st.sub_project_id,st.task_id,st.stask_id,pa.inception_date,st.emp_id,pa.approved from tbl_project_management as pm inner join tbl_sub_project as sp on (pm.pid = sp.pid ) inner join tbl_sub_task as st on(st.project_id = pm.pid) 
+			 inner join tbl_task as tt on (st.task_id = tt.task_id) inner join tbl_pid_approval as pa on(st.pid_approval_id = pa.pid_id ) inner join tbl_employee as em on (st.emp_id = em.emp_id) where  st.sub_project_id = sp.spid $whrcondition ";
+			 	$search_id = Yii::app()->db->createCommand($sql1)->queryRow();
+			 	if ($condition['emp_id'] != '')
+                $pid_approval_id	 .= "where st.emp_id = " . $search_id['emp_id'];
+			 if ($condition['sub_task_name'] != '')
+                $pid_approval_id .= "where st.stask_id = " . $search_id['stask_id'];
+            if ($condition['task_id'] != '')
+                $pid_approval_id .= "where st.task_id = " . $search_id['task_id'];
+
+            if ($condition['sub_project_id'] != '')
+                $pid_approval_id .= "where st.sub_project_id =".$search_id['sub_project_id'];
+            if ($condition['project_name'] != '')
+                $pid_approval_id .= "where st.project_id = ".$search_id['project_id'];
+			if(	$condition['sr'] != '')
+				$pid_approval_id .= "where pa.pid_id = ".$search_id['pid_approval_id'];
+			
+			if(	$condition['inception_date'] != '')
+				$pid_approval_id .= "where st.inception_date =".$search_id['inception_date'];
+			if(	$condition['approved'] != '')
+				$pid_approval_id .= "where pa.approved =".$search_id['approved'];
+			 	//$pid_approval_id = "AND pid_id = ".$search_id['pid_approval_id'];
+ 				
+ 				}else{
+ 					$pid_approval_id ='';
+ 				}
+ 				$data = array();
+         
+		   $sql = "select pid_id as sr, st.project_id,st.sub_project_id,st.task_id,sub_task_name,inception_date,total_est_hrs,emp_id,est_hrs,
+		   case when(approved = 2) then 'Approved' when (approved = 1) then 'In Queue' when (approved = 3) then 'Rejected' else null end as approved
+		   ,comments from tbl_sub_task as st 
+		   			inner join tbl_pid_approval as pa on (st.pid_approval_id = pa.pid_id) {$pid_approval_id};";
                  $results = Yii::app()->db->createCommand($sql)->queryAll();
-//        CHelper::debug($results);
-        $data = array();
-        if (!empty($results)) {
-            foreach ($results as $result) {
-                $sql1 = "SELECT * FROM tbl_sub_task  WHERE pid_approval_id={$result['pid_id']} ";
-                $stasks = Yii::app()->db->createCommand($sql1)->queryAll();
-//                CHelper::debug($stasks);
-                if (!empty($stasks)) {
-                    foreach ($stasks as $key => $stask) {
-                        $data[] = array(
-                            'sr' => $result['pid_id'],
-                            'project_id' => $result['project_id'],
-                            'sub_project_id' => $result['sub_project_id'],
-                            'inception_date' => $result['inception_date'],
-                            'total_est_hrs' => $result['total_est_hrs'],
-                            'comments' => $result['comments'],
-                            'task_id' => $stask['task_id'],
-                            'sub_task_name' => $stask['sub_task_name'],
-                            'emp_id' => $stask['emp_id'],
-                            'est_hrs' => $stask['est_hrs'],
-                            'approved' => $result['approved'],
-                        );
-                    }
-                }
-            }
-        }
+
+        //  if(Yii::app()->session['login']['user_id'] == 46){
+        //     CHelper::debug($results);
+        // }
 		$this->render('AllProjects',array(
-			'data' => $data,'model'=>$model,
+			'data' => $results,'model'=>$model,
 		));
 	}
 

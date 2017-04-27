@@ -334,3 +334,170 @@ in /var/www/html/timesheet/index.php (35)
 in /var/www/html/timesheet/protected/views/pidApproval/index.php (20)
 in /var/www/html/timesheet/protected/controllers/PidApprovalController.php (221)
 in /var/www/html/timesheet/index.php (35)
+2017/04/24 16:01:37 [error] [system.db.CDbCommand] CDbCommand::fetchAll() failed: SQLSTATE[42000]: Syntax error or access violation: 1055 Expression #3 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'timesheet.st.stask_id' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by. The SQL statement executed was: select st.sub_project_id,sp.sub_project_name,st.stask_id  from tbl_sub_task as st inner join tbl_pid_approval as pa on (st.pid_approval_id = pa.pid_id) inner join tbl_sub_project as sp on (sp.spid = st.sub_project_id)
+where st.project_id = 9 and st.emp_id = 46 group by st.sub_project_id.
+in /var/www/html/timesheet/protected/controllers/DayCommentController.php (970)
+in /var/www/html/timesheet/protected/controllers/DayCommentController.php (229)
+in /var/www/html/timesheet/index.php (35)
+2017/04/24 16:46:33 [error] [system.db.CDbCommand] CDbCommand::fetchAll() failed: SQLSTATE[42000]: Syntax error or access violation: 1055 Expression #1 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'timesheet.em.first_name' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by. The SQL statement executed was: select concat(first_name,' ',last_name) as name,project_name as Program ,sub_project_name as Project ,sub_task_name as Task,est_hrs as Estimated_hours,time(sum(hours)) as consumed_hours from tbl_day_comment as dc inner join tbl_sub_task as st on (dc.stask_id = st.stask_id) 
+inner join tbl_sub_project as sp on (dc.spid= sp.spid) 
+inner join tbl_project_management as pp on (pp.pid = dc.pid)
+inner join tbl_employee as em on (dc.emp_id = em.emp_id) 
+group by dc.stask_id order by em.emp_id;.
+in /var/www/html/timesheet/protected/controllers/ResourceAllocationProjectWorkController.php (264)
+in /var/www/html/timesheet/index.php (35)
+2017/04/24 16:47:39 [error] [system.db.CDbCommand] CDbCommand::fetchAll() failed: SQLSTATE[42000]: Syntax error or access violation: 1055 Expression #1 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'timesheet.em.first_name' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by. The SQL statement executed was: select concat(first_name,' ',last_name) as name,project_name as Program ,sub_project_name as Project ,sub_task_name as Task,est_hrs as Estimated_hours,time(sum(hours)) as consumed_hours from tbl_day_comment as dc inner join tbl_sub_task as st on (dc.stask_id = st.stask_id) 
+inner join tbl_sub_project as sp on (dc.spid= sp.spid) 
+inner join tbl_project_management as pp on (pp.pid = dc.pid)
+inner join tbl_employee as em on (dc.emp_id = em.emp_id) 
+group by dc.stask_id order by em.emp_id;.
+in /var/www/html/timesheet/protected/controllers/ResourceAllocationProjectWorkController.php (264)
+in /var/www/html/timesheet/index.php (35)
+2017/04/24 17:05:41 [error] [system.db.CDbCommand] CDbCommand::fetchAll() failed: SQLSTATE[42000]: Syntax error or access violation: 1055 Expression #1 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'timesheet.em.first_name' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by. The SQL statement executed was: select concat(first_name,' ',last_name) as name,project_name as Program ,sub_project_name as Project ,sub_task_name as Task,est_hrs as Estimated_hours,time(sum(hours)) as consumed_hours from tbl_day_comment as dc inner join tbl_sub_task as st on (dc.stask_id = st.stask_id) 
+inner join tbl_sub_project as sp on (dc.spid= sp.spid) 
+inner join tbl_project_management as pp on (pp.pid = dc.pid)
+inner join tbl_employee as em on (dc.emp_id = em.emp_id) 
+group by dc.stask_id order by em.emp_id;.
+in /var/www/html/timesheet/protected/controllers/ResourceAllocationProjectWorkController.php (264)
+in /var/www/html/timesheet/index.php (35)
+2017/04/24 17:05:43 [error] [system.db.CDbCommand] CDbCommand::fetchAll() failed: SQLSTATE[42000]: Syntax error or access violation: 1055 Expression #1 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'timesheet.em.first_name' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by. The SQL statement executed was: select concat(first_name,' ',last_name) as name,project_name as Program ,sub_project_name as Project ,sub_task_name as Task,est_hrs as Estimated_hours,time(sum(hours)) as consumed_hours from tbl_day_comment as dc inner join tbl_sub_task as st on (dc.stask_id = st.stask_id) 
+inner join tbl_sub_project as sp on (dc.spid= sp.spid) 
+inner join tbl_project_management as pp on (pp.pid = dc.pid)
+inner join tbl_employee as em on (dc.emp_id = em.emp_id) 
+group by dc.stask_id order by em.emp_id;.
+in /var/www/html/timesheet/protected/controllers/ResourceAllocationProjectWorkController.php (264)
+in /var/www/html/timesheet/index.php (35)
+2017/04/24 17:07:01 [error] [system.db.CDbCommand] CDbCommand::fetchAll() failed: SQLSTATE[42000]: Syntax error or access violation: 1055 Expression #1 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'timesheet.em.first_name' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by. The SQL statement executed was: select concat(em.first_name,' ',em.last_name) as name,pp.project_name as Program ,
+sp.sub_project_name as Project ,st.sub_task_name as Task,st.est_hrs as Estimated_hours,
+time(sum(dc.hours)) as consumed_hours,dc.stask_id from tbl_day_comment as dc 
+inner join tbl_sub_project as sp on (dc.spid= sp.spid)  
+inner join tbl_sub_task as st on (dc.stask_id = st.stask_id)
+inner join tbl_project_management as pp on (pp.pid = dc.pid)
+inner join tbl_employee as em on (dc.emp_id = em.emp_id)
+where dc.spid = st.sub_project_id and dc.pid = st.project_id 
+group by dc.stask_id order by em.emp_id;.
+in /var/www/html/timesheet/protected/controllers/ResourceAllocationProjectWorkController.php (268)
+in /var/www/html/timesheet/index.php (35)
+2017/04/24 17:08:02 [error] [system.db.CDbCommand] CDbCommand::fetchAll() failed: SQLSTATE[42000]: Syntax error or access violation: 1055 Expression #1 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'timesheet.em.first_name' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by. The SQL statement executed was: select concat(em.first_name,' ',em.last_name) as name,pp.project_name as Program ,
+sp.sub_project_name as Project ,st.sub_task_name as Task,st.est_hrs as Estimated_hours,
+time(sum(dc.hours)) as consumed_hours,dc.stask_id from tbl_day_comment as dc 
+inner join tbl_sub_project as sp on (dc.spid= sp.spid)  
+inner join tbl_sub_task as st on (dc.stask_id = st.stask_id)
+inner join tbl_project_management as pp on (pp.pid = dc.pid)
+inner join tbl_employee as em on (dc.emp_id = em.emp_id)
+where dc.spid = st.sub_project_id and dc.pid = st.project_id 
+group by dc.stask_id order by em.emp_id;.
+in /var/www/html/timesheet/protected/controllers/ResourceAllocationProjectWorkController.php (268)
+in /var/www/html/timesheet/index.php (35)
+2017/04/25 16:06:31 [error] [system.db.CDbCommand] CDbCommand::fetchAll() failed: SQLSTATE[42000]: Syntax error or access violation: 1055 Expression #2 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'timesheet.pp.project_name' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by. The SQL statement executed was: select concat(em.first_name,' ',em.last_name) as name,pp.project_name as Program ,
+sp.sub_project_name as Project ,st.sub_task_name as Task,st.est_hrs as Estimated_hours,
+time(sum(dc.hours)) as consumed_hours,dc.stask_id from tbl_day_comment as dc 
+inner join tbl_sub_project as sp on (dc.spid= sp.spid)  
+inner join tbl_sub_task as st on (dc.stask_id = st.stask_id)
+inner join tbl_project_management as pp on (pp.pid = dc.pid)
+inner join tbl_employee as em on (dc.emp_id = em.emp_id)
+where dc.spid = st.sub_project_id and dc.pid = st.project_id  and em.first_name like 'Vaibhav%' or em.last_name like 'Vaibhav%'
+group by dc.stask_id,em.emp_id order by em.emp_id;.
+in /var/www/html/timesheet/protected/controllers/ResourceAllocationProjectWorkController.php (268)
+in /var/www/html/timesheet/index.php (35)
+2017/04/25 16:06:45 [error] [system.db.CDbCommand] CDbCommand::fetchAll() failed: SQLSTATE[42000]: Syntax error or access violation: 1055 Expression #2 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'timesheet.pp.project_name' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by. The SQL statement executed was: select concat(em.first_name,' ',em.last_name) as name,pp.project_name as Program ,
+sp.sub_project_name as Project ,st.sub_task_name as Task,st.est_hrs as Estimated_hours,
+time(sum(dc.hours)) as consumed_hours,dc.stask_id from tbl_day_comment as dc 
+inner join tbl_sub_project as sp on (dc.spid= sp.spid)  
+inner join tbl_sub_task as st on (dc.stask_id = st.stask_id)
+inner join tbl_project_management as pp on (pp.pid = dc.pid)
+inner join tbl_employee as em on (dc.emp_id = em.emp_id)
+where dc.spid = st.sub_project_id and dc.pid = st.project_id  and em.first_name like 'Vaibhav%' or em.last_name like 'Vaibhav%'
+group by dc.stask_id,em.emp_id order by em.emp_id;.
+in /var/www/html/timesheet/protected/controllers/ResourceAllocationProjectWorkController.php (268)
+in /var/www/html/timesheet/index.php (35)
+2017/04/25 16:09:04 [error] [system.db.CDbCommand] CDbCommand::fetchAll() failed: SQLSTATE[42000]: Syntax error or access violation: 1055 Expression #2 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'timesheet.pp.project_name' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by. The SQL statement executed was: select concat(em.first_name,' ',em.last_name) as name,pp.project_name as Program ,
+sp.sub_project_name as Project ,st.sub_task_name as Task,st.est_hrs as Estimated_hours,
+time(sum(dc.hours)) as consumed_hours,dc.stask_id from tbl_day_comment as dc 
+inner join tbl_sub_project as sp on (dc.spid= sp.spid)  
+inner join tbl_sub_task as st on (dc.stask_id = st.stask_id)
+inner join tbl_project_management as pp on (pp.pid = dc.pid)
+inner join tbl_employee as em on (dc.emp_id = em.emp_id)
+where dc.spid = st.sub_project_id and dc.pid = st.project_id  and em.first_name like 'Vaibhav%' or em.last_name like 'Vaibhav%'
+group by dc.stask_id,em.emp_id order by em.emp_id;.
+in /var/www/html/timesheet/protected/controllers/ResourceAllocationProjectWorkController.php (268)
+in /var/www/html/timesheet/index.php (35)
+2017/04/25 17:33:20 [error] [system.db.CDbCommand] CDbCommand::fetchAll() failed: SQLSTATE[42000]: Syntax error or access violation: 1055 Expression #2 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'timesheet.pp.project_name' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by. The SQL statement executed was: select concat(em.first_name,' ',em.last_name) as name,pp.project_name as Program ,
+sp.sub_project_name as Project ,st.sub_task_name as Task,st.est_hrs as Estimated_hours,
+time(sum(dc.hours)) as consumed_hours,dc.stask_id from tbl_day_comment as dc 
+inner join tbl_sub_project as sp on (dc.spid= sp.spid)  
+inner join tbl_sub_task as st on (dc.stask_id = st.stask_id)
+inner join tbl_project_management as pp on (pp.pid = dc.pid)
+inner join tbl_employee as em on (dc.emp_id = em.emp_id)
+where dc.spid = st.sub_project_id and dc.pid = st.project_id  and em.first_name like 'Vaibhav%' or em.last_name like 'Vaibhav%'
+group by dc.stask_id,em.emp_id order by em.emp_id;.
+in /var/www/html/timesheet/protected/controllers/ResourceAllocationProjectWorkController.php (268)
+in /var/www/html/timesheet/index.php (35)
+2017/04/25 17:33:25 [error] [system.db.CDbCommand] CDbCommand::fetchAll() failed: SQLSTATE[42000]: Syntax error or access violation: 1055 Expression #2 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'timesheet.pp.project_name' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by. The SQL statement executed was: select concat(em.first_name,' ',em.last_name) as name,pp.project_name as Program ,
+sp.sub_project_name as Project ,st.sub_task_name as Task,st.est_hrs as Estimated_hours,
+time(sum(dc.hours)) as consumed_hours,dc.stask_id from tbl_day_comment as dc 
+inner join tbl_sub_project as sp on (dc.spid= sp.spid)  
+inner join tbl_sub_task as st on (dc.stask_id = st.stask_id)
+inner join tbl_project_management as pp on (pp.pid = dc.pid)
+inner join tbl_employee as em on (dc.emp_id = em.emp_id)
+where dc.spid = st.sub_project_id and dc.pid = st.project_id  and em.first_name like 'Vaibhav%' or em.last_name like 'Vaibhav%'
+group by dc.stask_id,em.emp_id order by em.emp_id;.
+in /var/www/html/timesheet/protected/controllers/ResourceAllocationProjectWorkController.php (268)
+in /var/www/html/timesheet/index.php (35)
+2017/04/25 17:33:29 [error] [system.db.CDbCommand] CDbCommand::fetchAll() failed: SQLSTATE[42000]: Syntax error or access violation: 1055 Expression #2 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'timesheet.pp.project_name' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by. The SQL statement executed was: select concat(em.first_name,' ',em.last_name) as name,pp.project_name as Program ,
+sp.sub_project_name as Project ,st.sub_task_name as Task,st.est_hrs as Estimated_hours,
+time(sum(dc.hours)) as consumed_hours,dc.stask_id from tbl_day_comment as dc 
+inner join tbl_sub_project as sp on (dc.spid= sp.spid)  
+inner join tbl_sub_task as st on (dc.stask_id = st.stask_id)
+inner join tbl_project_management as pp on (pp.pid = dc.pid)
+inner join tbl_employee as em on (dc.emp_id = em.emp_id)
+where dc.spid = st.sub_project_id and dc.pid = st.project_id  and em.first_name like 'Vaibhav%' or em.last_name like 'Vaibhav%'
+group by dc.stask_id,em.emp_id order by em.emp_id;.
+in /var/www/html/timesheet/protected/controllers/ResourceAllocationProjectWorkController.php (268)
+in /var/www/html/timesheet/index.php (35)
+2017/04/26 16:02:42 [error] [system.db.CDbCommand] CDbCommand::fetch() failed: SQLSTATE[42000]: Syntax error or access violation: 1055 Expression #1 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'timesheet.em.first_name' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by. The SQL statement executed was: select concat(em.first_name,' ',em.last_name) as name,
+                    sum(dc.hours) as consumed_hours
+                    from  tbl_day_comment as dc
+                    inner join tbl_employee as em on(dc.emp_id = em.emp_id)
+                    where dc.stask_id = 18
+                    group by dc.stask_id.
+in /var/www/html/timesheet/protected/controllers/ProjectController.php (180)
+in /var/www/html/timesheet/index.php (35)
+2017/04/26 16:03:28 [error] [system.db.CDbCommand] CDbCommand::fetch() failed: SQLSTATE[42000]: Syntax error or access violation: 1140 In aggregated query without GROUP BY, expression #1 of SELECT list contains nonaggregated column 'timesheet.em.first_name'; this is incompatible with sql_mode=only_full_group_by. The SQL statement executed was: select concat(em.first_name,' ',em.last_name) as name,
+                    sum(dc.hours) as consumed_hours
+                    from  tbl_day_comment as dc
+                    inner join tbl_employee as em on(dc.emp_id = em.emp_id)
+                    where dc.stask_id = 18 .
+in /var/www/html/timesheet/protected/controllers/ProjectController.php (179)
+in /var/www/html/timesheet/index.php (35)
+2017/04/26 16:03:54 [error] [system.db.CDbCommand] CDbCommand::fetch() failed: SQLSTATE[42000]: Syntax error or access violation: 1140 In aggregated query without GROUP BY, expression #1 of SELECT list contains nonaggregated column 'timesheet.em.first_name'; this is incompatible with sql_mode=only_full_group_by. The SQL statement executed was: select concat(em.first_name,' ',em.last_name) as name,
+                    sum(dc.hours) as consumed_hours
+                    from  tbl_day_comment as dc
+                    inner join tbl_employee as em on(dc.emp_id = em.emp_id)
+                    where dc.stask_id = 18 .
+in /var/www/html/timesheet/protected/controllers/ProjectController.php (179)
+in /var/www/html/timesheet/index.php (35)
+2017/04/26 16:31:35 [error] [system.db.CDbCommand] CDbCommand::fetch() failed: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'sum(dc.hours) as consumed_hours
+                    from  tbl_day_comment as dc
+' at line 1. The SQL statement executed was: 
+                    sum(dc.hours) as consumed_hours
+                    from  tbl_day_comment as dc
+                    where stask_id = 18 group by dc.stask_id .
+in /var/www/html/timesheet/protected/controllers/ProjectController.php (180)
+in /var/www/html/timesheet/index.php (35)
+2017/04/26 16:31:51 [error] [system.db.CDbCommand] CDbCommand::fetch() failed: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'sum(dc.hours) as consumed_hours
+                    from  tbl_day_comment as dc
+' at line 1. The SQL statement executed was: 
+                    sum(dc.hours) as consumed_hours
+                    from  tbl_day_comment as dc
+                    where stask_id = 18 group by dc.emp_id .
+in /var/www/html/timesheet/protected/controllers/ProjectController.php (180)
+in /var/www/html/timesheet/index.php (35)
+2017/04/26 18:25:11 [error] [system.db.CDbCommand] CDbCommand::fetchAll() failed: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 6. The SQL statement executed was: select concat(em.first_name,' ',em.last_name) as Name,pm.project_name as Program ,sp.sub_project_name as Project ,st.sub_task_name as Task ,tt.task_name as Type ,
+                    st.stask_id,st.est_hrs as Estimated_Hours from tbl_sub_task as st 
+                    inner join tbl_project_management as pm on(st.project_id = pm.pid)
+                    inner join tbl_sub_project as sp on (st.sub_project_id = sp.spid)
+                    inner join tbl_task as tt on(st.task_id = tt.task_id)
+                    inner join tbl_employee as em on(st.emp_id = em.emp_id;.
+in /var/www/html/timesheet/protected/controllers/ProjectController.php (173)
+in /var/www/html/timesheet/index.php (35)

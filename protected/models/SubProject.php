@@ -29,7 +29,9 @@ class SubProject extends CActiveRecord
 		public $Program;
 		public $Project;
 		public $Aproved_hour;
-		public $Consumed_hours;
+		public $consumed_hours;
+                public $Task;
+                public $Estimated_hours;
                 
 		
 	/**

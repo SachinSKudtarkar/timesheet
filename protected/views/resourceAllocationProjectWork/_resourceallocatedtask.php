@@ -27,11 +27,11 @@ $this->widget('zii.widgets.grid.CGridView', array(
 		'name',
 		'Program',
 		'Project',
-		//'estimated_start_date',
+		'Task',
 		//'estimated_end_date',
-		'Aproved_hour',
-		'Consumed_hours',
-		'Priority',
+		'Estimated_hours',
+		'consumed_hours',
+		//'Priority',
 		 
 		
 	),
