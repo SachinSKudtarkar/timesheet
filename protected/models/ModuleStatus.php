@@ -164,18 +164,11 @@ class ModuleStatus extends CActiveRecord
             echo CHtml::checkBox('onstag',($model->on_staging == 1)?true:false, array (
                                         'value'=>'stag','class'=>'chk','rid'=>$model->id,'style'=>'margin-left:10px;',
                                         ));
-        }
+        
         echo $resultstring = implode(", ", $namesarray);
     }
 
-    public function getManags($model) {
-        $mrgids = $model->manager;
-        $query = "SELECT CONCAT(first_name,'  ',last_name) as name from tbl_infi_employee WHERE id IN(" . $mrgids . ")";
-        $result = YII::app()->db->createCommand($query)->queryAll();
-        $namesarray = array();
-        foreach ($result as $each) {
-            $namesarray[] = $each['name'];
-        }
+   
         public function getDevs($model)
         {
             $devIds = $model->developer;

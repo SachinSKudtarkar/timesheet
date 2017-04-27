@@ -234,13 +234,13 @@ class ResourceAllocationProjectWorkController extends Controller {
             $condition = $_REQUEST['SubProject'];
             $whrcondition = '';
             if ($condition['name'] != '')
-                $whrcondition .= " AND em.first_name like '" . $condition['name'] . "%' or em.last_name like '" . $condition['name'] . "%'";
+                $whrcondition .= " and em.first_name like '" . $condition['name'] . "%' or em.last_name like '" . $condition['name'] . "%'";
             if ($condition['sub_project_name'] != '')
-                $whrcondition .= " AND sb.sub_project_name = '" . $condition['sub_project_name'] . "'";
+                $whrcondition .= " and sp.sub_project_name like'" . $condition['sub_project_name'] . "%'";
             if ($condition['project_name'] != '')
-                $whrcondition .= " AND pm.project_name = '" . $condition['project_name'] . "'";
+                $whrcondition .= " and pp.project_name = '" . $condition['project_name'] . "%'";
 			if(	$condition['Priority'] != '')
-				$whrcondition .= " AND sb.Priority = '" . $condition['Priority'] . "'";
+				$whrcondition .= " and sp.Priority = '" . $condition['Priority'] . "'";
         } else
             $whrcondition = '';
         //echo 'test'.$whrcondition;
@@ -250,18 +250,26 @@ class ResourceAllocationProjectWorkController extends Controller {
           FROM tbl_task_allocation as ta inner join tbl_sub_project as sb on(ta.spid = sb.spid), tbl_employee em , tbl_project_management as pm,
           (select sum(hours) as hours from tbl_employee em ,tbl_day_comment as da , tbl_sub_project as sb  where da.spid = sb.spid and da.emp_id = em.emp_id group by da.spid ) as tmp
           WHERE  em.emp_id in (ta.allocated_resource) and sb.pid = pm.pid  order by em.first_name"; */
+//$query ="select concat(first_name,' ',last_name) as name,project_name as Program ,sub_project_name as Project ,sub_task_name as Task,est_hrs as Estimated_hours,time(sum(hours)) as consumed_hours from tbl_day_comment as dc inner join tbl_sub_task as st on (dc.stask_id = st.stask_id) 
+//inner join tbl_sub_project as sp on (dc.spid= sp.spid) 
+//inner join tbl_project_management as pp on (pp.pid = dc.pid)
+//inner join tbl_employee as em on (dc.emp_id = em.emp_id) $whrcondition
+//group by dc.stask_id order by em.emp_id;";
 
-
-        $query = "SELECT concat(em.first_name,' ',em.last_name) as name,sum(hours) as Consumed_hours,pm.project_name as Program ,sb.sub_project_name as Project ,sb.estimated_end_date,sb.estimated_start_date,sb.total_hr_estimation_hour as Aproved_hour,
-		case when (sb.Priority = 1) then 'Heigh' when (sb.Priority = 2) then 'Medium' when (sb.Priority = 3) then 'Low' else null end as  Priority
-from tbl_employee em,tbl_day_comment as da,tbl_sub_project as sb,tbl_project_management as pm 
-WHERE em.emp_id=da.emp_id AND da.spid=sb.spid AND da.pid=pm.pid $whrcondition
-group by da.spid order by em.emp_id";
+        $query = "select concat(em.first_name,' ',em.last_name) as name,pp.project_name as Program ,
+sp.sub_project_name as Project ,st.sub_task_name as Task,st.est_hrs as Estimated_hours,
+time(sum(dc.hours)) as consumed_hours,dc.stask_id from tbl_day_comment as dc 
+inner join tbl_sub_project as sp on (dc.spid= sp.spid)  
+inner join tbl_sub_task as st on (dc.stask_id = st.stask_id)
+inner join tbl_project_management as pp on (pp.pid = dc.pid)
+inner join tbl_employee as em on (dc.emp_id = em.emp_id)
+where dc.spid = st.sub_project_id and dc.pid = st.project_id $whrcondition
+group by dc.stask_id,em.emp_id order by em.emp_id;";
         $rawData = Yii::app()->db->createCommand($query)->queryAll();
 
-        // if (Yii::app()->session['login']['user_id'] == 46) {
-            
-        // }
+//         if (Yii::app()->session['login']['user_id'] == 46) {
+//             CHelper::debug($rawData);            
+//         }
 
         /* 	$dataProvider=new CArrayDataProvider($rawData, array(
           'pagination'=>array(
@@ -560,10 +568,15 @@ group by da.spid order by em.emp_id";
         $project = isset($_POST['ProjectName']) ? $_POST['ProjectName'] : 0;
         $employee = isset($_POST['employee']) ? $_POST['employee'] : 0;
         $arraydata = array();
-
+//        if(isset($_POST)){
+//         CHelper::debug($_POST);  
+//        }
+        
+        
         if (!empty($project)) {
             $query = "SELECT emp_id FROM tbl_day_comment WHERE pid =$project";
             $result = Yii::app()->db->createCommand($query)->queryAll();
+           //    CHelper::debug($result);
             if (!empty($result)) {
                 $result = array_column($result, 'emp_id');
                 $result = array_count_values($result);
@@ -589,7 +602,10 @@ group by da.spid order by em.emp_id";
             }
         }
 
+
+
         $dataProvider = new CActiveDataProvider('ResourceAllocationProjectWork');
+
         $this->render('resourcemanage', array('dataProvider' => $dataProvider, 'arraydata' => $arraydata));
     }
 

@@ -83,18 +83,35 @@ Yii::app()->clientScript->registerCssFile(
 		?>
 
 		<?php 
+		
 		if(key_exists($date_id, $arrData)) { ?>
 				<div class="main_daycomments">
 			<?php
-			$i = 0;
-			
+			$i = 1;
+		$count = 0;
+//		CHelper::debug($arrData);
 			foreach ($arrData[$date_id] as $key=>$eachproject) {
 				
-				//CHelper::debug($eachproject);
+				
 				$tmpcls = ($i > 0) ? '' : '';
-				$nxt = $i + 1;
+				$nxt = $i++;
+                              $day = explode(" ",$eachproject['day'])[0];
+                              $day = preg_replace('/-/','_', $day);   
+                              
+                                if($date_id == $day){
+                                   $count++;
+                                }
+//                                
+                                if($count > 0 ){
+                                    
+                                    $pid = $eachproject['pid']+$count;
+                                }else{
+                                    $pid = $eachproject['pid'];
+                                }
+                               
 					?>
-					<div class="row hdshow_<?php echo $date_id ."_". $i . " " . $tmpcls; ?>" id="<?php echo $date_id ."_". $i . " " . $tmpcls; ?>" >
+				<!-- 	<div class="row hdshow_<?php //echo $date_id ."_". $i . " " . $tmpcls; ?>" id="<?php //echo $date_id ."_". $i . " " . $tmpcls; ?>" > -->
+				<div>
 						<div class="row" >
 
 							<div class="span2"  style="margin-left:10px;">
@@ -103,20 +120,20 @@ Yii::app()->clientScript->registerCssFile(
 							</div>
 							<div class="span2"  style="margin-left:10px; " >
 								<?php echo CHTML::label('Program :', '', array('style' => 'width:90px;font-weight:bold; ')); ?>
-								<?php echo CHTML::dropDownList('ProjectName[]', $eachproject['pid'], CHtml::listData($allProjects, 'pid', 'project_name'), array('style' => 'width:150px;', 'disabled' => ($is_submitted ? 'disabled' : ''), 'prompt' => 'Please select Program', 'class' => 'proclass', 'id' => $date_id ."_". $eachproject['pid'], 'nxt' => $date_id ."_". $nxt)); ?>
+								<?php echo CHTML::dropDownList('ProjectName[]', $eachproject['pid'], CHtml::listData($allProjects, 'pid', 'project_name'), array('style' => 'width:150px;', 'disabled' => ($is_submitted ? 'disabled' : ''), 'prompt' => 'Please select Program', 'class' => 'proclass', 'id' => $date_id ."_". $pid, 'nxt' => $date_id ."_". $nxt)); ?>
 							</div>
 							<div class="span2"  style="margin-left:10px;">
 								<?php echo CHTML::label('Project :', '', array('style' => 'width:90px;font-weight:bold; ')); ?>
 								<?php
 									//$result = array();
-									echo CHTML::dropDownList('SubProjectName[]', $eachproject['spid']['selected'], $eachproject['spid']['result'], array('class'=>'sub-project','style' => 'width:150px;  ', 'prompt' => 'Please select  Project', 'disabled' => ($is_submitted ? 'disabled' : ''), 'id' => 'subproclass' . $date_id ."_". $eachproject['pid'] ));
+									echo CHTML::dropDownList('SubProjectName[]', $eachproject['spid']['selected'], $eachproject['spid']['result'], array('class'=>'sub-project','style' => 'width:150px;  ', 'prompt' => 'Please select  Project', 'disabled' => ($is_submitted ? 'disabled' : ''), 'id' => 'subproclass' . $date_id ."_". $pid ));
 								?>
 							</div>
 							<div class="span2"  style="margin-left:10px;">
 								<?php echo CHTML::label('Task :', '', array('style' => 'width:90px;font-weight:bold; ')); ?>
 								<?php
 									//$result = array();
-									echo CHTML::dropDownList('SubTaskName[]', $eachproject['stask_id']['selected'], $eachproject['stask_id']['result'], array('class'=>'sub-task','style' => 'width:150px;  ', 'prompt' => 'Please select  Task', 'disabled' => ($is_submitted ? 'disabled' : ''), 'id' => 'subtasks' . $date_id ."_". $eachproject['spid'] ));
+									echo CHTML::dropDownList('SubTaskName[]', $eachproject['stask_id']['selected'], $eachproject['stask_id']['result'], array('class'=>'sub-task','style' => 'width:150px;  ', 'prompt' => 'Please select  Task', 'disabled' => ($is_submitted ? 'disabled' : ''), 'id' => 'subtasks' . $date_id ."_". $pid ));
 								?>
 							</div>
 							<div class="span1" style="margin-left:10px; ">
@@ -127,7 +144,7 @@ Yii::app()->clientScript->registerCssFile(
 										$h = (strlen($h) < 2) ? "0".$h : $h;
 										$arrHrs[$h] = $h;
 									}
-									echo CHTML::dropDownList('hrs[]', $eachproject['hrs'], $arrHrs, array('style' => 'width:50px;  ', 'class'=>'wrkhrsClass', 'disabled' => ($is_submitted ? 'disabled' : ''), 'id' => 'wrkhsrsClass' . $date_id ."_". $eachproject['pid']));
+									echo CHTML::dropDownList('hrs[]', $eachproject['hrs'], $arrHrs, array('style' => 'width:50px;  ', 'class'=>'wrkhrsClass', 'disabled' => ($is_submitted ? 'disabled' : ''), 'id' => 'wrkhsrsClass' . $date_id ."_". $pid));
 								?>
 							</div>
 							<div class="span1" style="margin-left:10px; ">
@@ -138,19 +155,19 @@ Yii::app()->clientScript->registerCssFile(
 										$m = (strlen($m) < 2) ? "0".$m : $m;
 										$arrMnts[$m] = $m;
 									}
-									echo CHTML::dropDownList('mnts[]', $eachproject['mnts'], $arrMnts, array('style' => 'width:50px;  ', 'class'=>'wrkmntClass',  'disabled' => ($is_submitted ? 'disabled' : ''), 'id' => 'wrkhsrsClass' . $date_id ."_". $eachproject['pid']));
+									echo CHTML::dropDownList('mnts[]', $eachproject['mnts'], $arrMnts, array('style' => 'width:50px;  ', 'class'=>'wrkmntClass',  'disabled' => ($is_submitted ? 'disabled' : ''), 'id' => 'wrkhsrsClass' . $date_id ."_". $pid));
 								?>
 							</div>
 							<div class="span2">
 								<?php echo CHTML::label('Comment :', '', array('style' => 'width:130px;font-weight:bold; ')); ?>
-								<?php echo CHtml::textArea('procomment[]', $eachproject['comment'], array('style' => ' height:40px; width:200px; ', 'disabled' => ($is_submitted ? 'disabled' : ''), 'id' => 'comment' . $date_id ."_". $eachproject['pid']));
+								<?php echo CHtml::textArea('procomment[]', $eachproject['comment'], array('style' => ' height:40px; width:200px; ', 'disabled' => ($is_submitted ? 'disabled' : ''), 'id' => 'comment' . $date_id ."_". $pid));
 								?>
 							</div>
 							<div class="span2">
 								<?php echo CHTML::label('&nbsp;', '', array('style' => 'width:20px;font-weight:bold; ')); ?>
 								<?php
 								if(!$is_submitted) {
-									echo '<a href="javascript:void(0)"  class="showbox" data-nxt="' . $date_id ."_". $nxt . '" data-val="' . $date_id ."_". $eachproject['pid'] . '" >'
+									echo '<a href="javascript:void(0)"  class="showbox" data-nxt="' . $date_id ."_". $nxt . '" data-val="' . $date_id ."_". $pid . '" >'
 										. '<img src="' . $img_path . '" style="width:20px;">' . '</a>';
 								}
 								?>
@@ -162,6 +179,7 @@ Yii::app()->clientScript->registerCssFile(
 				<?php
 				$i++;
 			}
+                      //  exit;
 			?>
 			</div>
 		<?php }else { ?>
@@ -169,12 +187,15 @@ Yii::app()->clientScript->registerCssFile(
 			<div class="main_daycomments">
 			<?php
 			$i = 0;
+
+
 			
 			foreach ($allProjects as $eachproject) {
 				$tmpcls = ($i > 0) ? '' : '';
 				$nxt = $i + 1;
 				?>
-					<div class="row hdshow_<?php echo $date_id ."_". $i . " " . $tmpcls; ?>"  >
+					<!-- <div class="row hdshow_<?php //echo $date_id ."_". $i . " " . $tmpcls; ?>"  > -->
+					<div>
 						<div class="row" >
 							<div class="span2"  style="margin-left:10px;">
 								<?php echo "<b>" . date("l", $generte_date) . "</b> <br /> (" . date("d-m-Y", $generte_date) . " )"; ?>
@@ -197,7 +218,7 @@ Yii::app()->clientScript->registerCssFile(
 								<?php echo CHTML::label('Task :', '', array('style' => 'width:90px;font-weight:bold; ')); ?>
 								<?php
 									$result = array();
-									echo CHTML::dropDownList('SubTaskName[]', 'staskid', $result, array('class'=>'sub-task','style' => 'width:150px;  ', 'prompt' => 'Please select  Task', 'disabled' => ($is_submitted ? 'disabled' : ''), 'id' => 'subtasks' . $date_id ."_". $eachproject['spid']));
+									echo CHTML::dropDownList('SubTaskName[]', 'stask_id', $result, array('class'=>'sub-task','style' => 'width:150px;  ', 'prompt' => 'Please select  Task', 'disabled' => ($is_submitted ? 'disabled' : ''), 'id' => 'subtasks' . $date_id ."_". $eachproject['pid']));
 								?>
 							</div>
 							<div class="span1" style="margin-left:10px; ">
@@ -257,8 +278,8 @@ Yii::app()->clientScript->registerCssFile(
     </div>
 
     <!--        <div class="row">
-    <?php echo CHTML::label('Add Comment', ''); ?>
-    <?php echo CHtml::textArea('dayComment', '', array('style' => 'width:500px;height:150px;'));  ?>
+    <?php// echo CHTML::label('Add Comment', ''); ?>
+    <?php //echo CHtml::textArea('dayComment', '', array('style' => 'width:500px;height:150px;'));  ?>
             </div>-->
 
 	<?php if ($btnShow) { ?>
@@ -313,10 +334,10 @@ Yii::app()->clientScript->registerCssFile(
 		var _this = $(this).parent().parent().parent();
 
 		var oldId = _this.find('select').attr('id');
-		//alert(oldId);
+		// alert(oldId);
 		var newArr = oldId.split('_');
 		var newId = newArr[0]+'_'+newArr[1]+'_'+newArr[2]+'_'+(+newArr[3]+1);
-
+		//alert(newId);
 		var clonned = _this.clone();
 
 		clonned.find('#'+oldId).each(function() {
@@ -353,8 +374,7 @@ Yii::app()->clientScript->registerCssFile(
        		var thisId = $(this).attr('id');           
            	var sub_id=$(this).val();
            	var nextcls = $(this).attr('nxt');
-
-           	//alert(nextcls);
+         
        		$(this).parents('.row').find('.wrkhrsClass').removeAttr('disabled');
        		$(this).parents('.row').find('.wrkmntClass').removeAttr('disabled');
        		$.ajax({
@@ -362,12 +382,7 @@ Yii::app()->clientScript->registerCssFile(
                type: 'POST',
                dataType: 'json',
                data:{ pid:sub_id},
-               // beforeSend:function(){
-               //      $('.custom-loader').show();
-               //  },
-               //  complete:function(){
-               //     $('.custom-loader').hide();
-               //  },
+             
 	           success: function(data)
 	               {
 					 
@@ -401,83 +416,18 @@ Yii::app()->clientScript->registerCssFile(
        	}
 	});
     
-    $('.proclassold').change(function(){
-       if($(this).val() != '')
-       {
-           var thisId = $(this).attr('id');
-           var nextcls = $(this).attr('nxt');
-           var thisVal = $(this).val();
-           $('#wrkhrs'+thisId).removeAttr('disabled');
-           $('#comment'+thisId).removeAttr('disabled');
-//           $('.hdshow_'+nextcls).show();
-//           pids.push(thisVal);
-//           $('#pidsid').val(pids);
-       } else {
-           var thisId = $(this).attr('id');
-              var thisVal = $(this).val();
-              var nextcls = $(this).attr('nxt');
-              $('#wrkhrs'+thisId).attr('disabled','disabled');
-              $('#comment'+thisId).attr('disabled','disabled');
-//              $('.hdshow_'+nextcls).hide();
-              pids.pop(thisVal);
-              $('#pidsid').val(pids);
-           }
-    });
 
 
-    $(document).on('change', '.proclassffff', function(){
 
-       if($(this).val() != '')
-       {
-
-           var thisId = $(this).attr('id');
-           
-           var sub_id=$(this).val();
-          //alert('subproclass'+thisId);
-           $('#subproclass'+thisId).removeAttr('disabled');
-           $.ajax({
-               url: BASE_URL+'/daycomment/fetchSubProject',
-               type: 'POST',
-               dataType: 'json',
-               data:{ pid:sub_id},
-               // beforeSend:function(){
-               //      $('.custom-loader').show();
-               //  },
-               //  complete:function(){
-               //     $('.custom-loader').hide();
-               //  },
-               success: function(data)
-               {
-				  // alert(data);
-                   if(data.status=='SUCCESS')
-                   {
-                        var dropDown = '<option value=>Please Select Sub Project</option>';
-						var workhours = data.workhours;
-                        $.each(data.result, function(key, val) {
-                            dropDown+='<option value='+key+'>'+val+'</option>';
-							localStorage.setItem( 'hours-'+key, workhours[key] );
-							console.log('ddddddddddd'+localStorage.getItem( 'hours-'+key ) );
-
-                        });
-
-                        $('#subproclass'+thisId).html(dropDown);
-                        $('#subproclass'+thisId).removeAttr('disabled');
-                   }
-               },
-               error: function(XMLHttpRequest, data, errorThrown){
-               },
-        });
-
-       }
-    });
+   
 
 	$(document).on('change', '.sub-project', function(){
        if($(this).val() != '')
        {
          	var thisId = $(this).attr('id');
-           var is = thisId.substr(11, 11);
+           var is = thisId.substr(11, 13);
            var sub_id=$(this).val(); 
-             // alert(is);
+//             alert(thisId);
            $('#subtasks'+is).removeAttr('disabled');
            $.ajax({
                url: BASE_URL+'/daycomment/fetchSubTask',
@@ -504,8 +454,8 @@ Yii::app()->clientScript->registerCssFile(
 							//console.log('ddddddddddd'+localStorage.getItem( 'hours-'+key ) );
 
                         });
-						// $(this).parents('.row').find('.sub-task').html(dropDown);
-						// $(this).parents('.row').find('.sub-task').removeAttr('disabled');
+						 // $(this).parents('.row').find('.sub-task').html(dropDown);
+						 // $(this).parents('.row').find('.sub-task').removeAttr('disabled');
                         $('#subtasks'+is).html(dropDown);
                         $('#subtasks'+is).removeAttr('disabled');
                    }

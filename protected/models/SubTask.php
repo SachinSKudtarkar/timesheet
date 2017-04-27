@@ -32,6 +32,23 @@ class SubTask extends CActiveRecord
 	public $sub_project_name;
 	public $task_name;
 	public $employee;
+        public $id;
+        public $project_description;
+        public $start_date;
+        public $end_date;
+        public $hr_clocked;
+        public $category;
+        public $created_date;
+        public $updated_by;
+        public $updated_date;
+        public $is_deleted;
+        public $Name;
+        public $Program;
+        public $Project;
+        public $Task;
+        public $Type;
+        public $Estimated_Hours;
+        public $Consumed_Hours;
 	public function tableName()
 	{
 		return 'tbl_sub_task';

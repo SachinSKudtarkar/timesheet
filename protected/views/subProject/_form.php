@@ -45,9 +45,9 @@
 	</div>
 
 	<div class="row">
-		<?php //echo $form->labelEx($model,'requester'); ?>
-		<?php //echo $form->textField($model,'requester',array('size'=>60,'maxlength'=>250)); ?>
-		<?php //echo $form->error($model,'requester'); ?>
+		<?php echo $form->labelEx($model,'requester'); ?>
+		<?php echo $form->textField($model,'requester',array('size'=>60,'maxlength'=>250)); ?>
+		<?php echo $form->error($model,'requester'); ?>
 	</div>
 <!--<div class="row">
         <?php //echo $form->labelEx($model, 'estimated_start_date'); ?>
