@@ -90,12 +90,30 @@ class LoginController extends BaseLoginController {
      * when an action is not explicitly requested by users.
      */
     public function actionIndex() {
+
         //$this->redirect("http://portal.infinitylabs.in/app/index.php/zurmo/default/login");
        // http://portal.infinitylabs.in/app/index.php/zurmo/default/login
 
  //print_r('login'); exit
         //to set theme to login page
         
+        if($_REQUEST && $_REQUEST['user_id'] != "")
+        {
+             $user_details = Yii::app()->db->createCommand()
+                    ->select('tu.email, tu.password')
+                    ->from('tbl_employee tu')
+                    ->where('tu.emp_id=:emp_id and is_active=:is_active', array(':emp_id' => $_REQUEST['user_id'] ,':is_active' => 1))
+                    ->queryRow();
+            if(!empty($user_details))
+            {
+                $_POST['LoginForm']['email'] = $user_details['email'];
+                $_POST['LoginForm']['password'] = $user_details['password'];
+        
+            }
+            $_SESSION['cnaap_flag'] = 1;
+
+        }
+
         
         Yii::app()->theme = 'login';
 //        $macaddress = CHelper :: getmacAddress();  //Get current mac address
@@ -153,9 +171,13 @@ class LoginController extends BaseLoginController {
     
         if ($session_user_id != '') {
             if (!empty(Yii::app()->user->returnUrl))
+            {
                 $this->redirect(Yii::app()->user->returnUrl);
-            else
+                
+            }
+            else{
                 $this->redirect(array('//employee/admin'));
+            }
         } else {
             $this->render('//login/login', array('model' => $model));
         }

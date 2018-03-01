@@ -515,6 +515,7 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.stask_id";
 
     public function actionAddcomment() {
        
+        $timesheet_flag = 0;
 //        $rd_day = isset($_POST['Date']) ? $_POST['Date'] : '';
         $status_date = isset($_POST['Date']) ? $_POST['Date'] : '';
         $dayComment = isset($_POST['dayComment']) ? $_POST['dayComment'] : 0;
@@ -563,7 +564,14 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.stask_id";
                     'created_by' => Yii::app()->session['login']['user_id'],
                     'created_at' => date('Y-m-d H:i:s')
                 );
+                $date_array = array(date('Y-m-d', strtotime($status_date[$key])));
+                if (in_array(date('Y-m-d'), $date_array))
+                {
+                    $timesheet_flag = 1;
+                }
+
                 $sub_pro_name = SubProject::model()->find(array('select' => "spid,sub_project_name", "condition" => "spid= '" . $SubProjectName[$key] . "'"));
+
                 $projName = $this->GetProjName($value);
                 $projRequestor = $this->GetRequestorName($value);
                 $projManager = $this->GetProjManager($value);
@@ -597,12 +605,29 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.stask_id";
 
             $message .= "Regards,";
             $message .= "<br>Infinity Team";
+            if($timesheet_flag == 1)
+            {
+
+                $query = "UPDATE tbl_employee SET is_timesheet= '1' WHERE emp_id= '{$model->emp_id}'";
+                $update_query = Yii::app()->dbRjilauto->createCommand($query)->execute();
+                                  
+            }
 
             if ($is_submitted == 1) {
                 $mail_sent = $this->sendEmail($message, $commentor_name, $commentor_email, $rd_day, $projManagerEmailId, $projManager);
+
             }
+            if($timesheet_flag == 1 && $_SESSION['cnaap_flag'] == 1)
+            {
             Yii::app()->user->setFlash('success', "Comment added successfully.");
+                $this->redirect('http://10.137.32.113/login?user_id='.$model->emp_id, array('target' =>'_blank'));
+            }
+            else
+            {
+                Yii::app()->user->setFlash('success', "Comment added successfully.");
             $this->redirect(array('daycomment/index/selecting_date/' . $selected_date));
+                
+        }
         }
         Yii::app()->user->setFlash('error', "Please select project.");
         $this->redirect(array('daycomment/index/selecting_date/' . $selected_date));
