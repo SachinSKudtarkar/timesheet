@@ -21,12 +21,12 @@
 	<div class="row">
 	<?php echo CHTML::label('Task ID',''); ?>
 	<?php 
-   $TaskId = Yii::app()->db->createCommand('Select max(spid) as TaskId from tbl_sub_project ')->queryRow(); 
-	echo CHtml::textField("insert_id",$TaskId['TaskId']+1,array('readonly'=>true)); ?>
+   $TaskId = Yii::app()->db->createCommand('Select max(spid) as maxId from tbl_sub_project ')->queryRow(); 
+	echo CHtml::textField("insert_id",$TaskId['maxId']+1,array('readonly'=>true)); ?>
 </div>
 	<div class="row">
-		<?php echo CHTML::label('Project Name',''); ?>
-		<?php echo $form->dropDownList($model, 'pid', CHtml::listData(ProjectManagement::model()->findAll(array('order'=>'project_name','condition'=>'is_deleted=0')), 'pid', 'project_name'),array('prompt'=>'Please select Project'));
+		<?php echo CHTML::label('Program Name',''); ?>
+		<?php echo $form->dropDownList($model, 'pid', CHtml::listData(ProjectManagement::model()->findAll(array('order'=>'project_name','condition'=>'is_deleted=0')), 'pid', 'project_name'),array('prompt'=>'Please select Program'));
                 ?>
 		<?php echo $form->error($model,'pid'); ?>
 	</div>

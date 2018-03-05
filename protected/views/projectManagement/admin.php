@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /* @var $this ProjectManagementController */
 /* @var $model ProjectManagement */
 
@@ -27,7 +27,7 @@ $('.search-form form').submit(function(){
 ");
 ?>
 
-<h1>Manage Projects</h1>
+<h1>Manage Programs</h1>
 
 <!--
 <p>

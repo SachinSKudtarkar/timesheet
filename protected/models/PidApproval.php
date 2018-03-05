@@ -20,12 +20,13 @@ class PidApproval extends CActiveRecord
 {
         public $project_description;
         public $sub_project_name;
-	public $emp_id;
+		public $emp_id;
         public $task_id;
         public $sub_task_id;
         public $est_hrs;
         public $sub_task_name;
         public $sr;
+        //public $
 	/**
 	 * @return string the associated database table name
 	 */
@@ -198,9 +199,9 @@ class PidApproval extends CActiveRecord
             if($model['sr']){
                 $project = PidApproval::model()->findByPk($model['sr']);
                 $approvalStatus = $project['approved'];
-                //$accessType  = Yii::app()->session['login']['access_type'];
-				$accessType  = 2;
-                if($accessType==1){
+                $accessType  = Yii::app()->session['login']['access_type'];
+				// CHelper::debug($accessType);
+               /* if($accessType==1){
                     if($approvalStatus==0){
                         return CHtml::link('Send for Approval', array('#'), array('class' => 'approval btn btn-primary mr2', 'data-value' => $model['sr'].'-'.'1', 'style' => 'width:150px;', 'data-toggle' => 'modal', 'data-target' => '#approval',));
                     }elseif($approvalStatus==1){
@@ -212,8 +213,8 @@ class PidApproval extends CActiveRecord
                         $editlink =  CHtml::link('Edit', array("/pidapproval/update/".$model['sr']) );
                         return "Rejected"."  ".$reapproval."<br/>  ".$editlink;
                     }
-                }
-                if($accessType==2){
+                }*/
+                if($accessType==1){
                     if($approvalStatus==1){
                         $approved = CHtml::link('Approve', array('javascript:void(0);'), array('class' => 'approval btn btn-primary mr2', 'data-value' => $model['sr'].'-'.'2', 'style' => 'width:70px;', 'data-toggle' => 'modal', 'data-target' => '#approval',));
                         $reject = CHtml::link('Reject', array('javascript:void(0);'), array('class' => 'approval btn btn-primary mr2', 'data-value' => $model['sr'].'-'.'3', 'style' => 'width:70px;', 'data-toggle' => 'modal', 'data-target' => '#rejected',));

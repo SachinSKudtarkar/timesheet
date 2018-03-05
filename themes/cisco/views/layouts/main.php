@@ -65,7 +65,7 @@ $user_email = base64_encode($user_email);
                                 'visible' => (CHelper::isAccess("DASHBOARD", "full_access")),
                                 'active' => (Yii::app()->controller->id == 'dashboard' && Yii::app()->controller->action->id == 'index'),
                             ),
-                            array(   
+                            array(
                                 'label' => 'Operations',
                                 'url' => '#',
                                 'visible' => (isset(Yii::app()->session['login']['user_id'])),
@@ -76,111 +76,118 @@ $user_email = base64_encode($user_email);
                                         'encodeLabel' => false,
                                         'visible' => 1,
                                         'active' => (Yii::app()->controller->id == 'daycomment' && Yii::app()->controller->action->id == 'index'),
-                                        
                                     ),
-									
-                                    array('label' => 'Manage Program',
-                                        'url' => '#',
-                                        'visible' => (CHelper::isAccess("PROJECTS", "full_access")),
-                                        'active' => 0,
-                                   		 'items' =>array(
-                                                         array('label' => 'Create PID',
-                                                            'url' => array('//pidapproval/create'),
-                                                            'visible' => (CHelper::isAccess("RESOURCEALLOCATION", "full_access")),
-                                                            'active' => (Yii::app()->controller->id == 'pidapproval' && Yii::app()->controller->action->id == 'pidapproval')
-                                                        ),
-                                                        array('label' => 'View All Projects',
-                                                            'url' => array('//pidapproval/AllProjects'),
-                                                            'visible' => (CHelper::isAccess("RESOURCEALLOCATION", "full_access")),
-                                                            'active' => (Yii::app()->controller->id == 'pidapproval' && Yii::app()->controller->action->id == 'pidapproval')
-                                                        ),
-                                                        array('label' => 'View PID',
-                                                            'url' => array('//pidmapping/index'),
-                                                            'visible' => (CHelper::isAccess("RESOURCEALLOCATION", "full_access")),
-                                                            'active' => (Yii::app()->controller->id == 'pidmapping' && Yii::app()->controller->action->id == 'pidmapping')
-                                                        ),
-                                   		 			  array('label' => 'Create Program',
-			                                        'url' => array('//projectmanagement/create'),
-			                                        'encodeLabel' => false,
-			                                        'visible' => 1,
-			                                        'active' => (Yii::app()->controller->id == 'daycomment' && Yii::app()->controller->action->id == 'index'),
-                                        
-					                                    ),
-			                                   		  array('label' => 'Allocate Resource for Program',
-			                                        'url' => array('//resourceallocationprojectwork/create'),
-			                                        'encodeLabel' => false,
-			                                        'visible' => 1,
-			                                        'active' => (Yii::app()->controller->id == 'daycomment' && Yii::app()->controller->action->id == 'index'),
-                                        
-					                                    ),
-					                                     array('label' => 'View Program',
-			                                        'url' => array('//projectmanagement/admin'),
-			                                        'encodeLabel' => false,
-			                                        'visible' => 1,
-			                                        'active' => (Yii::app()->controller->id == 'daycomment' && Yii::app()->controller->action->id == 'index'),
-                                        
-					                                    ),
-					                                    
-                                        ),
+                                    array('label' => 'View Comment',
+                                        'url' => array('//daycomment/admin'),
+                                        'encodeLabel' => false,
+                                        'visible' => 1,
+                                        'active' => (Yii::app()->controller->id == 'daycomment' && Yii::app()->controller->action->id == 'admin'),
                                     ),
-                                    
-									array('label' => 'Manage Project',
+                                      array('label' => 'Manage PID',
                                         'url' => '#',
                                         'encodeLabel' => false,
 //                                        'visible' => 1,
                                         'visible' => (CHelper::isAccess("PROJECTS", "full_access")),
                                         'active' => 0,
-                                   
-                                   			 'items' =>array(
-			                                   		  array('label' => 'Create Project',
-			                                        'url' => array('//subproject/create'),
-			                                        'encodeLabel' => false,
-			                                        'visible' => 1,
-			                                        'active' => (Yii::app()->controller->id == 'daycomment' && Yii::app()->controller->action->id == 'index'),
-                                        
-					                                    ),
-													// array('label' => 'Allocate Resource for Project',
-			                                        // 'url' => array('//resourceallocationprojectwork/create_task'),
-			                                        // 'encodeLabel' => false,
-			                                        // 'visible' => 1,
-			                                        // 'active' => (Yii::app()->controller->id == 'daycomment' && Yii::app()->controller->action->id == 'index'),
-                                        
-					                                    // ),
-					                                     array('label' => 'View Project',
-			                                        'url' => array('//subproject/admin'),
-			                                        'encodeLabel' => false,
-			                                        'visible' => 1,
-			                                        'active' => (Yii::app()->controller->id == 'daycomment' && Yii::app()->controller->action->id == 'index'),
-                                        
-					                                    ),
-                                                    array('label' => 'Resource statistics',
-			                                        'url' => array('//resourceallocationprojectwork/resourceallocatedtask'),
-			                                        'encodeLabel' => false,
-			                                        'visible' => 1,
-			                                        'active' => (Yii::app()->controller->id == 'daycomment' && Yii::app()->controller->action->id == 'index'),
-                                        
-					                                    ),
-										
-													
+                                        'items' => array(
+                                                     array('label' => 'Create PID',
+                                                'url' => array('//pidapproval/create'),
+                                                'visible' => (CHelper::isAccess("RESOURCEALLOCATION", "full_access")),
+                                                'active' => (Yii::app()->controller->id == 'pidapproval' && Yii::app()->controller->action->id == 'pidapproval')
+                                            ),
+                                            array('label' => 'View PID',
+                                                'url' => array('//pidmapping/index'),
+                                                'visible' => (CHelper::isAccess("RESOURCEALLOCATION", "full_access")),
+                                                'active' => (Yii::app()->controller->id == 'pidmapping' && Yii::app()->controller->action->id == 'pidmapping')
+                                            ),
+                                            array('label' => 'View All Projects Status',
+                                                'url' => array('//pidapproval/AllProjects'),
+                                                'visible' => (CHelper::isAccess("RESOURCEALLOCATION", "full_access")),
+                                                'active' => (Yii::app()->controller->id == 'pidapproval' && Yii::app()->controller->action->id == 'pidapproval')
+                                            ),
+                                            array('label' => 'View All Projects Details',
+                                                'url' => array('//Project/allProject'),
+                                                'visible' => (CHelper::isAccess("RESOURCEALLOCATION", "full_access")),
+                                                'active' => (Yii::app()->controller->id == 'Project' && Yii::app()->controller->action->id == 'Project')
+                                            ),
                                         ),
                                     ),
-									array('label' => 'Manage Type',
+                                    array('label' => 'Manage Program',
+                                        'url' => '#',
+                                        'visible' => (CHelper::isAccess("PROJECTS", "full_access")),
+                                        'active' => 0,
+                                        'items' => array(
+                                           
+                                            array('label' => 'Create Program',
+                                                'url' => array('//projectmanagement/create'),
+                                                'encodeLabel' => false,
+                                                'visible' => 1,
+                                                'active' => (Yii::app()->controller->id == 'daycomment' && Yii::app()->controller->action->id == 'index'),
+                                            ),
+                                            array('label' => 'Allocate Resource for Program',
+                                                'url' => array('//resourceallocationprojectwork/create'),
+                                                'encodeLabel' => false,
+                                                'visible' => 1,
+                                                'active' => (Yii::app()->controller->id == 'daycomment' && Yii::app()->controller->action->id == 'index'),
+                                            ),
+//					                                     array('label' => 'View Program',
+//			                                        'url' => array('//projectmanagement/admin'),
+//			                                        'encodeLabel' => false,
+//			                                        'visible' => 1,
+//			                                        'active' => (Yii::app()->controller->id == 'daycomment' && Yii::app()->controller->action->id == 'index'),
+//                                        
+//					                                    ),
+                                        ),
+                                    ),
+                                    array('label' => 'Manage Project',
+                                        'url' => '#',
+                                        'encodeLabel' => false,
+//                                        'visible' => 1,
+                                        'visible' => (CHelper::isAccess("PROJECTS", "full_access")),
+                                        'active' => 0,
+                                        'items' => array(
+                                            array('label' => 'Create Project',
+                                                'url' => array('//subproject/create'),
+                                                'encodeLabel' => false,
+                                                'visible' => 1,
+                                                'active' => (Yii::app()->controller->id == 'daycomment' && Yii::app()->controller->action->id == 'index'),
+                                            ),
+                                            // array('label' => 'Allocate Resource for Project',
+                                            // 'url' => array('//resourceallocationprojectwork/create_task'),
+                                            // 'encodeLabel' => false,
+                                            // 'visible' => 1,
+                                            // 'active' => (Yii::app()->controller->id == 'daycomment' && Yii::app()->controller->action->id == 'index'),
+                                            // ),
+                                            array('label' => 'View Project',
+                                                'url' => array('//subproject/admin'),
+                                                'encodeLabel' => false,
+                                                'visible' => 1,
+                                                'active' => (Yii::app()->controller->id == 'daycomment' && Yii::app()->controller->action->id == 'index'),
+                                            ),
+//                                                    array('label' => 'Resource statistics',
+//			                                        'url' => array('//resourceallocationprojectwork/resourceallocatedtask'),
+//			                                        'encodeLabel' => false,
+//			                                        'visible' => 1,
+//			                                        'active' => (Yii::app()->controller->id == 'daycomment' && Yii::app()->controller->action->id == 'index'),
+//                                        
+//					                                    ),
+                                        ),
+                                    ),
+                                    array('label' => 'Manage Type',
                                         'url' => array('//Task/admin'),
                                         'visible' => (CHelper::isAccess("RESOURCEALLOCATION", "full_access")),
                                         'active' => (Yii::app()->controller->id == 'task' && Yii::app()->controller->action->id == 'task')
                                     ),
-									array('label' => 'Manage Project Task',
-                                        'url' => array('//subtask/admin'),
-                                        'visible' => (CHelper::isAccess("RESOURCEALLOCATION", "full_access")),
-                                        'active' => (Yii::app()->controller->id == 'subtask' && Yii::app()->controller->action->id == 'subtask')
-                                    ),
-                                   
+                                    // array('label' => 'Manage Project Task',
+                                    //                                'url' => array('//subtask/admin'),
+                                    //                                'visible' => (CHelper::isAccess("RESOURCEALLOCATION", "full_access")),
+                                    //                                'active' => (Yii::app()->controller->id == 'subtask' && Yii::app()->controller->action->id == 'subtask')
+                                    //                            ),
                                     array('label' => 'View Project Statistics',
                                         'url' => array('//resourceallocationprojectwork/resourcemanagement'),
                                         'visible' => (CHelper::isAccess("RESOURCEALLOCATION", "full_access")),
                                         'active' => (Yii::app()->controller->id == 'resourceallocationprojectwork' && Yii::app()->controller->action->id == 'resourcemanagement')
                                     ),
-                                   
                                 ),
                             ),
                             array(
@@ -209,11 +216,11 @@ $user_email = base64_encode($user_email);
                                         'visible' => CHelper::isAccess("STATUS", "full_access"),
                                         'active' => (Yii::app()->controller->id == 'roles' && Yii::app()->controller->action->id == 'index')
                                     ),
-                                     array('label' => 'Unlock Daily Status',
+                                    array('label' => 'Unlock Daily Status',
                                         'url' => array('//ManagedayComment/index'),
                                         'visible' => CHelper::isAccess("STATUS", "full_access"),
                                         'active' => (Yii::app()->controller->id == 'ManagedayComment' && Yii::app()->controller->action->id == 'ManagedayComment')
-                                     ),
+                                    ),
                                     array('label' => 'Logout',
                                         'url' => array('//logout'),
                                         'visible' => !Yii::app()->user->isGuest,
@@ -225,31 +232,31 @@ $user_email = base64_encode($user_email);
         </div>
 
         <div class="cont">
-<?php if (!CHelper::user()->isGuest) { ?>
+            <?php if (!CHelper::user()->isGuest) { ?>
                 <?php if (CHelper::hasFlash('success') && CHelper::getFlash('success') != ''): ?>				
                     <div class="alert alert-success">
-                    <?php
-                    echo CHelper::getFlash('success');
-                    CHelper::setFlash('success', '');
-                    ?>
+                        <?php
+                        echo CHelper::getFlash('success');
+                        CHelper::setFlash('success', '');
+                        ?>
                     </div>
-                    <?php endif ?>
+                <?php endif ?>
                 <?php if (CHelper::hasFlash('error') && CHelper::getFlash('error') != ''): ?>
                     <div class="alert alert-error">
-                    <?php
-                    echo CHelper::getFlash('error');
-                    CHelper::setFlash('error', '');
-                    ?>
+                        <?php
+                        echo CHelper::getFlash('error');
+                        CHelper::setFlash('error', '');
+                        ?>
                     </div>
-                    <?php endif ?>
+                <?php endif ?>
                 <?php if (CHelper::hasFlash('notice') && CHelper::getFlash('notice') != ''): ?>
                     <div class="alert alert-notice">
-                    <?php
-                    echo CHelper::getFlash('notice');
-                    CHelper::setFlash('notice', '');
-                    ?>
+                        <?php
+                        echo CHelper::getFlash('notice');
+                        CHelper::setFlash('notice', '');
+                        ?>
                     </div>
-                    <?php endif ?>
+                <?php endif ?>
                 <?php
                 Yii::app()->clientScript->registerScript(
                         'myHideEffect', '$(".alert-success,.alert-notice,.alert-error").animate({opacity: 1.0}, 10000).fadeOut("slow");', CClientScript::POS_READY
@@ -258,11 +265,11 @@ $user_email = base64_encode($user_email);
             <?php } ?>
             <div class="container-fluid"> <?php echo $content ?> </div>
         </div>
-<?php
-CHelper::registerScriptFile(CHelper::getCurrentThemePath() . '/js/left_panel.js');
-CHelper::registerScriptFile(CHelper::getCurrentThemePath() . '/js/common.js', CClientScript::POS_END);
-CHelper::registerScriptFile(CHelper::getCurrentThemePath() . '/js/bootbox.js', CClientScript::POS_END);
-?>
+        <?php
+        CHelper::registerScriptFile(CHelper::getCurrentThemePath() . '/js/left_panel.js');
+        CHelper::registerScriptFile(CHelper::getCurrentThemePath() . '/js/common.js', CClientScript::POS_END);
+        CHelper::registerScriptFile(CHelper::getCurrentThemePath() . '/js/bootbox.js', CClientScript::POS_END);
+        ?>
         <?php
         if (Yii::app()->session['login']['email'] == 'bits.qa@gmail.com') {
             if (Yii::app()->session['login']['survey_taken_count'] <= 4 && isset(Yii::app()->session['login']['user_id'])) {
@@ -295,13 +302,13 @@ CHelper::registerScriptFile(CHelper::getCurrentThemePath() . '/js/bootbox.js', C
                 ));
                 ?>
                 <div class="surveyModel">
-                <?php echo $this->renderPartial('//portalSurvey/survey', array('model' => new PortalSurvey())); ?>
+                    <?php echo $this->renderPartial('//portalSurvey/survey', array('model' => new PortalSurvey())); ?>
                 </div>
-                    <?php
-                    $this->endWidget();
-                }
+                <?php
+                $this->endWidget();
             }
-            ?>
+        }
+        ?>
 
     </body>
 

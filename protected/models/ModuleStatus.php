@@ -164,9 +164,9 @@ class ModuleStatus extends CActiveRecord
             echo CHtml::checkBox('onstag',($model->on_staging == 1)?true:false, array (
                                         'value'=>'stag','class'=>'chk','rid'=>$model->id,'style'=>'margin-left:10px;',
                                         ));
-        
-        echo $resultstring = implode(", ", $namesarray);
-    }
+        }
+        //echo $resultstring = implode(",", $namesarray);
+   
 
    
         public function getDevs($model)

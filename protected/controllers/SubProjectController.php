@@ -71,11 +71,16 @@ class SubProjectController extends Controller {
             $model->attributes = $_POST['SubProject'];
             $model->created_date = date('Y-m-d h:i:s');
             $model->created_by = Yii::app()->session['login']['user_id'];  
-            if ($model->save())
-			$insert_id = Yii::app()->db->getLastInsertID();
+            $valid =$_POST['SubProject'];
+            if(empty($valid['pid']) || empty($valid['sub_project_name'])|| empty($valid['sub_project_description'])|| empty($valid['requester'])|| empty($valid['status']) ||empty($valid['Priority']))
+            {
+                Yii::app()->user->setFlash('error','Please fill all required filleds');
+            }else{
+               if($model->save())
+           	$insert_id = Yii::app()->db->getLastInsertID();
 			Yii::app()->user->setFlash('success', "TaskId is {$insert_id}");
                 $this->redirect(array('admin'));
-			
+           }	
         }
 	
 

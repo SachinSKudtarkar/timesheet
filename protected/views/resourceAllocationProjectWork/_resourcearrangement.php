@@ -24,8 +24,8 @@ Yii::app()->clientScript->registerCssFile(
 
 
         <div class="row">
-            <h3>Resource Arrangement With Project</h3>
-            <?php echo CHTML::label('Project Name', ''); ?>
+            <h3>Resource Arrangement With Program</h3>
+            <?php echo CHTML::label('Program Name', ''); ?>
             <?php
             $pid = isset($_REQUEST['pid']) ? $_REQUEST['pid'] : 0;
             if ($pid != 0) {

@@ -28,9 +28,9 @@ $this->widget('zii.widgets.grid.CGridView', array(
 		'Program',
 		'Project',
 		'Task',
-		//'estimated_end_date',
 		'Estimated_hours',
 		'consumed_hours',
+		//'Consumed_hours',
 		//'Priority',
 		 
 		

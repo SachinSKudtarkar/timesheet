@@ -75,10 +75,5 @@ return array(
     //'onException' =>require(dirname(__FILE__).'/exception.php'),
     // Application default theme
     'theme' => 'cisco',
-        // Session management in database
-//    'urlManager'=>array(
- //   'urlFormat'=>'path',
- //   'showScriptName'=>false,
-//     'caseSensitive'=>false,        
-//),
+        // Session management in database	
 );

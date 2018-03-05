@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 // Page: site summary page
 // Developed on: 15/10/2014
 // Developed by: Gorakh Wagh
@@ -9,7 +9,7 @@
 /* @var $dataProvider CActiveDataProvider */
 
 $this->breadcrumbs = array(
-    'Resource Allocation Project Works',
+    'Resource Allocation Program Works',
 );
 
 $this->menu = array(
@@ -21,12 +21,12 @@ $employee = isset($_POST['employee']) ? $_POST['employee'] : 0;
 ?>
 
 <div class="form-group clearfix test-panal" style="margin-top: 20px;">
-    <h4>Resource-Projects Statistics</h4>    
+    <h4>Resource-Program Statistics</h4>    
     <form class="form-inline no-mr clearfix" action="" method="post" id="graphFiltersForm">
 
         <div class="row"> 
-            <?php echo CHTML::label('Project Name', ''); ?>
-            <?php echo CHTML::dropDownList('ProjectName', $project, CHtml::listData(ProjectManagement::model()->findAll(array('order' => 'project_name', 'condition' => 'is_deleted=0')), 'pid', 'project_name'), array('prompt' => 'Please select Project'));
+            <?php echo CHTML::label('Program Name', ''); ?>
+            <?php echo CHTML::dropDownList('ProjectName', $project, CHtml::listData(ProjectManagement::model()->findAll(array('order' => 'project_name', 'condition' => 'is_deleted=0')), 'pid', 'project_name'), array('prompt' => 'Please select Program'));
             ?>		 
         </div>
 
@@ -92,7 +92,7 @@ $this->Widget('application.extensions.highcharts.HighchartsWidget', array(
 Yii::app()->clientScript->registerScript('ResourceManage', "
   
   $('#ProjectName').change(function(){  
-  
+
     $('#employee').val('');  
     $('#graphFiltersForm').submit();
   

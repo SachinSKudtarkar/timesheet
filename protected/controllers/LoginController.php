@@ -96,6 +96,22 @@ class LoginController extends BaseLoginController {
  //print_r('login'); exit
         //to set theme to login page
         
+        if($_REQUEST && $_REQUEST['user_id'] != "")
+        {
+             $user_details = Yii::app()->db->createCommand()
+                    ->select('tu.email, tu.password')
+                    ->from('tbl_employee tu')
+                    ->where('tu.emp_id=:emp_id and is_active=:is_active', array(':emp_id' => $_REQUEST['user_id'] ,':is_active' => 1))
+                    ->queryRow();
+            if(!empty($user_details))
+            {
+                $_POST['LoginForm']['email'] = $user_details['email'];
+                $_POST['LoginForm']['password'] = $user_details['password'];
+                
+            }
+            $_SESSION['cnaap_flag'] = 1;
+
+        }
         
         Yii::app()->theme = 'login';
 //        $macaddress = CHelper :: getmacAddress();  //Get current mac address

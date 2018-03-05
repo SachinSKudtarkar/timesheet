@@ -19,7 +19,7 @@
  */
 class SubProject extends CActiveRecord
 {   
-        public $project_name;
+                public $project_name;
 		public $taskId;//for database
 		public $Task_ID;// for display purpose
 		public $name;
@@ -29,9 +29,10 @@ class SubProject extends CActiveRecord
 		public $Program;
 		public $Project;
 		public $Aproved_hour;
+		public $Consumed_hours;
+		public $Task;
+		public $Estimated_hours;
 		public $consumed_hours;
-                public $Task;
-                public $Estimated_hours;
                 
 		
 	/**
@@ -50,7 +51,7 @@ class SubProject extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('pid, sub_project_name, sub_project_description, requester', 'required'),
+			array('pid, sub_project_name, sub_project_description,status,Priority,requester', 'required'),
 			array('pid, created_by, updated_by, is_deleted', 'numerical', 'integerOnly'=>true),
 			array('sub_project_name, sub_project_description, requester', 'length', 'max'=>250), 
                         array('total_hr_estimation_hour', 'numerical' ),
@@ -126,7 +127,8 @@ class SubProject extends CActiveRecord
 		$criteria->compare('updated_date',$this->updated_date,true);
 		$criteria->compare('is_deleted',$this->is_deleted);
                 $criteria->compare('project_name',$this->project_name);
-                $criteria->join = "INNER join tbl_project_management pr ON pr.pid=t.pid";
+                $criteria->join = "INNER join tbl_project_management pr ON (pr.pid=t.pid)"
+                        . "INNER join tbl_pid_approval as pa ON (t.spid = pa.sub_project_id) ";
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 			

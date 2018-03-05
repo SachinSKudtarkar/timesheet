@@ -72,11 +72,11 @@ Yii::app()->clientScript->registerCssFile(
     <?php
     echo "<input type='hidden' name='selected_date' value='{$selecting_date}' />";
     $img_path = Yii::app()->theme->baseUrl . "/img/add_image.png";
+    
     for ($k = 0; $k <= 6; $k++) {
         $generte_date = strtotime("+{$k} day", strtotime($selecting_date));
         $date = date("Y-m-d", $generte_date);
         $date_id = date("Y_m_d", $generte_date);
-
 
 		if(key_exists($date,$arrSubmitted))
 			$is_submitted = $arrSubmitted[$date];
@@ -87,28 +87,28 @@ Yii::app()->clientScript->registerCssFile(
 		if(key_exists($date_id, $arrData)) { ?>
 				<div class="main_daycomments">
 			<?php
-			$i = 1;
-		$count = 0;
-//		CHelper::debug($arrData);
+			$i = 0;
+		
+			 // if(Yii::app()->session['login']['user_id'] == 2070){
+    //         CHelper::debug($arrData[$date_id]);
+    //     }
 			foreach ($arrData[$date_id] as $key=>$eachproject) {
 				
 				
 				$tmpcls = ($i > 0) ? '' : '';
-				$nxt = $i++;
-                              $day = explode(" ",$eachproject['day'])[0];
-                              $day = preg_replace('/-/','_', $day);   
-                              
-                                if($date_id == $day){
-                                   $count++;
-                                }
-//                                
-                                if($count > 0 ){
-                                    
-                                    $pid = $eachproject['pid']+$count;
-                                }else{
-                                    $pid = $eachproject['pid'];
-                                }
-                               
+				$nxt = $i + 1;
+				$day = explode(" ", $eachproject['day'])[0];
+				$day = preg_replace('/-/','_', $day);
+				if($date_id == $day){
+					$count++;
+
+				}
+				if($count > 1){
+					$pid = $eachproject['pid']+$count;
+
+				}else{
+					$pid = $eachproject['pid'];
+				}
 					?>
 				<!-- 	<div class="row hdshow_<?php //echo $date_id ."_". $i . " " . $tmpcls; ?>" id="<?php //echo $date_id ."_". $i . " " . $tmpcls; ?>" > -->
 				<div>
@@ -144,7 +144,7 @@ Yii::app()->clientScript->registerCssFile(
 										$h = (strlen($h) < 2) ? "0".$h : $h;
 										$arrHrs[$h] = $h;
 									}
-									echo CHTML::dropDownList('hrs[]', $eachproject['hrs'], $arrHrs, array('style' => 'width:50px;  ', 'class'=>'wrkhrsClass', 'disabled' => ($is_submitted ? 'disabled' : ''), 'id' => 'wrkhsrsClass' . $date_id ."_". $pid));
+									echo CHTML::dropDownList('hrs[]', $eachproject['hrs'], $arrHrs, array('style' => 'width:50px;  ', 'class'=>'wrkhrsClass', 'disabled' => ($is_submitted ? 'disabled' : ''), 'id' => 'wrkhrsClass' . $date_id ."_". $pid));
 								?>
 							</div>
 							<div class="span1" style="margin-left:10px; ">
@@ -155,7 +155,7 @@ Yii::app()->clientScript->registerCssFile(
 										$m = (strlen($m) < 2) ? "0".$m : $m;
 										$arrMnts[$m] = $m;
 									}
-									echo CHTML::dropDownList('mnts[]', $eachproject['mnts'], $arrMnts, array('style' => 'width:50px;  ', 'class'=>'wrkmntClass',  'disabled' => ($is_submitted ? 'disabled' : ''), 'id' => 'wrkhsrsClass' . $date_id ."_". $pid));
+									echo CHTML::dropDownList('mnts[]', $eachproject['mnts'], $arrMnts, array('style' => 'width:50px;  ', 'class'=>'wrkmntClass',  'disabled' => ($is_submitted ? 'disabled' : ''), 'id' => 'wrkminsClass' . $date_id ."_". $pid));
 								?>
 							</div>
 							<div class="span2">
@@ -179,7 +179,6 @@ Yii::app()->clientScript->registerCssFile(
 				<?php
 				$i++;
 			}
-                      //  exit;
 			?>
 			</div>
 		<?php }else { ?>
@@ -229,7 +228,7 @@ Yii::app()->clientScript->registerCssFile(
 										$h = (strlen($h) < 2) ? "0".$h : $h;
 										$arrHrs[$h] = $h;
 									}
-									echo CHTML::dropDownList('hrs[]', '', $arrHrs, array('style' => 'width:50px;  ', 'class'=>'wrkhrsClass', 'disabled' => ($is_submitted ? 'disabled' : ''), 'id' => 'wrkhsrsClass' . $date_id ."_". $eachproject['pid']));
+									echo CHTML::dropDownList('hrs[]', '', $arrHrs, array('style' => 'width:50px;  ', 'class'=>'wrkhrsClass', 'disabled' => ($is_submitted ? 'disabled' : ''), 'id' => 'wrkhrsClass' . $date_id ."_". $eachproject['pid']));
 								?>
 							</div>
 							<div class="span1" style="margin-left:10px; ">
@@ -240,7 +239,7 @@ Yii::app()->clientScript->registerCssFile(
 										$m = (strlen($m) < 2) ? "0".$m : $m;
 										$arrMnts[$m] = $m;
 									}
-									echo CHTML::dropDownList('mnts[]', '', $arrMnts, array('style' => 'width:50px;  ', 'class'=>'wrkmntClass', 'disabled' => ($is_submitted ? 'disabled' : ''), 'id' => 'wrkhsrsClass' . $date_id ."_". $eachproject['pid']));
+									echo CHTML::dropDownList('mnts[]', '', $arrMnts, array('style' => 'width:50px;  ', 'class'=>'wrkmntClass', 'disabled' => ($is_submitted ? 'disabled' : ''), 'id' => 'wrkminsClass' . $date_id ."_". $eachproject['pid']));
 								?>
 							</div>
 							<div class="span2">
@@ -374,7 +373,9 @@ Yii::app()->clientScript->registerCssFile(
        		var thisId = $(this).attr('id');           
            	var sub_id=$(this).val();
            	var nextcls = $(this).attr('nxt');
-         
+           //	var this = $(this).parent('id');
+
+           //	alert(this);
        		$(this).parents('.row').find('.wrkhrsClass').removeAttr('disabled');
        		$(this).parents('.row').find('.wrkmntClass').removeAttr('disabled');
        		$.ajax({
@@ -382,7 +383,12 @@ Yii::app()->clientScript->registerCssFile(
                type: 'POST',
                dataType: 'json',
                data:{ pid:sub_id},
-             
+               // beforeSend:function(){
+               //      $('.custom-loader').show();
+               //  },
+               //  complete:function(){
+               //     $('.custom-loader').hide();
+               //  },
 	           success: function(data)
 	               {
 					 
@@ -415,11 +421,76 @@ Yii::app()->clientScript->registerCssFile(
        		$(this).parents('.row').find('.wrkmntClass').attr('disabled','disabled');
        	}
 	});
-    
+    //$('.proclass').trigger('change');
+    $('.proclassold').change(function(){
+       if($(this).val() != '')
+       {
+           var thisId = $(this).attr('id');
+           var nextcls = $(this).attr('nxt');
+           var thisVal = $(this).val();
+           $('#wrkhrs'+thisId).removeAttr('disabled');
+           $('#comment'+thisId).removeAttr('disabled');
+//           $('.hdshow_'+nextcls).show();
+//           pids.push(thisVal);
+//           $('#pidsid').val(pids);
+       } else {
+           var thisId = $(this).attr('id');
+              var thisVal = $(this).val();
+              var nextcls = $(this).attr('nxt');
+              $('#wrkhrs'+thisId).attr('disabled','disabled');
+              $('#comment'+thisId).attr('disabled','disabled');
+//              $('.hdshow_'+nextcls).hide();
+              pids.pop(thisVal);
+              $('#pidsid').val(pids);
+           }
+    });
 
 
+    $(document).on('change', '.proclassffff', function(){
 
-   
+       if($(this).val() != '')
+       {
+
+           var thisId = $(this).attr('id');
+           
+           var sub_id=$(this).val();
+          //alert('subproclass'+thisId);
+           $('#subproclass'+thisId).removeAttr('disabled');
+           $.ajax({
+               url: BASE_URL+'/daycomment/fetchSubProject',
+               type: 'POST',
+               dataType: 'json',
+               data:{ pid:sub_id},
+               // beforeSend:function(){
+               //      $('.custom-loader').show();
+               //  },
+               //  complete:function(){
+               //     $('.custom-loader').hide();
+               //  },
+               success: function(data)
+               {
+				  // alert(data);
+                   if(data.status=='SUCCESS')
+                   {
+                        var dropDown = '<option value=>Please Select Sub Project</option>';
+						var workhours = data.workhours;
+                        $.each(data.result, function(key, val) {
+                            dropDown+='<option value='+key+'>'+val+'</option>';
+							localStorage.setItem( 'hours-'+key, workhours[key] );
+							console.log('ddddddddddd'+localStorage.getItem( 'hours-'+key ) );
+
+                        });
+
+                        $('#subproclass'+thisId).html(dropDown);
+                        $('#subproclass'+thisId).removeAttr('disabled');
+                   }
+               },
+               error: function(XMLHttpRequest, data, errorThrown){
+               },
+        });
+
+       }
+    });
 
 	$(document).on('change', '.sub-project', function(){
        if($(this).val() != '')
@@ -427,7 +498,7 @@ Yii::app()->clientScript->registerCssFile(
          	var thisId = $(this).attr('id');
            var is = thisId.substr(11, 13);
            var sub_id=$(this).val(); 
-//             alert(thisId);
+           //  alert(is);
            $('#subtasks'+is).removeAttr('disabled');
            $.ajax({
                url: BASE_URL+'/daycomment/fetchSubTask',
@@ -449,8 +520,9 @@ Yii::app()->clientScript->registerCssFile(
                         var dropDown = '<option value=>Please Select Sub Project</option>';
 						//var workhours = data.workhours;
                         $.each(data.result, function(key, val) {
-                            dropDown+='<option value='+key+'>'+val+'</option>';
-							//localStorage.setItem( 'hours-'+key, workhours[key] );
+                            dropDown+='<option value='+key+' hrmin='+data.workhours[key]+'>'+val+'</option>';
+							//console.log(data.workhours[key]);
+							//localStorage.setItem( 'hours-'+key, data.workhours[key] );
 							//console.log('ddddddddddd'+localStorage.getItem( 'hours-'+key ) );
 
                         });
@@ -466,7 +538,52 @@ Yii::app()->clientScript->registerCssFile(
 
        }
     });
- 
+	
+	$(document).on('change', '.sub-task', function(){
+		//console.log('here')
+		/*var hrs = 0;
+		var hrtime = 0;
+		var hrstime = $(this).find('option:selected').attr('hrmin').split(':');
+		var thisid = $(this).attr('id').split('subtasks');
+		//console.log(thisid);
+		if(hrstime[1]==0){
+			hrs = hrstime[0];
+			hrtime = 59;
+		}
+		else{
+			hrs = hrstime[0];
+			hrtime = hrstime[1];
+		}
+		if(hrs>24)
+		hrs=23;
+		
+		var optstr = '';
+		var optminstr = '';
+		for(var h=0;h<=hrs;h++){
+			optstr = optstr+'<option value='+h+'>'+h+'</option>';
+		}
+		for(var m=0;m<=hrtime;m++){
+			optminstr = optminstr+'<option value='+m+'>'+m+'</option>';
+		}
+		console.log(optstr);
+		$('#wrkhrsClass'+thisid[1]).html(optstr);
+		$('#wrkminsClass'+thisid[1]).html(optminstr);*/
+	});
+	
+	$(document).on('change', '.wrkhrsClass', function(){
+		
+		var thisattr = $(this).attr('id');
+		var maxhrs = $('#'+thisattr+' option:last').val();
+		var thisid = $(this).attr('id').split('wrkhrsClass');
+		if($(this).val()==maxhrs && $(this).val()!=23){
+			
+			//console.log('asdada'+thisid);
+			$('#wrkminsClass'+thisid[1]).attr('disabled',true);	
+		}
+		else{
+			$('#wrkminsClass'+thisid[1]).removeAttr('disabled');	
+		}
+	});
            $('.datepicker').datepicker({
                dateFormat: 'd/m/yy',
                onSelect: function(dateText) {

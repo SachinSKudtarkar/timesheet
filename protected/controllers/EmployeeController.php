@@ -36,7 +36,7 @@ class EmployeeController extends BaseController {
                 'users' => array('@'),
             ),
             array('allow', // allow 'index' actions
-                'actions' => array('create', 'getroles','admin'),  
+                'actions' => array('create', 'getroles','admin','test'),  
 		'users' => array('@'),				
             ),
             array('allow', // allow 'index' actions
@@ -429,5 +429,18 @@ error_reporting(E_ALL);
 	exit;
 	return $model->first_name." ".$model->last_name;
 	}
-
+        public function actionTest() {
+            
+            $query = "select allocated_resource from tbl_resource_allocation_project_work where pid = 9";
+                $list = Yii::app()->db->createCommand($query)->queryRow();
+               $newList = explode(",",$list['allocated_resource']);
+            
+            
+        $emp_list = array();
+        foreach ($newList as $key => $value) {
+            $e_list = Yii::app()->db->createCommand("select * from tbl_employee where emp_id ={$value}")->queryRow();
+            $emp_list[$value] = $e_list['first_name'] . " " . $e_list['last_name'];
+        }
+        CHelper::debug($emp_list);
+        }
 }

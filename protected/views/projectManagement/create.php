@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /* @var $this ProjectManagementController */
 /* @var $model ProjectManagement */
 
@@ -15,6 +15,6 @@ $this->menu=array(
 );
 ?>
 
-<h1>Create ProjectManagement</h1>
+<h1>Create Program Management</h1>
 
 <?php $this->renderPartial('_form', array('model'=>$model)); ?>

@@ -379,10 +379,20 @@ class Employee extends CActiveRecord {
  
 
     public static function getEmloyeeList() {
-        $employeeData = Employee::model()->findAll(array('select' => "emp_id,first_name,last_name", 'order' => 'first_name', 'condition' => 'is_active=1'));
+//        $employeeData = Employee::model()->findAll(array('select' => "emp_id,first_name,last_name", 'order' => 'first_name', 'condition' => 'is_active=1'));
+//        $emp_list = array();
+//        foreach ($employeeData as $key => $value) {
+//            $emp_list[$value['emp_id']] = $value['first_name'] . " " . $value['last_name'];
+//        }
+           $query = "select allocated_resource from tbl_resource_allocation_project_work where pid = 9";
+                $list = Yii::app()->db->createCommand($query)->queryRow();
+               $newList = explode(",",$list['allocated_resource']);
+            
+            
         $emp_list = array();
-        foreach ($employeeData as $key => $value) {
-            $emp_list[$value['emp_id']] = $value['first_name'] . " " . $value['last_name'];
+        foreach ($newList as $key => $value) {
+            $e_list = Yii::app()->db->createCommand("select * from tbl_employee where emp_id ={$value}")->queryRow();
+            $emp_list[$value] = $e_list['first_name'] . " " . $e_list['last_name'];
         }
         return $emp_list;
     }

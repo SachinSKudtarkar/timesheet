@@ -148,8 +148,8 @@ class FeatureRequests extends CActiveRecord
  else {
      return "No";
  }
-        
-    }
+        }
+    
 
     public function renderApproveDisapprove($model) {
         $result = FeatureRequests::model()->findByPk($model->id);

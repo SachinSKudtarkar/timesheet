@@ -42,7 +42,11 @@ for($h=0; $h<=999; $h++) {
 	// controller action is handling ajax validation correctly.
 	// There is a call to performAjaxValidation() commented in generated controller code.
 	// See class documentation of CActiveForm for details on this.
-	'enableAjaxValidation'=>false,
+	'enableAjaxValidation'=>true,
+    'clientOptions'=>array(
+        'validateOnSubmit'=>true,
+        'afterValidate'=>'js:yiiFix.ajaxSubmit.afterValidate'
+    )
 )); ?>
 
 	<p class="note">Fields with <span class="required">*</span> are required.</p>
@@ -232,5 +236,15 @@ getWrkHoursTotal();
 });
 
 
+$(document).ready(function(){
+ $('.datepicker').datepicker({
+     dateFormat: 'yy-m-d',    
+     onSelect: function(dateText) {
+        var type = $(this).attr('id');
+        var date = $(this).val();         
+      },
+    }).attr('readonly','readonly');
+  
+  });
 </script>
    

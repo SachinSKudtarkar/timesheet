@@ -1,17 +1,14 @@
 <?php
 /* @var $this ProjectController */
 /* @var $model Project */
-
 $this->breadcrumbs=array(
 	'Projects'=>array('index'),
 	'Manage',
 );
-
 $this->menu=array(
 	array('label'=>'List Project', 'url'=>array('index')),
 	array('label'=>'Create Project', 'url'=>array('create')),
 );
-
 Yii::app()->clientScript->registerScript('search', "
 $('.search-button').click(function(){
 	$('.search-form').toggle();
@@ -51,7 +48,7 @@ $('.search-form form').submit(function(){
             'Type',
             
              array(
-                 'header'=>'Estimated Hourse',
+                 'header'=>'Estimated Hours',
                     'name' => 'Estimated_Hours',
                     'type' => 'raw',
                      'filter'=>false,
@@ -62,8 +59,11 @@ $('.search-form form').submit(function(){
                     'type' => 'raw',
                      'filter'=>false,
                 ),
-
 	),
 ));
+echo $this->renderExportGridButton($x, 'Export Grid Results', array('class' => 'btn btn-primary pull-left clearfix mr-tp-20'));
 
-echo $this->renderExportGridButton($x, 'Export Grid Results', array('class' => 'btn btn-primary pull-left clearfix mr-tp-20'));?>
+
+
+
+?>

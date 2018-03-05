@@ -69,10 +69,10 @@ class ProjectManagement extends CActiveRecord {
     public function attributeLabels() {
         return array(
             'pid' => 'Pid',
-            'project_name' => 'Project Name',
-            'project_description' => 'Project Description',
+            'project_name' => 'Program Name',
+            'project_description' => 'Program Description',
             'requester' => 'Requester',
-            'estimated_start_date' => 'Project Start Date',
+            'estimated_start_date' => 'Program Start Date',
             'estimated_end_date' => 'Estimated End Date',
             'total_hr_estimation_hour' => 'Total Estimation Hours',
             'status' => 'Status',
