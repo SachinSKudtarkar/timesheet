@@ -20,9 +20,9 @@ $this->menu = array(
                 <td><label><b>From</b></label></td>
                 <td><label><b>To</b></label></td>
                 <td width="40px;"></td>
+                <td><label><b>Program</b></label></td> 
                 <td><label><b>Employee</b></label></td>
-                <td><label><b>Project</b></label></td> 
-                <td><label><b>Task</b></label></td>
+                <td><label><b>Project</b></label></td>
                 <td></td>
             </tr>    
             <tr>
@@ -45,16 +45,17 @@ $this->menu = array(
                     ?>
                 </td>   
                 <td width="40px;"></td>
-                <td>
-                    <?php
-                    $emp_list = Employee::model()->getEmloyeeList();
-                    echo CHTML::dropDownList('employee', $model->emp_id, $emp_list, array('prompt' => 'Please select Emlployee'));
+                <td id="project_name">
+                    <?php echo CHTML::dropDownList('ProjectName', $model->pid, CHtml::listData(ProjectManagement::model()->findAll(array('order' => 'project_name', 'condition' => 'is_deleted=0')), 'pid', 'project_name'), array('prompt' => 'Please select Project'));
+                    ?>  
+                </td>
+                <td id="employee">
+                     <?php
+                    // $emp_list = Employee::model()->getEmloyeeList();
+                    // echo CHTML::dropDownList('employee', $model->emp_id, $emp_list, array('prompt' => 'Please select Emlployee'));
                     ?>	
                 </td> 
-                <td>
-                    <?php echo CHTML::dropDownList('ProjectName', $model->pid, CHtml::listData(ProjectManagement::model()->findAll(array('order' => 'project_name', 'condition' => 'is_deleted=0')), 'pid', 'project_name'), array('prompt' => 'Please select Project'));
-                    ?>	
-                </td>
+                
                 <td>
                     <?php echo CHTML::dropDownList('Task_Name', $model->pid, CHtml::listData(SubProject::model()->findAll(array('order' => 'spid', 'condition' => 'is_deleted=0')), 'sub_project_name', 'sub_project_name'), array('prompt' => 'Please select Task'));
                     ?>	
@@ -66,7 +67,32 @@ $this->menu = array(
                     ?></td>
             </tr>
         </table>
-    </div>    
+            <script type="text/javascript">
+        // $('#project_name').change(function(){
+        $(document).on('change','#project_name',function(){
+         var project_id =   $(this).find(":selected").val()
+
+        $.ajax({
+                type: 'GET',
+                url: BASE_URL + '/DayComment/getEmployeeList',
+                dataType: 'json',
+                data: {
+                    project_id: project_id,
+                },
+                async: false,
+                success: function (data) {
+                    if (data) {
+                      $('#employee').html(data);
+                    }
+                },
+                error: function (data) { // if error occured
+                    alert("Error occured.please try again");
+                },
+            });
+});
+    </script> 
+    </div> 
+  
 </form>  
 
 <?php 

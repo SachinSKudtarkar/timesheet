@@ -64,6 +64,12 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'type' => 'raw',
             'value' => array($model, 'getSubTaskDescription')
         ),
+            array(
+            'header'=>'Employee',
+            'name' => 'emp_id',
+            'type' => 'raw',
+            'value' => array($model, 'getemp_name'),
+        ),
 		array(
             'type' => 'raw',
             'name' => 'Status',

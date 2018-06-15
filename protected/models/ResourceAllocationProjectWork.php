@@ -67,6 +67,8 @@ class ResourceAllocationProjectWork extends CActiveRecord
 			'allocated_resource' => 'Allocated Resource',
 			'comment' => 'Comment',
 			'created_by' => 'Created By',
+			'modified_by' => 'modified_by ',
+			'modified_at' => 'modified_at',
 		);
 	}
 
@@ -96,6 +98,8 @@ class ResourceAllocationProjectWork extends CActiveRecord
 		$criteria->compare('allocated_resource',$this->allocated_resource,true);
 		$criteria->compare('comment',$this->comment,true);
 		$criteria->compare('created_by',$this->created_by);
+		$criteria->compare('modified_by',$this->modified_by);
+		$criteria->compare('modified_at',$this->modified_at);
                 $criteria->compare('project_name',$this->project_name,true);                
                 $criteria->select = "t.id, t.pid,t.date,t.allocated_resource,pm.project_name";
                 $criteria->join = "INNER JOIN tbl_project_management pm ON pm.pid = t.pid";

@@ -355,9 +355,9 @@ class Employee extends CActiveRecord {
     }
 
     public function setActivityStamp($id) {
-        $user = Employee::model()->findByPk($id);
-        $user->activity_time = Date("Y-m-d H:i:s");
-        $user->save(true, array('activity_time'));
+//        $user = Employee::model()->findByPk($id);
+//        $user->activity_time = Date("Y-m-d H:i:s");
+//        $user->save(true, array('activity_time'));
     }
 
     public function getadmin() {
@@ -378,19 +378,32 @@ class Employee extends CActiveRecord {
     }
  
 
-    public static function getEmloyeeList() {
+    public static function getEmloyeeList($project_id = '') {
 //        $employeeData = Employee::model()->findAll(array('select' => "emp_id,first_name,last_name", 'order' => 'first_name', 'condition' => 'is_active=1'));
 //        $emp_list = array();
 //        foreach ($employeeData as $key => $value) {
 //            $emp_list[$value['emp_id']] = $value['first_name'] . " " . $value['last_name'];
 //        }
-           $query = "select allocated_resource from tbl_resource_allocation_project_work where pid = 9";
+
+           $query = "select allocated_resource from tbl_resource_allocation_project_work  where pid ='{$project_id}' ";
                 $list = Yii::app()->db->createCommand($query)->queryRow();
                $newList = explode(",",$list['allocated_resource']);
+               if(!$project_id){
+                       $query = "select allocated_resource from tbl_resource_allocation_project_work";
+                $list = Yii::app()->db->createCommand($query)->queryAll();
+                foreach($list as $key => $list_empid){
+                    $emp_id = explode(",",$list_empid['allocated_resource']);
+                    foreach($emp_id as $k =>$id){
+                      $newList[$id] = $id;  
+                    }
+                    
+                }
+               }
             
             
         $emp_list = array();
         foreach ($newList as $key => $value) {
+            if($value)
             $e_list = Yii::app()->db->createCommand("select * from tbl_employee where emp_id ={$value}")->queryRow();
             $emp_list[$value] = $e_list['first_name'] . " " . $e_list['last_name'];
         }

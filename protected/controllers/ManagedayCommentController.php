@@ -165,6 +165,7 @@ class ManagedayCommentController extends Controller
 	public function actionIndex()
 	{
 		$dataProvider=new CActiveDataProvider('DayComment');
+                
 		$this->render('index',array(
 			'dataProvider'=>$dataProvider,
 		));

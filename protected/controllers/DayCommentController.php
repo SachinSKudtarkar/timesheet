@@ -38,11 +38,6 @@ class DayCommentController extends Controller {
      */
     public $layout = '//layouts/column2';
 
-    public function get_userid() {
-        $id = Yii::app()->session['login']['user_id'];
-        return $id;
-    }
-
     /**
      * @return array action filters
      */
@@ -65,7 +60,7 @@ class DayCommentController extends Controller {
                 'users' => array('@'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'addcomment', 'GetProjName', 'getIrregularEmp', 'sendReminder', 'AdminAll', 'NotFilledStatus', 'fetchSubProject', 'fetchSubTask', 'StatusReport', 'getSubPStatus'),
+                'actions' => array('create', 'update', 'addcomment', 'GetProjName', 'getIrregularEmp', 'sendReminder', 'AdminAll', 'NotFilledStatus', 'fetchSubProject', 'fetchSubTask', 'StatusReport', 'getSubPStatus', 'getEmployeeList'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -230,9 +225,9 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.stask_id";
                     $day = date('Y_m_d', strtotime($v->day));
                     $arrData[$day][$dayNo]['id'] = $v->id;
                     $arrData[$day][$dayNo]['pid'] = $v->pid;
-                    $arrData[$day][$dayNo]['spid']['result'] = $this->getSubProjectByProjectId2($v->pid);
+                    $arrData[$day][$dayNo]['spid']['result'] = $this->actionfetchSubProject($v->pid); //fetchSubProject
                     $arrData[$day][$dayNo]['spid']['selected'] = $v->spid;
-                    $arrData[$day][$dayNo]['stask_id']['result'] = $this->GetSubTask($v->spid);
+                    $arrData[$day][$dayNo]['stask_id']['result'] = $this->actionfetchSubTask($v->spid);
                     $arrData[$day][$dayNo]['stask_id']['selected'] = $v->stask_id;
                     $arrData[$day][$dayNo]['emp_id'] = $v->emp_id;
                     $arrData[$day][$dayNo]['day'] = $v->day;
@@ -647,14 +642,14 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.stask_id";
         //$to[] = array("email" => "pm@infinitylabs.in", "name" => "PM");
         //    $to[] = array("email" => "kpanse@cisco.com", "name" => "Krishnaji");
         $to[] = array("email" => $projManagerEmailId, "name" => $projManager);
-        $cc[] = array("email" => "jinal@infinitylabs.in", "name" => "Jinal Thakkar");
-        $cc[] = array("email" => "abhijit@infinitylabs.in", "name" => "Abhijit Aphale");
+//        $cc[] = array("email" => "jinal@infinitylabs.in", "name" => "Jinal Thakkar");
+        $cc[] = array("email" => "sachin.k@infinitylabs.in", "name" => "sachin kudtarkar");
         $cc[] = array("email" => $commentor_email, "name" => $commentor_name);
 
-        if (($commentor_name != 'Lalitha Shivkumar') && ($commentor_name != 'Vidhyadhar Kulkarni')) {
-            $cc[] = array("email" => "vidyadhar@infinitylabs.in", "name" => "Vidhyadhar Kulkarni");
-            $cc[] = array("email" => "lalitha.shivkumar@infinitylabs.in", "name" => "Lalitha Shivkumar");
-        }
+//        if (($commentor_name != 'Lalitha Shivkumar') && ($commentor_name != 'Vidhyadhar Kulkarni')) {
+//            $cc[] = array("email" => "vidyadhar@infinitylabs.in", "name" => "Vidhyadhar Kulkarni");
+//            $cc[] = array("email" => "lalitha.shivkumar@infinitylabs.in", "name" => "Lalitha Shivkumar");
+//        }
         $subject = "Daily Status By " . $commentor_name . " (" . $rd_day . ")";
         return CommonUtility::sendmail($to, null, $from, $from_name, $subject, $message, $cc, null, $bcc);
     }
@@ -852,16 +847,31 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.stask_id";
         return CommonUtility::sendmail($to, null, $from, $from_name, $subject, $message, $cc, null, $bcc);
     }
 
-    public function actionfetchSubProject() {
+    public function actionfetchSubProject($pida = '') {
         $newData = $da = $nn = $result = array();
-        $pid = $_POST['pid'];
+        if ($pida) {
+
+            $pid = $pida;
+        } else {
+            $pid = $_POST['pid'];
+        }
+
         $userId = Yii::app()->session['login']['user_id'];
+        if($pid){
         $query = "select st.sub_project_id,sp.sub_project_name,st.stask_id  from tbl_sub_task as st inner join tbl_pid_approval as pa on (st.pid_approval_id = pa.pid_id) inner join tbl_sub_project as sp on (sp.spid = st.sub_project_id)
-where pa.approved = 2  and st.project_id = {$pid} and st.emp_id = {$userId} group by st.stask_id";
+where st.project_id = {$pid} and st.emp_id = {$userId} group by st.stask_id"; //pa.approved = 2  and 
 
         $res = Yii::app()->db->createCommand($query)->queryAll();
+        }
+        else{
+               $query = "select st.sub_project_id,sp.sub_project_name,st.stask_id  from tbl_sub_task as st inner join tbl_pid_approval as pa on (st.pid_approval_id = pa.pid_id) inner join tbl_sub_project as sp on (sp.spid = st.sub_project_id)
+where  st.emp_id = {$userId} group by st.stask_id"; //pa.approved = 2  and 
 
-        $hours = array();
+        $res = Yii::app()->db->createCommand($query)->queryAll();
+        }
+        
+
+        $hours = $newData = array();
         if (isset($res)) {
             foreach ($res as $ke => $val) {
                 $query1 = "select sec_to_time(sum(time_to_sec(hours))) as hours,est_hrs 
@@ -870,6 +880,7 @@ where pa.approved = 2  and st.project_id = {$pid} and st.emp_id = {$userId} grou
                         where st.emp_id ={$userId} and dc.stask_id ={$val['stask_id']}
                         group by st.stask_id";
                 $res1 = Yii::app()->db->createCommand($query1)->queryRow();
+
                 $hr = explode(":", $res1['hours'])[0];
                 if (!empty($res1)) {
                     if ($hr > $res1['est_hrs']) {
@@ -883,17 +894,28 @@ where pa.approved = 2  and st.project_id = {$pid} and st.emp_id = {$userId} grou
 
 
         foreach (array_filter($newData) as $key => $val) {
-
+            $val['sub_project_name'] . "</br>";
             $nn[] = $val;
 
             $hours[$val['sub_project_id']] = $val['hours'];
         }
+
         $list = CHtml::listData($nn, 'sub_project_id', 'sub_project_name');
+
         $data['result'] = $list;
+
         //$data['workhours'] = $hours;
         $data['status'] = 'SUCCESS';
+//        if ($pida) {
+//            return $data['result'];
+//        }
+//        echo json_encode($data);
+            if(!empty($data)){
+        if($_POST['pid'])
         echo json_encode($data);
-        die();
+        else return $data['result'];
+        }                                                                                                
+      //  die();
     }
 
     public function getTimeToFloat($input) {
@@ -915,20 +937,40 @@ where pa.approved = 2  and st.project_id = {$pid} and st.emp_id = {$userId} grou
         return $time;
     }
 
-    public function actionfetchSubTask() {
+    public function actionfetchSubTask($pid = '') {
         $newData = $da = $nn = $result = $data = array();
-        $spid = $_POST['pid'];
+        if ($pid) {
+            $spid = $pid;
+        } else {
+            $spid = $_POST['pid'];
+        }
+
 
         $userId = Yii::app()->session['login']['user_id'];
-        $query = "select * from tbl_sub_task as st inner join tbl_pid_approval as pa on (st.pid_approval_id = pa.pid_id)"
-                . " where  pa.approved = 2 and st.sub_project_id={$spid} and emp_id ={$userId};";
-        $res = Yii::app()->db->createCommand($query)->queryAll();
+        
+        
+            if($spid){
+                 $query = "select * from tbl_sub_task as st inner join tbl_pid_approval as pa on (st.pid_approval_id = pa.pid_id)"
+                    . " where  st.sub_project_id={$spid} and emp_id ={$userId} "; // pa.approved = 2 and
+            $res = Yii::app()->db->createCommand($query)->queryAll();
+            }else{
+                 $query = "select * from tbl_sub_task as st inner join tbl_pid_approval as pa on (st.pid_approval_id = pa.pid_id)"
+                    . " where emp_id ={$userId} "; // pa.approved = 2 and
+            $res = Yii::app()->db->createCommand($query)->queryAll();
+            }
+           
+//            if(isset($_POST['pid'])){
+//                  CHelper::pr($res);
+//            }
+
 
         $hours = array();
 
         if (!empty($res)) {
             foreach ($res as $ke => $val) {
                 $res2 = Yii::app()->db->createCommand("select hours,stask_id from tbl_day_comment where stask_id ={$val['stask_id']} and emp_id = {$userId}")->queryRow();
+
+
                 if (!empty($res2['stask_id'])) {
                     $query = "SELECT sec_to_time(sum(time_to_sec(da.hours))) as hours ,sb.est_hrs,sb.stask_id,sb.sub_task_name
 										from tbl_day_comment as da right join tbl_sub_task as sb on (da.stask_id=sb.stask_id ) right join
@@ -936,33 +978,34 @@ where pa.approved = 2  and st.project_id = {$pid} and st.emp_id = {$userId} grou
 								WHERE  da.emp_id ={$userId} and da.stask_id = {$val['stask_id']} 
 								group by da.stask_id order by em.emp_id"; // and sb.spid = ra.spid
                     $res1 = Yii::app()->db->createCommand($query)->queryRow();
+                    
                     $newData[] = $res1;
-                    //$hours[$val['spid']] = 0;
                 } elseif (empty($res2['stask_id'])) {
                     $nn[] = $val;
-                    //$hours[$val['spid']] = 0;
-                } //echo $val['est_hrs'].'||';
+                }
+                
                 $timeRem = $val['est_hrs'] - $this->getTimeToFloat($val['est_hrs']);
                 $hours[$val['stask_id']] = $this->getTimeToHrs($timeRem);
             }
 
-            foreach ($newData as $key => $val) {
 
+            foreach ($newData as $key => $val) {
+                $hours_old = explode(":",$val['hours'])[0];
                 if (empty($val)) {
                     continue;
                 }
-                if (empty($val['hours'])) {
+                if (empty($hours_old)) {
                     continue;
                 }
-                if ($val['hours'] <= $val['est_hrs']) {
+                if ($val['est_hrs'] > $hours_old) {
 
                     $nn[] = $val;
-                    $timeRem = $val['est_hrs'] - $this->getTimeToFloat($val['hours']);
-                    $hours[$val['stask_id']] = $this->getTimeToHrs($timeRem);
+                    $timeRem = $val['est_hrs'] - $hours_old;
+                    $hours[$val['stask_id']] = $timeRem;
                 }
-                // $nn[] = $val;
-                //echo $val['hours'].'||';
             }
+            
+
             $list = CHtml::listData($nn, 'stask_id', 'sub_task_name');
             //$hourslist = CHtml::listData($hours);
             //$hourslist = CHtml::listData($nn, 's_task_id','hours');
@@ -975,8 +1018,12 @@ where pa.approved = 2  and st.project_id = {$pid} and st.emp_id = {$userId} grou
         $data['result'] = $list;
         $data['workhours'] = $hours;
         $data['status'] = 'SUCCESS';
+        if(!empty($data)){
+        if($_POST['pid'])
         echo json_encode($data);
-        die();
+        else return $data['result'];
+        }
+       // die();
     }
 
     public function actionGetSubPStatus() {
@@ -1013,9 +1060,11 @@ group by da.spid order by em.emp_id"; // and sb.spid = ra.spid
     private function getSubProjectByProjectId2($pid) {
         $newData = $da = $nn = $result = array();
         if ($pid) {
-            $userId = self::get_userid();
-            $query = "select st.sub_project_id,sp.sub_project_name,stask_id  from tbl_sub_task as st inner join tbl_pid_approval as pa on (st.pid_approval_id = pa.pid_id) inner join tbl_sub_project as sp on (sp.spid = st.sub_project_id)
-where st.project_id = {$pid} and st.emp_id = {$userId}";
+
+            //echo "<pre>";
+            $userId = Yii::app()->session['login']['user_id'];
+            $query = "select st.sub_project_id,sp.sub_project_name,st.stask_id  from tbl_sub_task as st inner join tbl_pid_approval as pa on (st.pid_approval_id = pa.pid_id) inner join tbl_sub_project as sp on (sp.spid = st.sub_project_id)
+where st.project_id = {$pid} and st.emp_id = {$userId} group by st.sub_project_id";
 
             $res = Yii::app()->db->createCommand($query)->queryAll();
 
@@ -1095,6 +1144,16 @@ where st.project_id = {$pid} and st.emp_id = {$userId}";
                 $command->delete('tbl_day_comment', $condition, $params);
             }
         }
+    }
+
+    public function actiongetEmployeeList() {
+        $project_id = $_GET['project_id'];
+        if ($project_id) {
+            $list = Employee::model()->getEmloyeeList($project_id);
+        }
+        echo CHtml::dropDownList("Employee", "", CHtml::listData($list, 'employee', 'employee'));
+        // echo CHtml::dropDownList('please select', CHtml::listData($list));
+        // echo  json_encode($list);
     }
 
 }

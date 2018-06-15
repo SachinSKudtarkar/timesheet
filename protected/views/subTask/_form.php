@@ -20,70 +20,75 @@
 	<?php echo $form->errorSummary($model); ?>
 
 	<div class="row">
-		<?php echo $form->labelEx($model,'task_id'); ?>
-		<?php echo $form->textField($model,'task_id'); ?>
-		<?php echo $form->error($model,'task_id'); ?>
+		<?php echo $form->labelEx($model,'stask_id'); ?>
+		<?php echo $form->textField($model,'stask_id'); ?>
+		<?php echo $form->error($model,'stask_id'); ?>
+	</div>
+
+<!--	<div class="row">
+		<?php //echo $form->labelEx($model,'project_id'); ?>
+		<?php //echo $form->textField($model,'project_id'); ?>
+		<?php //echo $form->error($model,'project_id'); ?>
 	</div>
 
 	<div class="row">
-		<?php echo $form->labelEx($model,'project_id'); ?>
-		<?php echo $form->textField($model,'project_id'); ?>
-		<?php echo $form->error($model,'project_id'); ?>
+		<?php //echo $form->labelEx($model,'sub_project_id'); ?>
+		<?php //echo $form->textField($model,'sub_project_id'); ?>
+		<?php //echo $form->error($model,'sub_project_id'); ?>
 	</div>
 
 	<div class="row">
-		<?php echo $form->labelEx($model,'sub_project_id'); ?>
-		<?php echo $form->textField($model,'sub_project_id'); ?>
-		<?php echo $form->error($model,'sub_project_id'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'emp_id'); ?>
-		<?php echo $form->textField($model,'emp_id',array('size'=>10,'maxlength'=>10)); ?>
-		<?php echo $form->error($model,'emp_id'); ?>
-	</div>
+		<?php //echo $form->labelEx($model,'emp_id'); ?>
+		<?php //echo $form->textField($model,'emp_id',array('size'=>10,'maxlength'=>10)); ?>
+		<?php //echo $form->error($model,'emp_id'); ?>
+	</div>-->
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'sub_task_name'); ?>
-		<?php echo $form->textField($model,'sub_task_name',array('size'=>60,'maxlength'=>255)); ?>
+		<?php echo $form->textField($model,'sub_task_name',array('size'=>100,'maxlength'=>255)); ?>
 		<?php echo $form->error($model,'sub_task_name'); ?>
 	</div>
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'description'); ?>
-		<?php echo $form->textField($model,'description',array('size'=>60,'maxlength'=>255)); ?>
+		<?php echo $form->textField($model,'description',array('size'=>100,'maxlength'=>255)); ?>
 		<?php echo $form->error($model,'description'); ?>
 	</div>
-
 	<div class="row">
-		<?php echo $form->labelEx($model,'status'); ?>
-		<?php echo $form->textField($model,'status'); ?>
-		<?php echo $form->error($model,'status'); ?>
+		<?php echo $form->labelEx($model,'est_hrs'); ?>
+		<?php echo $form->textField($model,'est_hrs',array('size'=>60,'maxlength'=>255)); ?>
+		<?php echo $form->error($model,'est_hrs'); ?>
+	</div>
+
+<!--	<div class="row">
+		<?php //echo $form->labelEx($model,'status'); ?>
+		<?php //echo $form->textField($model,'status'); ?>
+		<?php //echo $form->error($model,'status'); ?>
 	</div>
 
 	<div class="row">
-		<?php echo $form->labelEx($model,'created_by'); ?>
-		<?php echo $form->textField($model,'created_by'); ?>
-		<?php echo $form->error($model,'created_by'); ?>
+		<?php //echo $form->labelEx($model,'created_by'); ?>
+		<?php //echo $form->textField($model,'created_by'); ?>
+		<?php //echo $form->error($model,'created_by'); ?>
 	</div>
 
 	<div class="row">
-		<?php echo $form->labelEx($model,'created_at'); ?>
-		<?php echo $form->textField($model,'created_at'); ?>
-		<?php echo $form->error($model,'created_at'); ?>
+		<?php //echo $form->labelEx($model,'created_at'); ?>
+		<?php //echo $form->textField($model,'created_at'); ?>
+		<?php //echo $form->error($model,'created_at'); ?>
 	</div>
 
 	<div class="row">
-		<?php echo $form->labelEx($model,'is_approved'); ?>
-		<?php echo $form->textField($model,'is_approved'); ?>
-		<?php echo $form->error($model,'is_approved'); ?>
+		<?php //echo $form->labelEx($model,'is_approved'); ?>
+		<?php //echo $form->textField($model,'is_approved'); ?>
+		<?php //echo $form->error($model,'is_approved'); ?>
 	</div>
 
 	<div class="row">
-		<?php echo $form->labelEx($model,'is_delete'); ?>
-		<?php echo $form->textField($model,'is_delete'); ?>
-		<?php echo $form->error($model,'is_delete'); ?>
-	</div>
+		<?php //echo $form->labelEx($model,'is_delete'); ?>
+		<?php// echo $form->textField($model,'is_delete'); ?>
+		<?php //echo $form->error($model,'is_delete'); ?>
+	</div>-->
 
 	<div class="row buttons">
 		<?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save'); ?>

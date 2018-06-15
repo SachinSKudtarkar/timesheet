@@ -54,6 +54,7 @@ $('.search-form form').submit(function(){
                     'header' => 'Sr.no',
                     'name'=>'sr',
                  ),
+                'jira_id',
 		array(
 			'header'=>'Program',
                         'name' => 'project_id',

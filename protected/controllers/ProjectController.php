@@ -164,6 +164,7 @@ class ProjectController extends Controller {
                 $whrcondition .= " where tt.task_name like '" . $condition['Type'] . "%'";
             } else 
                 $whrcondition = '';
+             
            
         $query = "select concat(em.first_name,' ',em.last_name) as Name,pm.project_name as Program ,sp.sub_project_name as Project ,st.sub_task_name as Task ,tt.task_name as Type ,
                     st.est_hrs as Estimated_Hours,st.stask_id from tbl_sub_task as st 
@@ -171,10 +172,11 @@ class ProjectController extends Controller {
                     inner join tbl_sub_project as sp on (st.sub_project_id = sp.spid)
                     inner join tbl_task as tt on(st.task_id = tt.task_id)
                     inner join tbl_employee as em on(st.emp_id = em.emp_id) {$whrcondition} "
-                    . "order by em.first_name;";
+                    . "order by st.stask_id desc";
         $rawData = Yii::app()->db->createCommand($query)->queryAll();
+   
         // echo "<pre>";
-        //print_r($rawData);
+
         foreach ($rawData as $key => $value) {
 //            $query1 = "select concat(em.first_name,' ',em.last_name) as name,
 //                    sec_to_time(sum(time_to_sec(dc.hours))) as Consumed_Hours
@@ -185,16 +187,30 @@ class ProjectController extends Controller {
                     from  tbl_day_comment 
                     where stask_id = {$value['stask_id']} ";
             $rawData_daycomment = Yii::app()->db->createCommand($query1)->queryRow();
+               
+            
+                
+            $newarray[$key]['Name'] = $value['Name'];
+            $newarray[$key]['Program'] =  $value['Program'];
+            $newarray[$key]['Project'] = $value['Project'];
+            $newarray[$key]['Task'] = $value['Task'];
+            $newarray[$key]['Type'] = $value['Type'];
+            $newarray[$key]['Estimated_Hours'] = $value['Estimated_Hours'];
             if (!empty($rawData_daycomment)) {
-                $newarray[$key]['Consumed_Hours'] = $rawData_daycomment['Consumed_Hours'];
+                $consumed_hr = explode(":",$rawData_daycomment['Consumed_Hours'])[0];
+                $newarray[$key]['Consumed_Hours'] = $consumed_hr;
+                
+                if($value['Estimated_Hours'] > $consumed_hr ){
+                $newarray[$key]['Remaining_Hours']  = $value['Estimated_Hours']- $consumed_hr;
+                    
+                }
+                
             }
-            unset($value['stask_id']);
-            $newarray[] = $value;
+          
+            
             
         }
-        
-      //  CHelper::debug($newarray);
-        
+//CHelper::pr($newarray);
         if ($this->isExportRequest()) {
            
           $export_column_name = array('Name',
@@ -203,7 +219,9 @@ class ProjectController extends Controller {
             'Task',
             'Type',
             'Estimated_Hours',
-            'Consumed_Hours');
+            'Consumed_Hours',
+              'Remaining_Hours');
+//          CHelper::prd($export_column_name);
             $filename = "All_Project_Details" . date('d_m_Y') . "_" . date('H') . "_hr";
             CommonUtility::downloadDataInCSV($export_column_name, $newarray, $filename);
         }

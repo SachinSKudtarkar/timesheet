@@ -123,5 +123,23 @@ class SubmitStatusCommand extends CConsoleCommand {
         //return $message;
         echo CommonUtility::sendmail($to, null, $from, $from_name, $subject, $message, $cc, null, $bcc);
     }
+    
+    public function actionDailyLoginStatus(){
+        ini_set('display_errors',1);
+        error_reporting(E_ALL);
+        $query ="select user_name,in_time,out_time,todaydate from tbl_capture_img where todaydate >= CURDATE()";
+        $emp_list = Yii::app()->db->createCommand($query)->queryAll();
+        
+       
+
+        $fp = fopen('file.csv', 'w');
+
+        foreach ($emp_list as $fields) {
+            fputcsv($fp, $fields);
+        }
+
+       
+        fclose($fp);
+    }
 
 }

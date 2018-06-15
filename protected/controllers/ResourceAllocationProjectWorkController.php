@@ -110,6 +110,8 @@ class ResourceAllocationProjectWorkController extends Controller {
 
         if (isset($_POST['ResourceAllocationProjectWork'])) {
             $model->attributes = $_POST['ResourceAllocationProjectWork'];
+            $model->modified_by = Yii::app()->session['login']['user_id'];
+            $model->modified_at = date('Y-m-d H:i:s');
             if ($model->save())
                 $this->redirect(array('view', 'id' => $model->id));
         }
@@ -152,6 +154,8 @@ class ResourceAllocationProjectWorkController extends Controller {
 
         if (isset($_POST['ResourceAllocationProjectWork'])) {
             $model->attributes = $_POST['ResourceAllocationProjectWork'];
+            $model->modified_by = Yii::app()->session['login']['user_id'];
+            $model->modified_at = date('Y-m-d H:i:s');
             if ($model->save())
                 $this->redirect(array('view', 'id' => $model->id));
         }
@@ -373,8 +377,11 @@ group by dc.stask_id order by em.emp_id;";
         $result = YII::app()->db->createCommand($query)->queryRow();
 
         $done = 0;
+        $modified_by = Yii::app()->session['login']['user_id'];
+        $modified_at = date('Y-m-d H:i:s');
         if (!empty($result)) {
-            echo $updateQuery = 'UPDATE tbl_resource_allocation_project_work SET allocated_resource ="' . $all_resources . '" WHERE id =' . $result['id'] . '';
+            $done = 1;
+            $updateQuery = "UPDATE tbl_resource_allocation_project_work SET allocated_resource = '{$all_resources}', modified_by ='{$modified_by}' , modified_at = '{$modified_at}' WHERE id = '{$result['id']}'  ";
             Yii::app()->db->createCommand($updateQuery)->execute();
            /* $model = new ResourceAllocationProjectWork;
             $model->pid = $projectId;
@@ -382,13 +389,15 @@ group by dc.stask_id order by em.emp_id;";
             $model->date = date('Y-m-d h:i:s');
             $model->created_by = Yii::app()->session['login']['user_id'];*/
 //                 $model->save(false);
-            $done = 1;
+            
         } else {
             $model = new ResourceAllocationProjectWork;
             $model->pid = $projectId;
             $model->allocated_resource = $all_resources;
             $model->date = date('Y-m-d h:i:s');
             $model->created_by = Yii::app()->session['login']['user_id'];
+            $model->modified_by = Yii::app()->session['login']['user_id'];
+            $model->modified_at = date('Y-m-d H:i:s');
             $model->save(false);
             $done = 1;
         }
@@ -398,7 +407,6 @@ group by dc.stask_id order by em.emp_id;";
             $emails = array();
             $queryGetemails = "SELECT email FROM  tbl_employee WHERE emp_id IN('" . $resourceIds . "')";
             $emails = Yii::app()->db->createCommand($queryGetemails)->queryAll();
-
 
             $project_name = $this->getPname($model);
             $allocated_resources = $this->getReource($model);

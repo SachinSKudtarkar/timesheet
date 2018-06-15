@@ -8,10 +8,10 @@ $this->breadcrumbs=array(
 );
 
 $this->menu=array(
-	array('label'=>'List Task', 'url'=>array('index')),
-	array('label'=>'Create Task', 'url'=>array('create')),
-	array('label'=>'Update Task', 'url'=>array('update', 'id'=>$model->stask_id)),
-	array('label'=>'Delete Task', 'url'=>'#', 'linkOptions'=>array('submit'=>array('delete','id'=>$model->stask_id),'confirm'=>'Are you sure you want to delete this item?')),
+//	array('label'=>'List Task', 'url'=>array('index')),
+//	array('label'=>'Create Task', 'url'=>array('create')),
+//	array('label'=>'Update Task', 'url'=>array('update', 'id'=>$model->stask_id)),
+//	array('label'=>'Delete Task', 'url'=>'#', 'linkOptions'=>array('submit'=>array('delete','id'=>$model->stask_id),'confirm'=>'Are you sure you want to delete this item?')),
 	array('label'=>'Manage Task', 'url'=>array('admin')),
 );
 ?>

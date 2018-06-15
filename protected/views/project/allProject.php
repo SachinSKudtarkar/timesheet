@@ -30,13 +30,13 @@ $('.search-form form').submit(function(){
 
 <?php  $x = $this->widget('ext.multirowheader.CGridViewPlus', array(
         'id' => 'lawfirm-grid',
-        'filter' => $model,
+        //'filter' => $model,
         'htmlOptions' => array('class' => 'grid-view clearfix'),
         'type' => 'striped bordered',
         'template' => '{pagerCustom}{items}{pager}{summary}',
         'dataProvider' => new CArrayDataProvider($data, array()),
         'filter' => $model,
-        'mergeColumns' => array('Name','Program','Project',),
+        'mergeColumns' => array('Name','Program','Project'),
         'extraRowPos' => 'above',
         'emptyText' => 'No Records Found',
         'enablePagination' => true,
@@ -59,6 +59,13 @@ $('.search-form form').submit(function(){
                     'type' => 'raw',
                      'filter'=>false,
                 ),
+            array(
+                 'header'=>'Remaining_Hours',
+                    'name' => 'Remaining_Hours',
+                    'type' => 'raw',
+                     'filter'=>false,
+                ),
+            
 	),
 ));
 echo $this->renderExportGridButton($x, 'Export Grid Results', array('class' => 'btn btn-primary pull-left clearfix mr-tp-20'));

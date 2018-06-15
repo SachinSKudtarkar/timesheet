@@ -28,7 +28,7 @@ class SubTaskController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view',),
+				'actions'=>array('index','view','create','update'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -94,7 +94,9 @@ class SubTaskController extends Controller
 
 		if(isset($_POST['SubTask']))
 		{
+                   
 			$model->attributes=$_POST['SubTask'];
+//                         CHelper::debug($model);
 			if($model->save())
 				$this->redirect(array('view','id'=>$model->stask_id));
 		}
@@ -132,36 +134,44 @@ class SubTaskController extends Controller
 	/**
 	 * Manages all models.
 	 */
-	public function actionAdmin()
-	{
-		$model=new SubTask('search');
-		//$model->unsetAttributes();  // clear any default values
-		if(isset($_GET['SubTask'])){
-		$condition = $_REQUEST['SubTask'];
-            $whrcondition = '';
-            if ($condition['project_id'] != '')
-                $whrcondition .= " AND em.first_name like '" . $condition['employee'] . "%' or em.last_name like '" . $condition['employee'] . "%'";
-            if ($condition['sub_project_name'] != '')
-                $whrcondition .= " AND pm.project_name like '" . $condition['project_name'] . "%'";
-            if ($condition['project_name'] != '')
-                $whrcondition .= " AND sp.sub_project_name like '" . $condition['sub_project_name'] . "%'";
-			if(	$condition['Priority'] != '')
-				$whrcondition .= " AND t.task_name like '" . $condition['task_name'] . "%'";
-        } else{
-            $whrcondition = '';
-			}
-			$sql ="select concat(em.first_name,' ',em.last_name) as employee,pm.project_name,sp.sub_project_name,t.task_name  from tbl_sub_task as st , tbl_employee as em ,tbl_project_management as pm , tbl_sub_project as sp , tbl_task as t
-where st.emp_id = em.emp_id and st.project_id = pm.pid and st.sub_project_id = sp.spid and st.task_id = t.task_id $whrcondition ";
-
-$data = YII::app()->db->createCommand($sql)->queryAll();
-		//	$model->attributes=$_GET['SubTask'];
-
-		$this->render('admin',array(
-			'model'=>$model,
-			'data' =>$data,
-		));
-	}
-
+//	public function actionAdmin()
+//	{
+//		$model=new SubTask('search');
+//		//$model->unsetAttributes();  // clear any default values
+//		if(isset($_GET['SubTask'])){
+//		$condition = $_REQUEST['SubTask'];
+//            $whrcondition = '';
+//            if ($condition['project_id'] != '')
+//                $whrcondition .= " AND em.first_name like '" . $condition['employee'] . "%' or em.last_name like '" . $condition['employee'] . "%'";
+//            if ($condition['sub_project_name'] != '')
+//                $whrcondition .= " AND pm.project_name like '" . $condition['project_name'] . "%'";
+//            if ($condition['project_name'] != '')
+//                $whrcondition .= " AND sp.sub_project_name like '" . $condition['sub_project_name'] . "%'";
+//			if(	$condition['Priority'] != '')
+//				$whrcondition .= " AND t.task_name like '" . $condition['task_name'] . "%'";
+//        } else{
+//            $whrcondition = '';
+//			}
+//			$sql ="select concat(em.first_name,' ',em.last_name) as employee,pm.project_name,sp.sub_project_name,t.task_name  from tbl_sub_task as st , tbl_employee as em ,tbl_project_management as pm , tbl_sub_project as sp , tbl_task as t
+//where st.emp_id = em.emp_id and st.project_id = pm.pid and st.sub_project_id = sp.spid and st.task_id = t.task_id $whrcondition ";
+//
+//$data = YII::app()->db->createCommand($sql)->queryAll();
+//		//	$model->attributes=$_GET['SubTask'];
+//
+//		$this->render('admin',array(
+//			'model'=>$model,
+//			'data' =>$data,
+//		));
+//	}
+   public function actionAdmin() {
+        $model = new SubTask('search');
+        $model->unsetAttributes();  // clear any default values
+        if (isset($_GET['SubTask']))
+            $model->attributes = $_GET['SubTask'];
+        $this->render('admin', array(
+            'model' => $model,
+        ));
+    }
 	/**
 	 * Returns the data model based on the primary key given in the GET variable.
 	 * If the data model is not found, an HTTP exception will be raised.

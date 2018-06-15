@@ -807,8 +807,8 @@ class CHelper {
      */
     public static function isAccess($module = 'SA', $key = '') {
         //Allow access for 1b with checking given modules and also give access for perticular users.
-            
-        $id = Yii::app()->session['login']['user_id']; 
+
+        $id = Yii::app()->session['login']['user_id'];
         // cheking user role
         if (Yii::app()->session['login']['access_type'] == '1') {
             // If current user is Super Admin
@@ -1248,6 +1248,19 @@ class CHelper {
             echo $outString;
             exit;
         }
+    }
+
+    public static function pr($data) {
+        echo "<pre>";
+        print_r($data);
+        echo "</pre>";
+    }
+
+    public static function prd($data) {
+        echo "<pre>";
+        print_r($data);
+        echo "</pre>";
+        die;
     }
 
 }

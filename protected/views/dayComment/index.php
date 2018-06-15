@@ -181,7 +181,10 @@ Yii::app()->clientScript->registerCssFile(
 			}
 			?>
 			</div>
-		<?php }else { ?>
+		<?php }else {
+                    
+                    
+                    ?>
 
 			<div class="main_daycomments">
 			<?php
@@ -244,7 +247,7 @@ Yii::app()->clientScript->registerCssFile(
 							</div>
 							<div class="span2">
 								<?php echo CHTML::label('Comment :', '', array('style' => 'width:130px;font-weight:bold; ')); ?>
-								<?php echo CHtml::textArea('procomment[]', $eachproject['project_description'], array('style' => ' height:40px; width:200px; ', 'disabled' => ($is_submitted ? 'disabled' : ''), 'id' => 'comment' . $date_id ."_". $eachproject['pid']));
+								<?php echo CHtml::textArea('procomment[]','', array('style' => ' height:40px; width:200px; ', 'disabled' => ($is_submitted ? 'disabled' : ''), 'id' => 'comment' . $date_id ."_". $eachproject['pid']));
 								?>
 							</div>
 							<div class="span2">

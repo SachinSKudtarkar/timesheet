@@ -42,13 +42,17 @@ Yii::app()->clientScript->registerCssFile(
                                     <div class="span5"> 
                                     <?php echo CHTML::label('Employee', ''); ?>
                                     <?php
-                                    $employeeData = Employee::model()->findAll(array('select' => "emp_id,first_name,last_name", 'order' => 'first_name', 'condition' => 'is_active=1'));
-                                    $emp_list = array();
-                                    foreach ($employeeData as $key => $value) {
-                                        $emp_list[$value['emp_id']] = $value['first_name'] . " " . $value['last_name'];
-                                    }
-                                   
-                                    echo CHTML::dropDownList('employee', $employee, $emp_list, array('class' => 'employee','prompt' => 'Please select Emlployee')); 
+//                                    CHelper::prd($model);
+                                    $model = new Employee();
+                                     $emp_list = Employee::model()->getEmloyeeList();
+                                    echo CHTML::dropDownList('employee', $model->emp_id, $emp_list, array('class' => 'employee','prompt' => 'Please select Emlployee'));
+//                                    $employeeData = Employee::model()->findAll(array('select' => "emp_id,first_name,last_name", 'order' => 'first_name', 'condition' => 'is_active=1'));
+//                                    $emp_list = array();
+//                                    foreach ($employeeData as $key => $value) {
+//                                        $emp_list[$value['emp_id']] = $value['first_name'] . " " . $value['last_name'];
+//                                    }
+//                                   
+//                                    echo CHTML::dropDownList('employee', $employee, $emp_list, array('class' => 'employee','prompt' => 'Please select Emlployee')); 
                                     ?>		 
                                     </div>
                                      <div class="span5">
@@ -158,6 +162,7 @@ $(document).on('click','#btnS', function(){
 
 			 var day = $('.selecting_weeks').val();
                           var empid = $('.employee').val();
+                          alert(empid);
 $.ajax({
        url: BASE_URL+'/managedaycomment/updateStatus',
                 type: 'POST',

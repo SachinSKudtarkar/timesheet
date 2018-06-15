@@ -62,13 +62,13 @@ class SubTask extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('task_id, project_id, sub_project_id, emp_id, sub_task_name, description,pid_approval_id, created_by, created_at, is_approved, is_delete', 'required'),
-			array('task_id, project_id, sub_project_id,pid_approval_id, status, created_by, is_approved, is_delete', 'numerical', 'integerOnly'=>true),
+			array('task_id, project_id, sub_project_id, emp_id, sub_task_name, description,pid_approval_id, created_by, created_at, is_approved, is_delete,est_hrs', 'required'),
+			array('task_id, project_id, sub_project_id,pid_approval_id, status, created_by, is_approved, is_delete,est_hrs', 'numerical', 'integerOnly'=>true),
 			array('emp_id', 'length', 'max'=>10),
 			array('sub_task_name, description', 'length', 'max'=>255),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('stask_id, pid_approval_id ,task_id, project_id, sub_project_id, emp_id, sub_task_name, description, status, created_by, created_at, is_approved, is_delete', 'safe', 'on'=>'search'),
+			array('stask_id, pid_approval_id ,task_id, project_id, sub_project_id, emp_id, sub_task_name, description, status, created_by, created_at, is_approved, is_delete,est_hrs', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -79,10 +79,10 @@ class SubTask extends CActiveRecord
 	{
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
-		return array(
-			'task' => array(self::BELONGS_TO, 'Task', 'task_id'),
-			'emp' => array(self::BELONGS_TO, 'Employee', 'emp_id'),
-		);
+//		return array(
+//			'task' => array(self::BELONGS_TO, 'Task', 'task_id'),
+//			'emp' => array(self::BELONGS_TO, 'Employee', 'emp_id'),
+//		);
 	}
 
 	/**
@@ -97,6 +97,7 @@ class SubTask extends CActiveRecord
 			'sub_project_id' => 'Project',
 			'emp_id' => 'Employee',
 			'sub_task_name' => 'Sub Task Name',
+			'est_hrs' => 'Estimated Hours',
 			'description' => 'Description',
 			'pid_approval_id' => 'pid Approval',
 			'status' => 'Status',
@@ -132,6 +133,7 @@ class SubTask extends CActiveRecord
 		$criteria->compare('pid_approval_id',$this->pid_approval_id);
 		$criteria->compare('emp_id',$this->emp_id,true);
 		$criteria->compare('sub_task_name',$this->sub_task_name,true);
+		$criteria->compare('est_hrs',$this->est_hrs,true);
 		$criteria->compare('description',$this->description,true);
 		$criteria->compare('status',$this->status);
 		$criteria->compare('created_by',$this->created_by);

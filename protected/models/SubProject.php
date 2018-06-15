@@ -113,7 +113,7 @@ class SubProject extends CActiveRecord
 		// @todo Please modify the following code to remove attributes that should not be searched.
 
 		$criteria=new CDbCriteria;
-                $criteria->select = "t.*,pr.project_name,t.spid as taskId ";//t.spid as taskId 
+//                $criteria->select = "t.*,pr.project_name,t.spid as taskId ";//t.spid as taskId 
 		$criteria->compare('spid',$this->spid);
 		$criteria->compare('pid',$this->pid);
 		$criteria->compare('sub_project_name',$this->sub_project_name,true);
@@ -127,8 +127,8 @@ class SubProject extends CActiveRecord
 		$criteria->compare('updated_date',$this->updated_date,true);
 		$criteria->compare('is_deleted',$this->is_deleted);
                 $criteria->compare('project_name',$this->project_name);
-                $criteria->join = "INNER join tbl_project_management pr ON (pr.pid=t.pid)"
-                        . "INNER join tbl_pid_approval as pa ON (t.spid = pa.sub_project_id) ";
+//                $criteria->join = "INNER join tbl_project_management pr ON (pr.pid=t.pid)"
+//                        . "INNER join tbl_pid_approval as pa ON (t.spid = pa.sub_project_id) ";
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 			

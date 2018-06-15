@@ -10,8 +10,8 @@ $this->breadcrumbs=array(
 
 $this->menu=array(
 	//array('label'=>'List SubTask', 'url'=>array('index')),
-	array('label'=>'Create SubTask', 'url'=>array('create')),
-	array('label'=>'View SubTask', 'url'=>array('view', 'id'=>$model->stask_id)),
+//	array('label'=>'Create SubTask', 'url'=>array('create')),
+//	array('label'=>'View SubTask', 'url'=>array('view', 'id'=>$model->stask_id)),
 	array('label'=>'Manage SubTask', 'url'=>array('admin')),
 );
 ?>

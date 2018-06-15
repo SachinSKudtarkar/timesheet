@@ -81,7 +81,7 @@ class PidApprovalController extends Controller {
 
             $model->project_id = $_POST['project_id'];
             $model->sub_project_id = $_POST['sub_project_id'];
-            $model->approved = 1;
+            $model->approved = 2;
             $model->created_by = Yii::app()->session["login"]["user_id"];
             $model->created_at = date("Y-m-d h:i:s");
 
@@ -132,8 +132,8 @@ class PidApprovalController extends Controller {
             // Yii::app()->user->setFlash('error', 'No records found.');
             // }
 
-
-            $this->redirect('admin', array('model' => $model));
+                $this->redirect(Yii::app()->urlManager->createUrl("Project/allProject"));
+//            $this->redirect('admin', array('model' => $model));
         }
 
         $this->render('create', array(
@@ -281,7 +281,7 @@ class PidApprovalController extends Controller {
         $data = array();
 
         $sql = "select t.*,st.task_id,st.stask_id,st.sub_task_name,st.emp_id,st.est_hrs from tbl_pid_approval as t inner join tbl_sub_task as st on(st.pid_approval_id = t.pid_id ) 
-  				 where approved!=2 and approved!=0 {$pid_approval_id}";
+  		order by t.pid_id desc	 "; //where approved!=2 and approved!=0 {$pid_approval_id}
         $results = Yii::app()->db->createCommand($sql)->queryAll();
 
 
@@ -355,21 +355,21 @@ class PidApprovalController extends Controller {
 
             $whrcondition = '';
             if ($condition['emp_id'] != '')
-                $whrcondition .= " AND em.first_name like '" . $condition['emp_id'] . "%' or em.last_name like '" . $condition['emp_id'] . "%'";
+                $whrcondition .= " AND em.first_name like '" . trim($condition['emp_id']) . "%' or em.last_name like '" . trim($condition['emp_id']) . "%'";
             if ($condition['sub_project_id'] != '')
-                $whrcondition .= " AND sp.sub_project_name like '" . $condition['sub_project_id'] . "%'";
+                $whrcondition .= " AND sp.sub_project_name like '" . trim($condition['sub_project_id']) . "%'";
             if ($condition['project_name'] != '')
-                $whrcondition .= " AND pm.project_name like '" . $condition['project_id'] . "'";
+                $whrcondition .= " AND pm.project_name like '" . trim($condition['project_id']) . "'";
             if ($condition['sub_task_name'] != '')
-                $whrcondition .= " AND st.sub_task_name like  '" . $condition['sub_task_name'] . "%'";
+                $whrcondition .= " AND st.sub_task_name like  '" . trim($condition['sub_task_name']) . "%'";
             if ($condition['sr'] != '')
-                $whrcondition .= " AND st.pid_approval_id like '" . $condition['sr'] . "%'";
+                $whrcondition .= " AND st.pid_approval_id like '" . trim($condition['sr']) . "%'";
             if ($condition['task_id'] != '')
-                $whrcondition .= " AND tt.task_name like '" . $condition['task_id'] . "%'";
+                $whrcondition .= " AND tt.task_name like '" . trim($condition['task_id']) . "%'";
             if ($condition['inception_date'] != '')
-                $whrcondition .= " AND pa.inception_date like '" . $condition['inception_date'] . "%'";
+                $whrcondition .= " AND pa.inception_date like '" . trim($condition['inception_date']) . "%'";
             if ($condition['approved'] != '')
-                $whrcondition .= " AND pa.approved like '" . $condition['approved'] . "%'";
+                $whrcondition .= " AND pa.approved like '" . trim($condition['approved']) . "%'";
         } else
             $whrcondition = '';
 

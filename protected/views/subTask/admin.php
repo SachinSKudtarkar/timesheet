@@ -8,8 +8,8 @@ $this->breadcrumbs=array(
 );
 
 $this->menu=array(
-	//array('label'=>'List Task', 'url'=>array('index')),
-	array('label'=>'Create Task', 'url'=>array('create')),
+//	array('label'=>'List Task', 'url'=>array('index')),
+//	array('label'=>'Create Task', 'url'=>array('create')),
 );
 
 Yii::app()->clientScript->registerScript('search', "
@@ -31,15 +31,15 @@ $('.search-form form').submit(function(){
 
 <?php $this->widget('zii.widgets.grid.CGridView', array(
 	'id'=>'sub-task-grid',
-	'dataProvider'=>new CArrayDataProvider($data, array()),
+	'dataProvider'=>$model->search(),//new CArrayDataProvider($data, array()),
 	'filter'=>$model,
 	'columns'=>array(
-		//'stask_id',
+		'stask_id',
 		//'project_id',
-		'project_name',
-		'sub_project_name',
-		'task_name',
-		'employee',
+//		'project_name',
+//		'sub_project_name',
+//		'task_name',
+//		'employee',
 		// array(
                     // 'name'=> 'project_id',
                     // 'type'=> 'raw',
@@ -57,13 +57,15 @@ $('.search-form form').submit(function(){
                     // 'type'=> 'raw',
                     // 'value'=>array($model,'getType'),
                 // ),
-		// 'sub_task_name',
+		 'sub_task_name',
+                 'est_hrs',
 		//'emp_id',
-		// array(
-                    // 'name'=> 'emp_id',
-                    // 'type'=> 'raw',
-                    // 'value'=>array($model,'GetResourceName'),
-                // ),
+		 array(
+                     'name'=> 'emp_id',
+                     'filter'=>false,
+                     'type'=> 'raw',
+                     'value'=>array($model,'GetResourceName'),
+                 ),
 		/*
 		'description',
 		'status',

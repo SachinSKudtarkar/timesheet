@@ -31,7 +31,7 @@
             } 
             echo CHtml::dropDownList("txtarea1", 'id', $emp_list, array('multiple' => 'multiple', 'style' => 'height:200px;margin-top:20px;'));
             echo CHtml::link('Allocate', array(''), array('style' => 'margin-left:20px;margin-top:50px; float:left', 'class' => 'btn allcateresource'));
-            echo CHtml::link('De-Allocate', array(''), array('style' => 'margin-left:20px;margin-top:50px; float:left', 'class' => 'btn dallocate hide'));
+            echo CHtml::link('De-Allocate', array(''), array('style' => 'margin-left:20px;margin-top:50px; float:left', 'class' => 'btn dallocate'));
             ?>
 
             <?php
@@ -93,15 +93,15 @@ $('.dallocate').click(function(){
     return !$('#txtarea2 option:selected').remove().appendTo('#txtarea1');
     });
     
-$('#txtarea2').click(function(){
-$('.allcateresource').hide();
-$('.dallocate').show();
-});
-
-$('#txtarea1').click(function(){
-$('.allcateresource').show();
-$('.dallocate').hide();
-});
+//$('#txtarea2').click(function(){
+//$('.allcateresource').hide();
+//$('.dallocate').show();
+//});
+//
+//$('#txtarea1').click(function(){
+//$('.allcateresource').show();
+//$('.dallocate').hide();
+//});
  
 $('#allocateR').click(function(){ 
 $('#txtarea2 option').prop('selected', true);

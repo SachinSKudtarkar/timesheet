@@ -86,6 +86,12 @@ echo CHTML::dropDownList('project_id', 'pid', CHtml::listData(ProjectManagement:
 		<?php echo $form->error($model,'inception_date'); ?>
 	</div>
 
+    <div class="row">
+        <?php echo $form->labelEx($model,'jira_id'); ?>
+                <?php echo $form->textField($model,'jira_id',array('size' => '1','style' => 'width:50px' )); ?>
+        <?php echo $form->error($model,'jira_id'); ?>
+    </div>
+
 	<div class="row">
 		<?php echo $form->labelEx($model,'total_est_hrs'); ?>
 		<?php // echo $form->textField($model,'total_est_hrs'); ?>

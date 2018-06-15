@@ -105,7 +105,7 @@ class PidMapping extends CActiveRecord
 		// @todo Please modify the following code to remove attributes that should not be searched.
 
 		$criteria=new CDbCriteria;
-
+                $criteria->select = "t.*,sbpr.emp_id ";
 		$criteria->compare('id',$this->id);
 		$criteria->compare('year_month',$this->year_month,true);
 		$criteria->compare('project_id',$this->project_id,true);
@@ -119,7 +119,7 @@ class PidMapping extends CActiveRecord
 		$criteria->compare('modified_by',$this->modified_by);
 		$criteria->compare('pid',$this->pid,true);
 		$criteria->order = "id DESC";
-
+                $criteria->join = "INNER JOIN tbl_sub_task as sbpr ON sbpr.stask_id=t.sub_task_id";
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
       
@@ -254,4 +254,11 @@ class PidMapping extends CActiveRecord
 			return '';
 		
 		}
+                 public function getemp_name($pmodel){
+                    if($pmodel->emp_id){
+                         $model = Employee::model()->findByPk($pmodel->emp_id);
+                        return $model->first_name . ' ' . $model->last_name;
+			}
+			return '';
+                }
 }
