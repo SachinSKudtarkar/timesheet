@@ -69,9 +69,10 @@ class PidApprovalController extends Controller {
         $this->performAjaxValidation($model);
 
         if (isset($_POST['PidApproval'])) {
-//         
+
             $valid = $_POST;
-            if (empty($valid['project_id']) || empty($valid['sub_project_id']) || empty($valid['PidApproval']) ||
+            if (empty($valid['project_id']) || empty($valid['sub_project_id']) || empty($valid['PidApproval']['inception_date']) || empty($valid['PidApproval']['jira_id']) ||
+                    empty($valid['PidApproval']['total_est_hrs']) || empty($valid['PidApproval']['comments']) ||
                     empty($valid['task_id']) || empty($valid['sub_task_name']) || empty($valid['est_hrs'])) {
                 Yii::app()->user->setFlash('error', 'Please fill all filleds, All Filleds are Required');
                 $this->render('create', array(
@@ -87,6 +88,7 @@ class PidApprovalController extends Controller {
                 $model->created_at = date("Y-m-d h:i:s");
     
                 $model->attributes = $_POST['PidApproval'];
+                $this->performAjaxValidation($model);
                 // echo "<pre>"; print_r($_POST['PidApproval']);
                 //CHelper::debug($_POST);
                 foreach ($_POST['task_id'] as $key => $val) {
