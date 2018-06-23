@@ -41,6 +41,7 @@ class Project extends CActiveRecord
 			array('id, type, hr_clocked, category, created_by, updated_by, is_deleted', 'numerical', 'integerOnly'=>true),
 			array('project_name, project_description', 'length', 'max'=>255),
 			array('status', 'length', 'max'=>50),
+			array('project_name', 'unique', 'message' => 'Project already exists!'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('id, project_name, project_description, start_date, end_date, status, type, hr_clocked, category, created_by, created_date, updated_by, updated_date, is_deleted', 'safe', 'on'=>'search'),

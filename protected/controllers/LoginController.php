@@ -96,7 +96,7 @@ class LoginController extends BaseLoginController {
  //print_r('login'); exit
         //to set theme to login page
         
-        if($_REQUEST && $_REQUEST['user_id'] != "")
+        if($_REQUEST) // && $_REQUEST['user_id'] != ""
         {
              $user_details = Yii::app()->db->createCommand()
                     ->select('tu.email, tu.password')

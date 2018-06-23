@@ -33,3 +33,4 @@ class FiltersForm extends CFormModel
         }
         return $data;
     }
+}

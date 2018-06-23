@@ -74,6 +74,7 @@ class ProjectManagementController extends Controller {
         // $this->performAjaxValidation($model);
 
         if (isset($_POST['ProjectManagement'])) {
+            // CHelper::debug($_POST['ProjectManagement']);
             $model->attributes = $_POST['ProjectManagement'];
             $model->created_date = date('Y-m-d h:i:s');
             $model->updated_date = date('Y-m-d h:i:s');

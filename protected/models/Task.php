@@ -38,6 +38,7 @@ class Task extends CActiveRecord
 			array('is_approved, created_by, is_delete', 'numerical', 'integerOnly'=>true),
 			array('task_name, description', 'length', 'max'=>255),
 			array('status', 'length', 'max'=>10),
+			array('task_name', 'unique', 'message' => 'Type already exists!'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('task_id, task_name, description, status, is_approved, created_by, created_at, is_delete', 'safe', 'on'=>'search'),

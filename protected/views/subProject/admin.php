@@ -16,7 +16,7 @@ $this->menu = array(
 ?> 
 
 <?php
-
+// CHelper::debug($model);
 $this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'sub-project-grid',
     'dataProvider' => $model->search(),
@@ -24,9 +24,17 @@ $this->widget('zii.widgets.grid.CGridView', array(
     'columns' => array(
         //'taskId',
         //'pid',
+        array(
+			'header'=>'Program',
+            'name' => 'pid',
+            'type' => 'raw',
+            // 'filter' => false,
+            'value' => array($model, 'getProgram')
+        ),
+        // 'program',
         'sub_project_name',
         'sub_project_description',
-        'requester',
+        // 'requester',
        // 'estimated_end_date',
         //  'total_hr_estimation_hour',
           /*'created_by',

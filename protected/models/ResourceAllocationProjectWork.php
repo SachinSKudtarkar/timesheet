@@ -15,7 +15,9 @@
 class ResourceAllocationProjectWork extends CActiveRecord
 {
     public $projectName;
-    public $project_name;
+	public $project_name;
+	public $modified_by;
+	public $modified_at;
     /**
 	 * @return string the associated database table name
 	 */

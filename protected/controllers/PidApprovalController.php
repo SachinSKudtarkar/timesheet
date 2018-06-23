@@ -69,6 +69,7 @@ class PidApprovalController extends Controller {
         $this->performAjaxValidation($model);
 
         if (isset($_POST['PidApproval'])) {
+//         
             $valid = $_POST;
             if (empty($valid['project_id']) || empty($valid['sub_project_id']) || empty($valid['PidApproval']) ||
                     empty($valid['task_id']) || empty($valid['sub_task_name']) || empty($valid['est_hrs'])) {
@@ -78,59 +79,50 @@ class PidApprovalController extends Controller {
                 ));
             }
 
-
-            $model->project_id = $_POST['project_id'];
-            $model->sub_project_id = $_POST['sub_project_id'];
-            $model->approved = 2;
-            $model->created_by = Yii::app()->session["login"]["user_id"];
-            $model->created_at = date("Y-m-d h:i:s");
-
-            $model->attributes = $_POST['PidApproval'];
-            // echo "<pre>"; print_r($_POST['PidApproval']);
-            //CHelper::debug($_POST);
-            foreach ($_POST['task_id'] as $key => $val) {
-                $FINAL_ARRAY[$key]['task_id'] = $_POST['task_id'][$key];
-                $FINAL_ARRAY[$key]['emp_id'] = $_POST['emp_id'][$key];
-                $FINAL_ARRAY[$key]['sub_task_name'] = $_POST['sub_task_name'][$key];
-                $FINAL_ARRAY[$key]['est_hrs'] = $_POST['est_hrs'][$key];
-            }
-            if (isset($_POST['l2_ring'])) {
-                foreach ($_POST['l2_ring'] as $key => $val) {
-                    $FINAL_ARRAY[] = $_POST['l2_ring'][$key];
+            
+                $model->project_id = $_POST['project_id'];
+                $model->sub_project_id = $_POST['sub_project_id'];
+                $model->approved = 2;
+                $model->created_by = Yii::app()->session["login"]["user_id"];
+                $model->created_at = date("Y-m-d h:i:s");
+    
+                $model->attributes = $_POST['PidApproval'];
+                // echo "<pre>"; print_r($_POST['PidApproval']);
+                //CHelper::debug($_POST);
+                foreach ($_POST['task_id'] as $key => $val) {
+                    $FINAL_ARRAY[$key]['task_id'] = $_POST['task_id'][$key];
+                    $FINAL_ARRAY[$key]['emp_id'] = $_POST['emp_id'][$key];
+                    $FINAL_ARRAY[$key]['sub_task_name'] = $_POST['sub_task_name'][$key];
+                    $FINAL_ARRAY[$key]['est_hrs'] = $_POST['est_hrs'][$key];
                 }
-            }
-            //rint_r($FINAL_ARRAY);
-            if ($model->save(false))
-                foreach ($FINAL_ARRAY as $key => $val) {
-                    $modelST = new SubTask;
-                    $modelST->s_task_id = $key + 1;
-                    $modelST->pid_approval_id = $model->pid_id;
-                    $modelST->project_id = $model->project_id;
-                    $modelST->sub_project_id = $model->sub_project_id;
-                    $modelST->task_id = $val['task_id'];
-                    $modelST->emp_id = $val['emp_id'];
-                    $modelST->sub_task_name = $val['sub_task_name'];
-                    $modelST->est_hrs = $val['est_hrs'];
-                    $modelST->created_by = Yii::app()->session["login"]["user_id"];
-                    $modelST->created_at = date("Y-m-d h:i:s");
-                    $modelST->save(false);
-                    //$importData[] = $modelST->getAttributes();
+                if (isset($_POST['l2_ring'])) {
+                    foreach ($_POST['l2_ring'] as $key => $val) {
+                        $FINAL_ARRAY[] = $_POST['l2_ring'][$key];
+                    }
                 }
-            // if (!empty($importData)) {
-            // $transaction = $modelST->getDbConnection()->beginTransaction();
-            // try {
-            // $query = $modelST->commandBuilder->createMultipleInsertCommand($modelST->tableName(), $importData);
-            // Print_r($query);exit;
-            // $query->execute();
-            // $transaction->commit();
-            // $this->redirect(array('admin'));
-            // } catch (Exception $ex) {
-            // $transaction->rollback();
-            // throw $ex;
-            // }
-            // } else {
-            // Yii::app()->user->setFlash('error', 'No records found.');
-            // }
+                
+                if($model->validate()){
+                //rint_r($FINAL_ARRAY);
+                if ($model->save(false))
+                    foreach ($FINAL_ARRAY as $key => $val) {
+                        $modelST = new SubTask;
+                        $modelST->s_task_id = $key + 1;
+                        $modelST->pid_approval_id = $model->pid_id;
+                        $modelST->project_id = $model->project_id;
+                        $modelST->sub_project_id = $model->sub_project_id;
+                        $modelST->task_id = $val['task_id'];
+                        $modelST->emp_id = $val['emp_id'];
+                        $modelST->sub_task_name = $val['sub_task_name'];
+                        $modelST->est_hrs = $val['est_hrs'];
+                        $modelST->created_by = Yii::app()->session["login"]["user_id"];
+                        $modelST->created_at = date("Y-m-d h:i:s");
+                        $modelST->save(false);
+                        //$importData[] = $modelST->getAttributes();
+                    }
+
+            }
+           
+            
 
                 $this->redirect(Yii::app()->urlManager->createUrl("Project/allProject"));
 //            $this->redirect('admin', array('model' => $model));
@@ -140,6 +132,15 @@ class PidApprovalController extends Controller {
             'model' => $model
                 //   'subtask'=>$subtask,
         ));
+    }
+    
+    public function validated($post){
+   
+        Yii::app()->user->setFlash('error', 'Please fill All Filleds are Required');
+                $this->render('create', array(
+                    'model' => $model
+                ));
+                  
     }
 
     /**

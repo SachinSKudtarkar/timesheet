@@ -84,8 +84,8 @@ $this->widget('zii.widgets.grid.CGridView', array(
 		'modified_by',
 		
 		*/
-	/* 	array(
+		array(
 			'class'=>'CButtonColumn',
-		), */
+		),
 	),
 )); ?>

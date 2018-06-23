@@ -60,43 +60,58 @@ Yii::app()->clientScript->registerCssFile(
 <?php echo $form->textField($model, 'requester', array('size' => 60, 'maxlength' => 250)); ?>
 <?php echo $form->error($model, 'requester'); ?>
     </div>
-
+    
      
+    <div class="row">
+        <?php echo $form->labelEx($model, 'estimated_start_date'); ?>
+<?php echo $form->textField($model, 'estimated_start_date', array('size' => 60,'class' => 'datepicker', 'placeholder' => 'estimated start date', 'maxlength' => 250)); ?>
+<?php echo $form->error($model, 'estimated_start_date'); ?>
+    </div>
+    <div class="row">
+        <?php echo $form->labelEx($model, 'estimated_end_date'); ?>
+<?php echo $form->textField($model, 'estimated_end_date', array('size' => 60, 'class' => 'datepicker', 'placeholder' => 'estimated end date',  'maxlength' => 250)); ?>
+<?php echo $form->error($model, 'estimated_end_date'); ?>
+    </div>
+    <div class="row">
+        <?php echo $form->labelEx($model, 'total_hr_estimation_hour'); ?>
+<?php echo $form->textField($model, 'total_hr_estimation_hour', array('size' => 60, 'maxlength' => 250)); ?>
+<?php echo $form->error($model, 'total_hr_estimation_hour'); ?>
+    </div>
     <!--
             <div class="row">
-    <?php echo $form->labelEx($model, 'hr_clocked'); ?>
-    <?php echo $form->textField($model, 'hr_clocked', array('size' => 10, 'maxlength' => 10, 'style' => 'width:50px;')); ?>
-    <?php echo $form->error($model, 'hr_clocked'); ?>
+    <?php //echo $form->labelEx($model, 'hr_clocked'); ?>
+    <?php //echo $form->textField($model, 'hr_clocked', array('size' => 10, 'maxlength' => 10, 'style' => 'width:50px;')); ?>
+    <?php //echo $form->error($model, 'hr_clocked'); ?>
             </div>
      */
             <div class="row">
-    <?php echo $form->labelEx($model, 'created_by'); ?>
-    <?php echo $form->textField($model, 'created_by'); ?>
-    <?php echo $form->error($model, 'created_by'); ?>
+    <?php //echo $form->labelEx($model, 'created_by'); ?>
+    <?php //echo $form->textField($model, 'created_by'); ?>
+    <?php //echo $form->error($model, 'created_by'); ?>
             </div>
     
             <div class="row">
-    <?php echo $form->labelEx($model, 'created_date'); ?>
-    <?php echo $form->textField($model, 'created_date'); ?>
-    <?php echo $form->error($model, 'created_date'); ?>
+    <?php //echo $form->labelEx($model, 'created_date'); ?>
+    <?php //echo $form->textField($model, 'created_date'); ?>
+    <?php //echo $form->error($model, 'created_date'); ?>
             </div>
     
             <div class="row">
-    <?php echo $form->labelEx($model, 'updated_by'); ?>
-    <?php echo $form->textField($model, 'updated_by'); ?>
-    <?php echo $form->error($model, 'updated_by'); ?>
+    <?php //echo $form->labelEx($model, 'updated_by'); ?>
+    <?php //echo $form->textField($model, 'updated_by'); ?>
+    <?php //echo $form->error($model, 'updated_by'); ?>
             </div>
     
             <div class="row">
-    <?php echo $form->labelEx($model, 'updated_date'); ?>
-    <?php echo $form->textField($model, 'updated_date'); ?>
-    <?php echo $form->error($model, 'updated_date'); ?>
+    <?php //echo $form->labelEx($model, 'updated_date'); ?>
+    <?php //echo $form->textField($model, 'updated_date'); ?>
+    <?php //echo $form->error($model, 'updated_date'); ?>
             </div>
     
             <div class="row">
-        <?php echo $form->labelEx($model, 'is_deleted'); ?>
-<?php echo $form->textField($model, 'is_deleted'); ?>
-    <?php echo $form->error($model, 'is_deleted'); ?>
+        <?php// echo $form->labelEx($model, 'is_deleted'); ?>
+<?php //echo $form->textField($model, 'is_deleted'); ?>
+    <?php //echo $form->error($model, 'is_deleted'); ?>
             </div>-->
 
     <div class="row buttons">

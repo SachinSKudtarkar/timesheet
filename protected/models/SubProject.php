@@ -24,9 +24,9 @@ class SubProject extends CActiveRecord
 		public $Task_ID;// for display purpose
 		public $name;
 		public $hours;
-                public $allocated_resource;
-                public $Allocate_Hours;
-		public $Program;
+		public $allocated_resource;
+		public $Allocate_Hours;
+		public $program;
 		public $Project;
 		public $Aproved_hour;
 		public $Consumed_hours;
@@ -159,5 +159,11 @@ class SubProject extends CActiveRecord
                 $pro[$v1['spid']] = $v1['sub_project_description'];
             }
             return $pro;
-        }
+		}
+		
+		public  function getProgram($model){
+			$name = ProjectManagement::model()->findByPk($model->pid);
+			
+			return $name['project_name'];
+		}
 }

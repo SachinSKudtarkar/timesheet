@@ -66,6 +66,7 @@ class SubTask extends CActiveRecord
 			array('task_id, project_id, sub_project_id,pid_approval_id, status, created_by, is_approved, is_delete,est_hrs', 'numerical', 'integerOnly'=>true),
 			array('emp_id', 'length', 'max'=>10),
 			array('sub_task_name, description', 'length', 'max'=>255),
+			array('sub_task_name', 'unique', 'message' => 'Sub Project already exists!'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('stask_id, pid_approval_id ,task_id, project_id, sub_project_id, emp_id, sub_task_name, description, status, created_by, created_at, is_approved, is_delete,est_hrs', 'safe', 'on'=>'search'),
