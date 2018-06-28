@@ -209,7 +209,8 @@ getWrkHoursTotal();
 								//return true;
 								}
 			});
-
+                        
+                       
     
 			var totHrs = ( parseFloat(allhrs)+parseInt( (allmnts / 60)) ) +':'+ ( parseFloat( (allmnts % 60) ) );
 			$('#tworkedHrs').val(totHrs);
@@ -218,7 +219,22 @@ getWrkHoursTotal();
 		
 		
 
+$('#PidApproval_total_est_hrs').on('change',function(){
+    var totelthrs = $(this).val();
+     if(totelthrs == 0){
+                            alert("Hours should be more than 0");
+                            
+                        }
 
+});
+
+$('#PidApproval_jira_id').on('change',function(){
+   var jira = $(this).val(); 
+   if(jira == null){
+       alert("Jira Id should not be blank");
+       
+   }
+});
 
 
  $('#project_id').on('change',function(){

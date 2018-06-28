@@ -1,2 +1,10 @@
 /assets
 /protected/runtime
+/protected/config/database.php
+
+/nbproject/
+/assets/*
+!/assets/empty
+protected/runtime/*
+!protected/runtime/empty
+/.htaccess

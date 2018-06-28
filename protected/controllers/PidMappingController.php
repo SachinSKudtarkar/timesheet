@@ -128,12 +128,15 @@ class PidMappingController extends Controller
 		// ));
 		$model=new PidMapping('search');
 		$model->unsetAttributes();  // clear any default values
-		if(isset($_GET['PidMapping']))
+		if(isset($_GET['PidMapping'])){
+                    
+                    CHelper::prd($_GET);
 			$model->attributes=$_GET['PidMapping'];
-
+                }
 		$this->render('admin',array(
 			'model'=>$model,
 		));
+                
 	}
 
 	/**
