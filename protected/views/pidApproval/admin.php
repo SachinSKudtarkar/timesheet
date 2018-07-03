@@ -3,7 +3,7 @@
 /* @var $model PidApproval */
 
 $this->breadcrumbs=array(
-	'Pid Approvals'=>array('index'),
+	'Create Pid Approvals'=>array('create'),
 	'Manage',
 );
 

@@ -205,7 +205,7 @@ getWrkHoursTotal();
 									$("#ISSUB").attr('disabled',true);
                                    // return false;
                                 }else{
-							$("#ISSUB").attr('disabled',false);
+					$("#ISSUB").attr('disabled',false);
 								//return true;
 								}
 			});

@@ -353,11 +353,12 @@ class PidApprovalController extends Controller {
         // 	$model->attributes=$_GET['PidApproval'];
 
         if (isset($_REQUEST['PidApproval'])) {
+            // CHelper::debug($_REQUEST['PidApproval']);
             $condition = $_REQUEST['PidApproval'];
 
             $whrcondition = '';
             if ($condition['emp_id'] != '')
-                $whrcondition .= " AND em.first_name like '" . trim($condition['emp_id']) . "%' or em.last_name like '" . trim($condition['emp_id']) . "%'";
+                $whrcondition .= " AND em.first_name like '" . trim($condition['emp_id']) . "' or em.last_name like '" . trim($condition['emp_id']) . "'";
             if ($condition['sub_project_id'] != '')
                 $whrcondition .= " AND sp.sub_project_name like '" . trim($condition['sub_project_id']) . "%'";
             if ($condition['project_name'] != '')

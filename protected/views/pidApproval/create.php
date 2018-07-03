@@ -8,7 +8,7 @@ $this->breadcrumbs=array(
 );
 
 $this->menu=array(
-	array('label'=>'List PidApproval', 'url'=>array('index')),
+	//array('label'=>'List PidApproval', 'url'=>array('index')),
 	array('label'=>'Manage PidApproval', 'url'=>array('admin')),
 );
 ?>
