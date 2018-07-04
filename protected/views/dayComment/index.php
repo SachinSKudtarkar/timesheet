@@ -160,7 +160,7 @@ Yii::app()->clientScript->registerCssFile(
 							</div>
 							<div class="span2">
 								<?php echo CHTML::label('Comment :', '', array('style' => 'width:130px;font-weight:bold; ')); ?>
-								<?php echo CHtml::textArea('procomment[]', $eachproject['comment'], array('style' => ' height:40px; width:200px; ', 'disabled' => ($is_submitted ? 'disabled' : ''), 'id' => 'comment' . $date_id ."_". $pid));
+								<?php echo CHtml::textArea('procomment[]', $eachproject['comment'], array('style' => ' height:40px; width:200px; ','class' =>'DayComment', 'disabled' => ($is_submitted ? 'disabled' : ''), 'id' => 'comment' . $date_id ."_". $pid));
 								?>
 							</div>
 							<div class="span2">
@@ -247,7 +247,7 @@ Yii::app()->clientScript->registerCssFile(
 							</div>
 							<div class="span2">
 								<?php echo CHTML::label('Comment :', '', array('style' => 'width:130px;font-weight:bold; ')); ?>
-								<?php echo CHtml::textArea('procomment[]','', array('style' => ' height:40px; width:200px; ', 'disabled' => ($is_submitted ? 'disabled' : ''), 'id' => 'comment' . $date_id ."_". $eachproject['pid']));
+								<?php echo CHtml::textArea('procomment[]','', array('style' => ' height:40px; width:200px; ','class' =>'DayComment', 'disabled' => ($is_submitted ? 'disabled' : ''), 'id' => 'comment' . $date_id ."_". $eachproject['pid']));
 								?>
 							</div>
 							<div class="span2">
@@ -336,7 +336,7 @@ Yii::app()->clientScript->registerCssFile(
 		var _this = $(this).parent().parent().parent();
 
 		var oldId = _this.find('select').attr('id');
-		// alert(oldId);
+		 //alert(oldId);
 		var newArr = oldId.split('_');
 		var newId = newArr[0]+'_'+newArr[1]+'_'+newArr[2]+'_'+(+newArr[3]+1);
 		//alert(newId);

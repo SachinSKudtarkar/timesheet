@@ -51,8 +51,8 @@ $this->menu = array(
                 </td>
                 <td id="employee">
                      <?php
-                    // $emp_list = Employee::model()->getEmloyeeList();
-                    // echo CHTML::dropDownList('employee', $model->emp_id, $emp_list, array('prompt' => 'Please select Emlployee'));
+                     $emp_list = Employee::model()->getEmloyeeList();
+                     echo CHTML::dropDownList('employee', $model->emp_id, $emp_list, array('prompt' => 'Please select Emlployee'));
                     ?>	
                 </td> 
                 

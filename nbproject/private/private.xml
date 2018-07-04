@@ -3,10 +3,14 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/var/www/html/timesheet/protected/models/PidApproval.php</file>
-            <file>file:/var/www/html/timesheet/protected/controllers/PidApprovalController.php</file>
-            <file>file:/var/www/html/timesheet/protected/components/FiltersForm.php</file>
-            <file>file:/var/www/html/timesheet/protected/models/ProjectManagement.php</file>
+            <file>file:/var/www/html/timesheet/protected/views/pidApproval/AllProjects.php</file>
+            <file>file:/var/www/html/timesheet/protected/controllers/DayCommentController.php</file>
+            <file>file:/var/www/html/timesheet/protected/views/dayComment/index.php</file>
+            <file>file:/var/www/html/timesheet/protected/views/dayComment/allcomment.php</file>
+            <file>file:/var/www/html/timesheet/protected/views/pidApproval/pidapprovalform.php</file>
+            <file>file:/var/www/html/timesheet/protected/views/dayComment/dailytask.php</file>
+            <file>file:/var/www/html/timesheet/protected/views/pidApproval/_form.php</file>
+            <file>file:/var/www/html/timesheet/protected/models/DayComment.php</file>
         </group>
     </open-files>
 </project-private>

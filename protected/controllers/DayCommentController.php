@@ -64,7 +64,7 @@ class DayCommentController extends Controller {
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
-                'actions' => array('admin', 'delete', 'testMail', 'home', 'test'),
+                'actions' => array('admin', 'delete', 'testMail', 'home', 'test','dailytask'),
                 'users' => array('*'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -76,6 +76,23 @@ class DayCommentController extends Controller {
                 'users' => array('*'),
             ),
         );
+    }
+    
+    public function actiondailytask(){
+        $model = new DayComment;
+
+        // Uncomment the following line if AJAX validation is needed
+        // $this->performAjaxValidation($model);
+
+        if (isset($_POST['DayComment'])) {
+            $model->attributes = $_POST['DayComment'];
+            if ($model->save())
+                $this->redirect(array('view', 'id' => $model->id));
+        }
+
+        $this->render('dailytask', array(
+            'model' => $model,
+        ));
     }
 
     public function behaviors() {

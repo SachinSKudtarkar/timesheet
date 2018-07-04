@@ -39,7 +39,7 @@ class DayComment extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('pid, day, comment, created_by', 'required'),
+            array('pid, day, comment, created_by,comment, hours, projectName, project_name ,sub_project_name', 'required'),
             array('pid, created_by, is_submitted', 'numerical', 'integerOnly' => true),
             array('day', 'length', 'max' => 15),
             array('comment', 'length', 'max' => 1000),
