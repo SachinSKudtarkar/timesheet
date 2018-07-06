@@ -162,7 +162,7 @@ $(document).on('click','#btnS', function(){
 
 			 var day = $('.selecting_weeks').val();
                           var empid = $('.employee').val();
-                          alert(empid);
+                          
 $.ajax({
        url: BASE_URL+'/managedaycomment/updateStatus',
                 type: 'POST',
