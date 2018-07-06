@@ -83,7 +83,39 @@ class DayCommentController extends Controller {
 
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
+        $dataProvider1 = $model->search(false);
 
+            $arrData = $arrSubmitted = array();
+            $is_submitted = 0;
+            if (count($dataProvider1->getData())) {
+                $dayNo = 0;
+
+                foreach ($dataProvider1->getData() as $k => $v) {
+
+                    $day = date('Y_m_d', strtotime($v->day));
+                    $arrData[$day][$dayNo]['id'] = $v->id;
+                    $arrData[$day][$dayNo]['pid'] = $v->pid;
+                    $arrData[$day][$dayNo]['spid']['result'] = $this->actionfetchSubProject($v->pid); //fetchSubProject
+                    $arrData[$day][$dayNo]['spid']['selected'] = $v->spid;
+                    $arrData[$day][$dayNo]['stask_id']['result'] = $this->actionfetchSubTask($v->spid);
+                    $arrData[$day][$dayNo]['stask_id']['selected'] = $v->stask_id;
+                    $arrData[$day][$dayNo]['emp_id'] = $v->emp_id;
+                    $arrData[$day][$dayNo]['day'] = $v->day;
+                    $arrData[$day][$dayNo]['comment'] = $v->comment;
+                    $hours = explode(':', $v->hours);
+                    $arrData[$day][$dayNo]['hrs'] = $hours[0];
+                    $arrData[$day][$dayNo]['mnts'] = $hours[1];
+                    $arrData[$day][$dayNo]['is_submitted'] = $v->is_submitted;
+
+                    $date = explode(" ", $v->day)[0];
+                    $arrSubmitted[$date] = $v->is_submitted;
+//                    echo date('Y-m-d', strtotime("last ", strtotime($v->day))).'||';
+                    /* if ($arrSubmitted[date('Y-m-d', strtotime("monday this week", strtotime($v->day)))] == 0)
+                     */  //  $arrSubmitted[date('Y-m-d', strtotime("sunday this week", strtotime($v->day)))] = $v->is_submitted;
+
+                    $dayNo++;
+                }
+            }
         if (isset($_POST['DayComment'])) {
             $model->attributes = $_POST['DayComment'];
             if ($model->save())
@@ -92,6 +124,8 @@ class DayCommentController extends Controller {
 
         $this->render('dailytask', array(
             'model' => $model,
+            'dataProvider1'=>$dataProvider1,
+            'arrData' =>$arrData,
         ));
     }
 

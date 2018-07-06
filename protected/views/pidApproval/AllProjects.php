@@ -93,7 +93,8 @@ $('.search-form form').submit(function(){
             'header'=>'Employee',
                     'name' => 'emp_id',
                     'type' => 'raw',
-                    'value' => array($model, 'getEmpName')
+                    'value' => array($model, 'getEmpName'),
+                    
                 ),
               array(
 			'header'=>'Start Date',

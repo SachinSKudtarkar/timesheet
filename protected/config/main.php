@@ -49,6 +49,7 @@ return array(
         'ext.bootstrap-theme.helpers.*',
         'ext.bootstrap-theme.behaviors.*',
         'ext.mail.*',
+        'ext.yiicalendar.*',
     // Cronjob modules model's,            
     //'application.modules.cronjob.models.*',
     // X-editable extenson,
