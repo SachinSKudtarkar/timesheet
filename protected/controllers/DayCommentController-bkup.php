@@ -985,7 +985,7 @@ group by da.spid order by em.emp_id"; // and sb.spid = ra.spid
         return $result;
     }
 
-    private function getSubProjectByProjectId2($pid) {
+    public function getSubProjectByProjectId2($pid) {
         $newData = $da = $nn = $result = array();
         if ($pid) {
 

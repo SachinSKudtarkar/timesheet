@@ -750,11 +750,36 @@ class CommonUtility extends CApplicationComponent {
         $result =[];
         if($emp_id){
          $query = "SELECT project_name,rap.pid FROM tbl_resource_allocation_project_work as rap INNER JOIN tbl_project_management pm ON (rap.pid = pm.pid) WHERE is_deleted=0 and rap.allocated_resource in ($emp_id)";
-        $projectDetails = Yii::app()->db->createCommand($query)->queryRow();
-//        CHelper::dump($projectDetails);
-        return $result[$projectDetails['pid']]=  $projectDetails['project_name'];
+        $projectDetails = Yii::app()->db->createCommand($query)->queryAll();
+        foreach ($projectDetails as $key => $value) {
+           $result[$value['pid']]=  $value['project_name'];
+        }
+        
+        return $result;
         }
           
     }
+
+    public static function getSubProjectByProjectId($pid){
+        $newData = $da = $nn = $result = array();
+        if ($pid) {
+            $userId = Yii::app()->session['login']['user_id'];
+           $query ="select st.sub_project_id,sp.sub_project_name,st.stask_id  from tbl_sub_task as st inner join tbl_pid_approval as pa on (st.pid_approval_id = pa.pid_id) inner join tbl_sub_project as sp on (sp.spid = st.sub_project_id)
+where st.project_id = {$pid} and st.emp_id = {$userId} group by st.sub_project_id";
+
+        $res = Yii::app()->db->createCommand($query)->queryAll();
+
+        $hours = array();
+            if (isset($res)) {
+            
+                    foreach (array_filter($res) as $key => $val) {
+                    
+                    $result[$val['sub_project_id']] = $val['sub_project_name'];
+                }
+            }
+        }
+        return $result;
+    }
+
 
 }
