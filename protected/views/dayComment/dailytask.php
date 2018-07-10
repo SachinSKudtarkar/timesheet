@@ -135,7 +135,10 @@
 								
 								
 							
-                                        <td class="Project"><input type="text" placeholder="Select Project" name ="Project[]" class="form-control"></td>
+                                        <td class="Project">
+                                           <?php //  echo CHTML::dropDownList('SubProject[]','spid', CommonUtility::getSubProjectByProjectId($emp_id), array('style' => 'width:150px;', 'prompt' => 'Please select Program', 'class' => 'form-control')); ?>
+                                            <input type="text" placeholder="Select Project" name ="SubProject[]" class="form-control">
+                                        </td>
                                         <td class="Task"><input  type="text" placeholder="Select Task" name ="Task[]"class="form-control"</td>
                                         <td class="Comment"><input  type="text" placeholder="Please right comment here" name ="Comment[]"class="form-control"></td>
                                         <td><a href='javascript:void(0);'  class='remove'><span class='glyphicon glyphicon-remove'></span></a></td>
@@ -185,7 +188,11 @@ Yii::app()->clientScript->registerScript('filters', "
 <script>
 $(function(){
     $('#addMore').on('click', function() {
+//        var $div = $('div[id^="klon"]:last');
+        
               var data = $("#tb tr:eq(1)").clone(true).appendTo("#tb");
+              alert(data);
+              
               data.find("input").val('');
      });
      $(document).on('click', '.remove', function() {
