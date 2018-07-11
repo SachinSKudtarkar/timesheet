@@ -15,6 +15,7 @@ class DayComment extends CActiveRecord {
     public $projectName;
     public $project_name;
     public $sub_project_name;
+    public $sub_task_name;
     //public $hours;
     public $name;
     public $from;
@@ -72,7 +73,8 @@ class DayComment extends CActiveRecord {
             'created_by' => 'created_by',
             'project_name' => 'Project Name',
             'hours' => 'Hours',
-            'sub_project_name' => 'Task'
+            'sub_project_name' => 'Project',
+            'sub_task_name' => 'Task'
         );
     }
 
@@ -94,7 +96,7 @@ class DayComment extends CActiveRecord {
             $criteria->condition = ' (t.day between "' . date('Y-m-d', strtotime($this->from)) . '" AND "' . date('Y-m-d', strtotime($this->to)) . ' 23:59:59")';
         }
         $criteria = new CDbCriteria;
-        $criteria->select = "t.*, pm.project_name,t.comment,t.day,t.comment,t.hours,t.emp_id,sb.sub_project_name";
+        $criteria->select = "t.*, pm.project_name,t.comment,t.day,t.comment,t.hours,t.emp_id,sb.sub_project_name,st.sub_task_name";
         $criteria->compare('id', $this->id);
         $criteria->compare('t.pid', $this->pid);
         $criteria->compare('t.emp_id', Yii::app()->session['login']['user_id']);
@@ -104,7 +106,8 @@ class DayComment extends CActiveRecord {
         $criteria->compare('created_by', $this->created_by);
         $criteria->compare('sb.sub_project_name', $this->sub_project_name);
         $criteria->compare('pm.project_name', $this->project_name, true);
-        $criteria->join = "INNER JOIN tbl_project_management pm ON t.pid = pm.pid LEFT join tbl_sub_project sb ON sb.spid=t.spid";
+        $criteria->join = "INNER JOIN tbl_project_management pm ON t.pid = pm.pid LEFT join tbl_sub_project sb ON sb.spid=t.spid LEFT join tbl_sub_task as st ON st.stask_id=t.stask_id";
+
         $criteria->order = "id,day DESC";
 
         if ($pagination) {

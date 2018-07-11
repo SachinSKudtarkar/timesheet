@@ -319,6 +319,7 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.stask_id";
      */
     public function actionAdmin() {
         $model = new DayComment('search');
+         
         $model->unsetAttributes();  // clear any default values
         if (isset($_GET['DayComment'])) {
             $_GET['DayComment'] = array_map('trim', $_GET['DayComment']);
@@ -328,6 +329,7 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.stask_id";
             $inpCount = 0;
             $dataProvider1 = $model->search(false);
             $result = $dataProvider1->getData();
+           
             foreach ($result as $key => $value) {
                 $inpCount++;
                 $finalArr['rows'][] = array(

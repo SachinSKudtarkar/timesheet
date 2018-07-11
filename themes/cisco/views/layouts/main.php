@@ -100,11 +100,11 @@ $user_email = base64_encode($user_email);
                                                 'visible' => (CHelper::isAccess("RESOURCEALLOCATION", "full_access")),
                                                 'active' => (Yii::app()->controller->id == 'pidmapping' && Yii::app()->controller->action->id == 'pidmapping')
                                             ),
-                                            array('label' => 'View All Projects Status',
-                                                'url' => array('//pidapproval/AllProjects'),
-                                                'visible' => (CHelper::isAccess("RESOURCEALLOCATION", "full_access")),
-                                                'active' => (Yii::app()->controller->id == 'pidapproval' && Yii::app()->controller->action->id == 'pidapproval')
-                                            ),
+//                                            array('label' => 'View All Projects Status',
+//                                                'url' => array('//pidapproval/AllProjects'),
+//                                                'visible' => (CHelper::isAccess("RESOURCEALLOCATION", "full_access")),
+//                                                'active' => (Yii::app()->controller->id == 'pidapproval' && Yii::app()->controller->action->id == 'pidapproval')
+//                                            ),
                                             array('label' => 'View All Projects Details',
                                                 'url' => array('//Project/allProject'),
                                                 'visible' => (CHelper::isAccess("RESOURCEALLOCATION", "full_access")),
@@ -173,16 +173,16 @@ $user_email = base64_encode($user_email);
 //					                                    ),
                                         ),
                                     ),
-                                    array('label' => 'Manage Type',
-                                        'url' => array('//Task/admin'),
-                                        'visible' => (CHelper::isAccess("RESOURCEALLOCATION", "full_access")),
-                                        'active' => (Yii::app()->controller->id == 'task' && Yii::app()->controller->action->id == 'task')
-                                    ),
-                                    // array('label' => 'Manage Project Task',
-                                    //                                'url' => array('//subtask/admin'),
-                                    //                                'visible' => (CHelper::isAccess("RESOURCEALLOCATION", "full_access")),
-                                    //                                'active' => (Yii::app()->controller->id == 'subtask' && Yii::app()->controller->action->id == 'subtask')
-                                    //                            ),
+//                                    array('label' => 'Manage Type',
+//                                        'url' => array('//Task/admin'),
+//                                        'visible' => (CHelper::isAccess("RESOURCEALLOCATION", "full_access")),
+//                                        'active' => (Yii::app()->controller->id == 'task' && Yii::app()->controller->action->id == 'task')
+//                                    ),
+                                     array('label' => 'Manage Project Task',
+                                                                    'url' => array('//subtask/admin'),
+//                                                                    'visible' => (CHelper::isAccess("RESOURCEALLOCATION", "full_access")),
+                                                                    'active' => (Yii::app()->controller->id == 'subtask' && Yii::app()->controller->action->id == 'subtask')
+                                                                ),
                                     array('label' => 'View Project Statistics',
                                         'url' => array('//resourceallocationprojectwork/resourcemanagement'),
                                         'visible' => (CHelper::isAccess("RESOURCEALLOCATION", "full_access")),

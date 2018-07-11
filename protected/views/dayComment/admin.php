@@ -20,6 +20,7 @@ $x = $this->widget('zii.widgets.grid.CGridView', array(
     'columns' => array(
         'project_name',
         'sub_project_name',
+        'sub_task_name',
         array(
             'name' => 'emp_id',
             'value' => array($model, 'getUserName'),
