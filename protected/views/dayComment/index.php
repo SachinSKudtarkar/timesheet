@@ -6,10 +6,10 @@ $this->breadcrumbs = array(
     'Day Comments',
 );
 
-$this->menu = array(
-    array('label' => 'DayComment', 'url' => array('index')),
-    array('label' => 'View My Status', 'url' => array('admin')),
-);
+//$this->menu = array(
+//    array('label' => 'DayComment', 'url' => array('index')),
+//    array('label' => 'View My Status', 'url' => array('admin')),
+//);
 ?>
 
 <?php

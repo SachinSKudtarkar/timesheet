@@ -381,7 +381,7 @@ group by dc.stask_id order by em.emp_id;";
         $modified_at = date('Y-m-d H:i:s');
         if (!empty($result)) {
             $done = 1;
-            $updateQuery = "UPDATE tbl_resource_allocation_project_work SET allocated_resource = '{$all_resources}', modified_by ='{$modified_by}' , modified_at = '{$modified_at}' WHERE id = '{$result['id']}'  ";
+            $updateQuery = "UPDATE tbl_resource_allocation_project_work SET allocated_resource = '{$all_resources}', modified_by ='{$modified_by}' , modified_at = '{$modified_at}',day = '{$modified_at}'   WHERE id = '{$result['id']}'  ";
             Yii::app()->db->createCommand($updateQuery)->execute();
            /* $model = new ResourceAllocationProjectWork;
             $model->pid = $projectId;

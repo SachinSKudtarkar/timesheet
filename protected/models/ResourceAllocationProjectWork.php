@@ -18,6 +18,7 @@ class ResourceAllocationProjectWork extends CActiveRecord
 	public $project_name;
 	public $modified_by;
 	public $modified_at;
+        public  $day;
     /**
 	 * @return string the associated database table name
 	 */

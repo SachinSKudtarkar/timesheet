@@ -196,26 +196,26 @@ $user_email = base64_encode($user_email);
                                 'visible' => isset(Yii::app()->session['login']['user_id']),
                                 'active' => (Yii::app()->controller->id == 'profile' || Yii::app()->controller->id == 'changepassword' || Yii::app()->controller->id == 'logout'),
                                 'items' => array(
-                                    array('label' => 'Status not submit',
-                                        'url' => array('//daycomment/StatusReport'),
-                                        'visible' => CHelper::isAccess("STATUS", "full_access"),
-                                        'active' => (Yii::app()->controller->id == 'daycomment' && Yii::app()->controller->action->id == 'statusreport')
-                                    ),
-                                    array('label' => 'Status submit',
+//                                    array('label' => 'Status not submit',
+//                                        'url' => array('//daycomment/StatusReport'),
+//                                        'visible' => CHelper::isAccess("STATUS", "full_access"),
+//                                        'active' => (Yii::app()->controller->id == 'daycomment' && Yii::app()->controller->action->id == 'statusreport')
+//                                    ),
+                                    array('label' => 'Daily task submission records',
                                         'url' => array('//daycomment/adminAll'),
                                         'visible' => CHelper::isAccess("STATUS", "full_access"),
                                         'active' => (Yii::app()->controller->id == 'daycomment' && Yii::app()->controller->action->id == 'adminAll')
                                     ),
-                                    array('label' => 'Manage Employee',
-                                        'url' => array('//employee/admin'),
-                                        'visible' => CHelper::isAccess("EMPLOYEE", "index"),
-                                        'active' => (Yii::app()->controller->id == 'employee' && Yii::app()->controller->action->id == 'admin')
-                                    ),
-                                    array('label' => 'Access Roles',
-                                        'url' => array('//roles'),
-                                        'visible' => CHelper::isAccess("STATUS", "full_access"),
-                                        'active' => (Yii::app()->controller->id == 'roles' && Yii::app()->controller->action->id == 'index')
-                                    ),
+//                                    array('label' => 'Manage Employee',
+//                                        'url' => array('//employee/admin'),
+//                                        'visible' => CHelper::isAccess("EMPLOYEE", "index"),
+//                                        'active' => (Yii::app()->controller->id == 'employee' && Yii::app()->controller->action->id == 'admin')
+//                                    ),
+//                                    array('label' => 'Access Roles',
+//                                        'url' => array('//roles'),
+//                                        'visible' => CHelper::isAccess("STATUS", "full_access"),
+//                                        'active' => (Yii::app()->controller->id == 'roles' && Yii::app()->controller->action->id == 'index')
+//                                    ),
                                     array('label' => 'Unlock Daily Status',
                                         'url' => array('//ManagedayComment/index'),
                                         'visible' => CHelper::isAccess("STATUS", "full_access"),
