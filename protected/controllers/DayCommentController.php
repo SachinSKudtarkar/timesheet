@@ -360,7 +360,7 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.stask_id";
         $condition = $_GET['DayComment'];
         if (isset($_REQUEST['DayComment'])) {
             
-            CHelper::dump($_REQUEST);
+            
             $day = $condition['day'];
             if($day){
                 $whrcondition = "DATE_FORMAT(t.day,'%Y-%m-%d') = '{$day}'";
@@ -381,7 +381,7 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.stask_id";
             if($name){
                 $whrcondition = "CONCAT(first_name,' ',last_name) = '{$name}' ";
             }
-            // CHelper::debug($whrcondition);
+
             
               $sql1 = "select t.day,t.comment,t.hours,CONCAT(first_name,' ',last_name) as name,sb.sub_project_name,pm.project_name,st.task_name from tbl_day_comment as t
                   INNER JOIN tbl_project_management pm ON (t.pid = pm.pid) INNER JOIN tbl_employee emp ON (emp.emp_id = t.emp_id) LEFT join tbl_sub_project sb ON (sb.spid=t.spid )left Join tbl_task as st on (st.task_id = t.stask_id)

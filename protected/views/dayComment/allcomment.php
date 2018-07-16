@@ -115,14 +115,8 @@ $x = $this->widget('zii.widgets.grid.CGridView', array(
         'task_name',
         array(
             'name' => 'name',
-            // 'filter' => FALSE,
         ),
-        // array(
-        //     'name' => 'Name',
-        //     'type' => 'raw',
-        //     'value' => array(new CommonUtility, 'getCreatedByName'),
-        //     'filter' => CHtml::dropDownList('DayComment[emp_id]', $model->emp_id, CHtml::listData(CommonUtility::getCreaterDropdown($model->tableName()), 'emp_id', 'first_name'), array('empty' => 'All')),
-        // ),
+  
         array(
             'name' => 'comment',
             'filter' => FALSE,
