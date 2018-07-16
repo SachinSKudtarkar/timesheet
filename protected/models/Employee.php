@@ -377,7 +377,7 @@ class Employee extends CActiveRecord {
         return $name;
     }
  
-
+// this list only for allocated task employee
     public static function getEmloyeeList($project_id = '') {
 //        $employeeData = Employee::model()->findAll(array('select' => "emp_id,first_name,last_name", 'order' => 'first_name', 'condition' => 'is_active=1'));
 //        $emp_list = array();
@@ -403,9 +403,10 @@ class Employee extends CActiveRecord {
             
         $emp_list = array();
         foreach ($newList as $key => $value) {
-            if($value)
+            if($value){
             $e_list = Yii::app()->db->createCommand("select * from tbl_employee where emp_id ={$value}")->queryRow();
             $emp_list[$value] = $e_list['first_name'] . " " . $e_list['last_name'];
+            }
         }
         return $emp_list;
     }

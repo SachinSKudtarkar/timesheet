@@ -17,13 +17,13 @@
     <div style="position: relative; ">    
         <table>
             <tr>
-                <td><label><b>From</b></label></td>
-                <td><label><b>To</b></label></td>
-                <td width="40px;"></td>
-                <td><label><b>Program</b></label></td> 
-                <td><label><b>Employee</b></label></td>
-                <td><label><b>Project</b></label></td>
-                <td></td>
+                <th><label><b>From</b></label></th>
+                <th><label><b>To</b></label></th>
+                <th width="40px;"></th>
+                <th><label><b>Program</b></label></th> 
+                <th><label><b>Employee</b></label></th>
+                <th><label><b>Project</b></label></th>
+                <th></th>
             </tr>    
             <tr>
                 <td>
@@ -96,6 +96,8 @@
 </form>  
 
 <?php 
+
+  
 $x = $this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'day-comment-grid',
     'dataProvider' => $model->searchAll(),

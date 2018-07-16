@@ -183,11 +183,11 @@ $user_email = base64_encode($user_email);
 //                                                                    'visible' => (CHelper::isAccess("RESOURCEALLOCATION", "full_access")),
                                                                     'active' => (Yii::app()->controller->id == 'subtask' && Yii::app()->controller->action->id == 'subtask')
                                                                 ),
-                                    array('label' => 'View Project Statistics',
-                                        'url' => array('//resourceallocationprojectwork/resourcemanagement'),
-                                        'visible' => (CHelper::isAccess("RESOURCEALLOCATION", "full_access")),
-                                        'active' => (Yii::app()->controller->id == 'resourceallocationprojectwork' && Yii::app()->controller->action->id == 'resourcemanagement')
-                                    ),
+//                                    array('label' => 'View Project Statistics',
+//                                        'url' => array('//resourceallocationprojectwork/resourcemanagement'),
+//                                        'visible' => (CHelper::isAccess("RESOURCEALLOCATION", "full_access")),
+//                                        'active' => (Yii::app()->controller->id == 'resourceallocationprojectwork' && Yii::app()->controller->action->id == 'resourcemanagement')
+//                                    ),
                                 ),
                             ),
                             array(

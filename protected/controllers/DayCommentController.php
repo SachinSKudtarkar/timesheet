@@ -358,11 +358,13 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.stask_id";
         $_GET['DayComment'] = array_map('trim', $_GET['DayComment']);
         $model->attributes = $_GET['DayComment'];
         if (isset($_GET)) {
+            
             $model->from = $_GET['from'];
             $model->to = $_GET['to'];
             $model->emp_id = $_GET['employee'];
             $model->pid = $_GET['ProjectName'];
             $model->sub_project_name = $_GET['Task_Name'];
+            
         }
         if ($this->isExportRequest()) {
             $inpCount = 0;
