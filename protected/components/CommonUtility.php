@@ -781,5 +781,21 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.sub_project_i
         return $result;
     }
 
+    public static function downloadDataInCSV($header = array(), $data = array(), $fileName = 'datafile') {
+        ob_get_clean();
+        header("Content-type: text/csv");
+        header("Content-Disposition: attachment; filename={$fileName}.csv");
+        header("Pragma: no-cache");
+        header("Expires: 0");
+        $file = fopen('php://output', 'w');
+        fputcsv($file, $header);
+//fputcsv($file, array(1, 2, 4));
+        foreach ($data as $row) {
+            fputcsv($file, $row);
+        }
+        $file = fopen('php://output', 'w');
+        exit();
+    }
+
 
 }

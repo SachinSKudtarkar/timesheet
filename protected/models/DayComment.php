@@ -16,6 +16,7 @@ class DayComment extends CActiveRecord {
     public $project_name;
     public $sub_project_name;
     public $sub_task_name;
+    public $task_name;
     //public $hours;
     public $name;
     public $from;
@@ -57,6 +58,7 @@ class DayComment extends CActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
+            // 'Creater' => array(self::BELONGS_TO, 'Employee', 'emp_id'),
         );
     }
 
@@ -132,7 +134,7 @@ class DayComment extends CActiveRecord {
 //		if($criteria->condition != '') $criteria->condition .= ' AND ';
 //		$criteria->condition .= ' (t.emp_id = ' . Yii::app()->session['login']['user_id'] . ' )';
 		
-        $criteria->select = "t.*,CONCAT(first_name,' ',last_name) as name,sb.sub_project_name,pm.project_name, t.is_submitted ";
+        $criteria->select = "t.*,CONCAT(first_name,' ',last_name) as name,sb.sub_project_name,pm.project_name, t.is_submitted,st.task_name ";
         $criteria->compare('id', $this->id);
         $criteria->compare('t.pid', $this->pid);
         $criteria->compare('t.emp_id', $this->emp_id);
@@ -141,13 +143,15 @@ class DayComment extends CActiveRecord {
         $criteria->compare('t.is_submitted', $this->is_submitted, true);
         $criteria->compare('pm.project_name', $this->project_name, true);
         $criteria->compare('sb.sub_project_name', $this->sub_project_name);
+        $criteria->compare('st.task_name', $this->task_name);
         $criteria->compare('CONCAT(first_name," ",last_name)', $this->name, true);
-        $criteria->join = "INNER JOIN tbl_project_management pm ON t.pid = pm.pid INNER JOIN tbl_employee emp ON emp.emp_id = t.emp_id LEFT join tbl_sub_project sb ON sb.spid=t.spid";
+        // $criteria->with = array("Creater" => array("alias" => 'r', "select" => 'first_name, last_name'));
+        $criteria->join = "INNER JOIN tbl_project_management pm ON t.pid = pm.pid INNER JOIN tbl_employee emp ON emp.emp_id = t.emp_id LEFT join tbl_sub_project sb ON sb.spid=t.spid left Join tbl_task as st on st.task_id = t.stask_id";
         $criteria->order = "id, day DESC";
         if ($pagination) {
             return new CActiveDataProvider($this, array(
                 'criteria' => $criteria,
-                'pagination' => array('pageSize' => 20,),
+                'pagination' => array('pageSize' => 30,),
             ));
         } else {
             return new CActiveDataProvider($this, array(
@@ -235,9 +239,8 @@ class DayComment extends CActiveRecord {
     }
 
     public function getFormatedDate($model) {
-
-        $date = date("Y-m-d", strtotime($model->day));
-        return "<b>" . $date . "</b>";
+        $date = date("Y-m-d", strtotime($model['day']));
+        return  $date;
     }
 
     public function sendMailStatus() {

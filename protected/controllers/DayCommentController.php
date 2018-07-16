@@ -357,38 +357,74 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.stask_id";
         $model->unsetAttributes();  // clear any default values
         $_GET['DayComment'] = array_map('trim', $_GET['DayComment']);
         $model->attributes = $_GET['DayComment'];
-        if (isset($_GET)) {
+        $condition = $_GET['DayComment'];
+        if (isset($_REQUEST['DayComment'])) {
             
-            $model->from = $_GET['from'];
-            $model->to = $_GET['to'];
-            $model->emp_id = $_GET['employee'];
-            $model->pid = $_GET['ProjectName'];
-            $model->sub_project_name = $_GET['Task_Name'];
+            CHelper::dump($_REQUEST);
+            $day = $condition['day'];
+            if($day){
+                $whrcondition = "DATE_FORMAT(t.day,'%Y-%m-%d') = '{$day}'";
+            }
+            $project_name = $condition['project_name'];
+            if($project_name){
+                $whrcondition = "pm.project_name = '{$project_name}'";
+            }
+            $sub_project_name = $condition['sub_project_name'];
+            if($sub_project_name){
+                $whrcondition = "sb.sub_project_name = '{$sub_project_name}'";
+            }
+            $task_name = $condition['task_name'];
+            if($task_name){
+                $whrcondition = "st.task_name = '{$task_name}' ";
+            }
+             $name = $condition['name'];
+            if($name){
+                $whrcondition = "CONCAT(first_name,' ',last_name) = '{$name}' ";
+            }
+            // CHelper::debug($whrcondition);
             
+              $sql1 = "select t.day,t.comment,t.hours,CONCAT(first_name,' ',last_name) as name,sb.sub_project_name,pm.project_name,st.task_name from tbl_day_comment as t
+                  INNER JOIN tbl_project_management pm ON (t.pid = pm.pid) INNER JOIN tbl_employee emp ON (emp.emp_id = t.emp_id) LEFT join tbl_sub_project sb ON (sb.spid=t.spid )left Join tbl_task as st on (st.task_id = t.stask_id)
+                  where  $whrcondition  order by id, day DESC";
+            $search_data = Yii::app()->db->createCommand($sql1)->queryAll();
+            
+            
+          
+            
+            
+            
+        }else{
+            $sql1 = "select t.day,t.comment,t.hours,CONCAT(first_name,' ',last_name) as name,sb.sub_project_name,pm.project_name,st.task_name from tbl_day_comment as t
+                  INNER JOIN tbl_project_management pm ON (t.pid = pm.pid) INNER JOIN tbl_employee emp ON (emp.emp_id = t.emp_id) LEFT join tbl_sub_project sb ON (sb.spid=t.spid )left Join tbl_task as st on (st.task_id = t.stask_id)
+                    order by id DESC";
+            $search_data = Yii::app()->db->createCommand($sql1)->queryAll();
         }
         if ($this->isExportRequest()) {
             $inpCount = 0;
-            $dataProvider1 = $model->searchAll(false);
-            $result = $dataProvider1->getData();
-            foreach ($result as $key => $value) {
+            // $dataProvider1 = $model->searchAll(false);
+            // $result = $dataProvider1->getData();
+            // CHelper::debug($search_data);
+            foreach ($search_data as $key => $value) {
                 $inpCount++;
-                $finalArr['rows'][] = array(
+                $finalArr[$key] = array(
                     $inpCount,
+                    $value['day'],
                     $value['project_name'],
                     $value['sub_project_name'],
+                    $value['task_name'],
                     $value['name'],
-                    $value['day'],
                     $value['comment'],
                     $value['hours'],
                 );
             }
 
-            $export_column_name = array('Sr. No.', 'Project name', 'Task', 'Employee name', 'date', 'comment', 'hours');
+            $export_column_name = array('Sr No.','Day', 'Program Name','Project Name', 'Task Name', 'Employee name',  'Comment', 'Hours');
             $filename = "daily_comment " . date('d_m_Y') . "_" . date('H') . "_hr.csv";
-            CommonUtility::downloadDataInCSV($export_column_name, $finalArr['rows'], $filename);
+            CommonUtility::downloadDataInCSV($export_column_name, $finalArr, $filename);
         }
         $this->render('allcomment', array(
             'model' => $model,
+            'data' => $search_data,
         ));
     }
 
