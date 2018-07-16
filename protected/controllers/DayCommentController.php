@@ -360,31 +360,31 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.stask_id";
         $condition = $_GET['DayComment'];
         if (isset($_REQUEST['DayComment'])) {
             
-            CHelper::dump($_REQUEST);
-            $day = $condition['day'];
+            
+            $day = trim($condition['day']);
             if($day){
                 $whrcondition = "DATE_FORMAT(t.day,'%Y-%m-%d') = '{$day}'";
             }
-            $project_name = $condition['project_name'];
+            $project_name = trim($condition['project_name']);
             if($project_name){
                 $whrcondition = "pm.project_name = '{$project_name}'";
             }
-            $sub_project_name = $condition['sub_project_name'];
+            $sub_project_name = trim($condition['sub_project_name']);
             if($sub_project_name){
                 $whrcondition = "sb.sub_project_name = '{$sub_project_name}'";
             }
-            $task_name = $condition['task_name'];
+            $task_name = trim($condition['sub_task_name']);
             if($task_name){
-                $whrcondition = "st.task_name = '{$task_name}' ";
+                $whrcondition = "st.sub_task_name = '{$task_name}' ";
             }
-             $name = $condition['name'];
+             $name = trim($condition['name']);
             if($name){
                 $whrcondition = "CONCAT(first_name,' ',last_name) = '{$name}' ";
             }
-            // CHelper::debug($whrcondition);
+           
             
-              $sql1 = "select t.day,t.comment,t.hours,CONCAT(first_name,' ',last_name) as name,sb.sub_project_name,pm.project_name,st.task_name from tbl_day_comment as t
-                  INNER JOIN tbl_project_management pm ON (t.pid = pm.pid) INNER JOIN tbl_employee emp ON (emp.emp_id = t.emp_id) LEFT join tbl_sub_project sb ON (sb.spid=t.spid )left Join tbl_task as st on (st.task_id = t.stask_id)
+              $sql1 = "select t.day,t.comment,t.hours,CONCAT(first_name,' ',last_name) as name,sb.sub_project_name,pm.project_name,st.sub_task_name from tbl_day_comment as t
+                  INNER JOIN tbl_project_management pm ON (t.pid = pm.pid) INNER JOIN tbl_employee emp ON (emp.emp_id = t.emp_id) LEFT join tbl_sub_project sb ON (sb.spid=t.spid )left Join tbl_sub_task as st on (st.stask_id = t.stask_id)
                   where  $whrcondition  order by id, day DESC";
             $search_data = Yii::app()->db->createCommand($sql1)->queryAll();
             
@@ -394,8 +394,8 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.stask_id";
             
             
         }else{
-            $sql1 = "select t.day,t.comment,t.hours,CONCAT(first_name,' ',last_name) as name,sb.sub_project_name,pm.project_name,st.task_name from tbl_day_comment as t
-                  INNER JOIN tbl_project_management pm ON (t.pid = pm.pid) INNER JOIN tbl_employee emp ON (emp.emp_id = t.emp_id) LEFT join tbl_sub_project sb ON (sb.spid=t.spid )left Join tbl_task as st on (st.task_id = t.stask_id)
+            $sql1 = "select t.day,t.comment,t.hours,CONCAT(first_name,' ',last_name) as name,sb.sub_project_name,pm.project_name,st.sub_task_name from tbl_day_comment as t
+                  INNER JOIN tbl_project_management pm ON (t.pid = pm.pid) INNER JOIN tbl_employee emp ON (emp.emp_id = t.emp_id) LEFT join tbl_sub_project sb ON (sb.spid=t.spid )left Join tbl_sub_task as st on (st.stask_id = t.stask_id)
                     order by id DESC";
             $search_data = Yii::app()->db->createCommand($sql1)->queryAll();
         }

@@ -112,7 +112,7 @@ $x = $this->widget('zii.widgets.grid.CGridView', array(
         ),
         'project_name', 
         'sub_project_name',
-        'task_name',
+        'sub_task_name',
         array(
             'name' => 'name',
             // 'filter' => FALSE,
