@@ -361,11 +361,9 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.stask_id";
         if (isset($_REQUEST['DayComment'])) {
             
             
-<<<<<<< HEAD
-            $day = $condition['day'];
-=======
+
             $day = trim($condition['day']);
->>>>>>> 47953e0abcdfa69198d4c4801a6450eabc8d230f
+
             if($day){
                 $whrcondition = "DATE_FORMAT(t.day,'%Y-%m-%d') = '{$day}'";
             }
@@ -385,13 +383,7 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.stask_id";
             if($name){
                 $whrcondition = "CONCAT(first_name,' ',last_name) = '{$name}' ";
             }
-<<<<<<< HEAD
-
-=======
-           
->>>>>>> 47953e0abcdfa69198d4c4801a6450eabc8d230f
-            
-              $sql1 = "select t.day,t.comment,t.hours,CONCAT(first_name,' ',last_name) as name,sb.sub_project_name,pm.project_name,st.sub_task_name from tbl_day_comment as t
+            $sql1 = "select t.day,t.comment,t.hours,CONCAT(first_name,' ',last_name) as name,sb.sub_project_name,pm.project_name,st.sub_task_name from tbl_day_comment as t
                   INNER JOIN tbl_project_management pm ON (t.pid = pm.pid) INNER JOIN tbl_employee emp ON (emp.emp_id = t.emp_id) LEFT join tbl_sub_project sb ON (sb.spid=t.spid )left Join tbl_sub_task as st on (st.stask_id = t.stask_id)
                   where  $whrcondition  order by id, day DESC";
             $search_data = Yii::app()->db->createCommand($sql1)->queryAll();
