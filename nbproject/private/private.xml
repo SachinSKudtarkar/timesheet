@@ -7,7 +7,6 @@
             <file>file:/var/www/html/timesheet/protected/views/pidApproval/AllProjects.php</file>
             <file>file:/var/www/html/timesheet/protected/controllers/DayCommentController.php</file>
             <file>file:/var/www/html/timesheet/index.php</file>
-            <file>file:/var/www/html/timesheet/protected/views/dayComment/allcomment.php</file>
             <file>file:/var/www/html/timesheet/protected/models/DayComment.php</file>
         </group>
     </open-files>
