@@ -127,12 +127,7 @@ echo CHTML::dropDownList('project_id', 'pid', CHtml::listData(ProjectManagement:
                                 echo CHtml::textField('est_hrs[]', $value->est_hrs,array('data-name' => 'est_hrs', 'style' => "width:50px;", "name" => "data[0][est_hrs]", "class" => "est_hrs wrkhrsClass")); 
                                 
                                 ?></td>
-                                <td><?php
-                                    echo CHtml::link('', 'javascript:void(0);', array('class' => 'icon-plus-sign l2_ring customAddMorel2_ring'));
-                                    if ($count > 1)
-                                        
-                                        ?> 
-                                    <?php echo CHtml::link('', 'javascript:void(0);', array('class' => 'icon-remove-sign l2_ring customRemoveRowl2_ring')); ?></td>
+                                
                             </tr>
                             <?php
                         }
@@ -149,6 +144,7 @@ echo CHTML::dropDownList('project_id', 'pid', CHtml::listData(ProjectManagement:
                             <td><?php echo CHtml::textField('sub_task_name[]', $value->sub_task_name, array('data-name' => 'sub_task_name', 'style' => "width:210px;", "name" => "data[0][sub_task_name]", "class" => "sub_task_name")); ?></td>
                             <td><?php echo CHtml::textField('est_hrs[]', $value->est_hrs,array('data-name' => 'est_hrs', 'style' => "width:50px;", "name" => "data[0][est_hrs]", "class" => "est_hrs wrkhrsClass")); ?></td>
                             <td><?php echo CHtml::link('', 'javascript:void(0);', array('class' => 'icon-plus-sign l2_ring customAddMorel2_ring')); ?></td>
+                            
                         </tr>
                         <?php
                     } ?>

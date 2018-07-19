@@ -10,17 +10,6 @@ $this->breadcrumbs = array(
 //    array('label' => 'DayComment', 'url' => array('index')),
 //    array('label' => 'View My Status', 'url' => array('admin')),
 //);
-$this->widget('ext.yiicalendar.YiiCalendar', array
-    (
-    'dataProvider' => array
-        (
-        'pagination' => array
-            (
-            'pageSize' => 'week',
-            'isMondayFirst' => TRUE
-        )
-    )
-));
 ?>
 
 <?php
@@ -46,16 +35,13 @@ Yii::app()->clientScript->registerCssFile(
             <div class="span5">
 				<?php
                                 echo CHTML::label('Select Day :', '', array('style' => 'width:80px; font-weight:bold;'));
-					$selecting_date = "";
-					if (isset($_GET['selecting_date'])) {
-						$selecting_date = $_GET['selecting_date'];
-						$selecting_date = date('Y-m-d', strtotime($selecting_date));
-					} else {
-						$selecting_date = date('Y-m-d');
-					}
-                                        
-//                                        echo $selecting_date;
-                                        
+//					$selecting_date = "";
+//					if (isset($_GET['selecting_date'])) {
+//						$selecting_date = $_GET['selecting_date'];
+//						$selecting_date = date('Y-m-d', strtotime($selecting_date));
+//					} else {
+//						$selecting_date = date('Y-m-d', strtotime("monday this week"));
+//					}
 //					echo CHTML::label('Select Day :', '', array('style' => 'width:80px; font-weight:bold;'));
 //				
 //					for ($mondayCounter = 4; $mondayCounter >= 0; $mondayCounter--) {
@@ -84,18 +70,15 @@ Yii::app()->clientScript->registerCssFile(
 
 					$btnShow = FALSE;
 					//$is_submitted = TRUE;
-//					if (strtotime($selecting_date) >= strtotime("monday this week") ) {
-//						$btnShow = TRUE;
-//					}else if (strtotime($selecting_date) <= strtotime("monday this week") ) {
-//						$is_submitted = TRUE;
-//					}
+					if (strtotime($selecting_date) >= strtotime("monday this week") ) {
+						$btnShow = TRUE;
+					}else if (strtotime($selecting_date) <= strtotime("monday this week") ) {
+						$is_submitted = TRUE;
+					}
 					
 					$is_submitted = false;
 					$btnShow = true;
-                                        
-                                        
 				?>
-                                                      
 			</div>
         </div>
         <hr style=" margin-top: 0px; margin-bottom: 3px;"/>
@@ -104,18 +87,16 @@ Yii::app()->clientScript->registerCssFile(
     echo "<input type='hidden' name='selected_date' value='{$selecting_date}' />";
     $img_path = Yii::app()->theme->baseUrl . "/img/add_image.png";
     
-//    for ($k = 0; $k <= 6; $k++) {
-//        $generte_date = strtotime("+{$k} day", strtotime($selecting_date));
-//        $date = date("Y-m-d", $generte_date);
-//        $date_id = date("Y_m_d", $generte_date);
-//
-//		if(key_exists($date,$arrSubmitted))
-//			$is_submitted = $arrSubmitted[$date];
-   
-                $generte_date = strtotime($selecting_date);
-		 $date_id = date("Y_m_d", $generte_date);
-                
-               
+    for ($k = 0; $k <= 6; $k++) {
+        $generte_date = strtotime("+{$k} day", strtotime($selecting_date));
+        $date = date("Y-m-d", $generte_date);
+        $date_id = date("Y_m_d", $generte_date);
+
+		if(key_exists($date,$arrSubmitted))
+			$is_submitted = $arrSubmitted[$date];
+		?>
+
+		<?php 
 		
 		if(key_exists($date_id, $arrData)) { ?>
 				<div class="main_daycomments">
@@ -143,23 +124,16 @@ Yii::app()->clientScript->registerCssFile(
 					$pid = $eachproject['pid'];
 				}
 					?>
-                                      <div class="span"  style="margin-left:5px;">
-							<?php echo CHTML::label('shift :', '', array('style' => 'width:50px;font-weight:bold; '));   
-                                                        $shift = array('1'=>'Day', '2'=>'Night');
-                                                                    echo CHTML::radioButtonList($model,'shift',$shift[],array('separator'=>' ','style' => 'width:1px;font-weight:bold; '));?>
-							</div>
 				<!-- 	<div class="row hdshow_<?php //echo $date_id ."_". $i . " " . $tmpcls; ?>" id="<?php //echo $date_id ."_". $i . " " . $tmpcls; ?>" > -->
 				<div>
-                                   
 						<div class="row" >
-                                                   
 
 							<div class="span2"  style="margin-left:10px;">
 								<?php echo "<b>" . date("l", $generte_date) . "</b> <br /> (" . date("d-m-Y", $generte_date) . " )"; ?>
 								<?php echo CHTML::hiddenField('Date[]', $date, array('readonly' => 'readonly', 'style' => 'width:90px;')); ?>
 							</div>
 							<div class="span2"  style="margin-left:10px; " >
-								<?php echo CHTML::label('Program :', '', array('style' => 'width:50px;font-weight:bold; ')); ?>
+								<?php echo CHTML::label('Program :', '', array('style' => 'width:90px;font-weight:bold; ')); ?>
 								<?php echo CHTML::dropDownList('ProjectName[]', $eachproject['pid'], CHtml::listData($allProjects, 'pid', 'project_name'), array('style' => 'width:150px;', 'disabled' => ($is_submitted ? 'disabled' : ''), 'prompt' => 'Please select Program', 'class' => 'proclass', 'id' => $date_id ."_". $pid, 'nxt' => $date_id ."_". $nxt)); ?>
 							</div>
 							<div class="span2"  style="margin-left:10px;">
@@ -236,15 +210,9 @@ Yii::app()->clientScript->registerCssFile(
 				$tmpcls = ($i > 0) ? '' : '';
 				$nxt = $i + 1;
 				?>
-                              <div class="span"  style="margin-left:5px;">
-							<?php echo CHTML::label('shift :', '', array('style' => 'width:50px;font-weight:bold; '));   
-                                                        $shift = array('1'=>'Day', '2'=>'Night');
-                                                                    echo CHTML::radioButtonList($model,'shift[]',$shift,array('separator'=>' ','style' => 'width:1px;font-weight:bold; '));?>
-							</div>
 					<!-- <div class="row hdshow_<?php //echo $date_id ."_". $i . " " . $tmpcls; ?>"  > -->
 					<div>
 						<div class="row" >
-                                                    
 							<div class="span2"  style="margin-left:10px;">
 								<?php echo "<b>" . date("l", $generte_date) . "</b> <br /> (" . date("d-m-Y", $generte_date) . " )"; ?>
 								<?php echo CHTML::hiddenField('Date[]', date("Y-m-d", $generte_date), array('readonly' => 'readonly', 'style' => 'width:90px;'));
@@ -316,7 +284,7 @@ Yii::app()->clientScript->registerCssFile(
 			</div>
 		<?php } ?>
 	<?php
-    //}
+    }
     ?>
     <div class="row">
         <input type="hidden" name="totalPrjcts" value="<?php echo $i; ?>" />

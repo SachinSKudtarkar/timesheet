@@ -87,35 +87,38 @@ class DayCommentController extends Controller {
 
             $arrData = $arrSubmitted = array();
             $is_submitted = 0;
-            if (count($dataProvider1->getData())) {
-                $dayNo = 0;
-
-                foreach ($dataProvider1->getData() as $k => $v) {
-
-                    $day = date('Y_m_d', strtotime($v->day));
-                    $arrData[$day][$dayNo]['id'] = $v->id;
-                    $arrData[$day][$dayNo]['pid'] = $v->pid;
-                    $arrData[$day][$dayNo]['spid']['result'] = $this->actionfetchSubProject($v->pid); //fetchSubProject
-                    $arrData[$day][$dayNo]['spid']['selected'] = $v->spid;
-                    $arrData[$day][$dayNo]['stask_id']['result'] = $this->actionfetchSubTask($v->spid);
-                    $arrData[$day][$dayNo]['stask_id']['selected'] = $v->stask_id;
-                    $arrData[$day][$dayNo]['emp_id'] = $v->emp_id;
-                    $arrData[$day][$dayNo]['day'] = $v->day;
-                    $arrData[$day][$dayNo]['comment'] = $v->comment;
-                    $hours = explode(':', $v->hours);
-                    $arrData[$day][$dayNo]['hrs'] = $hours[0];
-                    $arrData[$day][$dayNo]['mnts'] = $hours[1];
-                    $arrData[$day][$dayNo]['is_submitted'] = $v->is_submitted;
-
-                    $date = explode(" ", $v->day)[0];
-                    $arrSubmitted[$date] = $v->is_submitted;
-//                    echo date('Y-m-d', strtotime("last ", strtotime($v->day))).'||';
-                    /* if ($arrSubmitted[date('Y-m-d', strtotime("monday this week", strtotime($v->day)))] == 0)
-                     */  //  $arrSubmitted[date('Y-m-d', strtotime("sunday this week", strtotime($v->day)))] = $v->is_submitted;
-
-                    $dayNo++;
-                }
-            }
+//            if (count($dataProvider1->getData())) {
+//                $dayNo = 0;
+//
+//                foreach ($dataProvider1->getData() as $k => $v) {
+//
+//                    $day = date('Y_m_d', strtotime($v->day));
+//                    $arrData[$day][$dayNo]['id'] = $v->id;
+//                    $arrData[$day][$dayNo]['pid'] = $v->pid;
+//                    $arrData[$day][$dayNo]['spid']['result'] = $this->actionfetchSubProject($v->pid); //fetchSubProject
+//                    $arrData[$day][$dayNo]['spid']['selected'] = $v->spid;
+//                    $arrData[$day][$dayNo]['stask_id']['result'] = $this->actionfetchSubTask($v->spid);
+//                    $arrData[$day][$dayNo]['stask_id']['selected'] = $v->stask_id;
+//                    $arrData[$day][$dayNo]['emp_id'] = $v->emp_id;
+//                    $arrData[$day][$dayNo]['day'] = $v->day;
+//                    $arrData[$day][$dayNo]['comment'] = $v->comment;
+//                    $hours = explode(':', $v->hours);
+//                    $arrData[$day][$dayNo]['hrs'] = $hours[0];
+//                    $arrData[$day][$dayNo]['mnts'] = $hours[1];
+//                    $arrData[$day][$dayNo]['is_submitted'] = $v->is_submitted;
+//
+//                    $date = explode(" ", $v->day)[0];
+//                    $arrSubmitted[$date] = $v->is_submitted;
+////                    echo date('Y-m-d', strtotime("last ", strtotime($v->day))).'||';
+//                    /* if ($arrSubmitted[date('Y-m-d', strtotime("monday this week", strtotime($v->day)))] == 0)
+//                     */  //  $arrSubmitted[date('Y-m-d', strtotime("sunday this week", strtotime($v->day)))] = $v->is_submitted;
+//
+//                    $dayNo++;
+//                }
+//            }
+            $arrData = $dataProvider1->getData();
+            
+//            CHelper::debug($arrData);
         if (isset($_POST['DayComment'])) {
             $model->attributes = $_POST['DayComment'];
             if ($model->save())
@@ -361,9 +364,7 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.stask_id";
         if (isset($_REQUEST['DayComment'])) {
             
             
-
             $day = trim($condition['day']);
-
             if($day){
                 $whrcondition = "DATE_FORMAT(t.day,'%Y-%m-%d') = '{$day}'";
             }
@@ -383,16 +384,11 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.stask_id";
             if($name){
                 $whrcondition = "CONCAT(first_name,' ',last_name) = '{$name}' ";
             }
+           
             $sql1 = "select t.day,t.comment,t.hours,CONCAT(first_name,' ',last_name) as name,sb.sub_project_name,pm.project_name,st.sub_task_name from tbl_day_comment as t
                   INNER JOIN tbl_project_management pm ON (t.pid = pm.pid) INNER JOIN tbl_employee emp ON (emp.emp_id = t.emp_id) LEFT join tbl_sub_project sb ON (sb.spid=t.spid )left Join tbl_sub_task as st on (st.stask_id = t.stask_id)
                   where  $whrcondition  order by id, day DESC";
             $search_data = Yii::app()->db->createCommand($sql1)->queryAll();
-            
-            
-          
-            
-            
-            
         }else{
             $sql1 = "select t.day,t.comment,t.hours,CONCAT(first_name,' ',last_name) as name,sb.sub_project_name,pm.project_name,st.sub_task_name from tbl_day_comment as t
                   INNER JOIN tbl_project_management pm ON (t.pid = pm.pid) INNER JOIN tbl_employee emp ON (emp.emp_id = t.emp_id) LEFT join tbl_sub_project sb ON (sb.spid=t.spid )left Join tbl_sub_task as st on (st.stask_id = t.stask_id)
@@ -603,6 +599,7 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.stask_id";
     }
 
     public function actionAddcomment() {
+     
         $timesheet_flag = 0;
 //        $rd_day = isset($_POST['Date']) ? $_POST['Date'] : '';
         $status_date = isset($_POST['Date']) ? $_POST['Date'] : '';
@@ -623,7 +620,10 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.stask_id";
         if ($rd_day == '') {
             $rd_day = date('d/m/Y');
         }
-
+if($_POST){
+//    CHelper::debug($_POST);
+    
+}
         $projectsName = array_filter($projectsName);
         $all_data = array();
 
@@ -940,6 +940,7 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.stask_id";
 
     public function actionfetchSubProject($pida = '') {
         $newData = $da = $nn = $result = array();
+        $val = '';
         if ($pida) {
 
             $pid = $pida;

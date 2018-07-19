@@ -25,6 +25,7 @@ class DayComment extends CActiveRecord {
     public $days_filled;
     public $dates_filled;
     public $to;
+    public $shift;
 
 
     /**
@@ -48,6 +49,7 @@ class DayComment extends CActiveRecord {
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('id, pid, day, comment, created_by,hours, projectName, project_name ,sub_project_name, emp_id,name, is_submitted', 'safe', 'on' => 'search,searchAll'),
+            array('pid, day, comment,hours, projectName, project_name ,sub_project_name,  ', 'safe'),
         );
     }
 

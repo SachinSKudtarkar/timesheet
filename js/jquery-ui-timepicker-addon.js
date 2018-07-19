@@ -457,7 +457,7 @@ $.extend(Timepicker.prototype, {
 					$(this).click(function() {
 						tp_inst.minute_slider.slider("option", "value", $(this).html());
 						tp_inst._onTimeChange();
-						tp_inst._onSelectHandler();
+						tp_inst._onSelectHandler(); 
 					}).css({
 						cursor: 'pointer',
 						width: (100 / minuteGridSize) + '%',
