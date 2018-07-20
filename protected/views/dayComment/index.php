@@ -145,8 +145,19 @@ Yii::app()->clientScript->registerCssFile(
 					?>
                                       <div class="span"  style="margin-left:5px;">
 							<?php echo CHTML::label('shift :', '', array('style' => 'width:50px;font-weight:bold; '));   
-                                                        $shift = array('1'=>'Day', '2'=>'Night');
-                                                                    echo CHTML::radioButtonList($model,'shift',$shift[],array('separator'=>' ','style' => 'width:1px;font-weight:bold; '));?>
+//                                                        $shift = array('1'=>'Day', '2'=>'Night');
+//                                                                    echo CHTML::radioButton($model,'shift[]',$shift,array('checked'=>'checked','style' => 'width:1px;font-weight:bold; '));
+                                                                    
+                                                                    
+                                                                    $this->widget('bootstrap.widgets.TbButtonGroup', array(
+                                                                        'type' => 'info',
+                                                                        'toggle' => 'radio', // 'checkbox' or 'radio'
+                                                                    'buttonType' => 'button',
+                                                                        'buttons' => array(
+                                                                            array('label'=>'Day','value'=>1),
+                                                                            array('label'=>'Night','value'=>2)
+                                                                        ),
+)); ?>
 							</div>
 				<!-- 	<div class="row hdshow_<?php //echo $date_id ."_". $i . " " . $tmpcls; ?>" id="<?php //echo $date_id ."_". $i . " " . $tmpcls; ?>" > -->
 				<div>
@@ -239,7 +250,29 @@ Yii::app()->clientScript->registerCssFile(
                               <div class="span"  style="margin-left:5px;">
 							<?php echo CHTML::label('shift :', '', array('style' => 'width:50px;font-weight:bold; '));   
                                                         $shift = array('1'=>'Day', '2'=>'Night');
-                                                                    echo CHTML::radioButtonList($model,'shift[]',$shift,array('separator'=>' ','style' => 'width:1px;font-weight:bold; '));?>
+//                                                                    echo CHTML::radioButtonlist($model,'shift',$shift,
+//                                                                                    array(
+//                                                                                        'labelOptions'=>array('style'=>'display:inline;margin-top: -3px;width: auto !important;'), // add this code
+//                                                                                        
+//                                                                                        'separator'=>'  ',
+//                                                                                        'id' =>'shift')
+//
+//                                                                            
+//                                                                                        );
+//                                                        
+                 
+                                                        
+                                                       $this->widget('bootstrap.widgets.TbButtonGroup', array(
+    'type' => 'info',
+    'toggle' => 'radio', // 'checkbox' or 'radio'
+'buttonType' => 'button',
+    'buttons' => array(
+        array('label'=>'Day','value'=>1),
+        array('label'=>'Night','value'=>2)
+    ),
+)); 
+
+                                                        ?>
 							</div>
 					<!-- <div class="row hdshow_<?php //echo $date_id ."_". $i . " " . $tmpcls; ?>"  > -->
 					<div>
