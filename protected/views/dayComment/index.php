@@ -53,7 +53,7 @@ Yii::app()->clientScript->registerCssFile(
 					} else {
 						$selecting_date = date('Y-m-d');
 					}
-                                        
+                                   
 //                                        echo $selecting_date;
                                         
 //					echo CHTML::label('Select Day :', '', array('style' => 'width:80px; font-weight:bold;'));
@@ -143,21 +143,31 @@ Yii::app()->clientScript->registerCssFile(
 					$pid = $eachproject['pid'];
 				}
 					?>
-                                      <div class="span"  style="margin-left:5px;">
-							<?php echo CHTML::label('shift :', '', array('style' => 'width:50px;font-weight:bold; '));   
-//                                                        $shift = array('1'=>'Day', '2'=>'Night');
-//                                                                    echo CHTML::radioButton($model,'shift[]',$shift,array('checked'=>'checked','style' => 'width:1px;font-weight:bold; '));
-                                                                    
-                                                                    
-                                                                    $this->widget('bootstrap.widgets.TbButtonGroup', array(
-                                                                        'type' => 'info',
-                                                                        'toggle' => 'radio', // 'checkbox' or 'radio'
-                                                                    'buttonType' => 'button',
-                                                                        'buttons' => array(
-                                                                            array('label'=>'Day','value'=>1),
-                                                                            array('label'=>'Night','value'=>2)
-                                                                        ),
-)); ?>
+                                              <div class="span"  style="margin-left:5px;" id="Shift">
+							<?php echo CHTML::label('shift :', '', array('style' => 'width:50px;font-weight:bold; '));  
+                                                                    echo CHTML::radioButtonlist($model,'shift',
+                                                                            array('1'=>'Day', '2'=>'Night'),
+                                                                            array(
+                                                                                'labelOptions'=>
+                                                                                array('style'=>'display:inline;margin-top: -3px;width: auto !important;'), // add this code
+                                                                                'separator'=>'  ',
+                                                                                'class' =>'checkbox')
+                                                                                );
+                                                        
+                 
+                                                        
+//                                                                    $this->widget('bootstrap.widgets.TbButtonGroup', array(
+//                                                                            'type' => 'info',
+//                                                                            'toggle' => 'radio', // 'checkbox' or 'radio'
+//                                                                        'buttonType' => 'button',
+//                                                                            'buttons' => array(
+//                                                                                array('label'=>'Day','value'=>1),
+//                                                                                array('label'=>'Night','value'=>2)
+//                                                                            ),
+//                                                                         'htmlOptions'=> array('onclick' => 'addtolist()'),
+//                                                                        )); 
+
+                                                        ?>
 							</div>
 				<!-- 	<div class="row hdshow_<?php //echo $date_id ."_". $i . " " . $tmpcls; ?>" id="<?php //echo $date_id ."_". $i . " " . $tmpcls; ?>" > -->
 				<div>
@@ -170,7 +180,7 @@ Yii::app()->clientScript->registerCssFile(
 								<?php echo CHTML::hiddenField('Date[]', $date, array('readonly' => 'readonly', 'style' => 'width:90px;')); ?>
 							</div>
 							<div class="span2"  style="margin-left:10px; " >
-								<?php echo CHTML::label('Program :', '', array('style' => 'width:50px;font-weight:bold; ')); ?>
+								<?php echo CHTML::label('Program :', '', array('style' => 'width:90px;font-weight:bold; ')); ?>
 								<?php echo CHTML::dropDownList('ProjectName[]', $eachproject['pid'], CHtml::listData($allProjects, 'pid', 'project_name'), array('style' => 'width:150px;', 'disabled' => ($is_submitted ? 'disabled' : ''), 'prompt' => 'Please select Program', 'class' => 'proclass', 'id' => $date_id ."_". $pid, 'nxt' => $date_id ."_". $nxt)); ?>
 							</div>
 							<div class="span2"  style="margin-left:10px;">
@@ -247,30 +257,29 @@ Yii::app()->clientScript->registerCssFile(
 				$tmpcls = ($i > 0) ? '' : '';
 				$nxt = $i + 1;
 				?>
-                              <div class="span"  style="margin-left:5px;">
-							<?php echo CHTML::label('shift :', '', array('style' => 'width:50px;font-weight:bold; '));   
-                                                        $shift = array('1'=>'Day', '2'=>'Night');
-//                                                                    echo CHTML::radioButtonlist($model,'shift',$shift,
-//                                                                                    array(
-//                                                                                        'labelOptions'=>array('style'=>'display:inline;margin-top: -3px;width: auto !important;'), // add this code
-//                                                                                        
-//                                                                                        'separator'=>'  ',
-//                                                                                        'id' =>'shift')
-//
-//                                                                            
-//                                                                                        );
-//                                                        
+                            <div class="span"  style="margin-left:5px;" id="Shift">
+							<?php echo CHTML::label('shift :', '', array('style' => 'width:50px;font-weight:bold; '));  
+                                                                    echo CHTML::radioButtonlist($model,'shift',
+                                                                            array('1'=>'Day', '2'=>'Night'),
+                                                                            array(
+                                                                                'labelOptions'=>
+                                                                                array('style'=>'display:inline;margin-top: -3px;width: auto !important;'), // add this code
+                                                                                'separator'=>'  ',
+                                                                                'class' =>'checkbox')
+                                                                                );
+                                                        
                  
                                                         
-                                                       $this->widget('bootstrap.widgets.TbButtonGroup', array(
-    'type' => 'info',
-    'toggle' => 'radio', // 'checkbox' or 'radio'
-'buttonType' => 'button',
-    'buttons' => array(
-        array('label'=>'Day','value'=>1),
-        array('label'=>'Night','value'=>2)
-    ),
-)); 
+//                                                                    $this->widget('bootstrap.widgets.TbButtonGroup', array(
+//                                                                            'type' => 'info',
+//                                                                            'toggle' => 'radio', // 'checkbox' or 'radio'
+//                                                                        'buttonType' => 'button',
+//                                                                            'buttons' => array(
+//                                                                                array('label'=>'Day','value'=>1),
+//                                                                                array('label'=>'Night','value'=>2)
+//                                                                            ),
+//                                                                         'htmlOptions'=> array('onclick' => 'addtolist()'),
+//                                                                        )); 
 
                                                         ?>
 							</div>
@@ -603,9 +612,7 @@ Yii::app()->clientScript->registerCssFile(
 						//var workhours = data.workhours;
                         $.each(data.result, function(key, val) {
                             dropDown+='<option value='+key+' hrmin='+data.workhours[key]+'>'+val+'</option>';
-							//console.log(data.workhours[key]);
-							//localStorage.setItem( 'hours-'+key, data.workhours[key] );
-							//console.log('ddddddddddd'+localStorage.getItem( 'hours-'+key ) );
+							
 
                         });
 						 // $(this).parents('.row').find('.sub-task').html(dropDown);
@@ -736,6 +743,13 @@ function checkLength(){
                 e.preventDefault();
 
         });
+        
+      $('.checkbox').click(function (e) {
+          var shift = $(this).val();
+          alert(shift);
+      });  
+	
+	
 });
 </script>
 </form>
