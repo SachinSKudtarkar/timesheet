@@ -37,6 +37,13 @@ Yii::app()->clientScript->registerCssFile(
 // echo '<pre>';print_r($arrData);echo '</pre>';exit;
 ?>
 
+<div class="info well well-large">
+    <h1>Time Sheet Notice </h1>
+    <p>For multiple task add by  clicking <code>+ sign</code> ,  mention <code>shift</code> and  Then click <code>Save Button</code> to save changes, <code>You can also edit current Month task </code> 
+    </p>
+</div>
+
+
 <form class="form" action="<?php echo Yii::app()->baseUrl; ?>/daycomment/addcomment" method="post" id="addcommentfrm">
     <input type="hidden" name ="YII_CSRF_TOKEN" value="<?php echo Yii::app()->request->csrfToken; ?>"  />
 

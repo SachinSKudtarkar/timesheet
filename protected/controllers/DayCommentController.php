@@ -713,13 +713,13 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.stask_id";
                 $update_query = Yii::app()->db->createCommand($query)->execute();
             }
 
-//            if ($timesheet_flag == 1 && $_SESSION['cnaap_flag'] == 1) {
-//                Yii::app()->user->setFlash('success', "Comment added successfully.");
-//                $this->redirect('https://' . $_SERVER['SERVER_NAME'] . '/login?user_id=' . $model->emp_id, array('target' => '_blank'));
-//            } else {
+           if ($timesheet_flag == 1 && $_SESSION['cnaap_flag'] == 1) {
+               Yii::app()->user->setFlash('success', "Comment added successfully.");
+               $this->redirect('https://' . $_SERVER['SERVER_NAME'] . '/login?user_id=' . $model->emp_id, array('target' => '_blank'));
+           } else {
                 Yii::app()->user->setFlash('success', "Comment added successfully.");
                 $this->redirect(array('daycomment/index/selecting_date/' . $selected_date));
-//            }
+           }
         }
         Yii::app()->user->setFlash('error', "Please select project.");
         $this->redirect(array('daycomment/index/selecting_date/' . $selected_date));
