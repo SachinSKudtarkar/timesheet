@@ -268,7 +268,7 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.stask_id";
                 $model->to = '';
             }
             $dataProvider1 = $model->search(false);
-
+           
             $arrData = $arrSubmitted = array();
             $is_submitted = 0;
             if (count($dataProvider1->getData())) {
@@ -290,6 +290,7 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.stask_id";
                     $arrData[$day][$dayNo]['hrs'] = $hours[0];
                     $arrData[$day][$dayNo]['mnts'] = $hours[1];
                     $arrData[$day][$dayNo]['is_submitted'] = $v->is_submitted;
+                    $arrData[$day][$dayNo]['shift'] = $v->shift;
 
                     $date = explode(" ", $v->day)[0];
                     $arrSubmitted[$date] = $v->is_submitted;

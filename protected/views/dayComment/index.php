@@ -45,7 +45,7 @@ Yii::app()->clientScript->registerCssFile(
         <div class="row" >
             <div class="span5">
 				<?php
-                                echo CHTML::label('Select Day :', '', array('style' => 'width:80px; font-weight:bold;'));
+                   	echo CHTML::label('Select Day :', '', array('style' => 'width:80px; font-weight:bold;'));
 					$selecting_date = "";
 					if (isset($_GET['selecting_date'])) {
 						$selecting_date = $_GET['selecting_date'];
@@ -122,9 +122,7 @@ Yii::app()->clientScript->registerCssFile(
 			<?php
 			$i = 0;
 		
-			 // if(Yii::app()->session['login']['user_id'] == 2070){
-    //         CHelper::debug($arrData[$date_id]);
-    //     }
+		
 			foreach ($arrData[$date_id] as $key=>$eachproject) {
 				
 				
@@ -143,16 +141,18 @@ Yii::app()->clientScript->registerCssFile(
 					$pid = $eachproject['pid'];
 				}
 					?>
-                                              <div class="span"  style="margin-left:5px;" id="Shift">
-							<?php echo CHTML::label('shift :', '', array('style' => 'width:50px;font-weight:bold; '));  
-                                                                    echo CHTML::radioButtonlist($model,'shift',
-                                                                            array('1'=>'Day', '2'=>'Night'),
-                                                                            array(
-                                                                                'labelOptions'=>
-                                                                                array('style'=>'display:inline;margin-top: -3px;width: auto !important;'), // add this code
-                                                                                'separator'=>'  ',
-                                                                                'class' =>'checkbox')
-                                                                                );
+					<div class="row">
+                            <div class="span"  style="margin-left:5px;">
+							<?php 
+								echo CHTML::label('shift :', '', array('style' => 'width:50px;font-weight:bold; '));  
+								echo CHTML::radioButtonlist($model,'shift',
+										array('1'=>'Day', '2'=>'Night'),
+										array(
+											'labelOptions'=>
+											array('style'=>'display:inline;margin-top: -3px;width: auto !important;'), // add this code
+											'separator'=>'  ',
+											'class' =>'checkbox')
+											);
                                                         
                  
                                                         
@@ -167,7 +167,8 @@ Yii::app()->clientScript->registerCssFile(
 //                                                                         'htmlOptions'=> array('onclick' => 'addtolist()'),
 //                                                                        )); 
 
-                                                        ?>
+							?>
+							</div>
 							</div>
 				<!-- 	<div class="row hdshow_<?php //echo $date_id ."_". $i . " " . $tmpcls; ?>" id="<?php //echo $date_id ."_". $i . " " . $tmpcls; ?>" > -->
 				<div>
@@ -257,16 +258,18 @@ Yii::app()->clientScript->registerCssFile(
 				$tmpcls = ($i > 0) ? '' : '';
 				$nxt = $i + 1;
 				?>
+				<div class='row'>
                             <div class="span"  style="margin-left:5px;" id="Shift">
 							<?php echo CHTML::label('shift :', '', array('style' => 'width:50px;font-weight:bold; '));  
-                                                                    echo CHTML::radioButtonlist($model,'shift',
-                                                                            array('1'=>'Day', '2'=>'Night'),
-                                                                            array(
-                                                                                'labelOptions'=>
-                                                                                array('style'=>'display:inline;margin-top: -3px;width: auto !important;'), // add this code
-                                                                                'separator'=>'  ',
-                                                                                'class' =>'checkbox')
-                                                                                );
+                                  echo CHTML::radioButtonlist($model,'shift',
+									array('1'=>'Day', '2'=>'Night'),
+									array(
+										'labelOptions'=>
+										array('style'=>'display:inline;margin-top: -3px;width: auto !important;'), // add this code
+										'separator'=>'  ',
+										'class' =>'checkbox',
+										'checked'=>null)
+										);
                                                         
                  
                                                         
@@ -282,6 +285,7 @@ Yii::app()->clientScript->registerCssFile(
 //                                                                        )); 
 
                                                         ?>
+							</div>
 							</div>
 					<!-- <div class="row hdshow_<?php //echo $date_id ."_". $i . " " . $tmpcls; ?>"  > -->
 					<div>

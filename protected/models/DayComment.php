@@ -49,7 +49,7 @@ class DayComment extends CActiveRecord {
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('id, pid, day, comment, created_by,hours, projectName, project_name ,sub_project_name, emp_id,name, is_submitted', 'safe', 'on' => 'search,searchAll'),
-            array('pid, day, comment,hours, projectName, project_name ,sub_project_name,  ', 'safe'),
+            array('pid, day, comment,hours, projectName, project_name ,sub_project_name,shift,  ', 'safe'),
         );
     }
 
@@ -78,7 +78,8 @@ class DayComment extends CActiveRecord {
             'project_name' => 'Project Name',
             'hours' => 'Hours',
             'sub_project_name' => 'Project',
-            'sub_task_name' => 'Task'
+            'sub_task_name' => 'Task',
+            'shift' => 'Shift'
         );
     }
 
@@ -146,6 +147,7 @@ class DayComment extends CActiveRecord {
         $criteria->compare('pm.project_name', $this->project_name, true);
         $criteria->compare('sb.sub_project_name', $this->sub_project_name);
         $criteria->compare('st.task_name', $this->task_name);
+        $criteria->compare('t.shift', $this->shift,true);
         $criteria->compare('CONCAT(first_name," ",last_name)', $this->name, true);
         // $criteria->with = array("Creater" => array("alias" => 'r', "select" => 'first_name, last_name'));
         $criteria->join = "INNER JOIN tbl_project_management pm ON t.pid = pm.pid INNER JOIN tbl_employee emp ON emp.emp_id = t.emp_id LEFT join tbl_sub_project sb ON sb.spid=t.spid left Join tbl_task as st on st.task_id = t.stask_id";
