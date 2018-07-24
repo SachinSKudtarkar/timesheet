@@ -615,16 +615,14 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.stask_id";
         $arrWrkmnts = isset($_POST['mnts']) ? $_POST['mnts'] : '';
         $is_submitted = isset($_POST['yt1']) ? 1 : 0;
         $selected_date = isset($_REQUEST['selected_date']) ? $_REQUEST['selected_date'] : '';
+        $shift = isset($_REQUEST['shift']) ? $_REQUEST['shift'] : '';
         $importData = array();
         $pidsarray = explode(',', $pidsid);
         $pidsarray = array_unique($pidsarray);
         if ($rd_day == '') {
             $rd_day = date('d/m/Y');
         }
-if($_POST){
-    CHelper::debug($_POST);
-    
-}
+
         $projectsName = array_filter($projectsName);
         $all_data = array();
 
@@ -639,10 +637,12 @@ if($_POST){
                 . "<th bgcolor='#CD853F' align='center' style='color:white; '>Total Efforts(Hrs)</th>"
                 . "<th bgcolor='#CD853F' align='center' style='color:white; '>Comments</th>";
         $tblString .= "</thead><tbody style='font-size:14px;'>";
+
+
         if (!empty($projectsName)) {
             foreach ($projectsName as $key => $value) {
                 $all_data[] = array(
-                    'day' => date('Y-m-d H:i:s', strtotime($status_date[$key])),
+                    'day' => $selected_date,
                     'emp_id' => Yii::app()->session['login']['user_id'],
                     'comment' => $comments[$key],
                     'pid' => $value,
@@ -650,10 +650,11 @@ if($_POST){
                     'stask_id' => $SubTaskName[$key],
                     'hours' => str_pad($arrWrkhrs[$key], 2, "0", STR_PAD_LEFT) . ':' . str_pad($arrWrkmnts[$key], 2, "0", STR_PAD_LEFT) . ':00',
                     'is_submitted' => $is_submitted,
+                    'shift'=> $shift,
                     'created_by' => Yii::app()->session['login']['user_id'],
                     'created_at' => date('Y-m-d H:i:s')
                 );
-
+   
 
                 $date_array = array(date('Y-m-d', strtotime($status_date[$key])));
                 if (in_array(date('Y-m-d'), $date_array) && $value != '' && $SubProjectName[$key] != '' && $SubTaskName[$key] != '') {

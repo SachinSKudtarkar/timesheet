@@ -100,6 +100,28 @@ Yii::app()->clientScript->registerCssFile(
         </div>
         <hr style=" margin-top: 0px; margin-bottom: 3px;"/>
     </div>
+
+    <div class="row">
+                            <div class="span"  style="margin-left:5px;">
+							<?php 
+					 $day_ne = preg_replace('/-/','_', $selecting_date);
+							foreach ($arrData[$day_ne] as $key=>$eachproject) {
+								$shift = $eachproject['shift'];
+							}
+
+				
+
+								echo CHTML::label('shift :', '', array('style' => 'width:50px;font-weight:bold; '));?>
+
+<span id="shift">
+    <input value="1" id="day" type="radio" name="shift" <?php if($shift == 1) echo "checked = 'checked' " ;?> >
+    <label for="day_1" style = "display:inline;margin-top: -3px;width: auto !important;">Day</label>
+    <input value="2" id="night" type="radio" name="shift" <?php if($shift == 2) echo "checked = 'checked' " ;?>>
+    <label for="night_1" style = "display:inline;margin-top: -3px;width: auto !important;">Night</label>
+</span>
+
+							</div>
+							</div>
     <?php
     echo "<input type='hidden' name='selected_date' value='{$selecting_date}' />";
     $img_path = Yii::app()->theme->baseUrl . "/img/add_image.png";
@@ -125,7 +147,7 @@ Yii::app()->clientScript->registerCssFile(
 		
 			foreach ($arrData[$date_id] as $key=>$eachproject) {
 				
-				
+				// CHelper::debug($eachproject);
 				$tmpcls = ($i > 0) ? '' : '';
 				$nxt = $i + 1;
 				$day = explode(" ", $eachproject['day'])[0];
@@ -141,35 +163,7 @@ Yii::app()->clientScript->registerCssFile(
 					$pid = $eachproject['pid'];
 				}
 					?>
-					<div class="row">
-                            <div class="span"  style="margin-left:5px;">
-							<?php 
-								echo CHTML::label('shift :', '', array('style' => 'width:50px;font-weight:bold; '));  
-								echo CHTML::radioButtonlist($model,'shift',
-										array('1'=>'Day', '2'=>'Night'),
-										array(
-											'labelOptions'=>
-											array('style'=>'display:inline;margin-top: -3px;width: auto !important;'), // add this code
-											'separator'=>'  ',
-											'class' =>'checkbox')
-											);
-                                                        
-                 
-                                                        
-//                                                                    $this->widget('bootstrap.widgets.TbButtonGroup', array(
-//                                                                            'type' => 'info',
-//                                                                            'toggle' => 'radio', // 'checkbox' or 'radio'
-//                                                                        'buttonType' => 'button',
-//                                                                            'buttons' => array(
-//                                                                                array('label'=>'Day','value'=>1),
-//                                                                                array('label'=>'Night','value'=>2)
-//                                                                            ),
-//                                                                         'htmlOptions'=> array('onclick' => 'addtolist()'),
-//                                                                        )); 
-
-							?>
-							</div>
-							</div>
+					
 				<!-- 	<div class="row hdshow_<?php //echo $date_id ."_". $i . " " . $tmpcls; ?>" id="<?php //echo $date_id ."_". $i . " " . $tmpcls; ?>" > -->
 				<div>
                                    
@@ -258,35 +252,7 @@ Yii::app()->clientScript->registerCssFile(
 				$tmpcls = ($i > 0) ? '' : '';
 				$nxt = $i + 1;
 				?>
-				<div class='row'>
-                            <div class="span"  style="margin-left:5px;" id="Shift">
-							<?php echo CHTML::label('shift :', '', array('style' => 'width:50px;font-weight:bold; '));  
-                                  echo CHTML::radioButtonlist($model,'shift',
-									array('1'=>'Day', '2'=>'Night'),
-									array(
-										'labelOptions'=>
-										array('style'=>'display:inline;margin-top: -3px;width: auto !important;'), // add this code
-										'separator'=>'  ',
-										'class' =>'checkbox',
-										'checked'=>null)
-										);
-                                                        
-                 
-                                                        
-//                                                                    $this->widget('bootstrap.widgets.TbButtonGroup', array(
-//                                                                            'type' => 'info',
-//                                                                            'toggle' => 'radio', // 'checkbox' or 'radio'
-//                                                                        'buttonType' => 'button',
-//                                                                            'buttons' => array(
-//                                                                                array('label'=>'Day','value'=>1),
-//                                                                                array('label'=>'Night','value'=>2)
-//                                                                            ),
-//                                                                         'htmlOptions'=> array('onclick' => 'addtolist()'),
-//                                                                        )); 
-
-                                                        ?>
-							</div>
-							</div>
+				
 					<!-- <div class="row hdshow_<?php //echo $date_id ."_". $i . " " . $tmpcls; ?>"  > -->
 					<div>
 						<div class="row" >
@@ -748,10 +714,23 @@ function checkLength(){
 
         });
         
-      $('.checkbox').click(function (e) {
-          var shift = $(this).val();
-          alert(shift);
-      });  
+        // $(document).on('change','.proclass',function(){
+//      $(function () {
+//         $('.proclass').on('click', function () {
+// //        var $div = $('div[id^="klon"]:last');
+
+//             var data = $("#tb tr:eq(1)").clone(true).appendTo("#tb");
+//             data.find("input").val('');
+//         });
+//         $(document).on('click', '.remove', function () {
+//             var trIndex = $(this).closest("tr").index();
+//             if (trIndex > 0) {
+//                 $(this).closest("tr").remove();
+//             } else {
+//                 alert("Sorry!! Can't remove first row!");
+//             }
+//         });
+//     });
 	
 	
 });
