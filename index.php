@@ -7,8 +7,8 @@ error_reporting(0);
 
 //} 
 //die('Site under maintenance!!!!');
-//  ini_set('display_errors', 1);
-//        error_reporting(E_ALL);
+ // ini_set('display_errors', 1);
+ //       error_reporting(E_ALL);
 ini_set ( 'soap.wsdl_cache_enable' , 0 );
 ini_set ( 'soap.wsdl_cache_ttl' , 0 );
 

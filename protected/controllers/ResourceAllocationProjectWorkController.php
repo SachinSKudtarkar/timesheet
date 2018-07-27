@@ -267,23 +267,7 @@ group by dc.stask_id order by em.emp_id;";
 // group by da.spid order by em.emp_id";
         $rawData = Yii::app()->db->createCommand($query)->queryAll();
 
-        // if (Yii::app()->session['login']['user_id'] == 46) {
-        //     CHelper::debug($rawData);            
-        // }
-
-        /* 	$dataProvider=new CArrayDataProvider($rawData, array(
-          'pagination'=>array(
-          'pageSize'=>10,
-          ),
-          ));
-          $filteredData = $filtersForm->filter($rawData);
-
-          $dataProvider=new CArrayDataProvider($filteredData);
-
-          $this->render('resourceallocatedtask', array(
-          'filtersForm' => $filtersForm,
-          'dataProvider' => $dataProvider,
-          )); */
+       
         $this->render('resourceallocatedtask', array(
             'rawData' => $rawData,
             'model' => $model
@@ -383,12 +367,7 @@ group by dc.stask_id order by em.emp_id;";
             $done = 1;
             $updateQuery = "UPDATE tbl_resource_allocation_project_work SET allocated_resource = '{$all_resources}', modified_by ='{$modified_by}' , modified_at = '{$modified_at}',day = '{$modified_at}'   WHERE id = '{$result['id']}'  ";
             Yii::app()->db->createCommand($updateQuery)->execute();
-           /* $model = new ResourceAllocationProjectWork;
-            $model->pid = $projectId;
-            $model->allocated_resource = $all_resources;
-            $model->date = date('Y-m-d h:i:s');
-            $model->created_by = Yii::app()->session['login']['user_id'];*/
-//                 $model->save(false);
+           
             
         } else {
             $model = new ResourceAllocationProjectWork;
@@ -793,42 +772,19 @@ group by dc.stask_id order by em.emp_id;";
                 $whrcondition .= " AND pm.project_name = '" . $condition['project_name'] . "'";
         } else
             $whrcondition = '';
-        
-        //recho "<pre>";
-        
-
-            //$userId = Yii::app()->session['login']['user_id'] ;
-            //tbl_resource_allocation_project_work ,tbl_task_allocation
-        
-           // $query = "select sb.pid,sb.spid,sb.sub_project_name,sb.total_hr_estimation_hour,allocated_resource from tbl_sub_project as sb inner join tbl_task_allocation  as ra on(sb.pid=ra.pid)  where sb.is_deleted =0
-		// and sb.spid = ra.spid "; // and sb.spid = ra.spid and FIND_IN_SET($userId,ra.allocated_resource)  inner join tbl_employee as emp on FIND_IN_SET(emp.emp_id,ra.allocated_resource)  , tbl_employee as em 
+       
   $query = "select sb.spid,sb.sub_project_name,sb.total_hr_estimation_hour,group_concat(concat(first_name,' ',last_name)) as allocated_resource from tbl_sub_project as sb inner join tbl_task_allocation  as ra on(sb.pid=ra.pid) inner join tbl_employee as emp on FIND_IN_SET(emp.emp_id,ra.allocated_resource) where sb.is_deleted = 0 and sb.spid = ra.spid group by sb.spid"; 
 
             $rawData = Yii::app()->db->createCommand($query)->queryAll();
 
-       // print_r($res);
-        
-        if (Yii::app()->session['login']['user_id'] == 46) {
-            
-        }
-
-        /* 	$dataProvider=new CArrayDataProvider($rawData, array(
-          'pagination'=>array(
-          'pageSize'=>10,
-          ),
-          ));
-          $filteredData = $filtersForm->filter($rawData);
-
-          $dataProvider=new CArrayDataProvider($filteredData);
-
-          $this->render('resourceallocatedtask', array(
-          'filtersForm' => $filtersForm,
-          'dataProvider' => $dataProvider,
-          )); */
+   
         $this->render('hoursallocation', array(
             'rawData' => $rawData,
             'model' => $model
         ));
     }
+
+
+    
 
 }

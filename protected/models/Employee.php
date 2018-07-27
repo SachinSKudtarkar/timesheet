@@ -410,5 +410,15 @@ class Employee extends CActiveRecord {
         }
         return $emp_list;
     }
+// name in array with containg firstname and last name
+    public function  returnEmp_id($name){
+        if(isset($name)){
+            $first_name = $name['first_name'];
+            $last_name = $name['last_name'];
+         $e_list = Yii::app()->db->createCommand("select emp_id from tbl_employee where first_name like '{$first_name}' and last_name like '{$last_name}'")->queryRow();
+
+         return  $e_list['emp_id'];
+        }
+    }
 
 }

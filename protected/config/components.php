@@ -72,6 +72,18 @@ return array(
         // use 'site/error' action to display errors
         'errorAction' => 'site/error',
     ),
+    'components'=>array(
+    
+    'urlManager'=>array(
+        'urlFormat'=>'path',
+        'rules'=>array(
+            'gii'=>'gii',
+            'gii/<controller:\w+>'=>'gii/<controller>',
+            'gii/<controller:\w+>/<action:\w+>'=>'gii/<controller>/<action>',
+            
+        ),
+    ),
+),
     // Application Log Managemer settings
     'log' => array(
         'class' => 'CLogRouter',

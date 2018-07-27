@@ -119,4 +119,11 @@ class Roles extends CActiveRecord {
         return parent::beforeSave();
     }
 
+
+//for managee employee with respective manager 
+
+    
+
+
+
 }

@@ -206,21 +206,21 @@ $user_email = base64_encode($user_email);
                                         'visible' => CHelper::isAccess("STATUS", "full_access"),
                                         'active' => (Yii::app()->controller->id == 'daycomment' && Yii::app()->controller->action->id == 'adminAll')
                                     ),
-//                                    array('label' => 'Manage Employee',
-//                                        'url' => array('//employee/admin'),
-//                                        'visible' => CHelper::isAccess("EMPLOYEE", "index"),
-//                                        'active' => (Yii::app()->controller->id == 'employee' && Yii::app()->controller->action->id == 'admin')
-//                                    ),
+                                   array('label' => 'Manage Resource',
+                                       'url' => array('//AccessRoleMaster/SetRoles'),
+                                       'visible' => (CHelper::isAccess("PROJECTS", "full_access")),
+                                       'active' => (Yii::app()->controller->id == 'AccessRoleMaster' && Yii::app()->controller->action->id == 'SetRoles')
+                                   ),
 //                                    array('label' => 'Access Roles',
 //                                        'url' => array('//roles'),
 //                                        'visible' => CHelper::isAccess("STATUS", "full_access"),
 //                                        'active' => (Yii::app()->controller->id == 'roles' && Yii::app()->controller->action->id == 'index')
 //                                    ),
-                                    array('label' => 'Unlock Daily Status',
-                                        'url' => array('//ManagedayComment/index'),
-                                        'visible' => CHelper::isAccess("STATUS", "full_access"),
-                                        'active' => (Yii::app()->controller->id == 'ManagedayComment' && Yii::app()->controller->action->id == 'ManagedayComment')
-                                    ),
+                                    // array('label' => 'Unlock Daily Status',
+                                    //     'url' => array('//ManagedayComment/index'),
+                                    //     'visible' => CHelper::isAccess("STATUS", "full_access"),
+                                    //     'active' => (Yii::app()->controller->id == 'ManagedayComment' && Yii::app()->controller->action->id == 'ManagedayComment')
+                                    // ),
                                     array('label' => 'Logout',
                                         'url' => array('//logout'),
                                         'visible' => !Yii::app()->user->isGuest,
