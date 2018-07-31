@@ -194,10 +194,43 @@ foreach ($list as $key => $emp_id) {
 
 
     public function get_manager_list(){
-       return $rawData = Yii::app()->db->createCommand("select first_name,last_name,em.emp_id from tbl_access_role_master as arm inner join tbl_employee as em on (arm.emp_id = em.emp_id and arm.is_active =1)
+       return $rawData = Yii::app()->db->createCommand("select first_name,last_name,em.emp_id,email from tbl_access_role_master as arm inner join tbl_employee as em on (arm.emp_id = em.emp_id and arm.is_active =1)
             where arm.access_type = 1 and em.is_active=1 and is_password_changed = 'yes' ")->queryAll();
 
 
+    }
+
+    public function get_resource_list($manager_id){
+    	if($manager_id){
+$Resources_list = [];
+
+		 $rawData = Yii::app()->db->createCommand("select first_name,last_name,em.emp_id from tbl_access_role_master as arm inner join tbl_employee as em on (arm.emp_id = em.emp_id and arm.is_active =1)
+            where arm.access_type = 2 and em.is_active=1 and is_password_changed = 'yes' and parent_id = {$manager_id} ")->queryAll();
+
+			foreach ($rawData as $key => $value) {
+			 	$Resources_list[$value['emp_id']] = $value['emp_id'];
+			 	$Resources_list[$value['email']] = $value['email'];
+			 } 
+    	}
+
+    	return $Resources_list;
+    }
+
+    public function get_day_comment($emp_id){
+    	if($emp_id){
+    		$day = date('d.m.Y',strtotime("-1 days"));
+
+    		 $query =  "select CONCAT(first_name,' ',last_name) as name,t.day,pm.project_name,sb.sub_project_name,
+ st.sub_task_name ,t.comment,t.hours,email from tbl_day_comment as t 
+ INNER JOIN tbl_project_management pm ON (t.pid = pm.pid) 
+ INNER JOIN tbl_employee emp ON (emp.emp_id = t.emp_id) 
+ LEFT join tbl_sub_project sb ON (sb.spid=t.spid )
+ left Join tbl_sub_task as st on (st.stask_id = t.stask_id)  
+ where emp.emp_id = '{$emp_id}' and t.day = '{$day}'  order by id DESC limit 1"; 
+
+ $rawData = Yii::app()->db->createCommand($query)->queryAll();
+ 		return  $rawData;
+    	}
     }
 
 }

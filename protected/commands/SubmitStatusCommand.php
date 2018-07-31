@@ -142,4 +142,77 @@ class SubmitStatusCommand extends CConsoleCommand {
         fclose($fp);
     }
 
+
+    public function actionDailyStatus(){
+        $AccessRoleMasterController = new  AccessRoleMasterController();
+
+        $records = $AccessRoleMasterController->actionreport();
+
+        foreach ($records as $manager => $value) {
+
+            $from = "support@infinitylabs.in";
+            $from_name = "Infinity Support";
+            $to = array();
+            $cc = array();
+            $bcc = array();
+
+            $message = "<html>
+                        <head>
+                        <style>
+                        table {
+                            font-family: arial, sans-serif;
+                            border-collapse: collapse;
+                            width: 100%;
+                        }
+
+                        td, th {
+                            border: 1px solid #dddddd;
+                            text-align: left;
+                            padding: 8px;
+                        }
+
+                        tr:nth-child(even) {
+                            background-color: #dddddd;
+                        }
+                        </style>
+                        </head>
+                        <body>
+                        <table>
+                        <tr><th>NAME</th>
+                        <th>DAY</th>
+                        <th>Program Name</th>
+                        <th>Project Name</th>
+                        <th>Task Name</th>
+                        <th>Comment</th>
+                        <th>Hours</th>
+                        <th>Eamil Id</th></tr>
+                        ";
+
+            foreach ($value as $resorce => $Employee_daily) {
+                foreach ($Employee_daily as $key => $Employee_dailytask) {
+                    $message .= "<tr><td>{$Employee_dailytask['name']}</td>
+            <td>{$Employee_dailytask['day']}</td>
+            <td>{$Employee_dailytask['project_name']}</td>
+            <td>{$Employee_dailytask['sub_project_name']}</td>
+            <td>{$Employee_dailytask['sub_task_name']}</td>
+            <td>{$Employee_dailytask['comment']}</td>
+            <td>{$Employee_dailytask['hours']}</td>
+            <td>{$Employee_dailytask['email']}</td></tr>
+            ";
+                }
+            
+            }
+
+            $message .="</table></body>
+                        </html>";
+             $manager_name = explode("@",$manager)[0];
+
+                $to[] =  array("email" => $manager, "name" => $manager_name);
+                $bcc[] = array("email" =>"sachin.k@infinitylabs.in","name"=>"Sachin Kudtarkar");
+             $subject = "Daily Status Submission";
+            echo CommonUtility::sendmail($to, null, $from, $from_name, $subject, $message, $cc, null, $bcc);
+           
+            }
+    }
+
 }

@@ -28,7 +28,7 @@ class AccessRoleMasterController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view','setroles','SetManager','Employee_management','admin','delete','create','update'),
+				'actions'=>array('index','view','setroles','SetManager','Employee_management','admin','delete','create','update','report'),
 				'users'=>array('*'),
 			),
 			// array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -123,6 +123,9 @@ class AccessRoleMasterController extends Controller
 	public function actionIndex()
 	{
 		$dataProvider=new CActiveDataProvider('AccessRoleMaster');
+
+
+
 		$this->render('index',array(
 			'dataProvider'=>$dataProvider,
 		));
@@ -223,7 +226,7 @@ class AccessRoleMasterController extends Controller
         if(isset($_POST['manager'])){
          AccessRoleMaster::model()->set_manager($_POST['manager']);
           Yii::app()->user->setFlash('success', 'You  successfully Set manager in our list.');
-                $this->redirect(array('AccessRoleMaster/upload'));
+                $this->redirect(array('AccessRoleMaster/admin'));
         }
         
         $this->render('save_manager', array(
@@ -239,5 +242,23 @@ class AccessRoleMasterController extends Controller
             'model' => $model,
             'dataProvider' => $model,
         ));
+    }
+
+    public function actionreport(){
+
+    	$employee_list = [];
+    	$model = new AccessRoleMaster();
+    	$get_manager_list = $model->get_manager_list();
+
+    	foreach ($get_manager_list as  $value) {
+    		$employee_list[$value['email']] = $model->get_resource_list($value['emp_id']);
+    	}
+    	foreach ($employee_list as $manager_id => $emp_id_list) {
+    		foreach ($emp_id_list as $ke => $val) {
+    			$records[$manager_id][$ke] = $model->get_day_comment($val);
+    		}
+    	}
+
+    	return $records;
     }
 }
