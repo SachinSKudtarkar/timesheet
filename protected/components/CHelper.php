@@ -809,8 +809,9 @@ class CHelper {
         //Allow access for 1b with checking given modules and also give access for perticular users.
 
         $id = Yii::app()->session['login']['user_id'];
+        //&& ($this->get_check($id) == 2)
         // cheking user role
-        if (Yii::app()->session['login']['access_type'] == '1') {
+        if (Yii::app()->session['login']['access_type'] == '1' ) {
             // If current user is Super Admin
             return true;
         } else {
@@ -1262,5 +1263,6 @@ class CHelper {
         echo "</pre>";
         die;
     }
+
 
 }

@@ -5,6 +5,9 @@ $baseUrl = Yii::app()->getBaseUrl(true);
 //Yii::app()->clientScript->scriptMap['bootstrap.css'] = false;
 $user_email = Yii::app()->session["login"]["email"];
 $user_email = base64_encode($user_email);
+
+$emp_id = Yii::app()->session['login']['user_id'];
+$access_type = AccessRoleMaster::model()->findByAttributes(array('emp_id' => $emp_id,'is_active'=>1));
 ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
@@ -87,7 +90,7 @@ $user_email = base64_encode($user_email);
                                         'url' => '#',
                                         'encodeLabel' => false,
 //                                        'visible' => 1,
-                                        'visible' => (CHelper::isAccess("PROJECTS", "full_access")),
+                                        'visible' => ($access_type->access_type == 2),
                                         'active' => 0,
                                         'items' => array(
                                                      array('label' => 'Create PID',
