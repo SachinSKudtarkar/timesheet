@@ -90,7 +90,7 @@ $access_type = AccessRoleMaster::model()->findByAttributes(array('emp_id' => $em
                                         'url' => '#',
                                         'encodeLabel' => false,
 //                                        'visible' => 1,
-                                        'visible' => ($access_type->access_type == 2),
+                                        'visible' => ($access_type->access_type == 1),
                                         'active' => 0,
                                         'items' => array(
                                                      array('label' => 'Create PID',
@@ -117,7 +117,7 @@ $access_type = AccessRoleMaster::model()->findByAttributes(array('emp_id' => $em
                                     ),
                                     array('label' => 'Manage Program',
                                         'url' => '#',
-                                        'visible' => (CHelper::isAccess("PROJECTS", "full_access")),
+                                        'visible' => ($access_type->access_type == 1),
                                         'active' => 0,
                                         'items' => array(
                                            
@@ -146,7 +146,7 @@ $access_type = AccessRoleMaster::model()->findByAttributes(array('emp_id' => $em
                                         'url' => '#',
                                         'encodeLabel' => false,
 //                                        'visible' => 1,
-                                        'visible' => (CHelper::isAccess("PROJECTS", "full_access")),
+                                        'visible' => ($access_type->access_type == 1),
                                         'active' => 0,
                                         'items' => array(
                                             array('label' => 'Create Project',
@@ -182,10 +182,10 @@ $access_type = AccessRoleMaster::model()->findByAttributes(array('emp_id' => $em
 //                                        'active' => (Yii::app()->controller->id == 'task' && Yii::app()->controller->action->id == 'task')
 //                                    ),
                                      array('label' => 'Manage Project Task',
-                                                                    'url' => array('//subtask/admin'),
-//                                                                    'visible' => (CHelper::isAccess("RESOURCEALLOCATION", "full_access")),
-                                                                    'active' => (Yii::app()->controller->id == 'subtask' && Yii::app()->controller->action->id == 'subtask')
-                                                                ),
+                                        'url' => array('//subtask/admin'),
+                                       'visible' => ($access_type->access_type == 1),
+                                        'active' => (Yii::app()->controller->id == 'subtask' && Yii::app()->controller->action->id == 'subtask')
+                                    ),
 //                                    array('label' => 'View Project Statistics',
 //                                        'url' => array('//resourceallocationprojectwork/resourcemanagement'),
 //                                        'visible' => (CHelper::isAccess("RESOURCEALLOCATION", "full_access")),
@@ -211,7 +211,7 @@ $access_type = AccessRoleMaster::model()->findByAttributes(array('emp_id' => $em
                                     ),
                                    array('label' => 'Manage Resource',
                                        'url' => array('//AccessRoleMaster/SetRoles'),
-                                       'visible' => (CHelper::isAccess("PROJECTS", "full_access")),
+                                       'visible' => ($access_type->access_type == 1),
                                        'active' => (Yii::app()->controller->id == 'AccessRoleMaster' && Yii::app()->controller->action->id == 'SetRoles')
                                    ),
 //                                    array('label' => 'Access Roles',
