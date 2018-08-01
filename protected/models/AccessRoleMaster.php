@@ -234,11 +234,5 @@ $Resources_list = [];
     }
 
 
-public function static get_check($emp_id){
-    if($emp_id){
-      $access_type = AccessRoleMaster::model()->findByAttributes(array('emp_id' => $emp_id,'is_active'=>1));
-      
-      return $access_type->access_type;
-    }
-}
+
 }
