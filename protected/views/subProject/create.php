@@ -9,6 +9,8 @@ $this->breadcrumbs = array(
 
 $this->menu = array( 
     array('label' => 'Manage Project', 'url' => array('admin')),
+    array('label' => 'Manage Program', 'url' => array('projectmanagement/admin')),
+    array('label' => 'Create Program', 'url' => array('projectmanagement/create')),
     //array('label' => 'Manage Program', 'url' => array('ResourceAllocationProjectWork/admin')),
 );
 ?>

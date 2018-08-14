@@ -27,17 +27,17 @@ class SubProjectController extends Controller {
         return array(
             array('allow', // allow all users to perform 'index' and 'view' actions
                 'actions' => array('index', 'view'),
-                
+
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'actions' => array('create', 'update', 'admin'),
-                'expression' => 'CHelper::isAccess("PROJECTS", "full_access")', 
+                'expression' => 'CHelper::isAccess("PROJECTS", "full_access")',
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
                 'actions' => array('admin', 'delete'),
-                'expression' => 'CHelper::isAccess("PROJECTS", "full_access")', 
+                'expression' => 'CHelper::isAccess("PROJECTS", "full_access")',
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -61,8 +61,8 @@ class SubProjectController extends Controller {
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
     public function actionCreate() {
-        $model = new SubProject;           
-                       
+        $model = new SubProject;
+
        // print_r($data);exit;
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
@@ -70,19 +70,18 @@ class SubProjectController extends Controller {
         if (isset($_POST['SubProject'])) {
             $model->attributes = $_POST['SubProject'];
             $model->created_date = date('Y-m-d h:i:s');
-            $model->created_by = Yii::app()->session['login']['user_id'];  
+            $model->created_by = Yii::app()->session['login']['user_id'];
             $valid =$_POST['SubProject'];
-            if(empty($valid['pid']) || empty($valid['sub_project_name'])|| empty($valid['sub_project_description'])|| empty($valid['requester'])|| empty($valid['status']) ||empty($valid['Priority']))
+            if(empty($valid['pid']) || empty($valid['sub_project_name'])|| empty($valid['sub_project_description'])|| empty($valid['requester'])|| empty($valid['status']) ||empty($valid['priority']))
             {
                 Yii::app()->user->setFlash('error','Please fill all required filleds');
             }else{
                if($model->save())
            	$insert_id = Yii::app()->db->getLastInsertID();
-			Yii::app()->user->setFlash('success', "TaskId is {$insert_id}");
+			Yii::app()->user->setFlash('success', "ProjectId is {$insert_id}");
                 $this->redirect(array('admin'));
-           }	
+           }
         }
-	
 
         $this->render('create', array(
             'model' => $model,
@@ -96,17 +95,17 @@ class SubProjectController extends Controller {
      */
     public function actionUpdate($id) {
         $model = $this->loadModel($id);
-	
-		
+
+
         // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model); 
+        // $this->performAjaxValidation($model);
         if (isset($_POST['SubProject'])) {
             $model->attributes = $_POST['SubProject'];
             $model->updated_date = date('Y-m-d h:i:s');
-            $model->updated_by = Yii::app()->session['login']['user_id']; 
+            $model->updated_by = Yii::app()->session['login']['user_id'];
             if ($model->save())
                 $this->redirect(array('admin'));
-				
+
         }
 
         $this->render('update', array(
@@ -131,7 +130,11 @@ class SubProjectController extends Controller {
      * Lists all models.
      */
     public function actionIndex() {
-        $dataProvider = new CActiveDataProvider('SubProject');
+        $dataProvider = new CActiveDataProvider('SubProject', array(
+        'criteria'=>array(
+            'order'=>'created_date DESC',
+        )));
+
         $this->render('index', array(
             'dataProvider' => $dataProvider,
         ));

@@ -36,8 +36,8 @@ class EmployeeController extends BaseController {
                 'users' => array('@'),
             ),
             array('allow', // allow 'index' actions
-                'actions' => array('create', 'getroles','admin','test'),  
-		'users' => array('@'),				
+                'actions' => array('create', 'getroles','admin','test'),
+		'users' => array('@'),
             ),
             array('allow', // allow 'index' actions
                 'actions' => array('ImportFieldEngineers', 'Getfailedentriesoffieldengineers', 'ViewFieldEngineerList','GetResourceName'),
@@ -49,7 +49,7 @@ class EmployeeController extends BaseController {
             array('allow', // allow 'index' actions
                 'actions' => array('delete'),
                 'users' => array('@'),
-            ), 
+            ),
         );
     }
 
@@ -67,9 +67,7 @@ class EmployeeController extends BaseController {
      * Creates a new model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
-    public function actionCreate() { 
-        ini_set('display_errors', 1);
-error_reporting(E_ALL);
+    public function actionCreate() {
         $model = new Employee('s');
         $model->access_type = 0;
         $model_employee_details = new EmployeeDetail('create');
@@ -77,12 +75,12 @@ error_reporting(E_ALL);
         // $this->performAjaxValidation($model);
 
         if (isset($_POST['Employee']) && isset($_POST['EmployeeDetail'])) {
-            
+
             $model->attributes = $_POST['Employee'];
             // set new attributes of user details
             $model_employee_details->attributes = $_POST['EmployeeDetail'];
 
-            $model->setAttribute("is_active", 1); 
+            $model->setAttribute("is_active", 1);
             // save in employee table & check
 
             $validate_emp = $model->validate();
@@ -97,7 +95,7 @@ error_reporting(E_ALL);
                 // Save user details
                 $model_employee_details->save();
 
-//				
+//
 //				#--------------------------------------------
 //				# Set FlasMessage And Redirect on Listing page
 //				#--------------------------------------------
@@ -122,13 +120,13 @@ error_reporting(E_ALL);
         //$model=$this->loadModel($id);
         $join_table = array('EmployeeDetail');
         // Load related model
-        $model = $this->loadModelRelation($id, $join_table, 'update');
+        //$model = $this->loadModelRelation($id, $join_table, 'update');
 
         if (!$model = $this->loadModelRelation($id, $join_table, 'update')) {
-
             CHelper::setFlashError("Record not found.");
             $this->redirect(array('index'));
         }
+
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
 
@@ -151,25 +149,30 @@ error_reporting(E_ALL);
                 }
                 $model[0]->save(false, $tobe_saved);
                 if (isset($_POST['EmployeeDetail'])) {
+
                     $employee_detail = new EmployeeDetail();
-                    $employee_detail = $model[0]->EmployeeDetail[0];
+                    $_POST['EmployeeDetail']['emp_id'] = $model[0]->emp_id;
+                    if(is_object($model[0]->EmployeeDetail[0])){
+                        $employee_detail = $model[0]->EmployeeDetail[0];
+                    }
                     $employee_detail->attributes = $_POST['EmployeeDetail'];
-                    $employee_detail->save();
                 }
                 #--------------------------------------------
                 # Set FlasMessage And Redirect on Listing page
                 #--------------------------------------------
-                CHelper::setFlashSuccess("Employee record updated.");
-                $this->redirect(array('index', 'id' => $model[0]->emp_id));
-            } // End if Save
-            else {
-                
+
+                if($employee_detail->save()){
+                    CHelper::setFlashSuccess("Employee record updated.");
+                    $this->redirect(array('index', 'id' => $model[0]->emp_id));
+                } // End if Save
+            }else {
+
             }
         }// End User POST
 
         $this->render('update', array(
             'model' => $model[0],
-            'model_employee_details' => $model[0]->EmployeeDetail[0],
+            'model_employee_details' => ($employee_detail) ? $employee_detail : (($model[0]->EmployeeDetail[0]) ? $model[0]->EmployeeDetail[0] : new EmployeeDetail('create')),
         ));
     }
 
@@ -180,15 +183,15 @@ error_reporting(E_ALL);
      */
     public function actionDelete($id) {
         //$this->loadModel($id)->delete();
-        Employee::model()->updateByPk($id, array('is_deleted' => 1)); 
+        Employee::model()->updateByPk($id, array('is_deleted' => 1));
 //		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-        // checking request type                
+        // checking request type
         if (isset($_POST['ajax']) && $_POST['ajax'] === 'delete') {
-            // If ajax request then just return message                    
+            // If ajax request then just return message
             echo CHelper::setFlashSuccess("Employee record deleted.");
             Yii::app()->end();
         } else {
-            // For normal request page will redirect and flash message will set                    
+            // For normal request page will redirect and flash message will set
             CHelper::setFlashSuccess("Employee record deleted.");
             $this->redirect(array('/employee/index/'));
         }
@@ -421,21 +424,21 @@ error_reporting(E_ALL);
         }
         return unserialize(base64_decode($data));
     }
-	
+
 	public function actionGetResourceName($id){
-	
+
 	$model = Employee::model()->findByPk($id);
 	echo $model->first_name." ".$model->last_name;
 	exit;
 	return $model->first_name." ".$model->last_name;
 	}
         public function actionTest() {
-            
+
             $query = "select allocated_resource from tbl_resource_allocation_project_work where pid = 9";
                 $list = Yii::app()->db->createCommand($query)->queryRow();
                $newList = explode(",",$list['allocated_resource']);
-            
-            
+
+
         $emp_list = array();
         foreach ($newList as $key => $value) {
             $e_list = Yii::app()->db->createCommand("select * from tbl_employee where emp_id ={$value}")->queryRow();

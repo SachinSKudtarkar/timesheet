@@ -179,7 +179,14 @@ class ProjectManagementController extends Controller {
         if (isset($_POST['ProjectManagement'])) {
             $model->attributes = $_POST['ProjectManagement'];
             if ($model->save())
-                $this->redirect(array('view', 'id' => $model->pid));
+                //$this->redirect(array('view', 'id' => $model->pid));
+                
+                /**
+                 * redirecting to the Program management page instead of program view(project management) page
+                 * Tirthesh::08042018
+                 */
+                $this->redirect(array('admin'));
+
         }
 
         $this->render('update', array(

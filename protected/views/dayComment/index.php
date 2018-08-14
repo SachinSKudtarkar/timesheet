@@ -665,7 +665,7 @@ Yii::app()->clientScript->registerCssFile(
             var data = $('.selecting_weeks').val();
             if(data != '')
             {
-                window.location.replace('" . CHelper::createUrl() . "/index/selecting_date/'+data);
+                window.location.replace('CHelper::createUrl()/index/selecting_date/'+data);
             }
     });
 	$(document).on('change','.sub-project111',function(){

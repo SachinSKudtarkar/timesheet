@@ -129,14 +129,12 @@ class PidMappingController extends Controller
 		$model=new PidMapping('search');
 		$model->unsetAttributes();  // clear any default values
 		if(isset($_GET['PidMapping'])){
-                    
-                    CHelper::prd($_GET);
-			$model->attributes=$_GET['PidMapping'];
+                    $model->attributes=$_GET['PidMapping'];
                 }
 		$this->render('admin',array(
 			'model'=>$model,
 		));
-                
+
 	}
 
 	/**
@@ -149,17 +147,17 @@ class PidMappingController extends Controller
                 $str=explode('-',$approval_id);
                 $id = $str[0];
                 $approved = $str[1];
-				
+
 				$PidApproval = PidApproval::model()->findByPk($id);
 				$PidApproval->approved = $approved;
 				$PidApproval->update(array('approved','comments'));
-				
+
 				if($approved == 2){
 				$pidGenration =PidMapping::model()->pidgenration($id);
-				
+
 				}
 	}
-	
+
 		$model=new PidMapping('search');
 		$model->unsetAttributes();  // clear any default values
 		if(isset($_GET['PidMapping']))
