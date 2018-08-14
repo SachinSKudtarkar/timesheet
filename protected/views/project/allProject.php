@@ -6,8 +6,8 @@ $this->breadcrumbs=array(
 	'Manage',
 );
 $this->menu=array(
-	array('label'=>'List Project', 'url'=>array('index')),
-	array('label'=>'Create Project', 'url'=>array('create')),
+	array('label'=>'Manage Project', 'url'=>array('subproject/admin')),
+	array('label'=>'Create Project', 'url'=>array('subproject/create')),
 );
 Yii::app()->clientScript->registerScript('search', "
 $('.search-button').click(function(){
@@ -41,12 +41,12 @@ $('.search-form form').submit(function(){
         'emptyText' => 'No Records Found',
         'enablePagination' => true,
         'columns' => array(
+            'id',
             'Name',
             'Program',
             'Project',
             'Task',
             'Type',
-            
              array(
                  'header'=>'Estimated Hours',
                     'name' => 'Estimated_Hours',
@@ -65,7 +65,24 @@ $('.search-form form').submit(function(){
                     'type' => 'raw',
                      'filter'=>false,
                 ),
-            
+            array(
+                'class' => 'bootstrap.widgets.TbButtonColumn',
+                'template' => '{update}{delete}',
+                'buttons' => array
+                    ('update' => array
+                        (
+                        'label' => 'Update',
+                        'url' => 'Yii::app()->createUrl("/Project/update", array("id"=>$data[\'id\']))',
+                        'visible' => "CHelper::isAccess('MANAGER','update')",
+                    ),
+                    'delete' => array
+                        (
+                        'label' => 'Delete',
+                        'url' => 'Yii::app()->createUrl("/Project/delete", array("id"=>$data[\'id\']))',
+                        'visible' => "CHelper::isAccess('MANAGER','delete')",
+                    ),
+                ),
+            ),
 	),
 ));
 echo $this->renderExportGridButton($x, 'Export Grid Results', array('class' => 'btn btn-primary pull-left clearfix mr-tp-20'));

@@ -107,11 +107,11 @@ class PidMapping extends CActiveRecord
 		$criteria=new CDbCriteria;
                 $criteria->select = "t.*,sbpr.emp_id ";
 		$criteria->compare('id',$this->id);
-		$criteria->compare('year_month',$this->year_month,true);
+		$criteria->compare('`year_month`',$this->year_month,true);
 		$criteria->compare('project_id',$this->project_id,true);
-		$criteria->compare('sub_project_id',$this->sub_project_id,true);
-		$criteria->compare('task_id',$this->task_id,true);
-		$criteria->compare('sub_task_id',$this->sub_task_id,true);
+		$criteria->compare('t.sub_project_id',$this->sub_project_id,true);
+		$criteria->compare('t.task_id',$this->task_id,true);
+		$criteria->compare('sbpr.sub_task_name',$this->sub_task_id,true);
 		$criteria->compare('status',$this->status,true);
 		$criteria->compare('created_at',$this->created_at,true);
 		$criteria->compare('created_by',$this->created_by);
@@ -120,10 +120,11 @@ class PidMapping extends CActiveRecord
 		$criteria->compare('pid',$this->pid,true);
 		$criteria->order = "id DESC";
                 $criteria->join = "INNER JOIN tbl_sub_task as sbpr ON sbpr.stask_id=t.sub_task_id";
+                        //. "        INNER JOIN tbl_project as tp ON tp.id = sbpr.project_id";
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
-      
-			
+
+
 		));
 	}
 
@@ -137,13 +138,13 @@ class PidMapping extends CActiveRecord
 	{
 		return parent::model($className);
 	}
-	
+
 	public function pidgenration($id){
 	$PidApproval=PidApproval::model()->findByPk($id);
 	  if($PidApproval->approved == 2){
-	 
+
 			  $subtask = $results = Yii::app()->db->createCommand("select * from tbl_sub_task where pid_approval_id = {$PidApproval->pid_id} ")->queryAll();
-			
+
 	$importData = array();
 		foreach($subtask as $key => $val){
 				  $this->year_month = substr($PidApproval->created_at,0,4).substr($PidApproval->created_at,5,2);
@@ -156,16 +157,16 @@ class PidMapping extends CActiveRecord
 				  $this->created_at = date('Y-m-d h:i:s');
 				  $this->created_by = Yii::app()->session['login']['user_id'];
 				  $this->modified_at = date('Y-m-d h:i:s');
-				  $this->modified_by = Yii::app()->session['login']['user_id']; 
-			
+				  $this->modified_by = Yii::app()->session['login']['user_id'];
+
 				  $importData[] = $this->getAttributes();
-				  
-				  
-				  
-				  
+
+
+
+
 		}
 		$this->SetTaskAllocation($subtask);
-		
+
 	   } else {
             $this->addError('input_file', "No records found.");
             throw new Exception("No records found.");
@@ -186,12 +187,12 @@ class PidMapping extends CActiveRecord
             $this->addError('input_file', "No records found.");
             throw new Exception("No records found.");
         }
-	 
+
 	return true;
-	
-	
+
+
 	}
-	
+
 	public function SetTaskAllocation($importData){
 	if(!empty($importData)){
 		foreach($importData as $key=>$val)
@@ -202,57 +203,57 @@ class PidMapping extends CActiveRecord
 			$pid_approval_id = $val['pid_approval_id'];
 		}
 		$emp = implode(',',$emp);
-		
+
 		 $model = new TaskAllocation;
 		 $model->pid = $pid;
 		 $model->spid = $spid;
 		 $model->pid_approval_id = $pid_approval_id;
 		 $model->date = date('Y-m-d h:i:s');
 		 $model->allocated_resource = $emp;
-		 $model->created_by = Yii::app()->session['login']['user_id']; 
+		 $model->created_by = Yii::app()->session['login']['user_id'];
 		 if($model->save()){
 		}
 		else{print_r($model->getErrors());
 		exit;
 		}
-	 
+
 		}
 	}
-	
+
 	public function getProjectDescription($pmodel){
 		if($pmodel->project_id){
 			$project = ProjectManagement::model()->findByPk($pmodel->project_id);
 			return $project['project_name'];
 		}
 		return '';
-		
+
 		}
-		
+
 		public function getSubProjectDescription($pmodel){
 		if($pmodel->sub_project_id){
 			$project = SubProject::model()->findByPk($pmodel->sub_project_id);
 			return $project['sub_project_name'];
 		}
 		return '';
-		
+
 		}
-		
+
 		public function getTaskDescription($pmodel){
 		if($pmodel->task_id){
 			$project = Task::model()->findByPk($pmodel->task_id);
 			return $project['task_name'];
 		}
 		return '';
-		
+
 		}
-		
+
 		public function getSubTaskDescription($pmodel){
 			if($pmodel->sub_task_id){
 				$project = SubTask::model()->findByPk($pmodel->sub_task_id);
 				return $project['sub_task_name'];
 			}
 			return '';
-		
+
 		}
                  public function getemp_name($pmodel){
                     if($pmodel->emp_id){

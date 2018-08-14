@@ -51,7 +51,7 @@ class SubProject extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('pid, sub_project_name, sub_project_description,status,Priority,requester', 'required'),
+			array('pid, sub_project_name, sub_project_description,status,priority,requester', 'required'),
 			array('pid, created_by, updated_by, is_deleted', 'numerical', 'integerOnly'=>true),
 			array('sub_project_name, sub_project_description, requester', 'length', 'max'=>250), 
                         array('total_hr_estimation_hour', 'numerical' ),
@@ -87,7 +87,7 @@ class SubProject extends CActiveRecord
 			'total_hr_estimation_hour' => 'Total Hr Estimation Hour',
 			'estimated_start_date' =>'Estimated Start Date',
 			'status' =>'Status',
-			'Priority' =>'Priority',
+			'priority' =>'Priority',
 			'created_by' => 'Created By',
 			'created_date' => 'Created Date',
 			'updated_by' => 'Updated By',
@@ -115,7 +115,8 @@ class SubProject extends CActiveRecord
 		$criteria=new CDbCriteria;
 //                $criteria->select = "t.*,pr.project_name,t.spid as taskId ";//t.spid as taskId 
 		$criteria->compare('spid',$this->spid);
-		$criteria->compare('pid',$this->pid);
+		//$criteria->compare('pid',$this->pid);
+		$criteria->compare('pr.project_name',$this->pid, true);
 		$criteria->compare('sub_project_name',$this->sub_project_name,true);
 		$criteria->compare('sub_project_description',$this->sub_project_description,true);
 		$criteria->compare('requester',$this->requester,true);
@@ -127,11 +128,12 @@ class SubProject extends CActiveRecord
 		$criteria->compare('updated_date',$this->updated_date,true);
 		$criteria->compare('is_deleted',$this->is_deleted);
                 $criteria->compare('project_name',$this->project_name);
+                $criteria->order = 'created_date desc';
+                $criteria->join = "INNER join tbl_project_management pr ON (pr.pid=t.pid) ";
 //                $criteria->join = "INNER join tbl_project_management pr ON (pr.pid=t.pid)"
 //                        . "INNER join tbl_pid_approval as pa ON (t.spid = pa.sub_project_id) ";
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
-			
 		));
 	}
 

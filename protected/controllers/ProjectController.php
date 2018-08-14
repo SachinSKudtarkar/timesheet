@@ -71,9 +71,12 @@ class ProjectController extends Controller {
      * @param integer $id the ID of the model to be updated
      */
     public function actionUpdate($id) {
+
         $model = $this->loadModel($id);
+
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
+
         if (isset($_POST['Project'])) {
             $model->attributes = $_POST['Project'];
             if ($model->save())
@@ -162,20 +165,17 @@ class ProjectController extends Controller {
                 $whrcondition .= " where st.sub_task_name like  '" . $condition['Task'] . "%'";
             if ($condition['Type'] != '')
                 $whrcondition .= " where tt.task_name like '" . $condition['Type'] . "%'";
-            } else 
+            } else
                 $whrcondition = '';
-             
-           
-        $query = "select concat(em.first_name,' ',em.last_name) as Name,pm.project_name as Program ,sp.sub_project_name as Project ,st.sub_task_name as Task ,tt.task_name as Type ,
-                    st.est_hrs as Estimated_Hours,st.stask_id from tbl_sub_task as st 
+
+        $query = "select st.project_id as id, concat(em.first_name,' ',em.last_name) as Name,pm.project_name as Program ,sp.sub_project_name as Project ,st.sub_task_name as Task ,tt.task_name as Type ,
+                    st.est_hrs as Estimated_Hours,st.stask_id from tbl_sub_task as st
                     inner join tbl_project_management as pm on(st.project_id = pm.pid)
                     inner join tbl_sub_project as sp on (st.sub_project_id = sp.spid)
                     inner join tbl_task as tt on(st.task_id = tt.task_id)
                     inner join tbl_employee as em on(st.emp_id = em.emp_id) {$whrcondition} "
                     . "order by st.stask_id desc";
         $rawData = Yii::app()->db->createCommand($query)->queryAll();
-   
-        // echo "<pre>";
 
         foreach ($rawData as $key => $value) {
 //            $query1 = "select concat(em.first_name,' ',em.last_name) as name,
@@ -184,12 +184,12 @@ class ProjectController extends Controller {
 //                    inner join tbl_employee as em on(dc.emp_id = em.emp_id)
 //                    where dc.stask_id = {$value['stask_id']} group by dc.emp_id ";
             $query1 = "select sec_to_time(sum(time_to_sec(hours))) as Consumed_Hours
-                    from  tbl_day_comment 
+                    from  tbl_day_comment
                     where stask_id = {$value['stask_id']} ";
             $rawData_daycomment = Yii::app()->db->createCommand($query1)->queryRow();
-               
-            
-                
+
+
+            $newarray[$key]['id'] = $value['id'];
             $newarray[$key]['Name'] = $value['Name'];
             $newarray[$key]['Program'] =  $value['Program'];
             $newarray[$key]['Project'] = $value['Project'];
@@ -199,20 +199,16 @@ class ProjectController extends Controller {
             if (!empty($rawData_daycomment)) {
                 $consumed_hr = explode(":",$rawData_daycomment['Consumed_Hours'])[0];
                 $newarray[$key]['Consumed_Hours'] = $consumed_hr;
-                
+
                 if($value['Estimated_Hours'] > $consumed_hr ){
                 $newarray[$key]['Remaining_Hours']  = $value['Estimated_Hours']- $consumed_hr;
-                    
+
                 }
-                
             }
-          
-            
-            
         }
 //CHelper::pr($newarray);
         if ($this->isExportRequest()) {
-           
+
           $export_column_name = array('Name',
             'Program',
             'Project',
@@ -225,18 +221,17 @@ class ProjectController extends Controller {
             $filename = "All_Project_Details" . date('d_m_Y') . "_" . date('H') . "_hr";
             CommonUtility::downloadDataInCSV($export_column_name, $newarray, $filename);
         }
-        
-        
-        
+
+
         //   CHelper::debug($newarray);
         $this->render('allProject', array(
             'data' => $newarray, 'model' => $model,
         ));
     }
-    
+
     public function actionProjectDetails(){
           $query = "select concat(em.first_name,' ',em.last_name) as Name,pm.project_name as Program ,sp.sub_project_name as Project ,st.sub_task_name as Task ,tt.task_name as Type ,
-                    st.stask_id,st.est_hrs as Estimated_Hours from tbl_sub_task as st 
+                    st.stask_id,st.est_hrs as Estimated_Hours from tbl_sub_task as st
                     inner join tbl_project_management as pm on(st.project_id = pm.pid)
                     inner join tbl_sub_project as sp on (st.sub_project_id = sp.spid)
                     inner join tbl_task as tt on(st.task_id = tt.task_id)

@@ -34,7 +34,7 @@ class EmployeeDetail extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('work_location, phone, mobile', 'required'),
+			array('work_location, phone, mobile, company_name, rjil_ext, building_name, floor, facebook_link, linkedin_link, twitter_link, sol_par_id, atp1a_sol_par_map_id, inst_sol_par_map_id', 'required'),
 			array('emp_id', 'length', 'max'=>11),
 			array('address_1', 'length', 'max'=>150),
 			array('city', 'length', 'max'=>50),

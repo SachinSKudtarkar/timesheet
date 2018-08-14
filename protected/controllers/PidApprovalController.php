@@ -62,19 +62,24 @@ class PidApprovalController extends Controller {
         
 
         $model = new PidApproval('search');
+        
 //		$model=new PidApproval;
         //$subtask=new SubTask;
         $FINAL_ARRAY = array();
         // Uncomment the following line if AJAX validation is needed
+        
+        //print_R($_POST);
+        //print_R($model);exit;
+        
         $this->performAjaxValidation($model);
 
         if (isset($_POST['PidApproval'])) {
 //                CHelper::prd($_POST);
             $valid = $_POST;
-            if (empty($valid['project_id']) || empty($valid['sub_project_id']) || empty($valid['PidApproval']['inception_date']) || empty($valid['PidApproval']['jira_id']) ||
+            
+            if (empty($valid['PidApproval']['project_id']) || empty($valid['PidApproval']['sub_project_id']) || empty($valid['PidApproval']['inception_date']) || empty($valid['PidApproval']['jira_id']) ||
                     empty($valid['PidApproval']['total_est_hrs']) || ($valid['PidApproval']['total_est_hrs'] == 0) ) { //|| isset($valid['task_id']) || isset($valid['sub_task_name']) || isset($valid['est_hrs'])
              
-                
                 Yii::app()->user->setFlash('error', 'Please fill all filleds, All Filleds are Required');
                 $this->render('create', array(
                     'model' => $model
@@ -102,9 +107,9 @@ class PidApprovalController extends Controller {
                     }
                 }
                 
-                if($model->validate()){
+            if($model->validate()){
                 //rint_r($FINAL_ARRAY);
-                if ($model->save(false))
+                if ($model->save(false)){
                     foreach ($FINAL_ARRAY as $key => $val) {
                         $modelST = new SubTask;
                         $modelST->s_task_id = $key + 1;
@@ -120,18 +125,15 @@ class PidApprovalController extends Controller {
                         $modelST->save(false);
                         //$importData[] = $modelST->getAttributes();
                     }
-
+                }
             }
-           
-            
-
-                $this->redirect(Yii::app()->urlManager->createUrl("Project/allProject"));
-//            $this->redirect('admin', array('model' => $model));
+            $this->redirect(Yii::app()->urlManager->createUrl("Project/allProject"));
+            //$this->redirect('admin', array('model' => $model));
         }
 
         $this->render('create', array(
             'model' => $model
-                //   'subtask'=>$subtask,
+            // 'subtask'=>$subtask,
         ));
     }
     

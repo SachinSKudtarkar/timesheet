@@ -10,10 +10,12 @@ $this->breadcrumbs = array(
 
 $this->menu = array(
     array('label' => 'Create Project', 'url' => array('create')),
-    array('label' => 'Manage Project', 'url' => array('admin')),
-    array('label' => 'Manage Program', 'url' => array('ResourceAllocationProjectWork/admin')),
+    array('label' => 'Create Program', 'url' => array('projectmanagement/create')),
+    array('label' => 'Manage Program', 'url' => array('projectmanagement/admin')),
 );
-?> 
+?>
+
+<h1>Manage Projects</h1>
 
 <?php
 // CHelper::debug($model);
@@ -25,7 +27,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
         //'taskId',
         //'pid',
         array(
-			'header'=>'Program',
+            'header'=>'Program',
             'name' => 'pid',
             'type' => 'raw',
             // 'filter' => false,
@@ -34,15 +36,14 @@ $this->widget('zii.widgets.grid.CGridView', array(
         // 'program',
         'sub_project_name',
         'sub_project_description',
-        // 'requester',
+        'requester',
        // 'estimated_end_date',
         //  'total_hr_estimation_hour',
-          /*'created_by',
+          'created_by',
           'created_date',
           'updated_by',
           'updated_date',
           'is_deleted',
-         */
         array(
             'class' => 'CButtonColumn',
         ),
