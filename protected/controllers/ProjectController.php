@@ -168,7 +168,7 @@ class ProjectController extends Controller {
             } else
                 $whrcondition = '';
 
-        $query = "select st.project_id as id, concat(em.first_name,' ',em.last_name) as Name,pm.project_name as Program ,sp.sub_project_name as Project ,st.sub_task_name as Task ,tt.task_name as Type ,
+        $query = "select st.stask_id as id, concat(em.first_name,' ',em.last_name) as Name,pm.project_name as Program ,sp.sub_project_name as Project ,st.sub_task_name as Task ,tt.task_name as Type ,
                     st.est_hrs as Estimated_Hours,st.stask_id from tbl_sub_task as st
                     inner join tbl_project_management as pm on(st.project_id = pm.pid)
                     inner join tbl_sub_project as sp on (st.sub_project_id = sp.spid)
