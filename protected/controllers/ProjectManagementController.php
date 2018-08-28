@@ -76,6 +76,7 @@ class ProjectManagementController extends Controller {
         if (isset($_POST['ProjectManagement'])) {
             // CHelper::debug($_POST['ProjectManagement']);
             $model->attributes = $_POST['ProjectManagement'];
+			$model->project_id = $_POST['project_id'];
             $model->created_date = date('Y-m-d h:i:s');
             $model->updated_date = date('Y-m-d h:i:s');
             $model->updated_by = Yii::app()->session['login']['user_id'];

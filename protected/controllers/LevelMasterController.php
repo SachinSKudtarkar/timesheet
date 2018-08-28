@@ -1,6 +1,9 @@
 <?php
 
-class SubProjectController extends Controller {
+/*  error_reporting(E_ALL);
+ini_set("display_startup_errors","1");
+ini_set("display_errors","1");  */
+class LevelMasterController extends Controller {
 
     /**
      * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
@@ -31,7 +34,7 @@ class SubProjectController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'admin','fetchProjectId'),
+                'actions' => array('create', 'update', 'admin'),
                 'expression' => 'CHelper::isAccess("PROJECTS", "full_access")',
                 'users' => array('@'),
             ),
@@ -61,28 +64,33 @@ class SubProjectController extends Controller {
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
     public function actionCreate() {
-        $model = new SubProject;
+		$model = new LevelMaster;
 
-        //print_r($model);exit;
+        //print_r($modal);exit;
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
 
-        if (isset($_POST['SubProject'])) {
-            $model->attributes = $_POST['SubProject'];
-            $model->created_date = date('Y-m-d h:i:s');
-			$model->project_id = $_POST['sub_project_id'];
+        if (isset($_POST['LevelMaster'])) {
+		
+            $model->attributes = $_POST['LevelMaster'];
+            $model->created_at = date('Y-m-d h:i:s');
             $model->created_by = Yii::app()->session['login']['user_id'];
-            $valid =$_POST['SubProject'];
-            if(empty($valid['pid']) || empty($valid['sub_project_name'])|| empty($valid['sub_project_description'])|| empty($valid['requester'])|| empty($valid['status']) ||empty($valid['Priority']))
+            $valid =$_POST['LevelMaster'];
+            if(empty($valid['level_name'])|| empty($valid['budget_per_hour']))
             {
                 Yii::app()->user->setFlash('error','Please fill all required filleds');
             }else{
 			
-               if($model->save())
-           	$insert_id = Yii::app()->db->getLastInsertID();
-			Yii::app()->user->setFlash('success', "ProjectId is {$insert_id}");
-                $this->redirect(array('admin'));
-           }
+				if($model->save())
+				{
+					$insert_id = Yii::app()->db->getLastInsertID();
+					Yii::app()->user->setFlash('success', "Level {$valid['level_name']} has been created successfully.");
+					
+				}else{
+					Yii::app()->user->setFlash('error', "Sorry! Insert was not succesfull.");
+				}
+				$this->redirect(array('admin'));
+		   }
         }
 
         $this->render('create', array(
@@ -101,11 +109,10 @@ class SubProjectController extends Controller {
 
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
-        if (isset($_POST['SubProject'])) {
-            $model->attributes = $_POST['SubProject'];
-			$model->project_id = $_POST['sub_project_id'];
-            $model->updated_date = date('Y-m-d h:i:s');
-            $model->updated_by = Yii::app()->session['login']['user_id'];
+        if (isset($_POST['LevelMaster'])) {
+            $model->attributes = $_POST['LevelMaster'];
+            $model->updated_at = date('Y-m-d h:i:s');
+            $model->modified_by = Yii::app()->session['login']['user_id'];
             if ($model->save())
                 $this->redirect(array('admin'));
 
@@ -147,10 +154,10 @@ class SubProjectController extends Controller {
      * Manages all models.
      */
     public function actionAdmin() {
-        $model = new SubProject('search');
+        $model = new LevelMaster('search');
         $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['SubProject']))
-            $model->attributes = $_GET['SubProject'];
+        if (isset($_GET['LevelMaster']))
+            $model->attributes = $_GET['LevelMaster'];
 
         $this->render('admin', array(
             'model' => $model,
@@ -165,7 +172,7 @@ class SubProjectController extends Controller {
      * @throws CHttpException
      */
     public function loadModel($id) {
-        $model = SubProject::model()->findByPk($id);
+        $model = LevelMaster::model()->findByPk($id);
         if ($model === null)
             throw new CHttpException(404, 'The requested page does not exist.');
         return $model;
@@ -181,28 +188,5 @@ class SubProjectController extends Controller {
             Yii::app()->end();
         }
     }
-
-	/**
-     * Fetches the program id to generate the project id.
-     * @param SubProject $projectid 
-     */
-	public function actionfetchProjectId(){
-		
-		$name = ProjectManagement::model()->findByPk($_POST['project_id']);
-		
-		if(!empty($_POST['update_id']))
-		{
-			$TaskId = $_POST['update_id'];
-		}else{
-			$TaskId = Yii::app()->db->createCommand('Select max(spid) as maxId from tbl_sub_project ')->queryRow(); 
-			$TaskId = $TaskId['maxId'] + 1;
-}
-		
-		
-		
-        $projectformat = $name['project_id'].sprintf("%03d", $TaskId);
-		echo $projectformat;
-	}
-	
 
 }

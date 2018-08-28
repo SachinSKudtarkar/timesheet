@@ -68,6 +68,8 @@ $('.search-form form').submit(function(){
                         'type' => 'raw',
                         'value' => array($model, 'getSubProjectDescription')
                     ),
+		'task_title',
+		'task_description',
         array(
       'header'=>'Type',
             'name' => 'task_id',

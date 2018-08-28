@@ -44,6 +44,15 @@ Yii::app()->clientScript->registerCssFile(
     // </div>
 -->    
     <div class="row">
+        <?php echo $form->labelEx($model, 'project_id'); ?>
+		<?php
+                $ProjectId = Yii::app()->db->createCommand('Select max(pid) as maxId from tbl_project_management ')->queryRow(); 
+				$projectformat = date('y').date('m').sprintf("%03d", $ProjectId['maxId']+1);
+                echo CHtml::textField("project_id",$projectformat,array('readonly'=>true));
+            ?>
+		<?php echo $form->error($model, 'project_id'); ?>
+    </div>   
+    <div class="row">
         <?php echo $form->labelEx($model, 'project_name'); ?>
 <?php echo $form->textField($model, 'project_name', array('size' => 60, 'maxlength' => 250)); ?>
 <?php echo $form->error($model, 'project_name'); ?>

@@ -53,6 +53,12 @@ for ($h = 0; $h <= 999; $h++) {
     <p class="note">Fields with <span class="required">*</span> are required.</p>
     <?php //echo $form->errorSummary($model); ?>
     <div class="row">
+            <?php echo CHTML::label('Task ID',''); ?>
+            <?php
+				echo CHtml::textField("project_task_id",'',array('readonly'=>true));
+            ?>
+    </div>
+    <div class="row">
         <?php echo $form->labelEx($model, 'Program'); ?>
         <?php
             echo CHTML::dropDownList('PidApproval[project_id]', 'pid', CHtml::listData(ProjectManagement::model()->findAll(array('order' => 'project_name',
@@ -74,6 +80,16 @@ for ($h = 0; $h <= 999; $h++) {
         <?php echo CHtml::dropDownList('PidApproval[sub_project_id]', '', array(), array('prompt' => 'Select Task'));?>
         <?php echo $form->error($model, 'sub_project_id'); ?>
     </div>
+    <div class="row">
+            <?php echo $form->labelEx($model,'task_title'); ?>
+            <?php echo $form->textField($model,'task_title',array('size'=>60,'maxlength'=>250)); ?>
+            <?php echo $form->error($model,'task_title'); ?>
+	</div>
+	<div class="row">
+            <?php echo $form->labelEx($model,'task_description'); ?>
+            <?php echo $form->textArea($model,'task_description',array('size'=>60,'maxlength'=>250)); ?>
+            <?php echo $form->error($model,'task_description'); ?>
+	</div>
     <div class="row">
         <?php echo $form->labelEx($model, 'inception_date'); ?>
         <?php // echo $form->textField($model,'inception_date'); ?>
@@ -99,11 +115,14 @@ for ($h = 0; $h <= 999; $h++) {
                 <td style="alignment-adjust: middle;color: #35619B"> Type (Dev/Test/Infra)   </td>
                 <td style="alignment-adjust: middle;color: #35619B"> Resource Name  </td>
                 <td style="alignment-adjust: middle;color: #35619B"> Task   </td>
+				<td style="alignment-adjust: middle;color: #35619B"> Jira Id   </td>
+				<td style="alignment-adjust: middle;color: #35619B"> Inception Date</td>
                 <td style="alignment-adjust: middle;color: #35619B"> Estimated Hours   </td>
             </tr>
             <?php
             $count = 0;
             if ($subtask[0]['task_id'] != '') {
+			
                 foreach ($subtask as $key => $value) {
                     $count++;
                     ?>   
@@ -117,6 +136,12 @@ for ($h = 0; $h <= 999; $h++) {
                             ?>
                         </td>
                         <td><?php echo CHtml::textField('sub_task_name[]', $value->sub_task_name, array('data-name' => 'sub_task_name', 'style' => "width:210px;", "name" => "data[0][sub_task_name]", "class" => "sub_task_name")); ?></td>
+						<td>
+							<?php echo CHtml::textField('st_jira_id[]',$value->sub_jira_id, array('data-name' => 'st_jira_id', 'style' => "width:210px;", "name" => "data[0][st_jira_id]", "class" => "st_jira_id")); ?>
+						</td>
+						<td>
+							<?php echo CHtml::textField('st_jira_id[]',$value->sub_jira_id, array('data-name' => 'st_jira_id', 'style' => "width:210px;", "name" => "data[0][st_jira_id]", "class" => "st_jira_id")); ?>
+						</td>
                         <td><?php
                                 echo CHtml::textField('est_hrs[]', $value->est_hrs, array('data-name' => 'est_hrs', 'style' => "width:50px;", "name" => "data[0][est_hrs]", "class" => "est_hrs wrkhrsClass"));
                             ?>
@@ -126,7 +151,9 @@ for ($h = 0; $h <= 999; $h++) {
                     <?php
                 }
             } else {
+                
                 ?>
+				
                 <tr class="row_copy_l2_ring">
                    <!-- <td><?php //echo $count+1;  ?> </td>-->
                     <td><?php echo CHtml::dropDownList('task_id[]', $value->task_id, CHtml::listData(Task::model()->findAll("status=1"), 'task_id', 'task_name'), array('data-name' => 'task_id')); ?></td>
@@ -137,6 +164,12 @@ for ($h = 0; $h <= 999; $h++) {
                         ?>
                     </td>
                     <td><?php echo CHtml::textField('sub_task_name[]', $value->sub_task_name, array('data-name' => 'sub_task_name', 'style' => "width:210px;", "name" => "data[0][sub_task_name]", "class" => "sub_task_name")); ?></td>
+					<td>
+						<?php echo CHtml::textField('st_jira_id[]',$value->sub_jira_id, array('data-name' => 'st_jira_id', 'style' => "width:50px;", "name" => "data[0][st_jira_id]", "class" => "st_jira_id")); ?>
+					</td>
+					<td>
+						<?php echo CHtml::textField('st_inception_date[]',$value->st_inception_date, array('data-name' => 'st_inception_date', 'style' => "width:100px;", "name" => "data[0][st_inception_date]", "class" => "st_inception_date datepicker")); ?>
+					</td>
                     <td><?php echo CHtml::textField('est_hrs[]', $value->est_hrs, array('data-name' => 'est_hrs', 'style' => "width:50px;", "name" => "data[0][est_hrs]", "class" => "est_hrs wrkhrsClass", "min"=> '1')); ?></td>
                     <td><?php echo CHtml::link('', 'javascript:void(0);', array('class' => 'icon-plus-sign l2_ring customAddMorel2_ring')); ?></td>
                 </tr>
@@ -163,7 +196,7 @@ for ($h = 0; $h <= 999; $h++) {
         var type = $(this).attr('id');
         var date = $(this).val();         
       },
-    }).attr('readonly','readonly');
+    });
   
     
     ", CClientScript::POS_READY);
@@ -233,14 +266,76 @@ for ($h = 0; $h <= 999; $h++) {
     });
 
 
+
+	
     $(document).ready(function () {
+	
         $('.datepicker').datepicker({
             dateFormat: 'yy-m-d',
             onSelect: function (dateText) {
                 var type = $(this).attr('id');
                 var date = $(this).val();
             },
-        }).attr('readonly', 'readonly');
+        });
 
+		
     });
+
+	function addDatepicker(element)
+	{
+		//alert(element);
+		
+		$(element).removeClass('hasDatepicker');
+		
+		$(element).datepicker();
+		
+	}
 </script>
+<?php
+Yii::app()->clientScript->registerScript('projecttaskid', "
+
+$('#PidApproval_sub_project_id').change(function(){
+	var project_id = $(this).val();
+	fetchProjectId(project_id);
+});
+
+$('#PidApproval_project_id').change(function(){
+	setTimeout(function(){ 
+		var project_id = $('#PidApproval_sub_project_id').val();
+		fetchProjectId(project_id);
+	}, 500);
+	
+});
+
+function fetchProjectId(project_id){
+
+var tval = project_id;
+
+ if(tval != '')
+{
+$('.custom-loader').show();
+$.ajax({
+				url: '" . CHelper::createUrl("pidapproval/fetchSubProjectId") . "',
+                type:'POST',
+			    data: {project_id : project_id},
+                success:function(data)
+                {
+                $('.custom-loader').hide();
+				
+					if(data != 0)
+					{
+						$('#project_task_id').val(data);
+					}
+				}
+            });
+            }
+}
+
+
+
+
+
+
+
+    ", CClientScript::POS_READY);
+?>

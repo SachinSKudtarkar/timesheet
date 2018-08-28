@@ -19,10 +19,9 @@
 	<p class="note">Fields with <span class="required">*</span> are required.</p>
 	<?php echo $form->errorSummary($model); ?>
 	<div class="row">
-            <?php echo CHTML::label('Task ID',''); ?>
+            <?php echo CHTML::label('Project ID',''); ?>
             <?php
-                $TaskId = Yii::app()->db->createCommand('Select max(spid) as maxId from tbl_sub_project ')->queryRow(); 
-                echo CHtml::textField("insert_id",$TaskId['maxId']+1,array('readonly'=>true));
+				echo CHtml::textField("sub_project_id",$model->project_id,array('readonly'=>true));
             ?>
         </div>
 	<div class="row">
@@ -76,7 +75,7 @@
             <?php echo $form->labelEx($model, 'priority'); ?>
             <?php
             //echo $form->textField($model,'type');
-            echo $form->dropDownList($model, 'priority', array('1' => 'High', '2' => 'Medium', '3' => 'Low'), array('prompt' => '(Select Priority)', 'class' => 'prio'));
+            echo $form->dropDownList($model, 'Priority', array('1' => 'High', '2' => 'Medium', '3' => 'Low'), array('prompt' => '(Select Priority)', 'class' => 'prio'));
             ?>
             <?php echo $form->error($model, 'priority'); ?>
         </div>
@@ -106,6 +105,7 @@
             <?php // echo $form->error($model,'is_deleted'); ?>
         </div>
         <div class="row buttons">
+			<?php echo $form->hiddenField($model,'spid'); ?>
             <?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save'); ?>
         </div>
     <?php $this->endWidget(); ?>
@@ -133,5 +133,68 @@
             var date = $(this).val();         
           },
         }).attr('readonly','readonly');
+    ", CClientScript::POS_READY);
+?>
+
+<?php
+Yii::app()->clientScript->registerScript('projectonchange', "
+
+$('#SubProject_pid').change(function(){
+	
+	var project_id = $(this).val();
+	var update_id = $(SubProject_spid).val();
+	var tval = $(this).val();
+	if(tval != '')
+	{
+		$('.custom-loader').show();
+		$.ajax({
+			url: '" . CHelper::createUrl("subproject/fetchProjectId") . "',
+			type:'POST',
+			data: {project_id : project_id,update_id: update_id},
+			success:function(data)
+			{
+			$('.custom-loader').hide();
+			
+				if(data != 0)
+				{
+					$('#sub_project_id').val(data);
+				}
+			}
+		});
+	}
+});
+
+    $('.allcateresource').click(function(){
+    return !$('#txtarea1 option:selected').remove().appendTo('#txtarea2');
+    });
+
+$('.dallocate').click(function(){
+    return !$('#txtarea2 option:selected').remove().appendTo('#txtarea1');
+    });
+
+//$('#txtarea2').click(function(){
+//$('.allcateresource').hide();
+//$('.dallocate').show();
+//});
+//
+//$('#txtarea1').click(function(){
+//$('.allcateresource').show();
+//$('.dallocate').hide();
+//});
+
+$('#allocateR').click(function(){
+$('#txtarea2 option').prop('selected', true);
+if($('#LevelName').val() == '')
+{
+    alert('Please select level.');
+    return false;
+}
+
+});
+
+
+
+
+
     ", CClientScript::POS_READY);
 ?>

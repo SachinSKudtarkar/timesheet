@@ -26,11 +26,11 @@ class PidApprovalController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow all users to perform 'index' and 'view' actions
-                'actions' => array('index', 'view', 'Approvalstatus', 'Allprojects'),
+                'actions' => array('index', 'view', 'Approvalstatus', 'Allprojects','fetchSubProjectId'),
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update'),
+                'actions' => array('create', 'update','fetchSubProjectId'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -92,14 +92,17 @@ class PidApprovalController extends Controller {
                 $model->approved = 2;
                 $model->created_by = Yii::app()->session["login"]["user_id"];
                 $model->created_at = date("Y-m-d h:i:s");
-    
+				$model->project_task_id = $_POST['project_task_id'];
                 $model->attributes = $_POST['PidApproval'];
 //                $this->performAjaxValidation($model);
-                foreach ($_POST['task_id'] as $key => $val) {
+                foreach ($_POST['sub_task_name'] as $key => $val) {
                     $FINAL_ARRAY[$key]['task_id'] = $_POST['task_id'][$key];
+					/* $FINAL_ARRAY[$key]['task_id'] = 1; */
                     $FINAL_ARRAY[$key]['emp_id'] = $_POST['emp_id'][$key];
                     $FINAL_ARRAY[$key]['sub_task_name'] = $_POST['sub_task_name'][$key];
                     $FINAL_ARRAY[$key]['est_hrs'] = $_POST['est_hrs'][$key];
+					$FINAL_ARRAY[$key]['st_jira_id'] = $_POST['st_jira_id'][$key];
+					$FINAL_ARRAY[$key]['st_inception_date'] = $_POST['st_inception_date'][$key];
                 }
                 if (isset($_POST['l2_ring'])) {
                     foreach ($_POST['l2_ring'] as $key => $val) {
@@ -122,6 +125,10 @@ class PidApprovalController extends Controller {
                         $modelST->est_hrs = $val['est_hrs'];
                         $modelST->created_by = Yii::app()->session["login"]["user_id"];
                         $modelST->created_at = date("Y-m-d h:i:s");
+						$subTaskId = Yii::app()->db->createCommand('Select max(stask_id) as maxId from tbl_sub_task ')->queryRow(); 
+						$modelST->sub_task_id = $_POST['project_task_id'].sprintf("%02d", $val['task_id']).sprintf("%03d", $subTaskId['maxId'] + 1);
+						$modelST->st_jira_id = $val['st_jira_id'];
+						$modelST->st_inception_date = $val['st_inception_date'];
                         $modelST->save(false);
                         //$importData[] = $modelST->getAttributes();
                     }
@@ -302,6 +309,8 @@ class PidApprovalController extends Controller {
                 'emp_id' => $stask['emp_id'],
                 'est_hrs' => $stask['est_hrs'],
                 'approved' => $stask['approved'],
+				'task_title' => $stask['task_title'],
+				'task_description' => $stask['task_description'],
             );
         }
         // $sql = "select t.* from tbl_pid_approval t where approved!=2 and approved!=0 {$pid_approval_id}";
@@ -538,6 +547,18 @@ class PidApprovalController extends Controller {
             //return $this->actionAdmin;
         }
         $this->redirect(array('admin'));
+    }
+
+	/**
+     * Fetches the project id to generate the task id.
+     * @param Project Id $projectid 
+     */
+	public function actionfetchSubProjectId(){
+		
+		$name = SubProject::model()->findByPk($_POST['project_id']);
+		$TaskId = Yii::app()->db->createCommand('Select max(pid_id) as maxId from tbl_pid_approval ')->queryRow(); 
+        $projectformat = $name['project_id'].sprintf("%03d", $TaskId['maxId']+1);
+		echo $projectformat;
     }
 
 }

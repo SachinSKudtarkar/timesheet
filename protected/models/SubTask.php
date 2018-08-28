@@ -69,7 +69,7 @@ class SubTask extends CActiveRecord
 			// array('sub_task_name', 'unique', 'message' => 'Sub Project already exists!'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('stask_id, pid_approval_id ,task_id, project_id, sub_project_id, emp_id, sub_task_name, description, status, created_by, created_at, is_approved, is_delete,est_hrs', 'safe', 'on'=>'search'),
+			array('stask_id, pid_approval_id ,task_id, project_id, sub_project_id, emp_id, sub_task_name, description, status, created_by, created_at, is_approved, is_delete,est_hrs,st_jira_id,st_inception_date', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -106,6 +106,8 @@ class SubTask extends CActiveRecord
 			'created_at' => 'Created At',
 			'is_approved' => 'Is Approved',
 			'is_delete' => 'Is Delete',
+			'st_jira_id' => 'Jira Id',
+			'st_inception_date' => 'Inception Date'
 		);
 	}
 
