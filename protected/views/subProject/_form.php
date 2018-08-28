@@ -75,7 +75,7 @@
             <?php echo $form->labelEx($model, 'priority'); ?>
             <?php
             //echo $form->textField($model,'type');
-            echo $form->dropDownList($model, 'Priority', array('1' => 'High', '2' => 'Medium', '3' => 'Low'), array('prompt' => '(Select Priority)', 'class' => 'prio'));
+            echo $form->dropDownList($model, 'priority', array('1' => 'High', '2' => 'Medium', '3' => 'Low'), array('prompt' => '(Select priority)', 'class' => 'prio'));
             ?>
             <?php echo $form->error($model, 'priority'); ?>
         </div>

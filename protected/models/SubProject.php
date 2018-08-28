@@ -51,7 +51,7 @@ class SubProject extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('pid, sub_project_name, sub_project_description,status,Priority,requester', 'required'),
+			array('pid, sub_project_name, sub_project_description,status,priority,requester', 'required'),
 			array('pid, created_by, updated_by, is_deleted', 'numerical', 'integerOnly'=>true),
 			array('sub_project_name, sub_project_description, requester', 'length', 'max'=>250), 
                         array('total_hr_estimation_hour', 'numerical' ),
@@ -88,7 +88,7 @@ class SubProject extends CActiveRecord
 			'total_hr_estimation_hour' => 'Total Hr Estimation Hour',
 			'estimated_start_date' =>'Estimated Start Date',
 			'status' =>'Status',
-			'Priority' =>'Priority',
+			'priority' =>'priority',
 			'created_by' => 'Created By',
 			'created_date' => 'Created Date',
 			'updated_by' => 'Updated By',
