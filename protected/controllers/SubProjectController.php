@@ -73,7 +73,7 @@ class SubProjectController extends Controller {
 			$model->project_id = $_POST['sub_project_id'];
             $model->created_by = Yii::app()->session['login']['user_id'];
             $valid =$_POST['SubProject'];
-            if(empty($valid['pid']) || empty($valid['sub_project_name'])|| empty($valid['sub_project_description'])|| empty($valid['requester'])|| empty($valid['status']) ||empty($valid['Priority']))
+            if(empty($valid['pid']) || empty($valid['sub_project_name'])|| empty($valid['sub_project_description'])|| empty($valid['requester'])|| empty($valid['status']) ||empty($valid['priority']))
             {
                 Yii::app()->user->setFlash('error','Please fill all required filleds');
             }else{
