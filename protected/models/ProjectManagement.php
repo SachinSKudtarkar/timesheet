@@ -40,7 +40,7 @@ class ProjectManagement extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('project_name, project_description, requester,estimated_start_date, estimated_end_date, total_hr_estimation_hour,', 'required'),//, estimated_end_date,estimated_start_date, status, type
+            array('project_id,project_name, project_description, requester,estimated_start_date, estimated_end_date, total_hr_estimation_hour,', 'required'),//, estimated_end_date,estimated_start_date, status, type
             array('type, hr_clocked,category, is_billable, created_by, updated_by, is_deleted', 'numerical', 'integerOnly' => true),
             array('project_name, project_description, requester', 'length', 'max' => 250),
             array('total_hr_estimation_hour', 'length', 'max' => 10),
@@ -50,7 +50,7 @@ class ProjectManagement extends CActiveRecord {
             array('project_name', 'unique', 'message' => 'Program already exists!'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('pid, project_name, project_description, requester, estimated_end_date, total_hr_estimation_hour, status, type, hr_clocked,category, customer, is_billable, created_by, created_date, updated_by, updated_date, is_deleted,sub_project_name', 'safe', 'on' => 'search'),
+            array('pid, project_id,project_name, project_description, requester, estimated_end_date, total_hr_estimation_hour, status, type, hr_clocked,category, customer, is_billable, created_by, created_date, updated_by, updated_date, is_deleted,sub_project_name', 'safe', 'on' => 'search'),
         );
     }
     public function validated_projectname($attribute,$params){
@@ -84,6 +84,7 @@ class ProjectManagement extends CActiveRecord {
     public function attributeLabels() {
         return array(
             'pid' => 'Pid',
+            'project_id' => 'Program Id',
             'project_name' => 'Program Name',
             'project_description' => 'Program Description',
             'requester' => 'Requester',
@@ -122,6 +123,7 @@ class ProjectManagement extends CActiveRecord {
         $criteria = new CDbCriteria;
        // $criteria->select = "t.*,sbpr.sub_project_name ";
         $criteria->compare('t.pid', $this->pid);
+		$criteria->compare('t.project_id', $this->project_id);
         $criteria->compare('project_name', $this->project_name, true);
         $criteria->compare('project_description', $this->project_description, true);
         $criteria->compare('requester', $this->requester, true);

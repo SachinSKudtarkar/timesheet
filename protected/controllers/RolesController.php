@@ -148,13 +148,13 @@ class RolesController extends BaseController {
         $this->loadModel($id)->delete();
         Employee::model()->updateByPk($id, array('is_deleted' => 1));
 //		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-        // checking request type                
+        // checking request type
         if (isset($_POST['ajax']) && $_POST['ajax'] === 'delete') {
-            // If ajax request then just return message                    
+            // If ajax request then just return message
             echo CHelper::setFlashSuccess("Role record deleted.");
             Yii::app()->end();
         } else {
-            // For normal request page will redirect and flash message will set                    
+            // For normal request page will redirect and flash message will set
             CHelper::setFlashSuccess("Role record deleted.");
             $this->redirect(array('/roles/index/'));
         }

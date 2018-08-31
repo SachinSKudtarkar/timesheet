@@ -714,11 +714,21 @@ group by dc.stask_id order by em.emp_id;";
         $query = "select allocated_resource from tbl_resource_allocation_project_work  where pid ={$_REQUEST['pid']}";
         $allocated_resource = Yii::app()->db->createCommand($query)->queryRow();
 
-        $query1 = "select emp_id,concat(first_name,' ',last_name) as name from tbl_employee  where emp_id in ({$allocated_resource['allocated_resource']}) order by first_name";
+        $query1 = "select emp.emp_id,concat(first_name,' ',last_name) as name,lm.level_name, lm.budget_per_hour
+						from tbl_employee emp 
+						left join tbl_assign_resource_level	rl on rl.emp_id = emp.emp_id 
+						left join tbl_level_master lm on lm.level_id = rl.level_id 
+						where emp.emp_id in ({$allocated_resource['allocated_resource']}) order by first_name";
         $resource = Yii::app()->db->createCommand($query1)->queryAll();
 
         foreach ($resource as $value => $name) {
-            echo CHtml::tag('option', array('value' => $name['emp_id']), CHtml::encode($name['name']), true);
+			
+			$name_with_level = $name['name'];
+			if(!empty($name['level_name'])){
+				$name_with_level = $name['name'].'('.$name['level_name'].')';
+			}
+			
+            echo CHtml::tag('option', array('value' => $name['emp_id'],'id'=>$name['budget_per_hour']), CHtml::encode($name_with_level), true);
         }
     }
 

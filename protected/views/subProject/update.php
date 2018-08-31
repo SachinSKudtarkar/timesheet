@@ -17,4 +17,4 @@ $this->menu=array(
 
 <h1>Update Project <?php echo $model->spid; ?></h1>
 
-<?php $this->renderPartial('_form', array('model'=>$model)); ?>
+<?php $this->renderPartial('_form', array('model'=>$model,'levels'=>$levels,'hours_label'=>$hours_label)); ?>

@@ -49,7 +49,7 @@ $('.search-form form').submit(function(){
         'emptyText' => 'No Records Found',
         'enablePagination' => true,
         'columns' => array(
-
+                
                 array(
                     'header' => 'Sr.no',
                     'name'=>'sr',
@@ -68,18 +68,8 @@ $('.search-form form').submit(function(){
                         'type' => 'raw',
                         'value' => array($model, 'getSubProjectDescription')
                     ),
-		array(
-                    'header' => 'Task Id',
-                    'name'=>'project_task_id',
-                 ),
-		 array(
-                    'header' => 'Task Title',
-                    'name'=>'task_title',
-                 ),
-		 array(
-                    'header' => 'Task Description',
-                    'name'=>'task_description',
-                 ),
+		'task_title',
+		'task_description',
         array(
       'header'=>'Type',
             'name' => 'task_id',
@@ -134,7 +124,7 @@ $('.search-form form').submit(function(){
 //                    'header' => 'Approved',
 //                    'type' => 'raw',
 //                    'value' => '$model->approved == 1 ? "Open": "Close"',
-//                ),
+//                ),                 
 //		array(
 //			'class'=>'CButtonColumn',
 //		),
@@ -143,9 +133,9 @@ $('.search-form form').submit(function(){
            // 'template' => '{s4a}',
            // 'buttons' => array(
               // 's4a' => array(
-
+                  
                  // 'visible' => 'Yii::app()->session[\'login\'][\'access_type\'] == 1',
-                // 'label' => 'Send For Approval',
+                // 'label' => 'Send For Approval', 
                   // 'url' => 'CHtml::normalizeUrl(array("dashboard/mail/id/".rawurlencode($data->feedback_email)."/f_id/".$data->feedback_id))', //Your URL According to your wish
                      // 'imageUrl' => Yii::app()->baseUrl . '/images/reply_mail_icon.png', // image URL of the button. If not set or false, a text link is used, The image must be 16X16 pixels
                   // ),
@@ -159,25 +149,7 @@ $('.search-form form').submit(function(){
            // 'visible' => 'Yii::app()->session[\'login\'][\'access_type\'] == 2',
             'value' => array($model, 'pidApprovalbtn'),
             ),
-            array(
-                'class' => 'bootstrap.widgets.TbButtonColumn',
-                'template' => '{update}{delete}',
-                'buttons' => array
-                    ('update' => array
-                        (
-                        'label' => 'Update',
-                        'url' => 'Yii::app()->createUrl("/pidapproval/update", array("id"=>$data[\'sr\']))',
-                        'visible' => "CHelper::isAccess('MANAGER','update')",
-                    ),
-                    'delete' => array
-                        (
-                        'label' => 'Delete',
-                        'url' => 'Yii::app()->createUrl("/pidapproval/delete", array("id"=>$data[\'sr\']))',
-                        'visible' => "CHelper::isAccess('MANAGER','delete')",
-                    ),
-                ),
-            ),
-        ),
+	),
 )); ?>
 
 <?php
@@ -187,13 +159,12 @@ Yii::app()->clientScript->registerScript('some-name', "
        $('#sendapproval').val($(this).data('value'));
        $('#sendreject').val($(this).data('value'));
         result_id = $(this).data('value');
-    });
+    }); 
 ");
 ?>
-
+               
 <?php $csrfToken = Yii::app()->request->csrfToken; ?>
 <?php
-/*
     # Connectivity modal code starts
     $this->beginWidget('bootstrap.widgets.TbModal', array('id' => 'approval', 'htmlOptions' => array('style' => 'width:600px;')));
 ?>
@@ -213,5 +184,4 @@ $this->endWidget();
 ?>
 <?php
 $this->endWidget();
-*/
 ?>

@@ -42,7 +42,22 @@ Yii::app()->clientScript->registerCssFile(
 // ?>
     <?php// echo $form->error($model, 'project_id'); ?>
     // </div>
--->    
+-->
+    <div class="row">
+        <?php echo $form->labelEx($model, 'project_id'); ?>
+		<?php
+				if(empty($model->project_id))
+				{
+					$ProjectId = Yii::app()->db->createCommand('Select max(pid) as maxId from tbl_project_management ')->queryRow();
+					$projectformat = date('y').date('m').sprintf("%03d", $ProjectId['maxId']+1);
+
+				}else{
+					$projectformat = $model->project_id;
+				}
+				echo CHtml::textField("project_id",$projectformat,array('readonly'=>true));
+            ?>
+		<?php echo $form->error($model, 'project_id'); ?>
+    </div>
     <div class="row">
         <?php echo $form->labelEx($model, 'project_name'); ?>
 <?php echo $form->textField($model, 'project_name', array('size' => 60, 'maxlength' => 250)); ?>
@@ -60,8 +75,8 @@ Yii::app()->clientScript->registerCssFile(
 <?php echo $form->textField($model, 'requester', array('size' => 60, 'maxlength' => 250)); ?>
 <?php echo $form->error($model, 'requester'); ?>
     </div>
-    
-     
+
+
     <div class="row">
         <?php echo $form->labelEx($model, 'estimated_start_date'); ?>
 <?php echo $form->textField($model, 'estimated_start_date', array('size' => 60,'class' => 'datepicker', 'placeholder' => 'estimated start date', 'maxlength' => 250)); ?>
@@ -89,25 +104,25 @@ Yii::app()->clientScript->registerCssFile(
     <?php //echo $form->textField($model, 'created_by'); ?>
     <?php //echo $form->error($model, 'created_by'); ?>
             </div>
-    
+
             <div class="row">
     <?php //echo $form->labelEx($model, 'created_date'); ?>
     <?php //echo $form->textField($model, 'created_date'); ?>
     <?php //echo $form->error($model, 'created_date'); ?>
             </div>
-    
+
             <div class="row">
     <?php //echo $form->labelEx($model, 'updated_by'); ?>
     <?php //echo $form->textField($model, 'updated_by'); ?>
     <?php //echo $form->error($model, 'updated_by'); ?>
             </div>
-    
+
             <div class="row">
     <?php //echo $form->labelEx($model, 'updated_date'); ?>
     <?php //echo $form->textField($model, 'updated_date'); ?>
     <?php //echo $form->error($model, 'updated_date'); ?>
             </div>
-    
+
             <div class="row">
         <?php// echo $form->labelEx($model, 'is_deleted'); ?>
 <?php //echo $form->textField($model, 'is_deleted'); ?>
@@ -124,20 +139,20 @@ Yii::app()->clientScript->registerCssFile(
 
 <?php
 Yii::app()->clientScript->registerScript('filters', "
-  
+
     $('.datepicker').datepicker({
-     dateFormat: 'yy-m-d',    
+     dateFormat: 'yy-m-d',
      onSelect: function(dateText) {
         var type = $(this).attr('id');
-        var date = $(this).val();         
+        var date = $(this).val();
       },
     }).attr('readonly','readonly');
-  
+
        $('.datepicker2').datepicker({
-     dateFormat: 'yy-m-d',    
+     dateFormat: 'yy-m-d',
      onSelect: function(dateText) {
         var type = $(this).attr('id');
-        var date = $(this).val();         
+        var date = $(this).val();
       },
     }).attr('readonly','readonly');
 ", CClientScript::POS_READY);

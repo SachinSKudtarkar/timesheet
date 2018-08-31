@@ -2,6 +2,19 @@
 /* @var $this SubProjectController */
 /* @var $model SubProject */
 /* @var $form CActiveForm */
+
+	Yii::app()->clientScript->registerCoreScript('jquery.ui');
+	$cs = Yii::app()->getClientScript();
+	$cs->registerScriptFile(Yii::app()->baseUrl . "/js/jquery-ui-timepicker-addon.js");
+	$cs->registerCssFile(Yii::app()->baseUrl . "/css/jquery-ui-timepicker-addon.css");
+	Yii::app()->clientScript->registerCssFile(
+			Yii::app()->clientScript->getCoreScriptUrl() .
+			'/jui/css/base/jquery-ui.css'
+	);
+	$cs = Yii::app()->getClientScript();
+	$baseUrl = Yii::app()->baseUrl;
+	$cs->registerScriptFile($baseUrl . '/js/custom_add_more_4k.js?28032017');
+	$img_path = Yii::app()->theme->baseUrl . "/img/add_image.png";
 ?>
 
 <div class="form">
@@ -16,32 +29,33 @@
             'enableAjaxValidation'=>false,
         ));
     ?>
+	
 	<p class="note">Fields with <span class="required">*</span> are required.</p>
 	<?php echo $form->errorSummary($model); ?>
-	<div class="row">
-            <?php echo CHTML::label('Task ID',''); ?>
-            <?php
-                $TaskId = Yii::app()->db->createCommand('Select max(spid) as maxId from tbl_sub_project ')->queryRow(); 
-                echo CHtml::textField("insert_id",$TaskId['maxId']+1,array('readonly'=>true));
-            ?>
-        </div>
-	<div class="row">
-            <?php echo CHTML::label('Program Name',''); ?>
-            <?php echo $form->dropDownList($model, 'pid', CHtml::listData(ProjectManagement::model()->findAll(array('order'=>'project_name','condition'=>'is_deleted=0')), 'pid', 'project_name'),array('prompt'=>'Please select Program')); ?>
-            <?php echo $form->error($model,'pid'); ?>
-	</div>
-	<div class="row">
-            <?php echo $form->labelEx($model,'sub_project_name'); ?>
-            <?php echo $form->textField($model,'sub_project_name',array('size'=>60,'maxlength'=>250)); ?>
-            <?php echo $form->error($model,'sub_project_name'); ?>
-	</div>
-	<div class="row">
-            <?php echo $form->labelEx($model,'sub_project_description'); ?>
-            <?php // echo $form->textField($model,'sub_project_description',array('size'=>60,'maxlength'=>250)); ?>
-            <?php echo $form->textArea($model,'sub_project_description',array('size'=>60,'maxlength'=>250)); ?>
-            <?php echo $form->error($model,'sub_project_description'); ?>
-	</div>
-	<div class="row">
+	<div class="span5">
+		<div class="row">
+				<?php echo CHTML::label('Project ID',''); ?>
+				<?php
+					echo CHtml::textField("sub_project_id",$model->project_id,array('readonly'=>true));
+				?>
+		</div>
+		<div class="row">
+				<?php echo CHTML::label('Program Name',''); ?>
+				<?php echo $form->dropDownList($model, 'pid', CHtml::listData(ProjectManagement::model()->findAll(array('order'=>'project_name','condition'=>'is_deleted=0')), 'pid', 'project_name'),array('prompt'=>'Please select Program')); ?>
+				<?php echo $form->error($model,'pid'); ?>
+		</div>
+		<div class="row">
+				<?php echo $form->labelEx($model,'sub_project_name'); ?>
+				<?php echo $form->textField($model,'sub_project_name',array('size'=>60,'maxlength'=>250)); ?>
+				<?php echo $form->error($model,'sub_project_name'); ?>
+		</div>
+		<div class="row">
+				<?php echo $form->labelEx($model,'sub_project_description'); ?>
+				<?php // echo $form->textField($model,'sub_project_description',array('size'=>60,'maxlength'=>250)); ?>
+				<?php echo $form->textArea($model,'sub_project_description',array('size'=>60,'maxlength'=>250)); ?>
+				<?php echo $form->error($model,'sub_project_description'); ?>
+		</div>
+		<div class="row">
             <?php echo $form->labelEx($model,'requester'); ?>
             <?php echo $form->textField($model,'requester',array('size'=>60,'maxlength'=>250)); ?>
             <?php echo $form->error($model,'requester'); ?>
@@ -101,23 +115,112 @@
             <?php // echo $form->error($model,'updated_date'); ?>
         </div>
         <div class="row">
+	</div>
+	</div>
+	<div class="span5">
+		<?php if(isset($hours_label)){ ?>
+		<div class="row">
+			<table class="table table-striped table-bordered hours_label">
+				<tr>
+					<th>Estimated (Hrs)</th>
+					<th>Allocated (Hrs)</th>
+					<th>Utilized (Hrs)</th>
+				</tr>
+				<tr>
+				
+					<td id="estimated_hrs"><?php echo $hours_label['estimated']['estimated_hrs']; ?></td>
+					<td id="allocated_hrs"><?php echo $hours_label['allocated']['allocated_hrs']; ?></td>
+					<td><?php echo $hours_label['utilized']['utilized_hrs']; ?></td>
+				</tr>
+			</table>
+			
+		</div>
+		<?php } ?>
+		<div class="row" id="L2_device_div">
+		<p> Allocated Level and its associated Hours to project.</p>
+		<div class="repeater">
+			<div data-repeater-list="group-a">
+			<?php
+				$count = 0;
+				if ($levels[0]['level_id'] != '') {
+					foreach ($levels as $key => $value) {
+					$count++;
+			?>   
+						<div data-repeater-item class="row">
+						
+							<?php echo CHtml::dropDownList('level_id', $value->level_id, CHtml::listData(LevelMaster::model()->findAll(array('order'=>'level_name ASC')), 'level_id', 'level_name'), array('data-name' => 'level_id','style' => "width:150px;margin-right:20px")); ?>
+						
+							<?php echo CHtml::textField('level_hours',$value->level_hours, array('data-name' => 'level_hours', 'style' => "width:100px;", "name" => "data[0][level_hours]", "class" => "level_hours")); ?>
+							<input data-repeater-delete type="button" value="Delete"/>
+						
+						</div>
+			 <?php } } else { ?>
+						<div data-repeater-item class="row">
+				
+							<?php echo CHtml::dropDownList('level_id', $value->level_id, CHtml::listData(LevelMaster::model()->findAll(array('order'=>'level_name ASC')), 'level_id', 'level_name'), array('data-name' => 'level_id','style' => "width:150px;margin-right:20px")); ?>
+				
+							<?php echo CHtml::textField('level_hours',$value->level_hours, array('data-name' => 'level_hours', 'style' => "width:100px;", "name" => "data[0][level_hours]", "class" => "level_hours")); ?>
+							<input data-repeater-delete type="button" value="Delete"/>
+						</div>
+			  <?php } ?>
+			</div>
+			<input data-repeater-create type="button" value="Add"/>
+		</div>
+    </div>
+	</div>
             <?php // echo $form->labelEx($model,'is_deleted'); ?>
             <?php // echo $form->textField($model,'is_deleted'); ?>
             <?php // echo $form->error($model,'is_deleted'); ?>
-        </div>
-        <div class="row buttons">
-            <?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save'); ?>
+       
+        <div class="row buttons span10">
+			<?php echo $form->hiddenField($model,'spid'); ?>
+            <?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save', array('id' => 'ISSUB')); ?>
         </div>
     <?php $this->endWidget(); ?>
 </div>
 <!-- form -->
+<script>
+    $(document).on('change', ' .level_hours', function () {
+		
+        getWrkHoursTotal();
+    });
+    function getWrkHoursTotal() {
+        var allhrs = 0;
+        var allmnts = 0;
+        var totalhrs = $('#allocated_hrs').text();
+		/* var project_id = $('#PidApproval_sub_project_id').val(); */
+		
+        $('.level_hours').each(function () {
+            var thisval = $(this).val();
+            if (thisval != '') {
+                allhrs = parseFloat(allhrs) + parseFloat(thisval);
+            }
+			
+			
+
+            
+        });
+		
+			if (totalhrs > allhrs) {
+                alert('Estimated hours is less than the allocated hrs. Please check and try again.');
+                $("#ISSUB").attr('disabled', true);
+                // return false;
+            } else {
+                $("#ISSUB").attr('disabled', false);
+                //return true;
+            } 
+
+        var totHrs = (parseFloat(allhrs) + parseInt((allmnts / 60))) + ':' + (parseFloat((allmnts % 60)));
+        $('#tworkedHrs').val(totHrs);
+    }
+</script>
 <?php
     Yii::app()->clientScript->registerCoreScript('jquery.ui');
 
     $cs = Yii::app()->getClientScript();
     $cs->registerScriptFile(Yii::app()->baseUrl . "/js/jquery-ui-timepicker-addon.js");
     $cs->registerCssFile(Yii::app()->baseUrl . "/css/jquery-ui-timepicker-addon.css");
-
+	$cs->registerScriptFile(Yii::app()->baseUrl . "/js/jquery.repeater.js");
     Yii::app()->clientScript->registerCssFile(
         Yii::app()->clientScript->getCoreScriptUrl() .
         '/jui/css/base/jquery-ui.css'
@@ -133,5 +236,68 @@
             var date = $(this).val();         
           },
         }).attr('readonly','readonly');
+    ", CClientScript::POS_READY);
+?>
+
+<?php
+Yii::app()->clientScript->registerScript('projectonchange', "
+
+$('#SubProject_pid').change(function(){
+	
+	var project_id = $(this).val();
+	var update_id = $(SubProject_spid).val();
+	var tval = $(this).val();
+	if(tval != '')
+	{
+		$('.custom-loader').show();
+		$.ajax({
+			url: '" . CHelper::createUrl("subproject/fetchProjectId") . "',
+			type:'POST',
+			data: {project_id : project_id,update_id: update_id},
+			success:function(data)
+			{
+			$('.custom-loader').hide();
+			
+				if(data != 0)
+				{
+					$('#sub_project_id').val(data);
+				}
+			}
+		});
+	}
+});
+
+    $('.allcateresource').click(function(){
+    return !$('#txtarea1 option:selected').remove().appendTo('#txtarea2');
+    });
+
+$('.dallocate').click(function(){
+    return !$('#txtarea2 option:selected').remove().appendTo('#txtarea1');
+    });
+
+//$('#txtarea2').click(function(){
+//$('.allcateresource').hide();
+//$('.dallocate').show();
+//});
+//
+//$('#txtarea1').click(function(){
+//$('.allcateresource').show();
+//$('.dallocate').hide();
+//});
+
+$('#allocateR').click(function(){
+$('#txtarea2 option').prop('selected', true);
+if($('#LevelName').val() == '')
+{
+    alert('Please select level.');
+    return false;
+}
+
+});
+
+ $('.repeater').repeater();
+
+
+
     ", CClientScript::POS_READY);
 ?>

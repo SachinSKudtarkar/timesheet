@@ -1,7 +1,7 @@
 <?php
 
-/* @var $this SubProjectController */
-/* @var $model SubProject */
+/* @var $this LevelMasterController */
+/* @var $model LevelMaster */
 
 $this->breadcrumbs = array(
     'Task' => array('index'),
@@ -9,35 +9,33 @@ $this->breadcrumbs = array(
 );
 
 $this->menu = array(
-    array('label' => 'Create Project', 'url' => array('create')),
-    array('label' => 'Create Program', 'url' => array('projectmanagement/create')),
-    array('label' => 'Manage Program', 'url' => array('projectmanagement/admin')),
+    array('label' => 'Create Level', 'url' => array('create')),
+    array('label' => 'Allocate Level To Resource', 'url' => array('levelresourceallocation/create')),
+    /*array('label' => 'Manage Program', 'url' => array('projectmanagement/admin')), */
 );
 ?>
 
-<h1>Manage Projects</h1>
+<h1>Manage Levels</h1>
 
 <?php
 // CHelper::debug($model);
 $this->widget('zii.widgets.grid.CGridView', array(
-    'id' => 'sub-project-grid',
+    'id' => 'level-master-grid',
     'dataProvider' => $model->search(),
     'filter' => $model,
     'columns' => array(
-        //'taskId',
+        'level_id',
         //'pid',
-		'project_id',
-        array(
+       /*  array(
             'header'=>'Program',
-            'name' => 'pid',
+            'name' => 'level_id',
             'type' => 'raw',
             // 'filter' => false,
             'value' => array($model, 'getProgram')
-        ),
+        ), */
         // 'program',
-        'sub_project_name',
-        'sub_project_description',
-        'requester',
+        'level_name',
+        'budget_per_hour',
        // 'estimated_end_date',
         //  'total_hr_estimation_hour',
           array(
@@ -47,16 +45,15 @@ $this->widget('zii.widgets.grid.CGridView', array(
            //'filter' => false,
             'value' => array($model, 'getCreatedBy')
               ),
-          'created_date',
+          'created_at',
           array(
-            'header'=>'Updated By',
-            'name' => 'updated_by',
+            'header'=>'Modified By',
+            'name' => 'modified_by',
             'type' => 'raw',
-            //'filter' => false,
-            'value' => array($model, 'getUpdatedBy')
+           //'filter' => false,
+            'value' => array($model, 'getModifiedBy')
               ),
-          'updated_date',
-          'is_deleted',
+          'updated_at',
         array(
             'class' => 'CButtonColumn',
         ),

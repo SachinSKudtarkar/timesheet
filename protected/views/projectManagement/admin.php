@@ -51,6 +51,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
     'filter' => $model,
     'columns' => array(
        // 'pid',
+	   'project_id',
        'project_name',
         'project_description',
         'requester',

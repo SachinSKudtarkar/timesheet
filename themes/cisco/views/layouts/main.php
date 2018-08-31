@@ -11,7 +11,7 @@ $access_type = AccessRoleMaster::model()->findByAttributes(array('emp_id' => $em
 ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-    <head> 
+    <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta name="sitelock-site-verification" content="1963" />
         <title><?php echo CHtml::encode($this->pageTitle); ?></title>
@@ -27,23 +27,23 @@ $access_type = AccessRoleMaster::model()->findByAttributes(array('emp_id' => $em
         <style>
             .top-banner{
                 font-family: inherit;font-size: 18px; color: yellow; position: fixed; top: 20px; z-index: 9999;width: 100%;
-            } 
+            }
             a.menu:after, .dropdown-toggle:after {content: none;}
-        </style>            
+        </style>
 
         <?php
         $timelogid = isset(Yii::app()->session['login']) && array_key_exists('timelogid', Yii::app()->session['login']) ? Yii::app()->session['login']['timelogid'] : '';
         Yii::app()->clientScript->registerScript('common_header_script', "
                 var BASE_URL = '{$baseUrl}';
             ", CClientScript::POS_HEAD);
-        ?> 
+        ?>
     </head>
     <body>
         <div class="custom-loader"></div>
         <!-- main nav -->
         <div class="header-wrap-1">
 
-            <span class="brand-name">Timesheet</span>  
+            <span class="brand-name">Timesheet</span>
             <?php
             $this->widget('bootstrap.widgets.TbNavbar', array(
                 'type' => 'inverse', // null or 'inverse'
@@ -60,7 +60,7 @@ $access_type = AccessRoleMaster::model()->findByAttributes(array('emp_id' => $em
                             //  array(
                             //     'label' => 'Home',
                             //     'url' => array('//daycomment/home'),
-                            //     'visible' => 1,                              
+                            //     'visible' => 1,
                             // ),
                             array(
                                 'label' => 'Dashboard',
@@ -98,7 +98,12 @@ $access_type = AccessRoleMaster::model()->findByAttributes(array('emp_id' => $em
                                                 'visible' => (CHelper::isAccess("RESOURCEALLOCATION", "full_access")),
                                                 'active' => (Yii::app()->controller->id == 'pidapproval' && Yii::app()->controller->action->id == 'pidapproval')
                                             ),
-                                            array('label' => 'View PID',
+                                            array('label' => 'Manage PID',
+                                                'url' => array('//pidapproval/admin'),
+                                                'visible' => (CHelper::isAccess("RESOURCEALLOCATION", "full_access")),
+                                                'active' => (Yii::app()->controller->id == 'pidapproval' && Yii::app()->controller->action->id == 'admin')
+                                            ),
+                                            array('label' => 'View PID Mapping',
                                                 'url' => array('//pidmapping/index'),
                                                 'visible' => (CHelper::isAccess("RESOURCEALLOCATION", "full_access")),
                                                 'active' => (Yii::app()->controller->id == 'pidmapping' && Yii::app()->controller->action->id == 'pidmapping')
@@ -120,7 +125,7 @@ $access_type = AccessRoleMaster::model()->findByAttributes(array('emp_id' => $em
                                         'visible' => ($access_type->access_type == 1),
                                         'active' => 0,
                                         'items' => array(
-                                           
+
                                             array('label' => 'Create Program',
                                                 'url' => array('//projectmanagement/create'),
                                                 'encodeLabel' => false,
@@ -138,7 +143,7 @@ $access_type = AccessRoleMaster::model()->findByAttributes(array('emp_id' => $em
 //			                                        'encodeLabel' => false,
 //			                                        'visible' => 1,
 //			                                        'active' => (Yii::app()->controller->id == 'daycomment' && Yii::app()->controller->action->id == 'index'),
-//                                        
+//
 //					                                    ),
                                         ),
                                     ),
@@ -172,7 +177,7 @@ $access_type = AccessRoleMaster::model()->findByAttributes(array('emp_id' => $em
 //			                                        'encodeLabel' => false,
 //			                                        'visible' => 1,
 //			                                        'active' => (Yii::app()->controller->id == 'daycomment' && Yii::app()->controller->action->id == 'index'),
-//                                        
+//
 //					                                    ),
                                         ),
                                     ),
@@ -214,6 +219,24 @@ $access_type = AccessRoleMaster::model()->findByAttributes(array('emp_id' => $em
                                        'visible' => ($access_type->access_type == 1),
                                        'active' => (Yii::app()->controller->id == 'AccessRoleMaster' && Yii::app()->controller->action->id == 'SetRoles')
                                    ),
+								   array('label' => 'Manage Level',
+                                       'url' => array('//levelmaster/admin'),
+                                       'visible' => ($access_type->access_type == 1),
+                                       'active' => (Yii::app()->controller->id == 'LevelMaster' && Yii::app()->controller->action->id == 'admin'),
+									   'items' => array(
+											array('label' => 'Level Master',
+                                                'url' => array('//levelmaster/admin'),
+                                                'encodeLabel' => false,
+                                                'visible' => 1,
+                                                'active' => '',
+                                            ),
+                                            array('label' => 'Allocate Resource Level',
+                                                'url' => array('//levelresourceallocation/create'),
+                                                'encodeLabel' => false,
+                                                'visible' => 1,
+                                                'active' => (Yii::app()->controller->id == 'daycomment' && Yii::app()->controller->action->id == 'index'),
+                                            )),
+                                   ),
 //                                    array('label' => 'Access Roles',
 //                                        'url' => array('//roles'),
 //                                        'visible' => CHelper::isAccess("STATUS", "full_access"),
@@ -236,7 +259,7 @@ $access_type = AccessRoleMaster::model()->findByAttributes(array('emp_id' => $em
 
         <div class="cont">
             <?php if (!CHelper::user()->isGuest) { ?>
-                <?php if (CHelper::hasFlash('success') && CHelper::getFlash('success') != ''): ?>				
+                <?php if (CHelper::hasFlash('success') && CHelper::getFlash('success') != ''): ?>
                     <div class="alert alert-success">
                         <?php
                         echo CHelper::getFlash('success');

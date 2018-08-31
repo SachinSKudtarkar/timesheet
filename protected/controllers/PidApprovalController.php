@@ -1,5 +1,6 @@
 <?php
-
+error_reporting(E_ALL);
+ini_set('display_errors',0);
 class PidApprovalController extends Controller {
 
     /**
@@ -26,11 +27,11 @@ class PidApprovalController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow all users to perform 'index' and 'view' actions
-                'actions' => array('index', 'view', 'Approvalstatus', 'Allprojects'),
+                'actions' => array('index', 'view', 'Approvalstatus', 'Allprojects','fetchSubProjectIdAndHours','checkHoursAndBudget'),
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update'),
+                'actions' => array('create', 'update','fetchSubProjectIdAndHours','checkHoursAndBudget'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -62,7 +63,7 @@ class PidApprovalController extends Controller {
         
 
         $model = new PidApproval('search');
-        
+       
 //		$model=new PidApproval;
         //$subtask=new SubTask;
         $FINAL_ARRAY = array();
@@ -92,14 +93,17 @@ class PidApprovalController extends Controller {
                 $model->approved = 2;
                 $model->created_by = Yii::app()->session["login"]["user_id"];
                 $model->created_at = date("Y-m-d h:i:s");
-    
+				$model->project_task_id = $_POST['project_task_id'];
                 $model->attributes = $_POST['PidApproval'];
 //                $this->performAjaxValidation($model);
-                foreach ($_POST['task_id'] as $key => $val) {
+                foreach ($_POST['sub_task_name'] as $key => $val) {
                     $FINAL_ARRAY[$key]['task_id'] = $_POST['task_id'][$key];
+					/* $FINAL_ARRAY[$key]['task_id'] = 1; */
                     $FINAL_ARRAY[$key]['emp_id'] = $_POST['emp_id'][$key];
                     $FINAL_ARRAY[$key]['sub_task_name'] = $_POST['sub_task_name'][$key];
                     $FINAL_ARRAY[$key]['est_hrs'] = $_POST['est_hrs'][$key];
+					$FINAL_ARRAY[$key]['st_jira_id'] = $_POST['st_jira_id'][$key];
+					$FINAL_ARRAY[$key]['st_inception_date'] = $_POST['st_inception_date'][$key];
                 }
                 if (isset($_POST['l2_ring'])) {
                     foreach ($_POST['l2_ring'] as $key => $val) {
@@ -109,6 +113,7 @@ class PidApprovalController extends Controller {
                 
             if($model->validate()){
                 //rint_r($FINAL_ARRAY);
+				
                 if ($model->save(false)){
                     foreach ($FINAL_ARRAY as $key => $val) {
                         $modelST = new SubTask;
@@ -122,11 +127,16 @@ class PidApprovalController extends Controller {
                         $modelST->est_hrs = $val['est_hrs'];
                         $modelST->created_by = Yii::app()->session["login"]["user_id"];
                         $modelST->created_at = date("Y-m-d h:i:s");
+						$subTaskId = Yii::app()->db->createCommand('Select max(stask_id) as maxId from tbl_sub_task ')->queryRow(); 
+						$modelST->sub_task_id = $_POST['project_task_id'].sprintf("%02d", $val['task_id']).sprintf("%03d", $subTaskId['maxId'] + 1);
+						$modelST->st_jira_id = $val['st_jira_id'];
+						$modelST->st_inception_date = $val['st_inception_date'];
                         $modelST->save(false);
                         //$importData[] = $modelST->getAttributes();
                     }
                 }
             }
+			
             $this->redirect(Yii::app()->urlManager->createUrl("Project/allProject"));
             //$this->redirect('admin', array('model' => $model));
         }
@@ -153,19 +163,32 @@ class PidApprovalController extends Controller {
      */
     public function actionUpdate($id) {
         $model = $this->loadModel($id);
-        $subtask = SubTask::model()->findAll("pid_approval_id=$id");
+		$query1 = "select st.*,lm.budget_per_hour from tbl_sub_task st inner join tbl_assign_resource_level lr on lr.emp_id = st.emp_id inner join tbl_level_master lm on lm.level_id = lr.level_id where pid_approval_id=$id";
+        $subtask = Yii::app()->db->createCommand($query1)->queryAll();
+		
+        //$subtask = SubTask::model()->findAll("pid_approval_id=$id");
+		//echo '<pre>';print_r($subtask);die;
 //                CHelper::debug($subtask); 
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
-
+	
         if (isset($_POST['PidApproval'])) {
-            $model->attributes = $_POST['PidApproval'];
+		
+            $model->project_id = $_POST['project_id'];
+                $model->sub_project_id = $_POST['sub_project_id'];
+                $model->approved = 2;
+				$model->project_task_id = $_POST['project_task_id'];
+			
+			$model->attributes = $_POST['PidApproval'];
             SubTask::model()->deleteAll("pid_approval_id=$id");
             foreach ($_POST['task_id'] as $key => $val) {
                 $FINAL_ARRAY[$key]['task_id'] = $_POST['task_id'][$key];
-                $FINAL_ARRAY[$key]['emp_id'] = $_POST['emp_id'][$key];
-                $FINAL_ARRAY[$key]['sub_task_name'] = $_POST['sub_task_name'][$key];
-                $FINAL_ARRAY[$key]['est_hrs'] = $_POST['est_hrs'][$key];
+				/* $FINAL_ARRAY[$key]['task_id'] = 1; */
+				$FINAL_ARRAY[$key]['emp_id'] = $_POST['emp_id'][$key];
+				$FINAL_ARRAY[$key]['sub_task_name'] = $_POST['sub_task_name'][$key];
+				$FINAL_ARRAY[$key]['est_hrs'] = $_POST['est_hrs'][$key];
+				$FINAL_ARRAY[$key]['st_jira_id'] = $_POST['st_jira_id'][$key];
+				$FINAL_ARRAY[$key]['st_inception_date'] = $_POST['st_inception_date'][$key];
             }
             if (isset($_POST['l2_ring'])) {
                 foreach ($_POST['l2_ring'] as $key => $val) {
@@ -173,23 +196,27 @@ class PidApprovalController extends Controller {
                 }
             }
 
-
+	
             if ($model->save())
                 foreach ($FINAL_ARRAY as $val) {
                     $modelST = new SubTask;
-                    $modelST->pid_approval_id = $model->pid_id;
-                    $modelST->project_id = $model->project_id;
-                    $modelST->sub_project_id = $model->sub_project_id;
-                    $modelST->task_id = $val['task_id'];
-                    $modelST->emp_id = $val['emp_id'];
-                    $modelST->sub_task_name = $val['sub_task_name'];
-                    $modelST->est_hrs = $val['est_hrs'];
-                    $modelST->created_by = Yii::app()->session["login"]["user_id"];
-                    $modelST->created_at = date("Y-m-d h:i:s");
-                    $modelST->isNewRecord = true;
-                    $modelST->save(false);
+					$modelST->s_task_id = $key + 1;
+					$modelST->pid_approval_id = $model->pid_id;
+					$modelST->project_id = $model->project_id;
+					$modelST->sub_project_id = $model->sub_project_id;
+					$modelST->task_id = $val['task_id'];
+					$modelST->emp_id = $val['emp_id'];
+					$modelST->sub_task_name = $val['sub_task_name'];
+					$modelST->est_hrs = $val['est_hrs'];
+					$modelST->created_by = Yii::app()->session["login"]["user_id"];
+					$modelST->created_at = date("Y-m-d h:i:s");
+					$subTaskId = Yii::app()->db->createCommand('Select max(stask_id) as maxId from tbl_sub_task ')->queryRow(); 
+					$modelST->sub_task_id = $_POST['project_task_id'].sprintf("%02d", $val['task_id']).sprintf("%03d", $subTaskId['maxId'] + 1);
+					$modelST->st_jira_id = $val['st_jira_id'];
+					$modelST->st_inception_date = $val['st_inception_date'];
+					$modelST->save(false);
                 }
-            $this->redirect('admin', array('model' => $model,));
+            $this->redirect('pidapproval/admin', array('model' => $model,));
         }
 
         $this->render('update', array(
@@ -302,6 +329,9 @@ class PidApprovalController extends Controller {
                 'emp_id' => $stask['emp_id'],
                 'est_hrs' => $stask['est_hrs'],
                 'approved' => $stask['approved'],
+				'project_task_id' => $stask['project_task_id'],
+				'task_title' => $stask['task_title'],
+				'task_description' => $stask['task_description'],
             );
         }
         // $sql = "select t.* from tbl_pid_approval t where approved!=2 and approved!=0 {$pid_approval_id}";
@@ -539,5 +569,60 @@ class PidApprovalController extends Controller {
         }
         $this->redirect(array('admin'));
     }
+	
+	/**
+     * Fetches the project id to generate the task id.
+     * @param Project Id $projectid 
+     */
+	public function actionfetchSubProjectIdAndHours()
+	{
+		
+		$name = SubProject::model()->findByPk($_POST['project_id']);
+		//$name_pid = PidApproval::model()->findByPk($_POST['update_id']);
+		if(!isset($name['project_id']) && empty($name['project_id']))
+		{
+			echo 0;die;
+		}
+		
+		if(!empty($_POST['update_id']))
+		{
+			$TaskId = $_POST['update_id'];
+		}else{
+			$TaskId = Yii::app()->db->createCommand('Select max(pid_id) as maxId from tbl_pid_approval ')->queryRow(); 
+			$TaskId = $TaskId['maxId'] + 1;
+		}
+		$projectformat['project_id'] = $name['project_id'].sprintf("%03d", $TaskId);
+		
+		$projectformat['allocated'] = Yii::app()->db->createCommand("select sum(st.est_hrs) as allocated_hrs from tbl_sub_project sp left join tbl_sub_task st on st.sub_project_id  = sp.spid where spid = {$_POST['project_id']}")->queryRow(); 
+		$projectformat['estimated'] = Yii::app()->db->createCommand("select sum(pl.level_hours * lm.budget_per_hour) as total_budget,sum(level_hours) as estimated_hrs from tbl_sub_project sp  left join tbl_project_level_allocation pl on pl.project_id = sp.spid left join tbl_level_master lm on lm.level_id = pl.level_id where spid = {$_POST['project_id']}")->queryRow();
+		$projectformat['utilized'] = Yii::app()->db->createCommand("SELECT  SEC_TO_TIME( SUM( TIME_TO_SEC( `hours` ) ) ) AS utilized_hrs  FROM tbl_day_comment where spid={$_POST['project_id']}")->queryRow();
+		echo json_encode($projectformat);
+	}
+	
+	public function actioncheckHoursAndBudget()
+	{
+		
+		$totalBudget = Yii::app()->db->createCommand("select sum(pl.level_hours * lm.budget_per_hour) as total_budget,sum(level_hours) as allocated_hrs from tbl_sub_project sp  left join tbl_project_level_allocation pl on pl.project_id = sp.spid left join tbl_level_master lm on lm.level_id = pl.level_id where spid = {$_POST['project_id']}")->queryRow();
+		
+		if($_POST['update_pid'] == 0) {
+			$total_allocated_budget = Yii::app()->db->createCommand("select SUM(st.est_hrs * lm.budget_per_hour) AS budget from tbl_sub_task st left join tbl_assign_resource_level rl on rl.emp_id = st.emp_id left join tbl_level_master lm on lm.level_id = rl.level_id where sub_project_id = {$_POST['project_id']}")->queryRow();
+		}else{
+			$total_allocated_budget = Yii::app()->db->createCommand("select SUM(st.est_hrs * lm.budget_per_hour) AS budget from tbl_sub_task st left join tbl_assign_resource_level rl on rl.emp_id = st.emp_id left join tbl_level_master lm on lm.level_id = rl.level_id where sub_project_id = {$_POST['project_id']} and pid_approval_id != {$_POST['update_pid']}")->queryRow();
+		}
+		$total_hrs = $_POST['totalhrs'];
+		$est_hrs = $_POST['allhrs'];
+		if($total_hrs < $est_hrs && $total_hrs > 0){
+			echo "Exceeding Allocated Hours({$total_hrs}). Please check the estimated hours.";die;
+		}
+		$final_allocated_budget = $total_allocated_budget['budget'] + $_POST['remaining_budget'];
+		
+		if($totalBudget['total_budget'] < $final_allocated_budget && $totalBudget['total_budget'] > 0)
+		{
+			echo "Exceeding Allocated Budget. Please check the estimated hours and resource.";die;
+		}
+		
+		echo 0;
+		
+	}
 
 }

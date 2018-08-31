@@ -42,13 +42,13 @@ class PidApproval extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('project_id, sub_project_id, inception_date, total_est_hrs, jira_id', 'required'),
+            array('project_id, sub_project_id, inception_date, total_est_hrs, jira_id, project_task_id, task_title, task_description', 'required'),
             array('project_id, sub_project_id, total_est_hrs, status, created_by, approved, is_deleted', 'numerical', 'integerOnly' => true),
-            array('comments', 'length', 'max' => 255),
+            array('comments, task_description', 'length', 'max' => 255),
             array('jira_id', 'unique', 'message' => 'jira id already exists!'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('pid_id, project_id, sub_project_id, project_description, sub_project_name, inception_date, total_est_hrs, comments, status, created_by, created_at, approved, is_deleted, comments, created_by, created_at, approved, is_deleted,jira_id', 'safe', 'on' => 'search'),
+            array('pid_id, project_id, sub_project_id, project_description, sub_project_name, inception_date, total_est_hrs, comments, status, created_by, created_at, approved, is_deleted, comments, created_by, created_at, approved, is_deleted,jira_id,project_task_id, task_title, task_description', 'safe', 'on' => 'search'),
         );
     }
 
@@ -69,9 +69,12 @@ class PidApproval extends CActiveRecord {
     public function attributeLabels() {
         return array(
             'pid_id' => 'Sr.No',
+			'project_task_id' => 'Task Id',
             'project_id' => 'Program',
             'sub_project_id' => 'Project',
-            'inception_date' => 'Inception Date',
+            'task_title' => 'Task Title',
+			'task_description' => 'Task Description',
+			'inception_date' => 'Inception Date',
             'jira_id' => 'Jira Id',
             'total_est_hrs' => 'Total Estimated Hours',
             'comments' => 'Comments',
