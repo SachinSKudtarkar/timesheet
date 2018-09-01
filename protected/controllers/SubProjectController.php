@@ -63,28 +63,27 @@ class SubProjectController extends Controller {
      */
     public function actionCreate() {
         $model = new SubProject;
-		
         //print_r($model);exit;
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
 
         if (isset($_POST['SubProject'])) {
-		
+
             $model->attributes = $_POST['SubProject'];
             $model->created_date = date('Y-m-d h:i:s');
 			$model->project_id = $_POST['sub_project_id'];
             $model->created_by = Yii::app()->session['login']['user_id'];
             $valid =$_POST['SubProject'];
-			
+
             if(empty($valid['pid']) || empty($valid['sub_project_name'])|| empty($valid['sub_project_description'])|| empty($valid['requester'])|| empty($valid['status']) ||empty($valid['priority']))
             {
                 Yii::app()->user->setFlash('error','Please fill all required filleds');
             }else{
-			
+
                if($model->save())
 				$insert_id = Yii::app()->db->getLastInsertID();
 				Yii::app()->user->setFlash('success', "ProjectId is {$insert_id}");
-				
+
 				foreach ($_POST['group-a'] as $key => $val) {
 					if(!empty($val['level_hours'])) {
 						$modelPLA = new ProjectLevelAllocation;
@@ -97,7 +96,7 @@ class SubProjectController extends Controller {
 					}
 					//$importData[] = $modelST->getAttributes();
 				}
-				
+
 				$this->redirect(array('admin'));
            }
         }
@@ -115,33 +114,33 @@ class SubProjectController extends Controller {
     public function actionUpdate($id) {
         $model = $this->loadModel($id);
 		$levels = ProjectLevelAllocation::model()->findAll("project_id=$id");
-		$hours_label['allocated'] = Yii::app()->db->createCommand("select sum(st.est_hrs) as allocated_hrs from tbl_sub_project sp left join tbl_sub_task st on st.sub_project_id  = sp.spid where spid = {$id}")->queryRow(); 
+		$hours_label['allocated'] = Yii::app()->db->createCommand("select sum(st.est_hrs) as allocated_hrs from tbl_sub_project sp left join tbl_sub_task st on st.sub_project_id  = sp.spid where spid = {$id}")->queryRow();
 		$hours_label['estimated'] = Yii::app()->db->createCommand("select sum(level_hours) as estimated_hrs from tbl_sub_project sp  left join tbl_project_level_allocation pl on pl.project_id = sp.spid where spid = {$id}")->queryRow();
 		$hours_label['utilized'] = Yii::app()->db->createCommand("SELECT  SEC_TO_TIME( SUM( TIME_TO_SEC( `hours` ) ) ) AS utilized_hrs  FROM tbl_day_comment where spid={$id}")->queryRow();
-		 
+
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
-		
+
         if (isset($_POST['SubProject'])) {
-		
+
             $model->attributes = $_POST['SubProject'];
 			$model->project_id = $_POST['sub_project_id'];
             $model->updated_date = date('Y-m-d h:i:s');
             $model->updated_by = Yii::app()->session['login']['user_id'];
-			
-			
-			
+
+
+
             if ($model->save())
-				Yii::app()->db->createCommand("DELETE FROM tbl_project_level_allocation where project_id={$id}")->execute(); 
+				Yii::app()->db->createCommand("DELETE FROM tbl_project_level_allocation where project_id={$id}")->execute();
 				foreach ($_POST['group-a'] as $key => $val) {
-					
+
 					if(!empty($val['level_hours'])) {
-					
+
 						$modelPLA = new ProjectLevelAllocation;
-						
-						
+
+
 						/* $checkCount = Yii::app()->db->createCommand('Select count(*) as count from tbl_project_level_allocation where project_id='.$id.' and level_id='.$val['level_id'])->queryRow();  */
-						
+
 						$modelPLA->project_id = $id;
 						$modelPLA->level_id = $val['level_id'];
 						$modelPLA->level_hours = $val['level_hours'];
@@ -158,8 +157,8 @@ class SubProjectController extends Controller {
 							$modelPLA->updated_at = date("Y-m-d h:i:s");
 							$modelPLA->save(false);
 						}
- */						
-						
+ */
+
 					}
 					//$importData[] = $modelST->getAttributes();
 				}
@@ -239,28 +238,24 @@ class SubProjectController extends Controller {
             Yii::app()->end();
         }
     }
-	
-	/**
-     * Fetches the program id to generate the project id.
-     * @param SubProject $projectid 
-     */
-	public function actionfetchProjectId(){
-		
-		$name = ProjectManagement::model()->findByPk($_POST['project_id']);
-		
-		if(!empty($_POST['update_id']))
-		{
-			$TaskId = $_POST['update_id'];
-		}else{
-			$TaskId = Yii::app()->db->createCommand('Select max(spid) as maxId from tbl_sub_project ')->queryRow(); 
-			$TaskId = $TaskId['maxId'] + 1;
-		}
-		
-		
-		
-        $projectformat = $name['project_id'].sprintf("%03d", $TaskId);
-		echo $projectformat;
-	}
-	
 
+    /**
+     * Fetches the program id to generate the project id.
+     * @param SubProject $projectid
+     */
+    public function actionfetchProjectId(){
+
+        $name = ProjectManagement::model()->findByPk($_POST['project_id']);
+
+        if(!empty($_POST['update_id']))
+        {
+                $TaskId = $_POST['update_id'];
+        }else{
+                $TaskId = Yii::app()->db->createCommand('Select max(spid) as maxId from tbl_sub_project ')->queryRow();
+                $TaskId = $TaskId['maxId'] + 1;
+        }
+
+        $projectformat = $name['project_id'].sprintf("%03d", $TaskId);
+        echo $projectformat;
+    }
 }

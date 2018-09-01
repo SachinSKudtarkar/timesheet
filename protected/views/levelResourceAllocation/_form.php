@@ -15,8 +15,7 @@
         <div class="row">
             <h3>Resource Allocation</h3>
             <?php echo CHtml::label('Level Name', ''); ?>
-            <?php echo CHtml::dropDownList('LevelName', $model->level_id, CHtml::listData(LevelMaster::model()->findAll(array('order' => 'level_name ASC')), 'level_id', 'level_name'), array('prompt' => 'Please select Level'));
-            ?>
+            <?php echo CHtml::dropDownList('LevelName', $model->level_id, CHtml::listData(LevelMaster::model()->findAll(array('order' => 'level_name ASC')), 'level_id', 'level_name'), array('prompt' => 'Please select Level'));?>
         </div>
 
         <div class="row">
@@ -68,7 +67,7 @@ $.ajax({
                 success:function(data)
                 {
                 $('.custom-loader').hide();
-				
+
                  if(data != 0)
                  {
 

@@ -8,13 +8,11 @@ $this->breadcrumbs=array(
 	'Update',
 );
 
-$this->menu=array( 
+$this->menu=array(
 	array('label'=>'Create Program', 'url'=>array('create')),
 	array('label'=>'View Program', 'url'=>array('view', 'id'=>$model->pid)),
 	array('label'=>'Manage Program', 'url'=>array('admin')),
 );
 ?>
-
-<h1>Update Project <?php echo $model->pid; ?></h1>
-
+<h1>Update Program "<?php echo $model->project_name; ?>"</h1>
 <?php $this->renderPartial('_form', array('model'=>$model)); ?>

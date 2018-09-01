@@ -26,7 +26,7 @@ class ProjectManagementController extends Controller {
      */
     public function accessRules() {
         return array(
-            array('allow', // allow all users to perform 'index' and 'view' actions 
+            array('allow', // allow all users to perform 'index' and 'view' actions
                 'actions' => array('index', 'view','getPID','genrate'),
              //   'expression' => 'CHelper::isAccess("PROJECTS", "full_access")',
                 'users' => array('@'),
@@ -56,7 +56,7 @@ class ProjectManagementController extends Controller {
         $model->unsetAttributes();  // clear any default values
         if (isset($_GET['ProjectManagement']))
             $model->attributes = $_GET['ProjectManagement'];
- 
+
         $model->pid = $id;
         $this->render('view', array(
             'model' => $model,
@@ -124,15 +124,15 @@ class ProjectManagementController extends Controller {
             $model->updated_date = date('Y-m-d h:i:s');
             $model->updated_by = Yii::app()->session['login']['user_id'];
             $model->created_by = Yii::app()->session['login']['user_id'];
-            
+
             if(!empty($model)){
                     $sql = "insert into tbl_project (project_name, created_date, updated_date, updated_by, created_by) values (:project_name,:created_date,:updated_date, :updated_by,:created_by)";
                     $parameters = array(":project_name" =>$model->project_name, ":created_date" => $model->created_date, ":updated_date" => $model->updated_date , ":updated_by" =>$model->updated_by, ':created_by' =>$model->created_by);
                     Yii::app()->db->createCommand($sql)->execute($parameters);
-                    
+
             }
             if (!empty($parameters)) {
-              
+
                 $creatorName = $this->getUserName(Yii::app()->session['login']['user_id']);
                 $message = "<b>Dear Manager,</b> <br><br>";
                 $message .= "<b>New Project Created</b> <br><br>";
@@ -161,7 +161,6 @@ class ProjectManagementController extends Controller {
       //$to[] = array("email" => "kpanse@cisco.com", "name" => "Krishnaji");
         $to[] = array("email" => "pm@infinitylabs.in", "name" => "PM");
 
-
         $subject = "Project Created: " . $projectname;
         return CommonUtility::sendmail($to, null, $from, $from_name, $subject, $message, $cc, null);
     }
@@ -181,7 +180,7 @@ class ProjectManagementController extends Controller {
             $model->attributes = $_POST['ProjectManagement'];
             if ($model->save())
                 //$this->redirect(array('view', 'id' => $model->pid));
-                
+
                 /**
                  * redirecting to the Program management page instead of program view(project management) page
                  * Tirthesh::08042018
@@ -201,7 +200,19 @@ class ProjectManagementController extends Controller {
      * @param integer $id the ID of the model to be deleted
      */
     public function actionDelete($id) {
-        $this->loadModel($id)->delete();
+        $model = $this->loadModel($id);
+
+        $subProject = SubProject::model()->findByAttributes(array('pid'=>$id));
+
+        if(!$subProject){
+            $model->delete();
+            //$model->is_deleted  = 1;
+            //$model->save();
+        }else{
+            //Yii::app()->user->setFlash('failed', "Program can not be deleted.");
+            echo 'could not be deleted';
+            // could not be deleted;
+        }
 
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
         if (!isset($_GET['ajax']))
@@ -274,5 +285,4 @@ class ProjectManagementController extends Controller {
 
         return $name['full_name'];
     }
-
 }

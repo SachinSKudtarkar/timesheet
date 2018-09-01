@@ -185,6 +185,4 @@ class SubProject extends CActiveRecord
 
 			return $name['project_name'];
 		}
-
-
 }

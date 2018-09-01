@@ -22,12 +22,12 @@
         <div class="row">
             <?php echo CHtml::label('Available Resource', ''); ?>
             <?php
-            $employeeData = Employee::model()->findAll(array('select' => "emp_id,first_name,last_name", 'order' => 'first_name', 'condition' => 'is_active=1 and is_password_changed="yes"'));
+            $employeeData = Employee::model()->findAll(array('select' => "emp_id,first_name,last_name,email", 'order' => 'first_name', 'condition' => 'is_active=1 and is_password_changed="yes"'));
             $emp_list = array();
             foreach ($employeeData as $key => $value) {
-                $emp_list[$value['emp_id']] = $value['first_name'] . " " . $value['last_name'];
+                $emp_list[$value['emp_id']] = $value['first_name'] . " " . $value['last_name']."  (".$value['email'].")";
             }
-            echo CHtml::dropDownList("txtarea1", '', $emp_list, array('multiple' => 'multiple', 'style' => 'height:200px;margin-top:20px;'));
+            echo CHtml::dropDownList("txtarea1", '', $emp_list, array('multiple' => 'multiple', 'style' => 'height:200px;margin-top:20px;width:300px;'));
             echo CHtml::link('Allocate', array(''), array('style' => 'margin-left:20px;margin-top:50px; float:left', 'class' => 'btn allcateresource'));
             echo CHtml::link('De-Allocate', array(''), array('style' => 'margin-left:20px;margin-top:50px; float:left', 'class' => 'btn dallocate'));
             ?>
@@ -37,7 +37,7 @@
                 foreach($allocatedResourcesIdsArr as $k=>$id){
                     $allocatedResourcesArr[$id] = $emp_list[$id];
                 }
-                echo CHtml::dropDownList("txtarea2", '', $allocatedResourcesArr, array('multiple' => 'multiple', 'style' => 'height:200px;margin-left:20px;margin-top:20px;'));
+                echo CHtml::dropDownList("txtarea2", '', $allocatedResourcesArr, array('multiple' => 'multiple', 'style' => 'height:200px;margin-left:20px;margin-top:20px;width:300px;'));
             ?>
         </div>
 

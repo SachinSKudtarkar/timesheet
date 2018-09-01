@@ -7,20 +7,20 @@ $this->breadcrumbs=array(
 	'Manage',
 );
 
-$this->menu=array(	 
+$this->menu=array(
 	array('label'=>'Allocate Resources For Project', 'url'=>array('create')),
-	      
+
 ); ?>
 <h1>Manage Resource Allocation Project Works</h1>
-<?php 
+<?php
 $this->widget('zii.widgets.grid.CGridView', array(
     'id'=>'area-grid',
     'dataProvider'=>$dataProvider,
-    'columns'=>array(		 
-		'spid',                
+    'columns'=>array(
+		'spid',
                 'sub_project_name',
 		'total_asign_hours',
-		'consumed_hours',		
+		'consumed_hours',
 //                array(
 //                    'name'=> 'allocated_resource',
 //                    'type'=> 'raw',
@@ -34,5 +34,4 @@ $this->widget('zii.widgets.grid.CGridView', array(
 	),
     'filter'=>$filtersForm,
 ));
-
- ?>
+?>

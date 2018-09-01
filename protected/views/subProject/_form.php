@@ -29,7 +29,7 @@
             'enableAjaxValidation'=>false,
         ));
     ?>
-	
+
 	<p class="note">Fields with <span class="required">*</span> are required.</p>
 	<?php echo $form->errorSummary($model); ?>
 	<div class="span5">
@@ -81,7 +81,7 @@
         <div class="row">
             <?php echo $form->labelEx($model, 'status'); ?>
             <?php
-                //echo $form->textField($model,'status',array('size'=>25,'maxlength'=>25)); 
+                //echo $form->textField($model,'status',array('size'=>25,'maxlength'=>25));
                 echo $form->dropDownList($model, 'status', array('Completed' => 'Completed', 'Newly Created' => 'Newly Created', 'Partially Completed' => 'Partially Completed'), array('prompt' => '(Select Status)', 'class' => 'sts'));
             ?>
             <?php echo $form->error($model, 'status'); ?>
@@ -127,13 +127,13 @@
 					<th>Utilized (Hrs)</th>
 				</tr>
 				<tr>
-				
+
 					<td id="estimated_hrs"><?php echo $hours_label['estimated']['estimated_hrs']; ?></td>
 					<td id="allocated_hrs"><?php echo $hours_label['allocated']['allocated_hrs']; ?></td>
-					<td><?php echo $hours_label['utilized']['utilized_hrs']; ?></td>
+					<td><?php echo (isset($hours_label['utilized']['utilized_hrs'])) ? $hours_label['utilized']['utilized_hrs'] : 0; ?></td>
 				</tr>
 			</table>
-			
+
 		</div>
 		<?php } ?>
 		<div class="row" id="L2_device_div">
@@ -145,20 +145,20 @@
 				if ($levels[0]['level_id'] != '') {
 					foreach ($levels as $key => $value) {
 					$count++;
-			?>   
+			?>
 						<div data-repeater-item class="row">
-						
+
 							<?php echo CHtml::dropDownList('level_id', $value->level_id, CHtml::listData(LevelMaster::model()->findAll(array('order'=>'level_name ASC')), 'level_id', 'level_name'), array('data-name' => 'level_id','style' => "width:150px;margin-right:20px")); ?>
-						
+
 							<?php echo CHtml::textField('level_hours',$value->level_hours, array('data-name' => 'level_hours', 'style' => "width:100px;", "name" => "data[0][level_hours]", "class" => "level_hours")); ?>
 							<input data-repeater-delete type="button" value="Delete"/>
-						
+
 						</div>
 			 <?php } } else { ?>
 						<div data-repeater-item class="row">
-				
+
 							<?php echo CHtml::dropDownList('level_id', $value->level_id, CHtml::listData(LevelMaster::model()->findAll(array('order'=>'level_name ASC')), 'level_id', 'level_name'), array('data-name' => 'level_id','style' => "width:150px;margin-right:20px")); ?>
-				
+
 							<?php echo CHtml::textField('level_hours',$value->level_hours, array('data-name' => 'level_hours', 'style' => "width:100px;", "name" => "data[0][level_hours]", "class" => "level_hours")); ?>
 							<input data-repeater-delete type="button" value="Delete"/>
 						</div>
@@ -171,7 +171,7 @@
             <?php // echo $form->labelEx($model,'is_deleted'); ?>
             <?php // echo $form->textField($model,'is_deleted'); ?>
             <?php // echo $form->error($model,'is_deleted'); ?>
-       
+
         <div class="row buttons span10">
 			<?php echo $form->hiddenField($model,'spid'); ?>
             <?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save', array('id' => 'ISSUB')); ?>
@@ -181,7 +181,7 @@
 <!-- form -->
 <script>
     $(document).on('change', ' .level_hours', function () {
-		
+
         getWrkHoursTotal();
     });
     function getWrkHoursTotal() {
@@ -189,18 +189,18 @@
         var allmnts = 0;
         var totalhrs = $('#allocated_hrs').text();
 		/* var project_id = $('#PidApproval_sub_project_id').val(); */
-		
+
         $('.level_hours').each(function () {
             var thisval = $(this).val();
             if (thisval != '') {
                 allhrs = parseFloat(allhrs) + parseFloat(thisval);
             }
-			
-			
 
-            
+
+
+
         });
-		
+
 			if (totalhrs > allhrs) {
                 alert('Estimated hours is less than the allocated hrs. Please check and try again.');
                 $("#ISSUB").attr('disabled', true);
@@ -208,7 +208,7 @@
             } else {
                 $("#ISSUB").attr('disabled', false);
                 //return true;
-            } 
+            }
 
         var totHrs = (parseFloat(allhrs) + parseInt((allmnts / 60))) + ':' + (parseFloat((allmnts % 60)));
         $('#tworkedHrs').val(totHrs);
@@ -230,10 +230,10 @@
     Yii::app()->clientScript->registerScript('filters', "
 
         $('.datepicker').datepicker({
-         dateFormat: 'yy-m-d',    
+         dateFormat: 'yy-m-d',
          onSelect: function(dateText) {
             var type = $(this).attr('id');
-            var date = $(this).val();         
+            var date = $(this).val();
           },
         }).attr('readonly','readonly');
     ", CClientScript::POS_READY);
@@ -243,9 +243,9 @@
 Yii::app()->clientScript->registerScript('projectonchange', "
 
 $('#SubProject_pid').change(function(){
-	
+
 	var project_id = $(this).val();
-	var update_id = $(SubProject_spid).val();
+	var update_id = $('#SubProject_spid').val();
 	var tval = $(this).val();
 	if(tval != '')
 	{
@@ -257,7 +257,7 @@ $('#SubProject_pid').change(function(){
 			success:function(data)
 			{
 			$('.custom-loader').hide();
-			
+
 				if(data != 0)
 				{
 					$('#sub_project_id').val(data);

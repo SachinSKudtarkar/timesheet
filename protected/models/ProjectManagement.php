@@ -141,6 +141,7 @@ class ProjectManagement extends CActiveRecord {
         $criteria->compare('updated_date', $this->updated_date, true);
         $criteria->compare('is_deleted', $this->is_deleted);
         $criteria->compare('sub_project_name', $this->sub_project_name,true);
+        $criteria->compare('is_deleted', $this->is_deleted);
         //$criteria->join = "LEFT join tbl_sub_project sbpr ON sbpr.pid=t.pid";
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,

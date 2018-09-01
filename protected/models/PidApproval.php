@@ -53,7 +53,7 @@ class PidApproval extends CActiveRecord {
     }
 
     /**
-     * 
+     *
      * @return array relational rules.
      */
     public function relations() {
@@ -69,12 +69,12 @@ class PidApproval extends CActiveRecord {
     public function attributeLabels() {
         return array(
             'pid_id' => 'Sr.No',
-			'project_task_id' => 'Task Id',
+            'project_task_id' => 'Project Task Id',
             'project_id' => 'Program',
             'sub_project_id' => 'Project',
             'task_title' => 'Task Title',
-			'task_description' => 'Task Description',
-			'inception_date' => 'Inception Date',
+            'task_description' => 'Task Description',
+            'inception_date' => 'Inception Date',
             'jira_id' => 'Jira Id',
             'total_est_hrs' => 'Total Estimated Hours',
             'comments' => 'Comments',
@@ -224,5 +224,4 @@ class PidApproval extends CActiveRecord {
             }
         }
     }
-
 }

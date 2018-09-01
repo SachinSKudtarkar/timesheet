@@ -16,9 +16,8 @@
 class LevelMaster extends CActiveRecord
 {
         public $level_id;
-		public $level_name;//for database
-		public $budget_per_hour;// for display purpose
-
+        public $level_name;//for database
+        public $budget_per_hour;// for display purpose
 
 	/**
 	 * @return string the associated database table name
@@ -53,8 +52,7 @@ class LevelMaster extends CActiveRecord
 	{
             // NOTE: you may need to adjust the relation name and the related
             // class name for the relations automatically generated below.
-            return array(
-            );
+            return array();
 	}
 
 	/**
@@ -126,7 +124,6 @@ class LevelMaster extends CActiveRecord
             return 'N/A';
         return CHtml::link("Allocate hours", array('#'), array('data-toggle' => "modal", 'data-target' => "#", 'class' => 'AllocateHrLink', 'data-key' => $model->spid));
     }
-
     public function getCreatedBy($model) {
         $emp = Employee::model()->findByPk($model['created_by']);
         if (!empty($emp))
@@ -148,9 +145,9 @@ class LevelMaster extends CActiveRecord
             return $pro;
 		}
 
-		public  function getProgram($model){
-			$name = ProjectManagement::model()->findByPk($model->pid);
+    public  function getProgram($model){
+        $name = ProjectManagement::model()->findByPk($model->pid);
 
-			return $name['project_name'];
-		}
+        return $name['project_name'];
+    }
 }

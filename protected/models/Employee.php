@@ -438,23 +438,20 @@ class Employee extends CActiveRecord {
 						left join tbl_assign_resource_level	rl on rl.emp_id = emp.emp_id 
 						left join tbl_level_master lm on lm.level_id = rl.level_id 
 						where emp.emp_id in ({$allocated_resource['allocated_resource']}) order by first_name";
-        $resource = Yii::app()->db->createCommand($query1)->queryAll();
+        $resource['emp_list'] = Yii::app()->db->createCommand($query1)->queryAll();
 		
 		
-		foreach ($resource as $value => $name) {
+		foreach ($resource['emp_list'] as $value => $name) {
 			
-			$name_with_level = $name['name'];
-			if(!empty($name['level_name'])){
-				$name_with_level = $name['name'].'('.$name['level_name'].')';
-			}
-			
-            $emp_data[] = array($name['emp_id'] => $name_with_level)	;
+	
+            $options_data[$name['emp_id']] = array('id'=>$name['budget_per_hour']);
     
 			
         }
+		
+	
+		$resource['options_data'] = $options_data;
 		return $resource;
-		
-		
 		
 	}
 

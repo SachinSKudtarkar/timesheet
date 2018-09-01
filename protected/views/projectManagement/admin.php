@@ -10,7 +10,6 @@ $this->breadcrumbs = array(
 $this->menu = array(
     array('label' => 'Create Program', 'url' => array('create')),
     array('label' => 'Create Project', 'url' => array('subproject/create')),
-    
 );
 
 Yii::app()->clientScript->registerScript('search', "

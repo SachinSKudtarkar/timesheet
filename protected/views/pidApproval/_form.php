@@ -136,6 +136,7 @@ for ($h = 0; $h <= 999; $h++) {
 		<?php } ?>
 	</div>
     <div class="row" id="L2_device_div">
+		
         <table style="margin-left: 0px"   class="bottomBorder">
             <tr>
               <!--  <td style="alignment-adjust: middle;color: #35619B"> Sr. No  </td>-->
@@ -149,10 +150,11 @@ for ($h = 0; $h <= 999; $h++) {
             <?php
             $count = 0;
             if ($subtask[0]['task_id'] != '') {
-
+				
                 foreach ($subtask as $key => $value) {
                     $count++;
                     ?>   
+					
                     <tr class="row_copy_l2_ring">
                         <!-- <td><?php // echo $count;  ?> </td>-->
                         <td><?php echo CHtml::dropDownList('task_id[]', $value['task_id'], CHtml::listData(Task::model()->findAll("status=1"), 'task_id', 'task_name'), array('data-name' => 'task_id')); ?></td>
@@ -160,10 +162,10 @@ for ($h = 0; $h <= 999; $h++) {
                                 //echo CHtml::dropDownList('emp_id[]', $value->emp_id, $emp_list = CHtml::listData(Employee::model()->findAll("is_active=1 AND access_type!=1"),'emp_id', 'first_name'),array('data-name' => 'emp_id')); 
 								
 								
-								
-																$emp_list = CHtml::listData(Employee::model()->fetchEmployee($model->project_id),'emp_id', 'name');
+								$emp_data = Employee::model()->fetchEmployee($model->project_id);
+								$emp_list = CHtml::listData($emp_data['emp_list'],'emp_id', 'name');
                                // $emp_list = array();
-								echo CHtml::dropDownList("emp_id[]", $value['emp_id'], $emp_list,array('class'=>'emp_id_bud','options'=>array($value['emp_id']=>array('id'=>$value['budget_per_hour'],'data-oldhrs'=>$value['est_hrs']))));
+								echo CHtml::dropDownList("emp_id[]", $value['emp_id'], $emp_list,array('class'=>'emp_id_bud','options'=>$emp_data['options_data']));
 								
 								
                             ?>
@@ -178,7 +180,10 @@ for ($h = 0; $h <= 999; $h++) {
                         <td><?php
                                 echo CHtml::textField('est_hrs[]', $value['est_hrs'], array('data-name' => 'est_hrs', 'style' => "width:50px;", "name" => "data[0][est_hrs]", "class" => "est_hrs wrkhrsClass"));
                             ?>
+							
                         </td>
+						 <td><?php echo CHtml::link('', 'javascript:void(0);', array('class' => 'icon-remove-sign l2_ring customRemoveRowl2_ring')); ?></td>
+						 
 						
                     </tr>
                     <?php
@@ -204,11 +209,16 @@ for ($h = 0; $h <= 999; $h++) {
 						<?php echo CHtml::textField('st_inception_date[]',$value->st_inception_date, array('data-name' => 'st_inception_date', 'style' => "width:100px;", "name" => "data[0][st_inception_date]", "class" => "st_inception_date datepicker")); ?>
 					</td>
 					<td><?php echo CHtml::textField('est_hrs[]', $value->est_hrs, array('data-name' => 'est_hrs', 'style' => "width:50px;", "name" => "data[0][est_hrs]", "class" => "est_hrs wrkhrsClass", "min"=> '1')); ?></td>
+					
                     <td><?php echo CHtml::link('', 'javascript:void(0);', array('class' => 'icon-plus-sign l2_ring customAddMorel2_ring')); ?></td>
                 </tr>
             <?php } ?>
 
         </table> 
+		
+		<?php if (!empty($model->project_task_id)) {
+			echo '<p>'.CHtml::link('', 'javascript:void(0);', array('class' => 'icon-plus-sign l2_ring customAddMorel2_ring')).'</p>'; 
+		}?>
     </div>
     <div class="row">
         <?php echo $form->labelEx($model, 'comments'); ?>
@@ -216,8 +226,10 @@ for ($h = 0; $h <= 999; $h++) {
         <?php echo $form->error($model, 'comments'); ?>
     </div>
     <div class="row buttons">
+		<?php if (!empty($model->project_task_id)) { ?>
 		<?php echo $form->hiddenField($model,'pid_id'); ?>
-        <?php echo CHtml::submitButton($model->isNewRecord ? 'Submit' : 'Update', array('id' => 'ISSUB')); ?>
+        <?php } ?>
+		<?php echo CHtml::submitButton($model->isNewRecord ? 'Submit' : 'Update', array('id' => 'ISSUB')); ?>
     </div>
     <?php $this->endWidget(); ?>
 </div><!-- form -->

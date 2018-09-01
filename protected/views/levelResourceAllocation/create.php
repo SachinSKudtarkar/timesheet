@@ -9,7 +9,6 @@ $this->breadcrumbs = array(
 
 $this->menu = array(
     array('label' => 'Manage Resource Level Allocation', 'url' => array('admin')),
-
 );
 ?>
 

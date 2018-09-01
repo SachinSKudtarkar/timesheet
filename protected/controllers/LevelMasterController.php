@@ -71,7 +71,6 @@ class LevelMasterController extends Controller {
         // $this->performAjaxValidation($model);
 
         if (isset($_POST['LevelMaster'])) {
-
             $model->attributes = $_POST['LevelMaster'];
             $model->created_at = date('Y-m-d h:i:s');
             $model->created_by = Yii::app()->session['login']['user_id'];
