@@ -87,13 +87,12 @@ class PidApprovalController extends Controller {
                 ));
             }
 
-
                 $model->project_id = $_POST['project_id'];
                 $model->sub_project_id = $_POST['sub_project_id'];
                 $model->approved = 2;
                 $model->created_by = Yii::app()->session["login"]["user_id"];
                 $model->created_at = date("Y-m-d h:i:s");
-				$model->project_task_id = $_POST['project_task_id'];
+                $model->project_task_id = $_POST['project_task_id'];
                 $model->attributes = $_POST['PidApproval'];
 //                $this->performAjaxValidation($model);
                 foreach ($_POST['sub_task_name'] as $key => $val) {
@@ -134,11 +133,14 @@ class PidApprovalController extends Controller {
                         $modelST->save(false);
                         //$importData[] = $modelST->getAttributes();
                     }
+                    //$this->redirect(Yii::app()->urlManager->createUrl("Project/allProject"));
+                    $this->redirect('admin', array('model' => $model));
+                }else{
                 }
+            }else{
+                print_R($model->getErrors());
+                exit;
             }
-
-            $this->redirect(Yii::app()->urlManager->createUrl("Project/allProject"));
-            //$this->redirect('admin', array('model' => $model));
         }
 
         $this->render('create', array(
@@ -286,7 +288,7 @@ class PidApprovalController extends Controller {
         if (isset($_REQUEST['PidApproval'])) {
 
             $pid_approval_id = '';
-            $sql1 = "select st.pid_approval_id,st.project_id,st.sub_project_id,st.task_id,st.stask_id,pa.inception_date,st.emp_id from tbl_project_management as pm inner join tbl_sub_project as sp on (pm.pid = sp.pid ) inner join tbl_sub_task as st on(st.project_id = pm.pid)
+            $sql1 = "select st.pid_approval_id,st.jira_id,st.project_id,st.sub_project_id,st.task_id,st.stask_id,pa.inception_date,st.emp_id from tbl_project_management as pm inner join tbl_sub_project as sp on (pm.pid = sp.pid ) inner join tbl_sub_task as st on(st.project_id = pm.pid)
 			 inner join tbl_task as tt on (st.task_id = tt.task_id) inner join tbl_pid_approval as pa on(st.pid_approval_id = pa.pid_id ) inner join tbl_employee as em on (st.emp_id = em.emp_id) where  st.sub_project_id = sp.spid $whrcondition ";
             $search_id = Yii::app()->db->createCommand($sql1)->queryRow();
             if ($condition['emp_id'] != '')
@@ -320,6 +322,7 @@ class PidApprovalController extends Controller {
             $data[] = array(
                 'sr' => $stask['pid_id'],
                 'project_id' => $stask['project_id'],
+                'jira_id' => $stask['jira_id'],
                 'sub_project_id' => $stask['sub_project_id'],
                 'inception_date' => $stask['inception_date'],
                 'total_est_hrs' => $stask['total_est_hrs'],

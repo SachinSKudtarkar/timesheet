@@ -254,14 +254,14 @@ class Employee extends CActiveRecord {
         $criteria->join = 'INNER JOIN tbl_roles_manager rm ON rm.id=t.access_type';
         $criteria->select = "t.emp_id , CONCAT(t.first_name,' ',t.last_name,' (',t.email,')') as emp_name";
         $criteria->order = " emp_name ASC";
- 
+
         if (!empty($roleLike)) {
             $criteria->addCondition($roleLike);
         }
 
         $getData = self::model()->findAll($criteria);
- 
- 
+
+
 
         if (isset($getData)) {
             foreach ($getData as $user) {
@@ -290,7 +290,7 @@ class Employee extends CActiveRecord {
 
         return $result;
 
-//        
+//
 //        $criteria = new CDbCriteria;
 //        $getIntegratorList = array();
 //        $roleLikeArr = array();
@@ -298,12 +298,12 @@ class Employee extends CActiveRecord {
 //        //$criteria->join = 'INNER JOIN tbl_roles_manager rm ON rm.id=t.access_type LEFT JOIN `tbl_assigned_sites` `as` on t.emp_id = as.allocated_to ';
 //        $criteria->join = ' LEFT JOIN `tbl_assigned_sites` `as` on t.emp_id = as.allocated_to ';
 //
-//        $criteria->select = "t.emp_id, 
-//                                CONCAT(t.first_name,' ',t.last_name) as emp_name, 
-//                                t.email as email, 
-//                                t.login_status, 
-//                                SEC_TO_TIME(TIMESTAMPDIFF(SECOND,t.activity_time,CURRENT_TIMESTAMP())) as activity_time, 
-//                                count(as.allocated_to) count_all, 
+//        $criteria->select = "t.emp_id,
+//                                CONCAT(t.first_name,' ',t.last_name) as emp_name,
+//                                t.email as email,
+//                                t.login_status,
+//                                SEC_TO_TIME(TIMESTAMPDIFF(SECOND,t.activity_time,CURRENT_TIMESTAMP())) as activity_time,
+//                                count(as.allocated_to) count_all,
 //                                sum(case when as.status = '1' then 1 else 0 end) as completed_all,
 //                                sum(case when DATE_FORMAT(as.allocated_date, '%Y-%m-%d') = CURDATE() then 1 else 0 end) as count_today,
 //                                sum(case when DATE_FORMAT(as.allocated_date, '%Y-%m-%d') = CURDATE() AND as.status != '2' AND as.status != '1' then 1 else 0 end) as count_today_pending,
@@ -315,22 +315,22 @@ class Employee extends CActiveRecord {
 //                                sum(case when DATE_FORMAT(as.allocated_date, '%Y-%m-%d') = CURDATE() AND as.status = '0' then 1 else 0 end) as count_today_no_change";
 //        $criteria->group = " t.emp_id ";
 //        $criteria->order = " count_today DESC, count_today_no_change ASC , emp_name ASC";
-//        $criteria->addCondition(" t.is_deleted = 0 ");    
+//        $criteria->addCondition(" t.is_deleted = 0 ");
 //        if (isset($ai_status) && ( $ai_status == 2 || $ai_status == 3))
 //            $criteria->addCondition(" t.is_auto_int = '1' ");
 //        else
-//            $criteria->addCondition(" user_type = '1' ");    
-//             
-//        
-//         
-//         
+//            $criteria->addCondition(" user_type = '1' ");
+//
+//
+//
+//
 //        $getData = self::model()->findAll($criteria);
 //
 //        return $getData;
     }
 
     /**
-     * 
+     *
      * @param type $id
      * @return type
      */
@@ -366,7 +366,6 @@ class Employee extends CActiveRecord {
         return $result;
     }
 
-  
     public function getUserName($id) {
         $name = Yii::app()->db->createCommand()
                 ->select('CONCAT(first_name,last_name) as full_name')
@@ -376,7 +375,7 @@ class Employee extends CActiveRecord {
 
         return $name;
     }
- 
+
 // this list only for allocated task employee
     public static function getEmloyeeList($project_id = '') {
 //        $employeeData = Employee::model()->findAll(array('select' => "emp_id,first_name,last_name", 'order' => 'first_name', 'condition' => 'is_active=1'));
@@ -385,74 +384,67 @@ class Employee extends CActiveRecord {
 //            $emp_list[$value['emp_id']] = $value['first_name'] . " " . $value['last_name'];
 //        }
 
-           $query = "select allocated_resource from tbl_resource_allocation_project_work  where pid ='{$project_id}' ";
-                $list = Yii::app()->db->createCommand($query)->queryRow();
-               $newList = explode(",",$list['allocated_resource']);
-               if(!$project_id){
-                       $query = "select allocated_resource from tbl_resource_allocation_project_work";
-                $list = Yii::app()->db->createCommand($query)->queryAll();
-                foreach($list as $key => $list_empid){
-                    $emp_id = explode(",",$list_empid['allocated_resource']);
-                    foreach($emp_id as $k =>$id){
-                      $newList[$id] = $id;  
-                    }
-                    
+        $query = "select allocated_resource from tbl_resource_allocation_project_work  where pid ='{$project_id}' ";
+        $list = Yii::app()->db->createCommand($query)->queryRow();
+        $newList = explode(",", $list['allocated_resource']);
+        if (!$project_id) {
+            $query = "select allocated_resource from tbl_resource_allocation_project_work";
+            $list = Yii::app()->db->createCommand($query)->queryAll();
+            foreach ($list as $key => $list_empid) {
+                $emp_id = explode(",", $list_empid['allocated_resource']);
+                foreach ($emp_id as $k => $id) {
+                    $newList[$id] = $id;
                 }
-               }
-            
-            
+            }
+        }
+
+
         $emp_list = array();
         foreach ($newList as $key => $value) {
-            if($value){
-            $e_list = Yii::app()->db->createCommand("select * from tbl_employee where emp_id ={$value}")->queryRow();
-            $emp_list[$value] = $e_list['first_name'] . " " . $e_list['last_name'];
+            if ($value) {
+                $e_list = Yii::app()->db->createCommand("select * from tbl_employee where emp_id ={$value}")->queryRow();
+                $emp_list[$value] = $e_list['first_name'] . " " . $e_list['last_name'];
             }
         }
         return $emp_list;
     }
+
 // name in array with containg firstname and last name
-    public function  returnEmp_id($name){
-        if(isset($name)){
+    public function returnEmp_id($name) {
+        if (isset($name)) {
             $first_name = $name['first_name'];
             $last_name = $name['last_name'];
-         $e_list = Yii::app()->db->createCommand("select emp_id from tbl_employee where first_name like '{$first_name}' and last_name like '{$last_name}'")->queryRow();
+            $e_list = Yii::app()->db->createCommand("select emp_id from tbl_employee where first_name like '{$first_name}' and last_name like '{$last_name}'")->queryRow();
 
-         return  $e_list['emp_id'];
+            return $e_list['emp_id'];
         }
     }
-	
-	public function getConcatened()
-        {
-				//return $this->name;
-                return ucwords($this->name.' ('.$this->level_name.')');
-        }
-	
-	public function fetchEmployee($project_id)
-	{
-		
-		$query = "select allocated_resource from tbl_resource_allocation_project_work  where pid =$project_id";
+
+    public function getConcatened() {
+        //return $this->name;
+        return ucwords($this->name . ' (' . $this->level_name . ')');
+    }
+
+    public function fetchEmployee($project_id) {
+
+        $query = "select allocated_resource from tbl_resource_allocation_project_work  where pid =$project_id";
         $allocated_resource = Yii::app()->db->createCommand($query)->queryRow();
+        $resource['options_data'] = array();
+        if ($allocated_resource && trim($allocated_resource['allocated_resource']) != '') {
 
-        $query1 = "select emp.emp_id,concat(concat(first_name,' ',last_name),' ',CONCAT('(', lm.level_name ,')') ) as name,lm.level_name, lm.budget_per_hour
-						from tbl_employee emp 
-						left join tbl_assign_resource_level	rl on rl.emp_id = emp.emp_id 
-						left join tbl_level_master lm on lm.level_id = rl.level_id 
-						where emp.emp_id in ({$allocated_resource['allocated_resource']}) order by first_name";
-        $resource['emp_list'] = Yii::app()->db->createCommand($query1)->queryAll();
-		
-		
-		foreach ($resource['emp_list'] as $value => $name) {
-			
-	
-            $options_data[$name['emp_id']] = array('id'=>$name['budget_per_hour']);
-    
-			
+            $query1 = "select emp.emp_id,concat(concat(first_name,' ',last_name),' ',CONCAT('(', lm.level_name ,')') ) as name,lm.level_name, lm.budget_per_hour
+                                                from tbl_employee emp
+                                                left join tbl_assign_resource_level	rl on rl.emp_id = emp.emp_id
+                                                left join tbl_level_master lm on lm.level_id = rl.level_id
+                                                where emp.emp_id in ({$allocated_resource['allocated_resource']}) order by first_name";
+            $resource['emp_list'] = Yii::app()->db->createCommand($query1)->queryAll();
+
+            foreach ($resource['emp_list'] as $value => $name) {
+                $options_data[$name['emp_id']] = array('id' => $name['budget_per_hour']);
+            }
+
+            $resource['options_data'] = $options_data;
         }
-		
-	
-		$resource['options_data'] = $options_data;
-		return $resource;
-		
-	}
-
+        return $resource;
+    }
 }

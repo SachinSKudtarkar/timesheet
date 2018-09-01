@@ -89,7 +89,7 @@ class ResourceAllocationProjectWorkController extends Controller {
 //            $result = Yii::app()->db->createCommand($query)->queryAll();
 //            $x1=  array_column($result,'tbl_emp_id');
 //            $x1=  array_unique($x1);
-//             
+//
 //             $y1 = implode("','", $x1);
 //             echo $query = "delete FROM tbl_employee where emp_id not in('$y1') ";
 //            $result = Yii::app()->db->createCommand($query)->execute();
@@ -153,6 +153,7 @@ class ResourceAllocationProjectWorkController extends Controller {
         // $this->performAjaxValidation($model);
 
         if (isset($_POST['ResourceAllocationProjectWork'])) {
+
             $model->attributes = $_POST['ResourceAllocationProjectWork'];
             $model->modified_by = Yii::app()->session['login']['user_id'];
             $model->modified_at = date('Y-m-d H:i:s');
@@ -254,20 +255,20 @@ class ResourceAllocationProjectWorkController extends Controller {
           FROM tbl_task_allocation as ta inner join tbl_sub_project as sb on(ta.spid = sb.spid), tbl_employee em , tbl_project_management as pm,
           (select sum(hours) as hours from tbl_employee em ,tbl_day_comment as da , tbl_sub_project as sb  where da.spid = sb.spid and da.emp_id = em.emp_id group by da.spid ) as tmp
           WHERE  em.emp_id in (ta.allocated_resource) and sb.pid = pm.pid  order by em.first_name"; */
-$query ="select concat(first_name,' ',last_name) as name,project_name as Program ,sub_project_name as Project ,sub_task_name as Task,est_hrs as Estimated_hours,time(sum(hours)) as consumed_hours from tbl_day_comment as dc inner join tbl_sub_task as st on (dc.stask_id = st.stask_id) 
-inner join tbl_sub_project as sp on (dc.spid= sp.spid) 
+$query ="select concat(first_name,' ',last_name) as name,project_name as Program ,sub_project_name as Project ,sub_task_name as Task,est_hrs as Estimated_hours,time(sum(hours)) as consumed_hours from tbl_day_comment as dc inner join tbl_sub_task as st on (dc.stask_id = st.stask_id)
+inner join tbl_sub_project as sp on (dc.spid= sp.spid)
 inner join tbl_project_management as pp on (pp.pid = dc.pid)
 inner join tbl_employee as em on (dc.emp_id = em.emp_id) $whrcondition
 group by dc.stask_id order by em.emp_id;";
 
 //         $query = "SELECT concat(em.first_name,' ',em.last_name) as name,sum(hours) as Consumed_hours,pm.project_name as Program ,sb.sub_project_name as Project ,sb.estimated_end_date,sb.estimated_start_date,sb.total_hr_estimation_hour as Aproved_hour,
 // 		case when (sb.Priority = 1) then 'Heigh' when (sb.Priority = 2) then 'Medium' when (sb.Priority = 3) then 'Low' else null end as  Priority
-// from tbl_employee em,tbl_day_comment as da,tbl_sub_project as sb,tbl_project_management as pm 
+// from tbl_employee em,tbl_day_comment as da,tbl_sub_project as sb,tbl_project_management as pm
 // WHERE em.emp_id=da.emp_id AND da.spid=sb.spid AND da.pid=pm.pid $whrcondition
 // group by da.spid order by em.emp_id";
         $rawData = Yii::app()->db->createCommand($query)->queryAll();
 
-       
+
         $this->render('resourceallocatedtask', array(
             'rawData' => $rawData,
             'model' => $model
@@ -302,7 +303,7 @@ group by dc.stask_id order by em.emp_id;";
      */
     public function actionAdmin() {
         $model = new ResourceAllocationProjectWork('search');
-        $model->unsetAttributes();  // clear any default values               
+        $model->unsetAttributes();  // clear any default values
         if (isset($_GET['ResourceAllocationProjectWork']))
             $model->attributes = $_GET['ResourceAllocationProjectWork'];
 
@@ -315,7 +316,7 @@ group by dc.stask_id order by em.emp_id;";
         $model = new TaskAllocation('search');
 
 
-        $model->unsetAttributes();  // clear any default values               
+        $model->unsetAttributes();  // clear any default values
         if (isset($_GET['ResourceAllocationProjectWork']))
             $model->attributes = $_GET['ResourceAllocationProjectWork'];
 
@@ -367,8 +368,8 @@ group by dc.stask_id order by em.emp_id;";
             $done = 1;
             $updateQuery = "UPDATE tbl_resource_allocation_project_work SET allocated_resource = '{$all_resources}', modified_by ='{$modified_by}' , modified_at = '{$modified_at}',day = '{$modified_at}'   WHERE id = '{$result['id']}'  ";
             Yii::app()->db->createCommand($updateQuery)->execute();
-           
-            
+
+
         } else {
             $model = new ResourceAllocationProjectWork;
             $model->pid = $projectId;
@@ -435,7 +436,7 @@ group by dc.stask_id order by em.emp_id;";
           exit; */
         $done = 0;
         if (empty($result)) {
-            $sql = "insert into tbl_task_allocation (pid,spid,date,allocated_resource,created_by) 
+            $sql = "insert into tbl_task_allocation (pid,spid,date,allocated_resource,created_by)
 		values (:pid,:spid, :date,:allocated_resource,:created_by)";
             $parameters = array(":pid" => $projectId, ":spid" => $subprojectId, ":date" => date('Y-m-d H:i:s'), ":allocated_resource" => $all_resources, ":created_by" => Yii::app()->session['login']['user_id']);
             Yii::app()->db->createCommand($sql)->execute($parameters);
@@ -650,7 +651,7 @@ group by dc.stask_id order by em.emp_id;";
             $modelr = new ResourceAvailability();
 
             $infi_id = $indidata['id'];
-            $query = "SELECT pid FROM tbl_resource_allocation_project_work WHERE allocated_resource like '%," . $infi_id . "' 
+            $query = "SELECT pid FROM tbl_resource_allocation_project_work WHERE allocated_resource like '%," . $infi_id . "'
                         OR allocated_resource like '%," . $infi_id . ",%' OR allocated_resource like '" . $infi_id . ",%' OR allocated_resource = " . $infi_id;
             $result = Yii::app()->db->createCommand($query)->queryAll();
             $result = array_column($result, 'pid');
@@ -715,19 +716,19 @@ group by dc.stask_id order by em.emp_id;";
         $allocated_resource = Yii::app()->db->createCommand($query)->queryRow();
 
         $query1 = "select emp.emp_id,concat(first_name,' ',last_name) as name,lm.level_name, lm.budget_per_hour
-						from tbl_employee emp 
-						left join tbl_assign_resource_level	rl on rl.emp_id = emp.emp_id 
-						left join tbl_level_master lm on lm.level_id = rl.level_id 
+						from tbl_employee emp
+						left join tbl_assign_resource_level	rl on rl.emp_id = emp.emp_id
+						left join tbl_level_master lm on lm.level_id = rl.level_id
 						where emp.emp_id in ({$allocated_resource['allocated_resource']}) order by first_name";
         $resource = Yii::app()->db->createCommand($query1)->queryAll();
 
         foreach ($resource as $value => $name) {
-			
+
 			$name_with_level = $name['name'];
 			if(!empty($name['level_name'])){
 				$name_with_level = $name['name'].'('.$name['level_name'].')';
 			}
-			
+
             echo CHtml::tag('option', array('value' => $name['emp_id'],'id'=>$name['budget_per_hour']), CHtml::encode($name_with_level), true);
         }
     }
@@ -768,7 +769,7 @@ group by dc.stask_id order by em.emp_id;";
         $newData = $da = $nn = $result = array();
         $pid = 9;
         $userId = 2072;
-        
+
         $model = new SubProject;
 
         if (isset($_REQUEST['SubProject'])) {
@@ -782,12 +783,12 @@ group by dc.stask_id order by em.emp_id;";
                 $whrcondition .= " AND pm.project_name = '" . $condition['project_name'] . "'";
         } else
             $whrcondition = '';
-       
-  $query = "select sb.spid,sb.sub_project_name,sb.total_hr_estimation_hour,group_concat(concat(first_name,' ',last_name)) as allocated_resource from tbl_sub_project as sb inner join tbl_task_allocation  as ra on(sb.pid=ra.pid) inner join tbl_employee as emp on FIND_IN_SET(emp.emp_id,ra.allocated_resource) where sb.is_deleted = 0 and sb.spid = ra.spid group by sb.spid"; 
+
+  $query = "select sb.spid,sb.sub_project_name,sb.total_hr_estimation_hour,group_concat(concat(first_name,' ',last_name)) as allocated_resource from tbl_sub_project as sb inner join tbl_task_allocation  as ra on(sb.pid=ra.pid) inner join tbl_employee as emp on FIND_IN_SET(emp.emp_id,ra.allocated_resource) where sb.is_deleted = 0 and sb.spid = ra.spid group by sb.spid";
 
             $rawData = Yii::app()->db->createCommand($query)->queryAll();
 
-   
+
         $this->render('hoursallocation', array(
             'rawData' => $rawData,
             'model' => $model
@@ -795,6 +796,6 @@ group by dc.stask_id order by em.emp_id;";
     }
 
 
-    
+
 
 }

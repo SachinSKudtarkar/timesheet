@@ -22,12 +22,8 @@ $('.search-form form').submit(function(){
 });
 ");
 ?>
-
 <h1>Individual Employee Details </h1>
-
-
 </div><!-- search-form -->
-
 <?php  $x = $this->widget('ext.multirowheader.CGridViewPlus', array(
         'id' => 'lawfirm-grid',
         //'filter' => $model,
@@ -65,29 +61,25 @@ $('.search-form form').submit(function(){
                     'type' => 'raw',
                      'filter'=>false,
                 ),
-            array(
-                'class' => 'bootstrap.widgets.TbButtonColumn',
-                'template' => '{update}{delete}',
-                'buttons' => array
-                    ('update' => array
-                        (
-                        'label' => 'Update',
-                        'url' => 'Yii::app()->createUrl("/Project/update", array("id"=>$data[\'id\']))',
-                        'visible' => "CHelper::isAccess('MANAGER','update')",
-                    ),
-                    'delete' => array
-                        (
-                        'label' => 'Delete',
-                        'url' => 'Yii::app()->createUrl("/Project/delete", array("id"=>$data[\'id\']))',
-                        'visible' => "CHelper::isAccess('MANAGER','delete')",
-                    ),
-                ),
-            ),
+//            array(
+//                'class' => 'bootstrap.widgets.TbButtonColumn',
+//                'template' => '{update}{delete}',
+//                'buttons' => array
+//                    ('update' => array
+//                        (
+//                        'label' => 'Update',
+//                        'url' => 'Yii::app()->createUrl("/Project/update", array("id"=>$data[\'id\']))',
+//                        'visible' => "CHelper::isAccess('MANAGER','update')",
+//                    ),
+//                    'delete' => array
+//                        (
+//                        'label' => 'Delete',
+//                        'url' => 'Yii::app()->createUrl("/Project/delete", array("id"=>$data[\'id\']))',
+//                        'visible' => "CHelper::isAccess('MANAGER','delete')",
+//                    ),
+//                ),
+//            ),
 	),
 ));
 echo $this->renderExportGridButton($x, 'Export Grid Results', array('class' => 'btn btn-primary pull-left clearfix mr-tp-20'));
-
-
-
-
 ?>
