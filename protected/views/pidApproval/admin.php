@@ -109,17 +109,17 @@ $this->widget('ext.multirowheader.CGridViewPlus', array(
             'filter' => false,
         ),
         array(
-            'header' => 'Estimated Hours for project',
+            'header' => 'Estimated Hours',
             'name' => 'est_hrs',
             'type' => 'raw',
             'filter' => false,
         ),
-        array(
-            'header' => 'Toatal Estimated Hours',
-            'name' => 'total_est_hrs',
-            'type' => 'raw',
-            'filter' => false,
-        ),
+//        array(
+//            'header' => 'Toatal Estimated Hours',
+//            'name' => 'total_est_hrs',
+//            'type' => 'raw',
+//            'filter' => false,
+//        ),
         array(
             'header' => 'Inception Date',
             'name' => 'inception_date',
