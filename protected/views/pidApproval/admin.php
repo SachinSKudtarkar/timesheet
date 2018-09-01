@@ -56,7 +56,10 @@ $this->widget('ext.multirowheader.CGridViewPlus', array(
             'header' => 'Sr.no',
             'name' => 'sr',
         ),
-        'jira_id',
+        array(
+            'header' => 'Jira Id',
+            'name' => 'jira_id',
+        ),
         array(
             'header' => 'Program',
             'name' => 'project_id',
