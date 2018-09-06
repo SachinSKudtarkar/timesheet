@@ -432,7 +432,13 @@ class Employee extends CActiveRecord {
         $resource['options_data'] = array();
         if ($allocated_resource && trim($allocated_resource['allocated_resource']) != '') {
 
-            $query1 = "select emp.emp_id,concat(concat(first_name,' ',last_name),' ',CONCAT('(', lm.level_name ,')') ) as name,lm.level_name, lm.budget_per_hour
+            /*******************************************
+             * Level suffix removed
+             * Tirthesh::04092018
+             */
+            //concat(concat(first_name,' ',last_name),' ',CONCAT('(', lm.level_name ,')') )
+            /*******************************************/
+            $query1 = "select emp.emp_id,concat(first_name,' ',last_name) as name,lm.level_name, lm.budget_per_hour
                                                 from tbl_employee emp
                                                 left join tbl_assign_resource_level	rl on rl.emp_id = emp.emp_id
                                                 left join tbl_level_master lm on lm.level_id = rl.level_id
@@ -440,7 +446,7 @@ class Employee extends CActiveRecord {
             $resource['emp_list'] = Yii::app()->db->createCommand($query1)->queryAll();
 
             foreach ($resource['emp_list'] as $value => $name) {
-                $options_data[$name['emp_id']] = array('id' => $name['budget_per_hour']);
+                $options_data[$name['emp_id']] = array('budget' => $name['budget_per_hour'], 'id'=>$name['emp_id']);
             }
 
             $resource['options_data'] = $options_data;
