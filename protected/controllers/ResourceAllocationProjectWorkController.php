@@ -727,6 +727,8 @@ group by dc.stask_id order by em.emp_id;";
                             where emp.emp_id in ({$allocated_resource['allocated_resource']}) order by first_name";
                 $resource = Yii::app()->db->createCommand($query1)->queryAll();
 
+                echo CHtml::tag('option', array('value' => ''), 'Please select resource', true);
+
                 foreach ($resource as $value => $name) {
 
                     $name_with_level = $name['name'];
