@@ -45,7 +45,7 @@ for ($h = 0; $h <= 999; $h++) {
         // See class documentation of CActiveForm for details on this.
         'enableAjaxValidation' => true,
         'clientOptions' => array(
-            'validateOnSubmit' => false,
+            'validateOnSubmit' => true,
 //        'afterValidate'=>'js:yiiFix.ajaxSubmit.afterValidate'
         )
     ));
@@ -64,16 +64,11 @@ for ($h = 0; $h <= 999; $h++) {
         <?php echo $form->labelEx($model, 'Program'); ?>
 
         <?php
-            if(!empty($model->project_id)) {
-                $readonly = true;
-            } else{
-                $readonly = false;
-            }
+            
 
             echo CHTML::dropDownList('PidApproval[project_id]', 'pid', CHtml::listData(ProjectManagement::model()->findAll(array('order' => 'project_name',
                                 'condition' => 'is_deleted=0')), 'pid', 'project_name'), array(
                 'prompt' => 'Select Project',
-                'readonly' => $readonly,
                 'options' => array($model->project_id => array('selected' => true)),
                 'ajax' => array(
                     'type' => 'POST',
@@ -125,7 +120,7 @@ for ($h = 0; $h <= 999; $h++) {
         </div>
 
         <div class="row">
-            
+
             <?php echo $form->labelEx($model, 'total_est_hrs'); ?>
             <?php // echo $form->textField($model,'total_est_hrs'); ?>
             <?php echo $form->numberField($model, 'total_est_hrs', array('size' => '1', 'style' => 'width:50px', 'class' => 'totwrkhrClass','readonly'=>true)); ?>
@@ -429,6 +424,11 @@ Yii::app()->clientScript->registerScript('filters', "
 
     
 </script>
+<?php if(!empty($model->pid_id)){ ?>
+<script>
+$('#PidApproval_project_id option:not(:selected)').hide();
+</script>
+<?php } ?>
 <?php if (isset($model->project_id) && !empty($model->project_id)) { ?>
 
 
