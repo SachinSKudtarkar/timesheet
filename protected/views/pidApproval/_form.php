@@ -32,7 +32,7 @@ for ($h = 0; $h <= 999; $h++) {
     $h = (strlen($h) < 2) ? "0" . $h : $h;
     $arrHrs[$h] = $h;
 }
-//echo '<pre>';print_r($model);die;
+
 ?>
 
 <div class="form">
@@ -162,7 +162,7 @@ for ($h = 0; $h <= 999; $h++) {
                         <td><?php
                                 //echo CHtml::dropDownList('emp_id[]', $value->emp_id, $emp_list = CHtml::listData(Employee::model()->findAll("is_active=1 AND access_type!=1"),'emp_id', 'first_name'),array('data-name' => 'emp_id'));
 
-
+                                
 								$emp_data = Employee::model()->fetchEmployee($model->project_id);
 								$emp_list = CHtml::listData($emp_data['emp_list'],'emp_id', 'name');
                                // $emp_list = array();
@@ -418,13 +418,13 @@ $('#PidApproval_sub_project_id').change(function(){
 	fetchProjectId(project_id,'create');
 });
 
-$('#PidApproval_project_id').change(function(){
-	setTimeout(function(){
-		var project_id = $('#PidApproval_sub_project_id').val();
-		fetchProjectId(project_id,'create');
-	}, 500);
+// $('#PidApproval_project_id').change(function(){
+// 	setTimeout(function(){
+// 		var project_id = $('#PidApproval_sub_project_id').val();
+// 		fetchProjectId(project_id,'create');
+// 	}, 500);
 
-});
+// });
 
 function fetchProjectId(project_id,update){
 
