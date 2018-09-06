@@ -425,7 +425,7 @@ class Employee extends CActiveRecord {
         return ucwords($this->name . ' (' . $this->level_name . ')');
     }
 
-    public function fetchEmployee($project_id) {
+    public function fetchEmployee($project_id,$emp_id) {
 
         $query = "select allocated_resource from tbl_resource_allocation_project_work  where pid =$project_id";
         $allocated_resource = Yii::app()->db->createCommand($query)->queryRow();
@@ -440,7 +440,12 @@ class Employee extends CActiveRecord {
             $resource['emp_list'] = Yii::app()->db->createCommand($query1)->queryAll();
 
             foreach ($resource['emp_list'] as $value => $name) {
-                $options_data[$name['emp_id']] = array('id' => $name['budget_per_hour']);
+                if($name['emp_id'] == $emp_id)
+                {
+                    $options_data[$name['emp_id']] = array('id' => $name['budget_per_hour'],'selected'=>true);
+                }else{
+                    $options_data[$name['emp_id']] = array('id' => $name['budget_per_hour']);
+                }
             }
 
             $resource['options_data'] = $options_data;

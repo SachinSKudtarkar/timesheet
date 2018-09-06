@@ -43,7 +43,7 @@ for ($h = 0; $h <= 999; $h++) {
         // controller action is handling ajax validation correctly.
         // There is a call to performAjaxValidation() commented in generated controller code.
         // See class documentation of CActiveForm for details on this.
-        'enableAjaxValidation' => false,
+        'enableAjaxValidation' => true,
         'clientOptions' => array(
             'validateOnSubmit' => false,
 //        'afterValidate'=>'js:yiiFix.ajaxSubmit.afterValidate'
@@ -150,7 +150,7 @@ for ($h = 0; $h <= 999; $h++) {
             if ($subtask[0]['task_id'] != '') {
 
                 foreach ($subtask as $key => $value) {
-                    $count++;
+                   
 					$task_count = Yii::app()->db->createCommand("select count(*) as count from tbl_sub_task st inner join tbl_day_comment dc on dc.stask_id = st.stask_id  where st.stask_id = {$value['stask_id']}")->queryRow();
                     ?>
 
@@ -162,8 +162,8 @@ for ($h = 0; $h <= 999; $h++) {
                         <td><?php
                                 //echo CHtml::dropDownList('emp_id[]', $value->emp_id, $emp_list = CHtml::listData(Employee::model()->findAll("is_active=1 AND access_type!=1"),'emp_id', 'first_name'),array('data-name' => 'emp_id'));
 
-                                
-								$emp_data = Employee::model()->fetchEmployee($model->project_id);
+
+								$emp_data = Employee::model()->fetchEmployee($model->project_id,$value['emp_id']);
 								$emp_list = CHtml::listData($emp_data['emp_list'],'emp_id', 'name');
                                // $emp_list = array();
 								echo CHtml::dropDownList("emp_id[]", $value['emp_id'], $emp_list,array('class'=>'emp_id_bud','options'=>$emp_data['options_data']));
@@ -233,6 +233,7 @@ for ($h = 0; $h <= 999; $h++) {
     <div class="row buttons">
 		<?php if (!empty($model->project_task_id)) { ?>
 		<?php echo CHtml::hiddenField('deleted_stask_id'); ?>
+        <?php echo CHtml::hiddenField('triggerexceed',0); ?>
 		<?php echo $form->hiddenField($model,'pid_id'); ?>
         <?php } ?>
         <?php echo CHtml::submitButton($model->isNewRecord ? 'Submit' : 'Update', array('id' => 'ISSUB')); ?>
@@ -260,6 +261,7 @@ Yii::app()->clientScript->registerScript('filters', "
         getWrkHoursTotal();
     });
     function getWrkHoursTotal() {
+        $('#ISSUB').attr('disabled', true);
         var pidid = $("#PidApproval_pid_id").val();
         if (pidid != '' && pidid > 0) {
             var update_pid = pidid;
@@ -309,9 +311,11 @@ Yii::app()->clientScript->registerScript('filters', "
                 if (data != 0) {
                     alert(data);
                     $("#ISSUB").attr('disabled', true);
+                    $("#triggerexceed").val(1);
                     // return false;
                 } else {
                     $("#ISSUB").attr('disabled', false);
+                    $('#triggerexceed').val(0)
                     //return true;
                 }
             }
@@ -342,7 +346,8 @@ Yii::app()->clientScript->registerScript('filters', "
 
     $('#PidApproval_project_id').on('change', function () {
         var pid = $(this).val();
-
+        
+        
         $.ajax({
             url: '<?php echo CHelper::createUrl('resourceallocationprojectwork/GetallocatedResource') ?>',
             type: 'POST',
@@ -354,6 +359,14 @@ Yii::app()->clientScript->registerScript('filters', "
                 }
             }
         });
+        $("#estimated_hrs").text(0);
+        $("#allocated_hrs").text(0);
+        $("#utilized_hrs").text(0);
+        if($('#PidApproval_pid_id').length == 0)
+        {
+            $('#project_task_id').val('');    
+        }
+        
     });
     $('#PidApproval_project_id').change();
 
@@ -379,6 +392,16 @@ Yii::app()->clientScript->registerScript('filters', "
         $(element).datepicker();
 
     }
+
+    $("#ISSUB").click(function() {
+        
+
+        if($('#triggerexceed').val() == 1)
+        {
+            return false;
+        }
+        
+    });
 
 
 </script>
@@ -445,8 +468,10 @@ $.ajax({
 					$('.custom-loader').hide();
 
 					if(data == 0){
-						alert('There is no project associated with the Program. Please create new project');
-						return false;
+						alert('There is no program ID associated with the Program, probably this is the old program. Please create new program with the same name.');
+                        $('#project_task_id').val('');
+						$('#ISSUB').attr('disabled', true);
+                        return false;
 					}
 
 					if(data != '')
@@ -458,7 +483,8 @@ $.ajax({
 						$('#allocated_hrs').text((data.allocated.allocated_hrs > 0) ? data.allocated.allocated_hrs : '0');
 						$('#estimated_hrs').text((data.estimated.estimated_hrs > 0) ? data.estimated.estimated_hrs : '0');
 						$('#utilized_hrs').text((data.utilized.utilized_hrs != null) ? data.utilized.utilized_hrs : '0');
-					}
+					    $('#ISSUB').attr('disabled', false);
+                    }
 				}
             });
             }

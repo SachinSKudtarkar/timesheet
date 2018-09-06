@@ -72,6 +72,8 @@ class PidApprovalController extends Controller {
         //print_R($_POST);
         //print_R($model);exit;
 
+        $model->attributes = $_POST['PidApproval'];
+//              
         $this->performAjaxValidation($model);
 
         if (isset($_POST['PidApproval'])) {
@@ -81,10 +83,8 @@ class PidApprovalController extends Controller {
             if (empty($valid['PidApproval']['project_id']) || empty($valid['PidApproval']['sub_project_id']) || empty($valid['PidApproval']['inception_date']) || empty($valid['PidApproval']['jira_id']) ||
                     empty($valid['PidApproval']['total_est_hrs']) || ($valid['PidApproval']['total_est_hrs'] == 0) ) { //|| isset($valid['task_id']) || isset($valid['sub_task_name']) || isset($valid['est_hrs'])
 
-                Yii::app()->user->setFlash('error', 'Please fill all filleds, All Filleds are Required');
-                $this->render('create', array(
-                    'model' => $model
-                ));
+                Yii::app()->user->setFlash('error', 'Please fill all the fields, All Fields are Required');
+               
             }
 
                 $model->project_id = $_POST['project_id'];
@@ -138,8 +138,8 @@ class PidApprovalController extends Controller {
                 }else{
                 }
             }else{
-                print_R($model->getErrors());
-                exit;
+                //print_R($model->getErrors());
+                //exit;
             }
         }
 
