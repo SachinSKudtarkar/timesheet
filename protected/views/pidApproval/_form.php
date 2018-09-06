@@ -64,9 +64,16 @@ for ($h = 0; $h <= 999; $h++) {
         <?php echo $form->labelEx($model, 'Program'); ?>
 
         <?php
+            if(!empty($model->project_id)) {
+                $readonly = true;
+            } else{
+                $readonly = false;
+            }
+
             echo CHTML::dropDownList('PidApproval[project_id]', 'pid', CHtml::listData(ProjectManagement::model()->findAll(array('order' => 'project_name',
                                 'condition' => 'is_deleted=0')), 'pid', 'project_name'), array(
                 'prompt' => 'Select Project',
+                'readonly' => $readonly,
                 'options' => array($model->project_id => array('selected' => true)),
                 'ajax' => array(
                     'type' => 'POST',
@@ -81,7 +88,18 @@ for ($h = 0; $h <= 999; $h++) {
 
         <div class="row">
             <?php echo CHTML::label('Project', ''); ?>
-            <?php echo CHtml::dropDownList('PidApproval[sub_project_id]', 'spid', CHtml::listData(SubProject::model()->findAll(array('order' => 'sub_project_name', 'condition' => 'is_deleted=0')), 'spid', 'sub_project_name'), array('prompt' => 'Select Project', 'options' => array($model->sub_project_id => array('selected' => true)))); ?>
+            <?php 
+
+                if(!empty($model->project_id))
+                {
+                    $subprojectlist = CHtml::listData(SubProject::model()->findAll(array('order' => 'sub_project_name', 'condition' => 'pid='.$model->project_id.' and is_deleted=0')), 'spid', 'sub_project_name');    
+                }else{
+                    $subprojectlist = '';
+                }
+                
+
+            ?>
+            <?php echo CHtml::dropDownList('PidApproval[sub_project_id]', 'spid', $subprojectlist, array('prompt' => 'Select Project', 'options' => array($model->sub_project_id => array('selected' => true)))); ?>
             <?php echo $form->error($model, 'sub_project_id'); ?>
         </div>
         <div class="row">
@@ -107,10 +125,10 @@ for ($h = 0; $h <= 999; $h++) {
         </div>
 
         <div class="row">
-
+            
             <?php echo $form->labelEx($model, 'total_est_hrs'); ?>
             <?php // echo $form->textField($model,'total_est_hrs'); ?>
-            <?php echo $form->numberField($model, 'total_est_hrs', array('size' => '1', 'style' => 'width:50px', 'class' => 'totwrkhrClass')); ?>
+            <?php echo $form->numberField($model, 'total_est_hrs', array('size' => '1', 'style' => 'width:50px', 'class' => 'totwrkhrClass','readonly'=>true)); ?>
             <?php echo $form->error($model, 'total_est_hrs'); ?>
         </div>
     </div>
@@ -166,6 +184,7 @@ for ($h = 0; $h <= 999; $h++) {
 								$emp_data = Employee::model()->fetchEmployee($model->project_id,$value['emp_id']);
 								$emp_list = CHtml::listData($emp_data['emp_list'],'emp_id', 'name');
                                // $emp_list = array();
+
 								echo CHtml::dropDownList("emp_id[]", $value['emp_id'], $emp_list,array('class'=>'emp_id_bud','options'=>$emp_data['options_data']));
 
                             ?>
@@ -277,16 +296,19 @@ Yii::app()->clientScript->registerScript('filters', "
         var project_id = $('#PidApproval_sub_project_id').val();
         var hrs_array = [];
         var remaining_budget = 0;
+        var estimated_hrs_total = 0;
         $i = 0;
         $('.wrkhrsClass').each(function () {
             var thisval = $(this).val();
             hrs_array.push(thisval);
             if (thisval != '') {
                 allhrs = parseFloat(allhrs) + parseFloat(thisval);
+                estimated_hrs_total = parseFloat(estimated_hrs_total) + parseFloat(thisval);
             }
 
         });
 
+        $("#PidApproval_total_est_hrs").val(estimated_hrs_total);
         /* var hours_array = $("input[name='est_hrs[]']").map(function(){return $(this).val();}).get(); */
         $('.emp_id_bud').each(function () {
             var thisval = $(this).val();
@@ -341,7 +363,7 @@ Yii::app()->clientScript->registerScript('filters', "
             alert("Jira Id should not be blank");
 
         }
-    });
+    }); 
 
 
     $('#PidApproval_project_id').on('change', function () {
@@ -368,7 +390,8 @@ Yii::app()->clientScript->registerScript('filters', "
         }
         
     });
-    $('#PidApproval_project_id').change();
+    
+    // $('#PidApproval_project_id').change();
 
     $(document).ready(function () {
 
@@ -404,6 +427,7 @@ Yii::app()->clientScript->registerScript('filters', "
     });
 
 
+    
 </script>
 <?php if (isset($model->project_id) && !empty($model->project_id)) { ?>
 

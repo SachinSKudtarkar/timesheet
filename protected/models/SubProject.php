@@ -185,4 +185,14 @@ class SubProject extends CActiveRecord
 
 			return $name['project_name'];
 		}
+
+    public function getSubProject($project_id)
+    {
+
+        $query = "select spid, sub_project_name from tbl_sub_project where is_deleted = 0 and pid = $project_id";
+
+        $project = Yii::app()->db->createCommand($query)->queryRow();
+        // print_r($project);die;
+        return $project;
+    }
 }
