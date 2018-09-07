@@ -123,7 +123,7 @@ class ProjectManagement extends CActiveRecord {
         $criteria = new CDbCriteria;
        // $criteria->select = "t.*,sbpr.sub_project_name ";
         $criteria->compare('t.pid', $this->pid);
-		$criteria->compare('t.project_id', $this->project_id);
+		$criteria->compare('t.project_id', $this->project_id, true);
         $criteria->compare('project_name', $this->project_name, true);
         $criteria->compare('project_description', $this->project_description, true);
         $criteria->compare('requester', $this->requester, true);
@@ -131,6 +131,8 @@ class ProjectManagement extends CActiveRecord {
         $criteria->compare('total_hr_estimation_hour', $this->total_hr_estimation_hour, true);
         $criteria->compare('status', $this->status, true);
         $criteria->compare('type', $this->type);
+        $criteria->compare('estimated_start_date', $this->estimated_start_date, true);
+        $criteria->compare('estimated_end_date', $this->estimated_start_date, true);
         $criteria->compare('hr_clocked', $this->hr_clocked);
         $criteria->compare('category', $this->category);
         $criteria->compare('customer', $this->customer, true);

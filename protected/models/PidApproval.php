@@ -42,7 +42,7 @@ class PidApproval extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('project_id, sub_project_id, inception_date, total_est_hrs, jira_id, project_task_id, task_title, task_description', 'required'),
+            array('project_id, sub_project_id, inception_date, jira_id, project_task_id, task_title', 'required'),
             array('project_id, sub_project_id, total_est_hrs, status, created_by, approved, is_deleted', 'numerical', 'integerOnly' => true),
             array('comments, task_description', 'length', 'max' => 255),
             array('jira_id', 'unique', 'message' => 'jira id already exists!'),
@@ -223,5 +223,37 @@ class PidApproval extends CActiveRecord {
                 }
             }
         }
+    }
+
+    public function searchList()
+    {
+            // @todo Please modify the following code to remove attributes that should not be searched.
+
+            $criteria=new CDbCriteria;
+            $criteria->select = "t.*,pr.project_name,t.spid as taskId ";//t.spid as taskId
+            $criteria->compare('pid_id', $this->pid_id);
+            $criteria->compare('project_id', $this->project_id);
+            $criteria->compare('sub_project_id', $this->sub_project_id);
+            $criteria->compare('inception_date', $this->inception_date, true);
+            $criteria->compare('jira_id', $this->jira_id, true);
+            $criteria->compare('total_est_hrs', $this->total_est_hrs);
+            $criteria->compare('comments', $this->comments, true);
+            $criteria->compare('status', $this->status);
+            $criteria->compare('created_by', $this->created_by);
+            $criteria->compare('created_at', $this->created_at, true);
+            $criteria->compare('approved', $this->approved);
+            $criteria->compare('is_deleted', $this->is_deleted);
+            $criteria->join = " LEFT JOIN tbl_project prj ON (t.project_id = prj.id) "
+                    . " LEFT JOIN tbl_sub_project sprj ON (t.sub_project_id = sprj.spid)";
+    //                        . " LEFT JOIN tbl_sub_task st ON (t.pid_id = st.pid_approval_id)";
+    //                $criteria->join = " LEFT JOIN tbl_sub_project sprj ON (t.sub_project_id = sprj.spid)";
+            $criteria->select = "t.*, prj.project_description, sprj.sub_project_name";
+    //                        . ", st.task_id, st.sub_task_name, st.emp_id ";
+
+            $criteria->order = "t.pid_id desc";
+
+        return new CActiveDataProvider($this, array(
+                'criteria'=>$criteria,
+        ));
     }
 }

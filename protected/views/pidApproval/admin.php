@@ -3,7 +3,7 @@
 /* @var $model PidApproval */
 
 $this->breadcrumbs = array(
-    'Create Pid Approvals' => array('create'),
+    'Tasks' => array('create'),
     'Manage',
 );
 
@@ -26,7 +26,7 @@ $('.search-form form').submit(function(){
 ");
 ?>
 
-<h1>Manage PID Approvals</h1>
+<h1>Manage Tasks</h1>
 
 
 <?php // echo CHtml::link('Advanced Search','#',array('class'=>'search-button')); ?>
