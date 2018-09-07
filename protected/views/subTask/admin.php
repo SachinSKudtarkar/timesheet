@@ -26,6 +26,7 @@ $('.search-form form').submit(function(){
 ");
 ?>
 <h1>Manage Tasks</h1>
+
 <?php $this->widget('zii.widgets.grid.CGridView', array(
 	'id'=>'sub-task-grid',
 	'dataProvider'=>$model->search(),//new CArrayDataProvider($data, array()),
@@ -84,6 +85,7 @@ $('.search-form form').submit(function(){
                      'type'=> 'raw',
                      'value'=>array($model,'GetCreatedBy'),
                  ),
+		'created_at',
 		/*
 		'description',
 		'status',
@@ -93,7 +95,22 @@ $('.search-form form').submit(function(){
 		'is_delete',
 		*/
 		array(
-			'class'=>'CButtonColumn',
-		),
+            'class'=>'CButtonColumn',
+            'template' => '{update}{delete}',
+            'buttons' => array
+                ('update' => array
+                    (
+                    'label' => 'Update',
+                    'url' => 'Yii::app()->createUrl("/pidapproval/update", array("id"=>$data["pid_approval_id"]))',
+                    'visible' => "CHelper::isAccess('MANAGER','update')",
+                ),
+                'delete' => array
+                    (
+                    'label' => 'Delete',
+                    'url' => 'Yii::app()->createUrl("/pidapproval/delete", array("id"=>$data["pid_approval_id"]))',
+                    'visible' => "CHelper::isAccess('MANAGER','delete')",
+                ),
+            ),
+        ),
 	),
 )); ?>

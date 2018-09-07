@@ -121,7 +121,7 @@ for ($h = 0; $h <= 999; $h++) {
 
             <?php echo $form->labelEx($model, 'total_est_hrs'); ?>
             <?php // echo $form->textField($model,'total_est_hrs'); ?>
-            <?php echo $form->numberField($model, 'total_est_hrs', array('size' => '1', 'style' => 'width:50px', 'class' => 'totwrkhrClass','readonly'=>true)); ?>
+            <?php echo $form->textField($model, 'total_est_hrs', array('size' => '1', 'style' => 'width:50px', 'class' => 'totwrkhrClass','readonly'=>true)); ?>
             <?php echo $form->error($model, 'total_est_hrs'); ?>
         </div>
     </div>

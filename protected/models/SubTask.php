@@ -142,6 +142,7 @@ class SubTask extends CActiveRecord
 		$criteria->compare('status',$this->status);
 		$criteria->compare('concat(cEmp.first_name, " ", cEmp.last_name)',$this->created_by,true);
 		$criteria->compare('is_approved',$this->is_approved);
+		$criteria->compare('created_at',$this->created_at,true);
 		$criteria->compare('is_delete',$this->is_delete);
                 $criteria->order = 't.created_at desc';
                 $criteria->join = " INNER JOIN tbl_sub_project as sp on t.sub_project_id = sp.spid "
