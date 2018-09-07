@@ -9,7 +9,7 @@ $this->breadcrumbs=array(
 
 $this->menu=array(
 	//array('label'=>'List PidApproval', 'url'=>array('index')),
-	array('label'=>'Manage Task', 'url'=>array('admin')),
+	array('label'=>'Manage Task', 'url'=>array('/subtask/admin')),
 );
 ?>
 
