@@ -135,6 +135,7 @@ class SubTask extends CActiveRecord
 		$criteria->compare('pm.project_name',$this->project_id, true);
 		$criteria->compare('sub_project_name',$this->sub_project_id, true);
 		$criteria->compare('pa.task_title',$this->pid_approval_id, true);
+		$criteria->compare('st_jira_id',$this->st_jira_id, true);
 		$criteria->compare('concat(emp.first_name, " ", emp.last_name)',$this->emp_id,true);
 		$criteria->compare('sub_task_name',$this->sub_task_name,true);
 		$criteria->compare('est_hrs',$this->est_hrs,true);
