@@ -7,10 +7,10 @@ $this->breadcrumbs=array(
 	'Manage',
 );
 
-$this->menu=array(
-//	array('label'=>'List Task', 'url'=>array('index')),
-//	array('label'=>'Create Task', 'url'=>array('create')),
-);
+ $this->menu=array(
+ 	array('label'=>'Create Tasks', 'url'=>array('pidapproval/create')),
+ );
+
 
 Yii::app()->clientScript->registerScript('search', "
 $('.search-button').click(function(){
@@ -25,10 +25,7 @@ $('.search-form form').submit(function(){
 });
 ");
 ?>
-
 <h1>Manage Tasks</h1>
-
-
 <?php $this->widget('zii.widgets.grid.CGridView', array(
 	'id'=>'sub-task-grid',
 	'dataProvider'=>$model->search(),//new CArrayDataProvider($data, array()),
@@ -38,33 +35,54 @@ $('.search-form form').submit(function(){
 		//'project_id',
 //		'project_name',
 //		'sub_project_name',
-//		'task_name',
 //		'employee',
-		// array(
-                    // 'name'=> 'project_id',
-                    // 'type'=> 'raw',
-                    // 'value'=>array($model,'getNameById'),
-                // ),
-		//'sub_project_id',
-		// array(
-                    // 'name'=> 'sub_project_id',
-                    // 'type'=> 'raw',
-                    // 'value'=>array($model,'getSubProject'),
-                // ),
+//		'task_name',
+		 array(
+                     'name'=> 'project_id',
+                     'type'=> 'raw',
+                     'value'=>array($model,'getNameById'),
+                 ),
+		array(
+                     'name'=> 'sub_project_id',
+                     'type'=> 'raw',
+                     'value'=>array($model,'getSubProject'),
+                ),
 		//'task_id',
-		// array(
-                    // 'name'=> 'task_id',
-                    // 'type'=> 'raw',
-                    // 'value'=>array($model,'getType'),
-                // ),
+//		 array(
+//                     'header'=> 'Jira Id',
+//                     'name'=> 'jira_id',
+//                     'type'=> 'raw',
+//                 ),
+		 array(
+                     'name'=> 'task_id',
+                     'type'=> 'raw',
+                     'value'=>array($model,'getType'),
+                 ),
+		 array(
+                     'header'=> 'Task Title',
+                     'name'=> 'pid_approval_id',
+                     'type'=> 'raw',
+                     'value'=>array($model,'getTaskTitle'),
+                 ),
+		 array(
+                     'header'=> 'Sub Jira Id',
+                     'name'=> 'st_jira_id',
+                     'type'=> 'raw',
+                 ),
 		 'sub_task_name',
                  'est_hrs',
 		//'emp_id',
 		 array(
+                     'header'=> 'Assigned to',
                      'name'=> 'emp_id',
-                     'filter'=>false,
                      'type'=> 'raw',
                      'value'=>array($model,'GetResourceName'),
+                 ),
+		 array(
+                     'header'=> 'Assigned By',
+                     'name'=> 'created_by',
+                     'type'=> 'raw',
+                     'value'=>array($model,'GetCreatedBy'),
                  ),
 		/*
 		'description',

@@ -23,7 +23,7 @@
  */
 class SubTask extends CActiveRecord
 {
-    
+
        // public $pid_approval_id;
 	/**
 	 * @return string the associated database table name
@@ -49,6 +49,7 @@ class SubTask extends CActiveRecord
         public $Type;
         public $Estimated_Hours;
         public $Consumed_Hours;
+        //public $jira_id;
 	public function tableName()
 	{
 		return 'tbl_sub_task';
@@ -130,19 +131,25 @@ class SubTask extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('stask_id',$this->stask_id);
-		$criteria->compare('task_id',$this->task_id);
-		$criteria->compare('project_id',$this->project_id);
-		$criteria->compare('sub_project_id',$this->sub_project_id);
-		$criteria->compare('pid_approval_id',$this->pid_approval_id);
-		$criteria->compare('emp_id',$this->emp_id,true);
+		$criteria->compare('tt.task_name',$this->task_id, true);
+		$criteria->compare('pm.project_name',$this->project_id, true);
+		$criteria->compare('sub_project_name',$this->sub_project_id, true);
+		$criteria->compare('pa.task_title',$this->pid_approval_id, true);
+		$criteria->compare('concat(emp.first_name, " ", emp.last_name)',$this->emp_id,true);
 		$criteria->compare('sub_task_name',$this->sub_task_name,true);
 		$criteria->compare('est_hrs',$this->est_hrs,true);
 		$criteria->compare('description',$this->description,true);
 		$criteria->compare('status',$this->status);
-		$criteria->compare('created_by',$this->created_by);
-		$criteria->compare('created_at',$this->created_at,true);
+		$criteria->compare('concat(cEmp.first_name, " ", cEmp.last_name)',$this->created_by,true);
 		$criteria->compare('is_approved',$this->is_approved);
 		$criteria->compare('is_delete',$this->is_delete);
+                $criteria->order = 't.created_at desc';
+                $criteria->join = " INNER JOIN tbl_sub_project as sp on t.sub_project_id = sp.spid "
+                                  ." INNER JOIN tbl_pid_approval as pa on t.pid_approval_id = pa.pid_id "
+                                  ." INNER JOIN tbl_project_management as pm on t.project_id = pm.pid "
+                                  ." INNER JOIN tbl_task as tt on t.task_id = tt.task_id "
+                                  ." INNER JOIN tbl_employee as emp on t.emp_id = emp.emp_id "
+                                  ." INNER JOIN tbl_employee as cEmp on t.created_by = cEmp.emp_id ";
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -159,22 +166,34 @@ class SubTask extends CActiveRecord
 	{
 		return parent::model($className);
 	}
-	
+
 	public function GetResourceName($model){
 	$model = Employee::model()->findByPk($model->emp_id);
 	return $model->first_name." ".$model->last_name;
 	}
-	
+	public function GetCreatedBy($model){
+            $model = Employee::model()->findByPk($model->created_by);
+            return $model->first_name." ".$model->last_name;
+	}
+
 	public function getNameById($model){
-	$name = ProjectManagement::model()->findByPk($model->project_id);
-	return $name['project_name'];	
+            $name = ProjectManagement::model()->findByPk($model->project_id);
+            return $name['project_name'];
 	}
 	public function getSubProject($model){
-	$name = SubProject::model()->findByPk($model->sub_project_id);
-	return $name['sub_project_name'];	
+            $name = SubProject::model()->findByPk($model->sub_project_id);
+            return $name['sub_project_name'];
 	}
 	public function getType($model){
-	$name = Task::model()->findByPk($model->task_id);
-	return $name['task_name'];	
+            $name = Task::model()->findByPk($model->task_id);
+            return $name['task_name'];
+	}
+	public function getTaskTitle($model){
+            $name = PidApproval::model()->findByPk($model->pid_approval_id);
+            return $name['task_title'];
+	}
+	public function getJiraId($model){
+            $name = PidApproval::model()->findByPk($model->pid_approval_id);
+            return $name['jira_id'];
 	}
 }

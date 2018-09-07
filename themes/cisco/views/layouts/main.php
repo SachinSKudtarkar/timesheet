@@ -6,6 +6,8 @@ $baseUrl = Yii::app()->getBaseUrl(true);
 $user_email = Yii::app()->session["login"]["email"];
 $user_email = base64_encode($user_email);
 
+$userName = Yii::app()->session['login']['first_name'].' '.Yii::app()->session['login']['last_name'];
+
 $emp_id = Yii::app()->session['login']['user_id'];
 $access_type = AccessRoleMaster::model()->findByAttributes(array('emp_id' => $emp_id,'is_active'=>1));
 ?>
@@ -44,6 +46,10 @@ $access_type = AccessRoleMaster::model()->findByAttributes(array('emp_id' => $em
         <div class="header-wrap-1">
 
             <span class="brand-name">Timesheet</span>
+            <span class="" style="font-size: 16px; color: #fff; right: 20px; position: fixed; top: 33px; z-index: 9999;">
+                <small style="color: #aeaeae">Logged in as </small>&nbsp;&nbsp;
+                <?php echo $userName; ?>
+            </span>
             <?php
             $this->widget('bootstrap.widgets.TbNavbar', array(
                 'type' => 'inverse', // null or 'inverse'
@@ -86,24 +92,25 @@ $access_type = AccessRoleMaster::model()->findByAttributes(array('emp_id' => $em
                                         'visible' => 1,
                                         'active' => (Yii::app()->controller->id == 'daycomment' && Yii::app()->controller->action->id == 'admin'),
                                     ),
-                                      array('label' => 'Manage PID',
+                                      array('label' => 'Manage Tasks',
                                         'url' => '#',
                                         'encodeLabel' => false,
 //                                        'visible' => 1,
                                         'visible' => ($access_type->access_type == 1),
                                         'active' => 0,
                                         'items' => array(
-                                                     array('label' => 'Create PID',
+                                                     array('label' => 'Create Task',
                                                 'url' => array('//pidapproval/create'),
                                                 'visible' => (CHelper::isAccess("RESOURCEALLOCATION", "full_access")),
                                                 'active' => (Yii::app()->controller->id == 'pidapproval' && Yii::app()->controller->action->id == 'pidapproval')
                                             ),
-                                            array('label' => 'Manage PID',
-                                                'url' => array('//pidapproval/admin'),
+                                            array('label' => 'Manage Task',
+//                                                'url' => array('//pidapproval/admin'),
+                                                'url' => array('//subtask/admin'),
                                                 'visible' => (CHelper::isAccess("RESOURCEALLOCATION", "full_access")),
                                                 'active' => (Yii::app()->controller->id == 'pidapproval' && Yii::app()->controller->action->id == 'admin')
                                             ),
-                                            array('label' => 'View PID Mapping',
+                                            array('label' => 'View Task(PID) Mapping',
                                                 'url' => array('//pidmapping/index'),
                                                 'visible' => (CHelper::isAccess("RESOURCEALLOCATION", "full_access")),
                                                 'active' => (Yii::app()->controller->id == 'pidmapping' && Yii::app()->controller->action->id == 'pidmapping')
