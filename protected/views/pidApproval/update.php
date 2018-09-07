@@ -12,7 +12,7 @@ $this->menu=array(
 	//array('label'=>'List Tasks', 'url'=>array('index')),
 	array('label'=>'Create Task', 'url'=>array('create')),
 	array('label'=>'View Task', 'url'=>array('view', 'id'=>$model->pid_id)),
-	array('label'=>'Manage Tasks', 'url'=>array('admin')),
+	array('label'=>'Manage Tasks', 'url'=>array('/subtask/admin')),
 );
 ?>
 

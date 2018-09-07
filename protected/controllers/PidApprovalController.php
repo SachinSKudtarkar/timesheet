@@ -133,7 +133,7 @@ class PidApprovalController extends Controller {
                         //$importData[] = $modelST->getAttributes();
                     }
                     //$this->redirect(Yii::app()->urlManager->createUrl("Project/allProject"));
-                    $this->redirect('admin', array('model' => $model));
+                    $this->redirect('/subtask/admin', array('model' => $model));
                 } else {
 
                 }
@@ -225,7 +225,7 @@ class PidApprovalController extends Controller {
                     $modelST->st_inception_date = $val['st_inception_date'];
                     $modelST->save(false);
                 }
-            $this->redirect(array('admin'));
+            $this->redirect(array('/subtask/admin'));
         }
 
         $this->render('update', array(
