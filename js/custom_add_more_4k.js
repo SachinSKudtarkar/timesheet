@@ -56,17 +56,17 @@ $(document).ready(function() {
          var  len = $('.validateL2seq').length + $('.validatel2device_seq_no').length;
         if(len < 8){
 		
-        $($('.row_copy_l2_ring:first')).clone().find('input[id="est_hrs"]').val('').end().find('input[id="stask_id"]').val('').end().insertAfter('.row_copy_l2_ring:last').attr('id', 'row_copy_id_' + window.count);
+        $($('.row_copy_l2_ring:first')).clone(false, false).find('input[id="est_hrs"]').val('').end().find('input[id="stask_id"]').val('').end().insertAfter('.row_copy_l2_ring:last').attr('id', 'row_copy_id_' + window.count);
         /* $('#row_copy_id_' + window.count + ' input, #row_copy_id_' + window.count + ' select').each(function() {
             $(this).val('');
             $(this).attr('name', 'l2_ring[' + window.count + '][' + $(this).attr('data-name') + ']');
             $(this).attr('id', 'l2_ring_' + window.count + '_' + $(this).attr('data-name'));
         }) */
-			
-			if($('#PidApproval_pid_id').length == 0) {
-
-				$('&nbsp; $nbsp; <a class="icon-remove-sign customRemoveRowl2_ring" href="javascript:void(0);"></a>').insertAfter('.l2_ring:last');
-			}
+        $('.row_copy_l2_ring:last').find('.datepicker').val('').removeAttr('id').removeClass('hasDatepicker');
+        addDatePicker($('.row_copy_l2_ring:last').find('.datepicker'));
+        if($('#PidApproval_pid_id').length == 0) {
+            $('&nbsp; $nbsp; <a class="icon-remove-sign customRemoveRowl2_ring" href="javascript:void(0);"></a>').insertAfter('.l2_ring:last');
+        }
         }else{
             alert("Limit exceeded");
         }

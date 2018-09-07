@@ -452,6 +452,15 @@ class Employee extends CActiveRecord {
                 }else{
                     $options_data[$name['emp_id']] = array('id' => $name['budget_per_hour']);
                 }
+
+                /*********************************************
+                 * if level not allocated concat with *
+                 * Tirthesh::07092018
+                 */
+                if($name['level_name'] == ''){
+                    $resource['emp_list'][$value]['name'] = $resource['emp_list'][$value]['name'].' *';
+                }
+                /*********************************************/
             }
 
             $resource['options_data'] = $options_data;
