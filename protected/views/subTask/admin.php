@@ -49,16 +49,23 @@ $('.search-form form').submit(function(){
                      'value'=>array($model,'getSubProject'),
                 ),
 		//'task_id',
-//		 array(
-//                     'header'=> 'Jira Id',
-//                     'name'=> 'jira_id',
-//                     'type'=> 'raw',
-//                 ),
 		 array(
                      'name'=> 'task_id',
                      'type'=> 'raw',
                      'value'=>array($model,'getType'),
                  ),
+		//'task_id',
+//		 array(
+//                     'header'=> 'Jira Id',
+//                     'name'=> 'pidApproval.jira_id',
+//                     'type'=> 'raw',
+//                 ),
+//		array(
+//                     'header'=> 'Task Id',
+//                     'name'=> 'pidApproval.project_task_id',
+//                     'type'=> 'raw',
+//                    'filter'=>true,
+//                ),
 		 array(
                      'header'=> 'Task Title',
                      'name'=> 'pid_approval_id',
@@ -68,6 +75,10 @@ $('.search-form form').submit(function(){
 		 array(
                      'header'=> 'Sub Jira Id',
                      'name'=> 'st_jira_id',
+                     'type'=> 'raw',
+                 ),
+		 array(
+                     'name'=> 'sub_task_id',
                      'type'=> 'raw',
                  ),
 		 'sub_task_name',
