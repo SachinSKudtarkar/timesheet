@@ -51,6 +51,7 @@ class SubTask extends CActiveRecord
         public $Consumed_Hours;
         public $jira_id;
         public $sub_task_id;
+        public $used_hours;
 	public function tableName()
 	{
 		return 'tbl_sub_task';
@@ -208,4 +209,16 @@ class SubTask extends CActiveRecord
             $name = PidApproval::model()->findByPk($model->pid_approval_id);
             return $name['jira_id'];
 	}
+        public function GetUsedHours($model){
+            $data = DayComment::model()->find(array(
+                    'select'=>'round(((sum(minute(hours))/60) + sum(hour(hours))), 2) as usedHrs',
+                    'condition'=>'stask_id=:stask_id',
+                    'params'=>array(':stask_id'=>$model->stask_id))
+                );
+            $return = 0;
+            if($data->usedHrs){
+                $return = $data->usedHrs;
+            }
+            return $return;
+        }
 }

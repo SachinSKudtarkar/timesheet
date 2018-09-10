@@ -82,13 +82,20 @@ $('.search-form form').submit(function(){
                      'type'=> 'raw',
                  ),
 		 'sub_task_name',
-                 'est_hrs',
 		//'emp_id',
 		 array(
                      'header'=> 'Assigned to',
                      'name'=> 'emp_id',
                      'type'=> 'raw',
                      'value'=>array($model,'GetResourceName'),
+                 ),
+                 'est_hrs',
+		 array(
+                     'header'=> 'Used Hours',
+                     'name'=> 'used_hours',
+                     'type'=> 'raw',
+                     'value'=>array($model,'GetUsedHours'),
+                     'filter'=>false
                  ),
 		 array(
                      'header'=> 'Assigned By',
