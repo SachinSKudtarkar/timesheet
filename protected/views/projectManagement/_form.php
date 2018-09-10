@@ -49,7 +49,7 @@ Yii::app()->clientScript->registerCssFile(
 				if(empty($model->project_id))
 				{
 					$ProjectId = Yii::app()->db->createCommand('Select max(pid) as maxId from tbl_project_management ')->queryRow();
-					$projectformat = date('y').date('m').sprintf("%03d", $ProjectId['maxId']+1);
+					$projectformat = date('y').date('m').sprintf("%02d", $ProjectId['maxId']+1);
 
 				}else{
 					$projectformat = $model->project_id;
