@@ -32,7 +32,7 @@ class SubProjectController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'admin','fetchProjectId'),
+                'actions' => array('create', 'update', 'admin','fetchProjectId','updateLog'),
                 'expression' => 'CHelper::isAccess("PROJECTS", "full_access")',
                 'users' => array('@'),
             ),
@@ -289,5 +289,34 @@ class SubProjectController extends Controller {
 
         $projectformat = $name['project_id'].sprintf("%03d", $TaskId);
         echo $projectformat;
+    }
+
+
+    /**
+     * Updates the project level allocation log with the existing valies
+     */
+    public function actionupdateLog() {
+        
+        $levels = ProjectLevelAllocation::model()->findAll();
+
+        foreach ($levels as $key => $value) {
+            // echo $value->project_id.'<br>';
+            $modelPLALog = new ProjectLevelAllocationLog;
+            $modelPLALog->rl_log_id = 0;
+            $modelPLALog->project_id = $value->project_id;
+            $modelPLALog->level_id = $value->level_id;
+            $modelPLALog->old_level_hours = 0;
+            $modelPLALog->new_level_hours = $value->level_hours;
+            $modelPLALog->comments = 'initial comment';
+            $modelPLALog->created_at = $value->created_at;
+            $modelPLALog->created_by = $value->created_by;
+            // echo '<pre>';print_r($value);print_r($modelPLALog);die;
+            $modelPLALog->save(false);
+
+        }
+    
+        echo 'Log has been updated successfully';
+        die;
+
     }
 }
