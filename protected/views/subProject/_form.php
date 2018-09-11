@@ -95,26 +95,6 @@
             <?php echo $form->error($model, 'priority'); ?>
         </div>
         <div class="row">
-            <?php // echo $form->labelEx($model,'created_by'); ?>
-            <?php // echo $form->textField($model,'created_by'); ?>
-            <?php // echo $form->error($model,'created_by'); ?>
-        </div>
-        <div class="row">
-            <?php // echo $form->labelEx($model,'created_date'); ?>
-            <?php // echo $form->textField($model,'created_date'); ?>
-            <?php // echo $form->error($model,'created_date'); ?>
-        </div>
-        <div class="row">
-            <?php // echo $form->labelEx($model,'updated_by'); ?>
-            <?php // echo $form->textField($model,'updated_by'); ?>
-            <?php // echo $form->error($model,'updated_by'); ?>
-        </div>
-        <div class="row">
-            <?php // echo $form->labelEx($model,'updated_date'); ?>
-            <?php // echo $form->textField($model,'updated_date'); ?>
-            <?php // echo $form->error($model,'updated_date'); ?>
-        </div>
-        <div class="row">
 	</div>
 	</div>
 	<div class="span5">
@@ -137,36 +117,66 @@
 		</div>
 		<?php } ?>
 		<div class="row" id="L2_device_div">
-		<p> Allocated Level and its associated Hours to project.</p>
-		<div class="repeater">
+        <?php if ($levels[0]['level_id'] != '') { $levelhours = '';?>    
+            
+            <p class="float:left"> Updated level and hours history</p>
+            <table class="table table-striped table-bordered">
+                    <tr>
+                        <th width="30%">Change Request</th>
+                        <th>Level (Hours)</th>
+                    </tr>
+
+                    <?php foreach ($levels_log as $key => $value) { ?>
+                    <tr>
+                        <td><?php echo $value['cr']; ?></td>
+                        <td><?php echo $value['log']; ?></td>
+                    </tr>   
+                    <?php } ?>
+            </table>
+        <?php } ?>
+        <?php if ($levels[0]['level_id'] != '') { ?>       
+        <div class="span10 row">
+            <?php echo CHtml::Button('Update Hours', array('id' => 'update_hours')); ?>    
+        </div>
+        <?php } ?>
+        <div class="span10 row updhrs"><p> Allocated Level and its associated Hours to project.</p></div>
+        
+        <div class="repeater updhrs">
 			<div data-repeater-list="group-a">
 			<?php
 				$count = 0;
+                $options_data = [];
 				if ($levels[0]['level_id'] != '') {
 					foreach ($levels as $key => $value) {
-					$count++;
+					   
+                       $options_data[$value->level_id] = array('data-oldhrs' => $value->level_hours);
+                    }
+                    // echo '<pre>';print_r($options_data);die;
+                }
 			?>
-						<div data-repeater-item class="row">
+				<div data-repeater-item class="row">
 
-							<?php echo CHtml::dropDownList('level_id', $value->level_id, CHtml::listData(LevelMaster::model()->findAll(array('order'=>'level_name ASC')), 'level_id', 'level_name'), array('data-name' => 'level_id','style' => "width:150px;margin-right:20px")); ?>
+					<?php echo CHtml::dropDownList('level_id', "", CHtml::listData(LevelMaster::model()->findAll(array('order'=>'level_name ASC')), 'level_id', 'level_name'), array('data-name' => 'level_id','style' => "width:150px;margin-right:20px","class"=>"level_id_hrs","options"=>$options_data)); ?>
 
-							<?php echo CHtml::textField('level_hours',$value->level_hours, array('data-name' => 'level_hours', 'style' => "width:100px;", "name" => "data[0][level_hours]", "class" => "level_hours")); ?>
-							<input data-repeater-delete type="button" value="Delete"/>
+					<?php echo CHtml::textField('level_hours','', array('data-name' => 'level_hours', 'style' => "width:100px;", "name" => "data[0][level_hours]", "class" => "level_hours")); ?>
+					<input data-repeater-delete type="button" value="Delete"/>
 
-						</div>
-			 <?php } } else { ?>
-						<div data-repeater-item class="row">
-
-							<?php echo CHtml::dropDownList('level_id', $value->level_id, CHtml::listData(LevelMaster::model()->findAll(array('order'=>'level_name ASC')), 'level_id', 'level_name'), array('data-name' => 'level_id','style' => "width:150px;margin-right:20px")); ?>
-
-							<?php echo CHtml::textField('level_hours',$value->level_hours, array('data-name' => 'level_hours', 'style' => "width:100px;", "name" => "data[0][level_hours]", "class" => "level_hours")); ?>
-							<input data-repeater-delete type="button" value="Delete"/>
-						</div>
-			  <?php } ?>
+				</div>
 			</div>
 			<input data-repeater-create type="button" value="Add"/>
+            
 		</div>
+
     </div>
+    <?php if ($levels[0]['level_id'] != '') { ?>
+    <div class="row span10 updhrs">
+            <?php echo CHtml::label('Comments'); ?>
+            <?php
+            //echo $form->textField($model,'type');
+            echo CHtml::textArea("level_comments",'',array('data-name' => 'level_comments', "name" => "data[0][comments]", "class" => "level_comments","disabled"=>false));
+            ?>
+    </div>
+    <?php } ?>
 	</div>
             <?php // echo $form->labelEx($model,'is_deleted'); ?>
             <?php // echo $form->textField($model,'is_deleted'); ?>
@@ -180,29 +190,60 @@
 </div>
 <!-- form -->
 <script>
-    $(document).on('change', ' .level_hours', function () {
+    $(document).on('change', ' .level_id_hrs', function () {
 
+        checkDuplicateLevel();        
+    });
+
+    function checkDuplicateLevel(){
+        var values = [];
+        $('.level_id_hrs').each(function(){
+            if($.inArray( $(this).val(), values ) >= 0) {
+                alert('You have already selected this level. Please check and try again.');
+                $("#ISSUB").attr('disabled', true);
+                // return false;
+            } else {
+                $("#ISSUB").attr('disabled', false);
+                //return true;
+            }
+            values.push(this.value); 
+        });
+    }
+    $(document).on('change', ' .level_hours', function () {
+        checkDuplicateLevel();
         getWrkHoursTotal();
     });
     function getWrkHoursTotal() {
-        var allhrs = 0;
+        var allhrs = $("#SubProject_spid").val() > 0 ? $('#allocated_hrs').text() : 0;
         var allmnts = 0;
-        var totalhrs = $('#allocated_hrs').text();
+        var totalhrs = $("#SubProject_spid").val() > 0 ? $('#estimated_hrs').text() : 0;
 		/* var project_id = $('#PidApproval_sub_project_id').val(); */
+        // alert(allhrs);return false;
+        if($("#SubProject_spid").val() > 0) {
+            $('.level_id_hrs').each(function () {
+                var thisval = $(this).val();
+                var oldval = $(this).find("option:selected").data('oldhrs');
+                
+                if (thisval != '') {
+                    totalhrs = parseFloat(totalhrs) - parseFloat(oldval);
+                }
+            }); 
 
-        $('.level_hours').each(function () {
-            var thisval = $(this).val();
-            if (thisval != '') {
-                allhrs = parseFloat(allhrs) + parseFloat(thisval);
-            }
+        }
 
+            $('.level_hours').each(function () {
+                var thisval = $(this).val();
+                if (thisval != '') {
+                    totalhrs = parseFloat(totalhrs) + parseFloat(thisval);
+                    $("#level_comments").prop('required',true);
+                }else{
+                    $("#level_comments").prop('required',false);
+                }
+            });    
+                
 
-
-
-        });
-
-			if (totalhrs > allhrs) {
-                alert('Estimated hours is less than the allocated hrs. Please check and try again.');
+			if (totalhrs < allhrs) {
+                alert('Estimated hours('+totalhrs+') should be greater than allocated hours('+allhrs+'). Please check and try again.');
                 $("#ISSUB").attr('disabled', true);
                 // return false;
             } else {
@@ -213,6 +254,16 @@
         var totHrs = (parseFloat(allhrs) + parseInt((allmnts / 60))) + ':' + (parseFloat((allmnts % 60)));
         $('#tworkedHrs').val(totHrs);
     }
+
+    if($("#SubProject_spid").val() > 0) {
+        $(".updhrs").hide();
+        $("#update_hours").click(function(){
+            $(".updhrs").toggle();
+            $(".level_id_hrs").change();
+        });
+    }
+
+
 </script>
 <?php
     Yii::app()->clientScript->registerCoreScript('jquery.ui');
