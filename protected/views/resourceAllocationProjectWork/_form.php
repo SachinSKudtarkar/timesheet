@@ -18,11 +18,15 @@
             <?php echo CHtml::dropDownList('ProjectName', $model->pid, CHtml::listData(ProjectManagement::model()->findAll(array('order' => 'project_name', 'condition' => 'is_deleted=0')), 'pid', 'project_name'), array('prompt' => 'Please select Program'));
             ?>
         </div>
-
         <div class="row">
             <?php echo CHtml::label('Available Resource', ''); ?>
             <?php
-            $employeeData = Employee::model()->findAll(array('select' => "emp_id,first_name,last_name,email", 'order' => 'first_name', 'condition' => 'is_active=1 and is_password_changed="yes"'));
+            /**
+             * "is_password_changed="yes" >>>>>> Condition removed
+             * Tirthesh::08092018
+             */
+            //$employeeData = Employee::model()->findAll(array('select' => "emp_id,first_name,last_name,email", 'order' => 'first_name', 'condition' => 'is_active=1 and is_password_changed="yes"'));
+            $employeeData = Employee::model()->findAll(array('select' => "emp_id,first_name,last_name,email", 'order' => 'first_name', 'condition' => 'is_active=1'));
             $emp_list = array();
             foreach ($employeeData as $key => $value) {
                 $emp_list[$value['emp_id']] = $value['first_name'] . " " . $value['last_name']."  (".$value['email'].")";

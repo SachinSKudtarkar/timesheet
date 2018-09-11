@@ -49,7 +49,9 @@ class SubTask extends CActiveRecord
         public $Type;
         public $Estimated_Hours;
         public $Consumed_Hours;
-        //public $jira_id;
+        public $jira_id;
+        public $sub_task_id;
+        public $used_hours;
 	public function tableName()
 	{
 		return 'tbl_sub_task';
@@ -70,7 +72,7 @@ class SubTask extends CActiveRecord
 			// array('sub_task_name', 'unique', 'message' => 'Sub Project already exists!'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('stask_id, pid_approval_id ,task_id, project_id, sub_project_id, emp_id, sub_task_name, description, status, created_by, created_at, is_approved, is_delete,est_hrs,st_jira_id,st_inception_date', 'safe', 'on'=>'search'),
+			array('stask_id, pid_approval_id ,task_id, sub_task_id, project_id, sub_project_id, emp_id, sub_task_name, description, status, created_by, created_at, is_approved, is_delete,est_hrs,st_jira_id,st_inception_date', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -85,6 +87,11 @@ class SubTask extends CActiveRecord
 //			'task' => array(self::BELONGS_TO, 'Task', 'task_id'),
 //			'emp' => array(self::BELONGS_TO, 'Employee', 'emp_id'),
 //		);
+
+            return array(
+                'project' => array(self::BELONGS_TO, 'SubProject', 'sub_project_id'),
+                'pidApproval' => array(self::BELONGS_TO, 'PidApproval', 'pid_approval_id'),
+            );
 	}
 
 	/**
@@ -99,6 +106,7 @@ class SubTask extends CActiveRecord
 			'sub_project_id' => 'Project',
 			'emp_id' => 'Employee',
 			'sub_task_name' => 'Sub Task Name',
+			'sub_task_id' => 'Sub Task Id',
 			'est_hrs' => 'Estimated Hours',
 			'description' => 'Description',
 			'pid_approval_id' => 'pid Approval',
@@ -107,8 +115,9 @@ class SubTask extends CActiveRecord
 			'created_at' => 'Created At',
 			'is_approved' => 'Is Approved',
 			'is_delete' => 'Is Delete',
-			'st_jira_id' => 'Jira Id',
-			'st_inception_date' => 'Inception Date'
+			'st_jira_id' => 'Sub Jira Id',
+			'jira_id' => 'Jira Id',
+			'st_inception_date' => 'Inception Date',
 		);
 	}
 
@@ -130,20 +139,22 @@ class SubTask extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('stask_id',$this->stask_id);
+		$criteria->compare('stask_id',$this->stask_id, true);
 		$criteria->compare('tt.task_name',$this->task_id, true);
 		$criteria->compare('pm.project_name',$this->project_id, true);
 		$criteria->compare('sub_project_name',$this->sub_project_id, true);
 		$criteria->compare('pa.task_title',$this->pid_approval_id, true);
 		$criteria->compare('st_jira_id',$this->st_jira_id, true);
+		$criteria->compare('pa.jira_id',$this->pidApproval->jira_id, true);
 		$criteria->compare('concat(emp.first_name, " ", emp.last_name)',$this->emp_id,true);
 		$criteria->compare('sub_task_name',$this->sub_task_name,true);
+		$criteria->compare('t.sub_task_id',$this->sub_task_id,true);
 		$criteria->compare('est_hrs',$this->est_hrs,true);
 		$criteria->compare('description',$this->description,true);
 		$criteria->compare('status',$this->status);
 		$criteria->compare('concat(cEmp.first_name, " ", cEmp.last_name)',$this->created_by,true);
 		$criteria->compare('is_approved',$this->is_approved);
-		$criteria->compare('created_at',$this->created_at,true);
+		$criteria->compare('t.created_at',$this->created_at,true);
 		$criteria->compare('is_delete',$this->is_delete);
                 $criteria->order = 't.created_at desc';
                 $criteria->join = " INNER JOIN tbl_sub_project as sp on t.sub_project_id = sp.spid "
@@ -198,4 +209,16 @@ class SubTask extends CActiveRecord
             $name = PidApproval::model()->findByPk($model->pid_approval_id);
             return $name['jira_id'];
 	}
+        public function GetUsedHours($model){
+            $data = DayComment::model()->find(array(
+                    'select'=>'round(((sum(minute(hours))/60) + sum(hour(hours))), 2) as usedHrs',
+                    'condition'=>'stask_id=:stask_id',
+                    'params'=>array(':stask_id'=>$model->stask_id))
+                );
+            $return = 0;
+            if($data->usedHrs){
+                $return = $data->usedHrs;
+            }
+            return $return;
+        }
 }
