@@ -21,6 +21,8 @@ $this->widget('ext.yiicalendar.YiiCalendar', array
         )
     )
 ));
+
+
 ?>
 
 <?php
@@ -39,9 +41,10 @@ Yii::app()->clientScript->registerCssFile(
 
 <div class="info well well-large">
     <h1>Time Sheet Notice </h1>
-    <p>For multiple task add by  clicking <code>+ sign</code> ,  mention <code>shift</code> and  Then click <code>Save Button</code> to save changes, <code>You can also edit current Month task </code>
+    <p>For multiple task add by  clicking <code>+ sign</code> ,  mention <code>shift</code> and  Then click <code>Save Button</code> to save changes, <code>You can also edit current Month task </code> 
     </p>
 </div>
+
 
 <form class="form" action="<?php echo Yii::app()->baseUrl; ?>/daycomment/addcomment" method="post" id="addcommentfrm">
     <input type="hidden" name ="YII_CSRF_TOKEN" value="<?php echo Yii::app()->request->csrfToken; ?>"  />
@@ -50,18 +53,20 @@ Yii::app()->clientScript->registerCssFile(
     <div class="row" >
         <div class="row" >
             <div class="span5">
-                <?php
-                echo CHTML::label('Select Day :', '', array('style' => 'width:80px; font-weight:bold;'));
-                $selecting_date = "";
-                if (isset($_GET['selecting_date'])) {
-                    $selecting_date = $_GET['selecting_date'];
-                    $selecting_date = date('Y-m-d', strtotime($selecting_date));
-                } else {
-                    $selecting_date = date('Y-m-d');
-                }
+				<?php
+                   	echo CHTML::label('Select Day :', '', array('style' => 'width:80px; font-weight:bold;'));
+					$selecting_date = "";
+					if (isset($_GET['selecting_date'])) {
+						$selecting_date = $_GET['selecting_date'];
+						$selecting_date = date('Y-m-d', strtotime($selecting_date));
+					} else {
+						$selecting_date = date('Y-m-d');
+					}
+                                   
 //                                        echo $selecting_date;
+                                        
 //					echo CHTML::label('Select Day :', '', array('style' => 'width:80px; font-weight:bold;'));
-//
+//				
 //					for ($mondayCounter = 4; $mondayCounter >= 0; $mondayCounter--) {
 //						$da = date('d-m-Y', strtotime(" -" . $mondayCounter . "monday this week"));
 //						$mondayList[date('Y-m-d', strtotime(" -" . $mondayCounter . "monday this week"))] = $da . " to " . date('d-m-Y', strtotime("+6 day", strtotime($da)));
@@ -69,57 +74,67 @@ Yii::app()->clientScript->registerCssFile(
 //					//add 1 week additional
 //					$da = date('d-m-Y', strtotime("monday next week"));
 //					$mondayList[date('Y-m-d', strtotime("monday next week"))] = $da . " to " . date('d-m-Y', strtotime("+6 day", strtotime($da)));
-                $list = array();
-                $date = date('Y-m-d');
-                $date = explode("-", $date);
-                $month = $date[1];
-                $year = $date[0];
+                                        
+                                       $list=array();
+                                       $date =  date('Y-m-d');
+                                       $date = explode("-", $date);
+                                        $month = $date[1];
+                                        $year = $date[0];
+                                        
+                                         $number = cal_days_in_month(CAL_GREGORIAN,$month, $year);
 
-                $number = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+                                        for($d=1; $d<=$number; $d++)
+                                        {
+                                            $time=mktime(12, 0, 0, $month, $d, $year);          
+                                            if (date('m', $time)==$month)       
+                                                $list[date('Y-m-d',$time)]=date('Y-m-d', $time);
+                                        }
+					echo CHtml::dropDownList('selecting_weeks', $date,$list, array('class' => 'selecting_weeks', 'empty' => 'Select Value', 'options' => array($selecting_date => array('selected' => true))));
 
-                for ($d = 1; $d <= $number; $d++) {
-                    $time = mktime(12, 0, 0, $month, $d, $year);
-                    if (date('m', $time) == $month)
-                        $list[date('Y-m-d', $time)] = date('Y-m-d', $time);
-                }
-                echo CHtml::dropDownList('selecting_weeks', $date, $list, array('class' => 'selecting_weeks', 'empty' => 'Select Value', 'options' => array($selecting_date => array('selected' => true))));
-
-                $btnShow = FALSE;
-                //$is_submitted = TRUE;
+					$btnShow = FALSE;
+					//$is_submitted = TRUE;
 //					if (strtotime($selecting_date) >= strtotime("monday this week") ) {
 //						$btnShow = TRUE;
 //					}else if (strtotime($selecting_date) <= strtotime("monday this week") ) {
 //						$is_submitted = TRUE;
 //					}
-                $is_submitted = false;
-                $btnShow = true;
-                ?>
-            </div>
+					
+					$is_submitted = false;
+					$btnShow = true;
+                                        
+                                        
+				?>
+                                                      
+			</div>
         </div>
         <hr style=" margin-top: 0px; margin-bottom: 3px;"/>
     </div>
+
     <div class="row">
-        <div class="span"  style="margin-left:5px;">
-            <?php
-            $day_ne = preg_replace('/-/', '_', $selecting_date);
-            $shift = 1;
-            foreach ($arrData[$day_ne] as $key => $eachproject) {
-                $shift = $eachproject['shift'];
-            }
-            echo CHTML::label('shift :', '', array('style' => 'width:50px;font-weight:bold; '));
-            ?>
-            <span id="shift">
-                <input value="1" id="day" type="radio" name="shift" <?php if ($shift == 1) echo "checked = 'checked' "; ?> >
-                <label for="day_1" style = "display:inline;margin-top: -3px;width: auto !important;">Day</label>
-                <input value="2" id="night" type="radio" name="shift" <?php if ($shift == 2) echo "checked = 'checked' "; ?>>
-                <label for="night_1" style = "display:inline;margin-top: -3px;width: auto !important;">Night</label>
-            </span>
-        </div>
-    </div>
+                            <div class="span"  style="margin-left:5px;">
+							<?php 
+					 $day_ne = preg_replace('/-/','_', $selecting_date);
+							foreach ($arrData[$day_ne] as $key=>$eachproject) {
+								$shift = $eachproject['shift'];
+							}
+
+				
+
+								echo CHTML::label('shift :', '', array('style' => 'width:50px;font-weight:bold; '));?>
+
+<span id="shift">
+    <input value="1" id="day" type="radio" name="shift" <?php echo "checked = 'checked' " ;?> >
+    <label for="day_1" style = "display:inline;margin-top: -3px;width: auto !important;">Day</label>
+    <input value="2" id="night" type="radio" name="shift" <?php if($shift == 2) echo "checked = 'checked' " ;?>>
+    <label for="night_1" style = "display:inline;margin-top: -3px;width: auto !important;">Night</label>
+</span>
+
+							</div>
+							</div>
     <?php
     echo "<input type='hidden' name='selected_date' value='{$selecting_date}' />";
     $img_path = Yii::app()->theme->baseUrl . "/img/add_image.png";
-
+    
 //    for ($k = 0; $k <= 6; $k++) {
 //        $generte_date = strtotime("+{$k} day", strtotime($selecting_date));
 //        $date = date("Y-m-d", $generte_date);
@@ -127,213 +142,252 @@ Yii::app()->clientScript->registerCssFile(
 //
 //		if(key_exists($date,$arrSubmitted))
 //			$is_submitted = $arrSubmitted[$date];
+   
+                $generte_date = strtotime($selecting_date);
+		 $date_id = date("Y_m_d", $generte_date);
+                
+               
+		
+		if(key_exists($date_id, $arrData)) { ?>
+				<div class="main_daycomments">
+			<?php
+			$i = 0;
+		
+		
+			foreach ($arrData[$date_id] as $key=>$eachproject) {
+				
+				// CHelper::debug($eachproject);
+				$tmpcls = ($i > 0) ? '' : '';
+				$nxt = $i + 1;
+				$day = explode(" ", $eachproject['day'])[0];
+				$day = preg_replace('/-/','_', $day);
+				if($date_id == $day){
+					$count++;
 
-    $generte_date = strtotime($selecting_date);
-    $date_id = date("Y_m_d", $generte_date);
+				}
+				if($count > 1){
+					$pid = $eachproject['pid']+$count;
 
-    if (key_exists($date_id, $arrData)) {
-        ?>
-        <div class="main_daycomments">
-            <?php
-            $i = 0;
+				}else{
+					$pid = $eachproject['pid'];
+				}
+					?>
+					
+				<!-- 	<div class="row hdshow_<?php //echo $date_id ."_". $i . " " . $tmpcls; ?>" id="<?php //echo $date_id ."_". $i . " " . $tmpcls; ?>" > -->
+				<div>
+                                   
+						<div class="row" >
+                                                   
 
-            foreach ($arrData[$date_id] as $key => $eachproject) {
+							<div class="span2"  style="margin-left:10px;">
+								<?php echo "<b>" . date("l", $generte_date) . "</b> <br /> (" . date("d-m-Y", $generte_date) . " )"; ?>
+								<?php echo CHTML::hiddenField('Date[]', $date, array('readonly' => 'readonly', 'style' => 'width:90px;')); ?>
+							</div>
+							<div class="span2"  style="margin-left:10px; " >
+								<?php echo CHTML::label('Program :', '', array('style' => 'width:90px;font-weight:bold; ')); ?>
+								<?php echo CHTML::dropDownList('ProjectName[]', $eachproject['pid'], CHtml::listData($allProjects, 'pid', 'project_name'), array('style' => 'width:150px;', 'disabled' => ($is_submitted ? 'disabled' : ''), 'prompt' => 'Please select Program', 'class' => 'proclass', 'id' => $date_id ."_". $pid, 'nxt' => $date_id ."_". $nxt)); ?>
+							</div>
+							<div class="span2"  style="margin-left:10px;">
+								<?php echo CHTML::label('Project :', '', array('style' => 'width:90px;font-weight:bold; ')); ?>
+								<?php
+									//$result = array();
+									echo CHTML::dropDownList('SubProjectName[]', $eachproject['spid']['selected'], $eachproject['spid']['result'], array('class'=>'sub-project','style' => 'width:150px;  ', 'prompt' => 'Please select  Project', 'disabled' => ($is_submitted ? 'disabled' : ''), 'id' => 'subproclass' . $date_id ."_". $pid ));
+								?>
+							</div>
+							<div class="span2"  style="margin-left:10px;">
+								<?php echo CHTML::label('Task :', '', array('style' => 'width:90px;font-weight:bold; ')); ?>
+								<?php
+									//$result = array();
+									echo CHTML::dropDownList('SubTaskName[]', $eachproject['stask_id']['selected'], $eachproject['stask_id']['result'], array('class'=>'sub-task','style' => 'width:150px;  ', 'prompt' => 'Please select  Task', 'disabled' => ($is_submitted ? 'disabled' : ''), 'id' => 'subtasks' . $date_id ."_". $pid ));
+								?>
+							</div>
+							<div class="span1" style="margin-left:5px;">
 
-                // CHelper::debug($eachproject);
-                $tmpcls = ($i > 0) ? '' : '';
-                $nxt = $i + 1;
-                $day = explode(" ", $eachproject['day'])[0];
-                $day = preg_replace('/-/', '_', $day);
-                if ($date_id == $day) {
-                    $count++;
-                }
-                if ($count > 1) {
-                    $pid = $eachproject['pid'] + $count;
-                } else {
-                    $pid = $eachproject['pid'];
-                }
-                ?>
+                                <?php 
+                                    $difference = '';
+                                    $difference = DayComment::model()->getDifference($eachproject['spid']['selected'],$eachproject['stask_id']['selected']); 
+                                    
+                                ?>
+								<?php echo CHTML::label('Time Remaining', '', array('style' => 'width:40px;font-weight:bold;margin-top:-10px ')); ?>
+								<?php echo CHTML::textField('rem_hrs', $difference['difference'], array('readonly' => 'readonly', 'class' => 'rem_hrs','style' => 'width:50px;color:#f00;','id' => 'remhrs' . $date_id ."_". $pid));
+								?>
+							</div>
+							<div class="span1" style="margin-left:10px; ">
+								<?php echo CHTML::label('Hour', '', array('style' => 'width:50px;font-weight:bold; ')); ?>
+								<?php
+									$arrHrs = array();
+									$hrs = 23;
+                                    if(isset($difference['estimated']) && !empty($difference['estimated']))
+                                    {
+                                        $hrs = $difference['hours'] < 23 ? $difference['estimated']  : 23;    
+                                    }
 
-                                        <!-- 	<div class="row hdshow_<?php //echo $date_id ."_". $i . " " . $tmpcls;    ?>" id="<?php //echo $date_id ."_". $i . " " . $tmpcls;    ?>" > -->
-                <div>
-                    <div class="row" >
-                        <div class="span2"  style="margin-left:10px;">
-                            <?php echo "<b>" . date("l", $generte_date) . "</b> <br /> (" . date("d-m-Y", $generte_date) . " )"; ?>
-                            <?php echo CHTML::hiddenField('Date[]', $date, array('readonly' => 'readonly', 'style' => 'width:90px;')); ?>
-                        </div>
-                        <div class="span2"  style="margin-left:10px; " >
-                            <?php echo CHTML::label('Program :', '', array('style' => 'width:90px;font-weight:bold; ')); ?>
-                            <?php echo CHTML::dropDownList('ProjectName[]', $eachproject['pid'], CHtml::listData($allProjects, 'pid', 'project_name'), array('style' => 'width:150px;', 'disabled' => ($is_submitted ? 'disabled' : ''), 'prompt' => 'Please select Program', 'class' => 'proclass', 'id' => $date_id . "_" . $pid, 'nxt' => $date_id . "_" . $nxt)); ?>
-                        </div>
-                        <div class="span2"  style="margin-left:10px;">
-                            <?php echo CHTML::label('Project :', '', array('style' => 'width:90px;font-weight:bold; ')); ?>
-                            <?php
-                            //$result = array();
-                            echo CHTML::dropDownList('SubProjectName[]', $eachproject['spid']['selected'], $eachproject['spid']['result'], array('class' => 'sub-project', 'style' => 'width:150px;  ', 'prompt' => 'Please select  Project', 'disabled' => ($is_submitted ? 'disabled' : ''), 'id' => 'subproclass' . $date_id . "_" . $pid));
-                            ?>
-                        </div>
-                        <div class="span2"  style="margin-left:10px;">
-                            <?php echo CHTML::label('Task :', '', array('style' => 'width:90px;font-weight:bold; ')); ?>
-                            <?php
-                            //$result = array();
-                            echo CHTML::dropDownList('SubTaskName[]', $eachproject['stask_id']['selected'], $eachproject['stask_id']['result'], array('class' => 'sub-task', 'style' => 'width:150px;  ', 'prompt' => 'Please select  Task', 'disabled' => ($is_submitted ? 'disabled' : ''), 'id' => 'subtasks' . $date_id . "_" . $pid));
-                            ?>
-                        </div>
-                        <div class="span1" style="margin-left:10px; ">
-                            <?php echo CHTML::label('Hour', '', array('style' => 'width:50px;font-weight:bold; ')); ?>
-                            <?php
-                            $arrHrs = array();
-                            for ($h = 0; $h <= 23; $h++) {
-                                $h = (strlen($h) < 2) ? "0" . $h : $h;
-                                $arrHrs[$h] = $h;
-                            }
-                            echo CHTML::dropDownList('hrs[]', $eachproject['hrs'], $arrHrs, array('style' => 'width:50px;  ', 'class' => 'wrkhrsClass', 'disabled' => ($is_submitted ? 'disabled' : ''), 'id' => 'wrkhrsClass' . $date_id . "_" . $pid));
-                            ?>
-                        </div>
-                        <div class="span1" style="margin-left:10px; ">
-                            <?php echo CHTML::label('Minutes', '', array('style' => 'width:50px;font-weight:bold; ')); ?>
-                            <?php
-                            $arrMnts = array();
-                            for ($m = 0; $m <= 59; $m += 5) {
-                                $m = (strlen($m) < 2) ? "0" . $m : $m;
-                                $arrMnts[$m] = $m;
-                            }
-                            echo CHTML::dropDownList('mnts[]', $eachproject['mnts'], $arrMnts, array('style' => 'width:50px;  ', 'class' => 'wrkmntClass', 'disabled' => ($is_submitted ? 'disabled' : ''), 'id' => 'wrkminsClass' . $date_id . "_" . $pid));
-                            ?>
-                        </div>
-                        <div class="span2">
-                            <?php echo CHTML::label('Comment :', '', array('style' => 'width:130px;font-weight:bold; ')); ?>
-                            <?php echo CHtml::textArea('procomment[]', $eachproject['comment'], array('style' => ' height:40px; width:200px; ', 'class' => 'DayComment', 'disabled' => ($is_submitted ? 'disabled' : ''), 'id' => 'comment' . $date_id . "_" . $pid, 'onclick' => 'checkLength()'));
-                            ?>
-                        </div>
-                        <div class="span2">
-                            <?php echo CHTML::label('&nbsp;', '', array('style' => 'width:20px;font-weight:bold; ')); ?>
-                            <?php
-                            if (!$is_submitted) {
-                                echo '<a href="javascript:void(0)"  class="showbox" data-nxt="' . $date_id . "_" . $nxt . '" data-val="' . $date_id . "_" . $pid . '" >'
-                                . '<img src="' . $img_path . '" style="width:20px;">' . '</a>';
-                            }
-                            ?>
-                        </div>
-                    </div>
+                                    for($h=0; $h<=$hrs; $h++) {
+										$h = (strlen($h) < 2) ? "0".$h : $h;
+										$arrHrs[$h] = $h;
+									}
+									echo CHTML::dropDownList('hrs[]', $eachproject['hrs'], $arrHrs, array('style' => 'width:50px;  ', 'class'=>'wrkhrsClass', 'disabled' => ($is_submitted ? 'disabled' : ''), 'id' => 'wrkhrsClass' . $date_id ."_". $pid));
+								?>
+							</div>
+							<div class="span1" style="margin-left:10px; ">
+								<?php echo CHTML::label('Minutes', '', array('style' => 'width:50px;font-weight:bold; ')); ?>
+								<?php
+									$arrMnts = array();
+									for($m=0; $m<=59; $m+=5) {
+										$m = (strlen($m) < 2) ? "0".$m : $m;
+										$arrMnts[$m] = $m;
+									}
+									echo CHTML::dropDownList('mnts[]', $eachproject['mnts'], $arrMnts, array('style' => 'width:50px;  ', 'class'=>'wrkmntClass',  'disabled' => ($is_submitted ? 'disabled' : ''), 'id' => 'wrkminsClass' . $date_id ."_". $pid));
+								?>
+							</div>
+							<div class="span2">
+								<?php echo CHTML::label('Comment :', '', array('style' => 'width:130px;font-weight:bold; ')); ?>
+								<?php echo CHtml::textArea('procomment[]', $eachproject['comment'], array('style' => ' height:40px; width:200px; ','class' =>'DayComment', 'disabled' => ($is_submitted ? 'disabled' : ''), 'id' => 'comment' . $date_id ."_". $pid ,'onclick'=>'checkLength()'));
+								?>
+							</div>
+							<div class="span2">
+								<?php echo CHTML::label('&nbsp;', '', array('style' => 'width:20px;font-weight:bold; ')); ?>
+								<?php
+								if(!$is_submitted) {
+									echo '<a href="javascript:void(0)"  class="showbox" data-nxt="' . $date_id ."_". $nxt . '" data-val="' . $date_id ."_". $pid . '" >'
+										. '<img src="' . $img_path . '" style="width:20px;">' . '</a>';
+								}
+								?>
+							</div>
+						</div>	
+						
+						<hr style=" margin-top: 0px; margin-bottom: 3px;"/>
+					</div>
+				<?php
+				$i++;
+			}
+			?>
+			</div>
+		<?php }else {
+                    
+                    
+                    ?>
 
-                    <hr style=" margin-top: 0px; margin-bottom: 3px;"/>
-                </div>
-                <?php
-                $i++;
-            }
-            ?>
-        </div>
-    <?php } else { ?>
-        <div class="main_daycomments">
-            <?php
-            $i = 0;
-            foreach ($allProjects as $eachproject) {
-                $tmpcls = ($i > 0) ? '' : '';
-                $nxt = $i + 1;
-                ?>
-                <!-- <div class="row hdshow_<?php //echo $date_id ."_". $i . " " . $tmpcls;    ?>"  > -->
-                <div>
-                    <div class="row" >
-                        <div class="span2"  style="margin-left:10px;">
-                            <?php echo "<b>" . date("l", $generte_date) . "</b> <br /> (" . date("d-m-Y", $generte_date) . " )"; ?>
-                            <?php echo CHTML::hiddenField('Date[]', date("Y-m-d", $generte_date), array('readonly' => 'readonly', 'style' => 'width:90px;'));
-                            ?>
-                        </div>
-                        <div class="span2"  style="margin-left:10px; ">
-                            <?php echo CHTML::label('Program :', '', array('style' => 'width:90px;font-weight:bold; ')); ?>
-                            <?php echo CHTML::dropDownList('ProjectName[]', 'pid', CHtml::listData($allProjects, 'pid', 'project_name'), array('style' => 'width:150px;', 'disabled' => ($is_submitted ? 'disabled' : ''), 'prompt' => 'Please select Program', 'class' => 'proclass', 'id' => $date_id . "_" . $eachproject['pid'], 'nxt' => $date_id . "_" . $nxt)); ?>
-                        </div>
-                        <div class="span2"  style="margin-left:10px;">
-                            <?php echo CHTML::label('Project :', '', array('style' => 'width:90px;font-weight:bold; ')); ?>
-                            <?php
-                            $result = array();
-                            echo CHTML::dropDownList('SubProjectName[]', 'spid', $result, array('class' => 'sub-project', 'style' => 'width:150px;  ', 'prompt' => 'Please select  Project', 'disabled' => ($is_submitted ? 'disabled' : ''), 'id' => 'subproclass' . $date_id . "_" . $eachproject['pid']));
-                            ?>
-                        </div>
-                        <div class="span2"  style="margin-left:10px;">
-                            <?php echo CHTML::label('Task :', '', array('style' => 'width:90px;font-weight:bold; ')); ?>
-                            <?php
-                            $result = array();
-                            echo CHTML::dropDownList('SubTaskName[]', 'stask_id', $result, array('class' => 'sub-task', 'style' => 'width:150px;  ', 'prompt' => 'Please select  Task', 'disabled' => ($is_submitted ? 'disabled' : ''), 'id' => 'subtasks' . $date_id . "_" . $eachproject['pid']));
-                            ?>
-                        </div>
-                        <div class="span1" style="margin-left:10px; ">
-                            <?php echo CHTML::label('Hour', '', array('style' => 'width:50px;font-weight:bold; ')); ?>
-                            <?php
-                            $arrHrs = array();
-                            for ($h = 0; $h <= 23; $h++) {
-                                $h = (strlen($h) < 2) ? "0" . $h : $h;
-                                $arrHrs[$h] = $h;
-                            }
-                            echo CHTML::dropDownList('hrs[]', '', $arrHrs, array('style' => 'width:50px;  ', 'class' => 'wrkhrsClass', 'disabled' => ($is_submitted ? 'disabled' : ''), 'id' => 'wrkhrsClass' . $date_id . "_" . $eachproject['pid']));
-                            ?>
-                        </div>
-                        <div class="span1" style="margin-left:10px; ">
-                            <?php echo CHTML::label('Minutes', '', array('style' => 'width:50px;font-weight:bold; ')); ?>
-                            <?php
-                            $arrMnts = array();
-                            for ($m = 0; $m <= 59; $m += 5) {
-                                $m = (strlen($m) < 2) ? "0" . $m : $m;
-                                $arrMnts[$m] = $m;
-                            }
-                            echo CHTML::dropDownList('mnts[]', '', $arrMnts, array('style' => 'width:50px;  ', 'class' => 'wrkmntClass', 'disabled' => ($is_submitted ? 'disabled' : ''), 'id' => 'wrkminsClass' . $date_id . "_" . $eachproject['pid']));
-                            ?>
-                        </div>
-                        <div class="span2">
-                            <?php echo CHTML::label('Comment :', '', array('style' => 'width:130px;font-weight:bold; ')); ?>
-                            <?php echo CHtml::textArea('procomment[]', '', array('style' => ' height:40px; width:200px; ', 'class' => 'DayComment', 'disabled' => ($is_submitted ? 'disabled' : ''), 'id' => 'comment' . $date_id . "_" . $eachproject['pid'], 'onclick' => 'checkLength()'));
-                            ?>
-                        </div>
-                        <div class="span2">
-                            <?php echo CHTML::label('&nbsp;', '', array('style' => 'width:20px;font-weight:bold; ')); ?>
-                            <?php
-                            if (!$is_submitted) {
-                                echo '<a href="javascript:void(0)"  class="showbox" data-nxt="' . $date_id . "_" . $nxt . '" data-val="' . $date_id . "_" . $eachproject['pid'] . '" >'
-                                . '<img src="' . $img_path . '" style="width:20px;">' . '</a>';
-                            }
-                            ?>
-                        </div>
-                    </div>
-                    <hr style=" margin-top: 0px; margin-bottom: 3px;"/>
-                </div>
-                <?php
-                $i++;
-                break;
-            }
-            ?>
-        </div>
-    <?php } ?>
-    <?php
+			<div class="main_daycomments">
+			<?php
+			$i = 0;
+
+
+			
+			foreach ($allProjects as $eachproject) {
+				$tmpcls = ($i > 0) ? '' : '';
+				$nxt = $i + 1;
+				?>
+				
+					<!-- <div class="row hdshow_<?php //echo $date_id ."_". $i . " " . $tmpcls; ?>"  > -->
+					<div>
+						<div class="row" >
+                                                    
+							<div class="span2"  style="margin-left:10px;">
+								<?php echo "<b>" . date("l", $generte_date) . "</b> <br /> (" . date("d-m-Y", $generte_date) . " )"; ?>
+								<?php echo CHTML::hiddenField('Date[]', date("Y-m-d", $generte_date), array('readonly' => 'readonly', 'style' => 'width:90px;'));
+								?>
+							</div>
+							<div class="span2"  style="margin-left:10px; ">
+								<?php echo CHTML::label('Program :', '', array('style' => 'width:90px;font-weight:bold; ')); ?>
+								<?php echo CHTML::dropDownList('ProjectName[]', 'pid', CHtml::listData($allProjects, 'pid', 'project_name'), array('style' => 'width:150px;', 'disabled' => ($is_submitted ? 'disabled' : ''), 'prompt' => 'Please select Program', 'class' => 'proclass', 'id' => $date_id ."_". $eachproject['pid'], 'nxt' => $date_id ."_". $nxt)); ?>
+							</div>
+							<div class="span2"  style="margin-left:10px;">
+								<?php echo CHTML::label('Project :', '', array('style' => 'width:90px;font-weight:bold; ')); ?>
+								<?php
+									$result = array();
+									echo CHTML::dropDownList('SubProjectName[]', 'spid', $result, array('class'=>'sub-project','style' => 'width:150px;  ', 'prompt' => 'Please select  Project', 'disabled' => ($is_submitted ? 'disabled' : ''), 'id' => 'subproclass' . $date_id ."_". $eachproject['pid']));
+								?>
+							</div>
+							
+							<div class="span2"  style="margin-left:5px;">
+								<?php echo CHTML::label('Task :', '', array('style' => 'width:90px;font-weight:bold; ')); ?>
+								<?php
+									$result = array();
+									echo CHTML::dropDownList('SubTaskName[]', 'stask_id', $result, array('class'=>'sub-task','style' => 'width:150px;  ', 'prompt' => 'Please select  Task', 'disabled' => ($is_submitted ? 'disabled' : ''), 'id' => 'subtasks' . $date_id ."_". $eachproject['pid']));
+								?>
+							</div>
+							<div class="span1" style="margin-left:5px;">
+								<?php echo CHTML::label('Time Remaining', '', array('style' => 'width:40px;font-weight:bold;margin-top:-10px ')); ?>
+								<?php echo CHTML::textField('rem_hrs', '', array('readonly' => 'readonly', 'class' => 'rem_hrs','style' => 'width:50px;color:#f00;','id' => 'remhrs' . $date_id ."_". $eachproject['pid']));
+								?>
+							</div>	
+							<div class="span1" style="margin-left:10px; ">
+								<?php echo CHTML::label('Hour', '', array('style' => 'width:50px;font-weight:bold; ')); ?>
+								<?php
+									$arrHrs = array();
+									for($h=0; $h<=23; $h++) {
+										$h = (strlen($h) < 2) ? "0".$h : $h;
+										$arrHrs[$h] = $h;
+									}
+									echo CHTML::dropDownList('hrs[]', '', $arrHrs, array('style' => 'width:50px;  ', 'class'=>'wrkhrsClass', 'disabled' => ($is_submitted ? 'disabled' : ''), 'id' => 'wrkhrsClass' . $date_id ."_". $eachproject['pid']));
+								?>
+							</div>
+							<div class="span1" style="margin-left:10px; ">
+								<?php echo CHTML::label('Minutes', '', array('style' => 'width:50px;font-weight:bold; ')); ?>
+								<?php
+									$arrMnts = array();
+									for($m=0; $m<=59; $m+=5) {
+										$m = (strlen($m) < 2) ? "0".$m : $m;
+										$arrMnts[$m] = $m;
+									}
+									echo CHTML::dropDownList('mnts[]', '', $arrMnts, array('style' => 'width:50px;  ', 'class'=>'wrkmntClass', 'disabled' => ($is_submitted ? 'disabled' : ''), 'id' => 'wrkminsClass' . $date_id ."_". $eachproject['pid']));
+								?>
+							</div>
+							<div class="span2">
+								<?php echo CHTML::label('Comment :', '', array('style' => 'width:130px;font-weight:bold; ')); ?>
+								<?php echo CHtml::textArea('procomment[]','', array('style' => ' height:40px; width:200px; ','class' =>'DayComment', 'disabled' => ($is_submitted ? 'disabled' : ''), 'id' => 'comment' . $date_id ."_". $eachproject['pid'] ,'onclick'=>'checkLength()'));
+								?>
+							</div>
+							<div class="span2">
+								<?php echo CHTML::label('&nbsp;', '', array('style' => 'width:20px;font-weight:bold; ')); ?>
+								<?php
+								if(!$is_submitted) {
+									echo '<a href="javascript:void(0)"  class="showbox" data-nxt="' . $date_id ."_". $nxt . '" data-val="' . $date_id ."_". $eachproject['pid'] . '" >'
+										. '<img src="' . $img_path . '" style="width:20px;">' . '</a>';
+								}
+								?>
+							</div>
+						</div>
+						<hr style=" margin-top: 0px; margin-bottom: 3px;"/>
+					</div>
+				<?php
+				$i++;
+				break;
+			}
+			?>
+			</div>
+		<?php } ?>
+	<?php
     //}
     ?>
     <div class="row">
         <input type="hidden" name="totalPrjcts" value="<?php echo $i; ?>" />
         <input type="hidden" name="pidsid"  id="pidsid" />
-        <?php echo CHTML::label('Total Hours :', '', array('style' => 'font-weight:bold; ')); ?>
+        <?php echo CHTML::label('Total Hours :', '' ,array('style' => 'font-weight:bold; ')); ?>
         <?php echo CHTML::textField('tworkedHrs', '', array('class' => 'tworkedHrs', 'disabled' => 'disabled')); ?>
     </div>
 
     <!--        <div class="row">
-    <?php // echo CHTML::label('Add Comment', '');  ?>
+    <?php// echo CHTML::label('Add Comment', ''); ?>
     <?php //echo CHtml::textArea('dayComment', '', array('style' => 'width:500px;height:150px;'));  ?>
             </div>-->
 
-<?php if ($btnShow) { ?>
-        <div class="row">
-        <?php
-        if (!$is_submitted) {
-            echo CHtml::submitButton('Save', array('id' => 'addC', 'style' => 'margin-top:10px;'));
-        }
+	<?php if ($btnShow) { ?>
+    <div class="row">
+		<?php
+			if(!$is_submitted) {
+				echo CHtml::submitButton('Save', array('id' => 'addC', 'style' => 'margin-top:10px;'));
+			}
 //			if(!$is_submitted) {
 //			//if(!$is_submitted && ( strtotime(date('Y-m-d')) >= strtotime("saturday this week") && strtotime(date('Y-m-d')) <= strtotime("monday next week 1 pm") ) ) {
 //				echo CHtml::submitButton('Submit', array('id' => 'btnSubmit', 'style' => 'margin-top:10px;', 'value'=>'Submit'));
 //			}
-        ?>
-        </div>
-        <?php } ?>
-        <?php
-        Yii::app()->clientScript->registerScript('comment', "
+		?>
+    </div>
+	<?php } ?>
+    <?php
+    Yii::app()->clientScript->registerScript('comment', "
         $(document).on('change','.wrkmntClass, .wrkhrsClass', function(){
 			getWrkHoursTotal();
         });
@@ -384,13 +438,20 @@ Yii::app()->clientScript->registerCssFile(
 		clonned.find('#subproclass'+oldId).each(function() {
 			$(this).attr('id',$(this).attr('id').replace('subproclass'+oldId,'subproclass'+newId));
 		});
-
+		
 		clonned.find('#subtasks'+oldId).each(function() {
-			$(this).attr('id',$(this).attr('id').replace('subtasks'+oldId,'subtasks'+newId));
-		});
+            $(this).attr('id',$(this).attr('id').replace('subtasks'+oldId,'subtasks'+newId));
+		      
+              
+        });
 
 		clonned.find('#wrkhrs'+oldId).each(function() {
-			$(this).attr('id',$(this).attr('id').replace('wrkhrs'+oldId,'wrkhrs'+newId));
+            $(this).attr('id',$(this).attr('id').replace('wrkhrs'+oldId,'wrkhrs'+newId));
+		});
+		
+		clonned.find('#remhrs'+oldId).each(function() {
+
+			$(this).attr('id',$(this).attr('id').replace('remhrs'+oldId,'remhrs'+newId));
 		});
 
 		clonned.find('#comment'+oldId).each(function() {
@@ -401,6 +462,7 @@ Yii::app()->clientScript->registerCssFile(
 		clonned.find('textarea').text('');
 
 		clonned.appendTo(_this.parent());
+        $('#subtasks'+newId).val('');
 		//var nextcls = $(this).data('nxt');
 		//$('.hdshow_'+nextcls).show();
     });
@@ -408,8 +470,9 @@ Yii::app()->clientScript->registerCssFile(
 	$(document).on('change','.proclass',function(){
 		if($(this).val() != '')
        	{
-       		var thisId = $(this).attr('id');
+       		var thisId = $(this).attr('id');           
            	var sub_id=$(this).val();
+			
            	var nextcls = $(this).attr('nxt');
            //	var this = $(this).parent('id');
 
@@ -429,14 +492,14 @@ Yii::app()->clientScript->registerCssFile(
                //  },
 	           success: function(data)
 	               {
-
+					 console.log(data);
 	                   	if(data.status=='SUCCESS')
 	                   	{
 	                        var dropDown = '<option value=>Please Select Sub Project</option>';
 							//var workhours = data.workhours;
 	                        $.each(data.result, function(key, val) {
 	                            dropDown+='<option value='+key+'>'+val+'</option>';
-								//localStorage.setItem( 'hours-'+key, workhours[key] );
+								//localStorage.setItem( 'hours-'+key, workhours[key] );								
 
 	                        });
 							//console.log(dropDown);
@@ -490,7 +553,7 @@ Yii::app()->clientScript->registerCssFile(
        {
 
            var thisId = $(this).attr('id');
-
+           
            var sub_id=$(this).val();
           //alert('subproclass'+thisId);
            $('#subproclass'+thisId).removeAttr('disabled');
@@ -535,7 +598,7 @@ Yii::app()->clientScript->registerCssFile(
        {
          	var thisId = $(this).attr('id');
            var is = thisId.substr(11, 13);
-           var sub_id=$(this).val();
+           var sub_id=$(this).val(); 
            //  alert(is);
            $('#subtasks'+is).removeAttr('disabled');
            $.ajax({
@@ -554,12 +617,12 @@ Yii::app()->clientScript->registerCssFile(
 			   console.log(data);
                    if(data.status=='SUCCESS')
                    {
-
+                   	 
                         var dropDown = '<option value=>Please Select Sub Project</option>';
 						//var workhours = data.workhours;
                         $.each(data.result, function(key, val) {
                             dropDown+='<option value='+key+' hrmin='+data.workhours[key]+'>'+val+'</option>';
-
+							
 
                         });
 						 // $(this).parents('.row').find('.sub-task').html(dropDown);
@@ -574,8 +637,10 @@ Yii::app()->clientScript->registerCssFile(
 
        }
     });
+	
 
 	$(document).on('change', '.sub-task', function(){
+		
 		//console.log('here')
 		/*var hrs = 0;
 		var hrtime = 0;
@@ -592,7 +657,7 @@ Yii::app()->clientScript->registerCssFile(
 		}
 		if(hrs>24)
 		hrs=23;
-
+		
 		var optstr = '';
 		var optminstr = '';
 		for(var h=0;h<=hrs;h++){
@@ -605,19 +670,95 @@ Yii::app()->clientScript->registerCssFile(
 		$('#wrkhrsClass'+thisid[1]).html(optstr);
 		$('#wrkminsClass'+thisid[1]).html(optminstr);*/
 	});
+	
+	//prab
+	
+    $(window).load(function(e){
+		// $('.sub-task').change();
+	}); 
+	
+	$(document).on('change', '.sub-task', function(e){
+        var changeid = $(this).attr('id');
+        var flag = false;
+        var values = [];
+        $('.sub-task').each(function () {
+            if ($.inArray($(this).val(), values) >= 0) {
+                alert('You have already selected this task above. Please check and add the appropriate hours.');
+                $('#addC').attr('disabled', true);
+                $('#'+changeid).val('');
+                var flag = true;
+            } else {
+                $('#addC').attr('disabled', false);
+                var flag = false;
+            }
+            values.push(this.value);
+        });
 
+        if(flag == true)
+        {
+            return false;
+        }
+		var thisid = $(this).attr('id').split('subtasks');
+		onChangeSubTask(thisid);
+	});
+	
+	function onChangeSubTask(thisid)
+	{
+		var project_id = $('.proclass').val();
+		var sub_project_id = $('.sub-project').val();
+		var sub_task_id = $('.sub-task').val();
+		var hour = '';
+		console.log(project_id+'--'+sub_project_id+'--'+sub_task_id);
+		$.ajax({
+               url: BASE_URL+'/daycomment/fetchRemainingHours',
+               type: 'POST',
+               dataType: 'json',
+               data:{ project_id: project_id,sub_project_id: sub_project_id,sub_task_id: sub_task_id},
+               success: function(data)
+               {
+					console.log(data);
+                   if(data.status==1)
+                   {
+                    
+						var hrs = data.hours;
+						if(hrs > 24)
+							hrs=23;
+						
+						var mins = data.mins;
+						var mins = 59;
+						
+						var optstr = '';
+						var optminstr = '';
+						for(var h=0;h<=hrs;h++){
+							
+							optstr = optstr+'<option value='+h+'>'+ h +'</option>';
+						}
+						for(var m=0;m<=mins;m++){
+							optminstr = optminstr+'<option value='+m+'>'+m+'</option>';
+						}
+						
+						$('#wrkhrsClass'+thisid[1]).html(optstr);
+						$('#wrkminsClass'+thisid[1]).html(optminstr);
+						$('#remhrs'+thisid[1]).val(data.difference);
+						 
+                   }
+               },
+               error: function(XMLHttpRequest, data, errorThrown){
+               },
+        });
+	}
 	$(document).on('change', '.wrkhrsClass', function(){
-
+		
 		var thisattr = $(this).attr('id');
 		var maxhrs = $('#'+thisattr+' option:last').val();
 		var thisid = $(this).attr('id').split('wrkhrsClass');
 		if($(this).val()==maxhrs && $(this).val()!=23){
-
+			
 			//console.log('asdada'+thisid);
-			$('#wrkminsClass'+thisid[1]).attr('disabled',true);
+			$('#wrkminsClass'+thisid[1]).attr('disabled',true);	
 		}
 		else{
-			$('#wrkminsClass'+thisid[1]).removeAttr('disabled');
+			$('#wrkminsClass'+thisid[1]).removeAttr('disabled');	
 		}
 	});
            $('.datepicker').datepicker({
@@ -635,7 +776,7 @@ Yii::app()->clientScript->registerCssFile(
             var data = $('.selecting_weeks').val();
             if(data != '')
             {
-                window.location.replace('daycomment/index/selecting_date/'+data);
+                window.location.replace('CHelper::createUrl()/index/selecting_date/'+data);
             }
     });
 	$(document).on('change','.sub-project111',function(){
@@ -649,9 +790,9 @@ Yii::app()->clientScript->registerCssFile(
 		}
 		console.log(hrs);
 		console.log($(this).closest('.wrkhrsClass').val(hrs));
-
+		
 	});
-
+        
 function checkLength(){
     var textbox = document.getElementById('comment2018_06_25_9');
     if(textbox.value.length <= 10 && textbox.value.length >= 10){
@@ -665,52 +806,53 @@ function checkLength(){
 
 
        ", CClientScript::POS_READY);
-        ?>
-
-    <script>
-        $(document).ready(function () {
-            $('#addC').click(function (e) {
-                var isValid = true;
-                $('.DayComment,.wrkmntClass,.sub-task,.sub-project,.proclass').each(function () {
-                    if ($.trim($(this).val()) == '') {
-                        isValid = false;
-                        $(this).css({
-                            "border": "1px solid red",
-                            "background": "#FFCECE"
-                        });
-                    } else {
-                        $(this).css({
-                            "border": "",
-                            "background": ""
-                        });
-                    }
-                });
-                if (isValid == false)
-                    e.preventDefault();
-
+    ?>
+    
+<script>
+ $(document).ready(function () {
+  $('#addC').click(function (e) {
+            var isValid = true;
+            $('.DayComment,.wrkmntClass,.sub-task,.sub-project,.proclass').each(function () {
+                if ($.trim($(this).val()) == '') {
+                    isValid = false;
+                    $(this).css({
+                        "border": "1px solid red",
+                        "background": "#FFCECE"
+                    });
+                }
+                else {
+                    $(this).css({
+                        "border": "",
+                        "background": ""
+                    });
+                }
             });
-
-            // $(document).on('change','.proclass',function(){
-            //      $(function () {
-            //         $('.proclass').on('click', function () {
-            // //        var $div = $('div[id^="klon"]:last');
-
-            //             var data = $("#tb tr:eq(1)").clone(true).appendTo("#tb");
-            //             data.find("input").val('');
-            //         });
-            //         $(document).on('click', '.remove', function () {
-            //             var trIndex = $(this).closest("tr").index();
-            //             if (trIndex > 0) {
-            //                 $(this).closest("tr").remove();
-            //             } else {
-            //                 alert("Sorry!! Can't remove first row!");
-            //             }
-            //         });
-            //     });
-
+            if (isValid == false)
+                e.preventDefault();
 
         });
-    </script>
+        
+        // $(document).on('change','.proclass',function(){
+//      $(function () {
+//         $('.proclass').on('click', function () {
+// //        var $div = $('div[id^="klon"]:last');
+
+//             var data = $("#tb tr:eq(1)").clone(true).appendTo("#tb");
+//             data.find("input").val('');
+//         });
+//         $(document).on('click', '.remove', function () {
+//             var trIndex = $(this).closest("tr").index();
+//             if (trIndex > 0) {
+//                 $(this).closest("tr").remove();
+//             } else {
+//                 alert("Sorry!! Can't remove first row!");
+//             }
+//         });
+//     });
+	
+	
+});
+</script>
 </form>
 
 <!--  $(document).on('change', '.subclass', function(){
@@ -718,7 +860,7 @@ function checkLength(){
        {
 
             var spid=$(this).val();
-
+           
             $.ajax({
                url: BASE_URL+'/daycomment/GetSubPStatus',
                type: 'POST',
@@ -733,7 +875,7 @@ function checkLength(){
                success: function(data)
                {
                	    $.each(val,function(data){
-          console.log(data);
+          console.log(data);     
 });
                	//alert(data);
                    if(data.status=='UNSUCCESS')
@@ -746,4 +888,4 @@ function checkLength(){
         });
 
        }
-    });-->
+    });--> 
