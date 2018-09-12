@@ -156,13 +156,13 @@ class SubTask extends CActiveRecord
 		$criteria->compare('is_approved',$this->is_approved);
 		$criteria->compare('t.created_at',$this->created_at,true);
 		$criteria->compare('is_delete',$this->is_delete);
-                $criteria->order = 't.created_at desc';
                 $criteria->join = " INNER JOIN tbl_sub_project as sp on t.sub_project_id = sp.spid "
                                   ." INNER JOIN tbl_pid_approval as pa on t.pid_approval_id = pa.pid_id "
                                   ." INNER JOIN tbl_project_management as pm on t.project_id = pm.pid "
                                   ." INNER JOIN tbl_task as tt on t.task_id = tt.task_id "
                                   ." INNER JOIN tbl_employee as emp on t.emp_id = emp.emp_id "
                                   ." INNER JOIN tbl_employee as cEmp on t.created_by = cEmp.emp_id ";
+                $criteria->order = 't.stask_id desc';
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
