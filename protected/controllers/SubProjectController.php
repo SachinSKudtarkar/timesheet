@@ -32,7 +32,7 @@ class SubProjectController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'admin','fetchProjectId','updateLog'),
+                'actions' => array('create', 'update', 'admin','fetchProjectId','updateLog','updateTask'),
                 'expression' => 'CHelper::isAccess("PROJECTS", "full_access")',
                 'users' => array('@'),
             ),
@@ -316,6 +316,59 @@ class SubProjectController extends Controller {
         }
     
         echo 'Log has been updated successfully';
+        die;
+
+    }
+
+    /**
+     * Updates the pid approval with the correct task ids and sub task with updated sub task ids 
+     */
+    public function actionupdateTask($id) {
+        
+        if($id == 1) {
+
+            $pids = PidApproval::model()->findAll();
+                
+            foreach ($pids as $key => $value) {
+                
+                $modelSP = SubProject::model()->findByPk($value->sub_project_id);
+                
+                if(!empty($modelSP->project_id)){
+
+                    $modelPid = PidApproval::model()->findByPk($value->pid_id);
+                    echo $modelPid->project_task_id.'-->';
+                    $modelPid->project_task_id = $modelSP->project_id.sprintf('%03d',$value->pid_id);
+                    echo $modelPid->project_task_id.'<br>';
+                    $modelPid->save(false);    
+                    
+                }
+            }
+            echo 'Task has been updated successfully';
+        } else if($id == 2) {
+
+            $subtasks = SubTask::model()->findAll();
+                
+            foreach ($subtasks as $key => $value) {
+                
+                $modelPA = PidApproval::model()->findByPk($value->pid_approval_id);
+                
+                if(!empty($modelPA->project_task_id)){
+
+                    $modelST = SubTask::model()->findByPk($value->stask_id);
+                    echo $modelST->sub_task_id.'-->';
+                    $modelST->sub_task_id = $modelPA->project_task_id.sprintf('%02d',$value->task_id).sprintf('%03d',$value->stask_id);
+                    echo $modelST->sub_task_id.'<br>';
+                    $modelST->save(false);    
+                    
+                }
+            }
+            echo 'Sub Task has been updated successfully';
+
+
+        }
+        
+    
+    
         die;
 
     }
