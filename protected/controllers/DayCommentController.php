@@ -1,4 +1,6 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors',0);
 
 class DayCommentController extends Controller {
 
@@ -60,7 +62,7 @@ class DayCommentController extends Controller {
                 'users' => array('@'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'addcomment', 'GetProjName', 'getIrregularEmp', 'sendReminder', 'AdminAll', 'NotFilledStatus', 'fetchSubProject', 'fetchSubTask', 'StatusReport', 'getSubPStatus', 'getEmployeeList'),
+                'actions' => array('create', 'update', 'addcomment', 'GetProjName', 'getIrregularEmp', 'sendReminder', 'AdminAll', 'NotFilledStatus', 'fetchSubProject', 'fetchSubTask', 'StatusReport', 'getSubPStatus', 'getEmployeeList', 'fetchRemainingHours'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -253,6 +255,7 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.stask_id";
      * Lists all models.
      */
     public function actionIndex() {
+        
         if (isset(Yii::app()->session['login']['user_id'])) {
             $current_user_id = Yii::app()->session['login']['user_id'];
             $projectData = $combinearray = array();
@@ -1067,10 +1070,10 @@ where  st.emp_id = {$userId} group by st.stask_id"; //pa.approved = 2  and
 
                 if (!empty($res2['stask_id'])) {
                     $query = "SELECT sec_to_time(sum(time_to_sec(da.hours))) as hours ,sb.est_hrs,sb.stask_id,sb.sub_task_name
-										from tbl_day_comment as da right join tbl_sub_task as sb on (da.stask_id=sb.stask_id ) right join
-										tbl_project_management as pm on (da.pid=pm.pid) right join tbl_employee em on (da.emp_id=em.emp_id)
-								WHERE  da.emp_id ={$userId} and da.stask_id = {$val['stask_id']}
-								group by da.stask_id order by em.emp_id"; // and sb.spid = ra.spid
+                                        from tbl_day_comment as da right join tbl_sub_task as sb on (da.stask_id=sb.stask_id ) right join
+                                        tbl_project_management as pm on (da.pid=pm.pid) right join tbl_employee em on (da.emp_id=em.emp_id)
+                                WHERE  da.emp_id ={$userId} and da.stask_id = {$val['stask_id']}
+                                group by da.stask_id order by em.emp_id"; // and sb.spid = ra.spid
                     $res1 = Yii::app()->db->createCommand($query)->queryRow();
 
                     $newData[] = $res1;
@@ -1104,14 +1107,17 @@ where  st.emp_id = {$userId} group by st.stask_id"; //pa.approved = 2  and
             $list = CHtml::listData($nn, 'stask_id', 'sub_task_name');
             //$hourslist = CHtml::listData($hours);
             //$hourslist = CHtml::listData($nn, 's_task_id','hours');
+            
         } else {
             $list = CHtml::listData($res, 'stask_id', 'sub_task_name');
             $hourslist = CHtml::listData($res, 'stask_id', 'hours');
+            echo 'asdasd';die;
         }
 
 
         $data['result'] = $list;
         $data['workhours'] = $hours;
+        
         $data['status'] = 'SUCCESS';
         if(!empty($data)){
         if($_POST['pid'])
@@ -1249,6 +1255,52 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.sub_project_i
         echo CHtml::dropDownList("Employee", "", CHtml::listData($list, 'employee', 'employee'));
         // echo CHtml::dropDownList('please select', CHtml::listData($list));
         // echo  json_encode($list);
+    }
+    
+    public function actionfetchRemainingHours()
+    {
+        $project_id = $_POST['project_id'];
+        $sub_project_id = $_POST['sub_project_id'];
+        $sub_task_id = $_POST['sub_task_id'];
+        
+        $query = "SELECT SEC_TO_TIME((est_hrs*60)*60) as total_task_hrs from tbl_sub_task where sub_project_id = {$sub_project_id} and stask_id = {$sub_task_id}";
+        $task_total_time = Yii::app()->db->createCommand($query)->queryRow();
+        
+        $query_utilized = "SELECT  SEC_TO_TIME( SUM( TIME_TO_SEC( `hours` ) ) ) AS utilized_hrs  FROM tbl_day_comment where spid={$sub_project_id} and stask_id = {$sub_task_id}";
+        $query_utilized_hrs = Yii::app()->db->createCommand($query_utilized)->queryRow();
+        
+        $time_diff = "SELECT TIMEDIFF(SEC_TO_TIME((est_hrs*60)*60),SEC_TO_TIME( SUM( TIME_TO_SEC( `hours` ) ) )) as difference, SEC_TO_TIME((est_hrs*60)*60) as est_hrs, SEC_TO_TIME( SUM( TIME_TO_SEC( `hours` ) ) ) AS utilized_hrs  from tbl_sub_task as st inner join tbl_day_comment dc on dc.stask_id = st.stask_id where sub_project_id = {$sub_project_id} and st.stask_id = {$sub_task_id}";
+        // echo $time_diff;die;
+        $time_diff_hrs = Yii::app()->db->createCommand($time_diff)->queryRow();
+        
+        if(!empty($time_diff_hrs['difference']))
+        {
+            $time_diff_hrs_mins_q = "SELECT HOUR('{$time_diff_hrs['difference']}') as hours, MINUTE('{$time_diff_hrs['difference']}') as mins"; 
+        }else{
+            $time_diff_hrs_mins_q = "SELECT HOUR('{$time_diff_hrs['est_hrs']}') as hours, MINUTE('{$time_diff_hrs['est_hrs']}') as mins"; 
+
+        }
+        
+        $time_diff_hrs_mins = Yii::app()->db->createCommand($time_diff_hrs_mins_q)->queryRow(); 
+        
+        if (!empty($time_diff_hrs)) {
+            if(!empty($time_diff_hrs['difference']))
+            {
+                $time_array['difference'] = $time_diff_hrs['difference'];
+            }else{
+                $time_array['difference'] = $time_diff_hrs['est_hrs'];
+            }
+            
+            $time_array['hours'] = $time_diff_hrs_mins['hours'];
+            $time_array['mins'] = $time_diff_hrs_mins['mins'];
+            
+            $time_array['status'] = 1;
+        }else{
+            $time_array['status'] = 0;
+        }
+        
+        echo json_encode($time_array);die;
+        
     }
 
 }
