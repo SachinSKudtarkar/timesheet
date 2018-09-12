@@ -73,7 +73,20 @@ $(document).ready(function() {
     };
 
     RemoveRowL2Ring = function(event) {
-        $(this).closest('.row_copy_l2_ring').remove();
+        // alert('sasdasd');
+        var r = confirm("Are you sure you want to delete the sub task ?");
+        if (r == true) {
+            var taskid = $(this).closest('.row_copy_l2_ring').find('#sub_task_name').data('taskid');
+            if($("#deleted_stask_id").val() == '')
+            {
+                $("#deleted_stask_id").val(taskid);    
+            }else{
+                $("#deleted_stask_id").val($("#deleted_stask_id").val()+','+taskid);
+            }
+            
+            $(this).closest('.row_copy_l2_ring').remove();
+        }
+        
     };
 
     $(document).on('click','.customAddMorel2_ring', makeCloneL2Ring);

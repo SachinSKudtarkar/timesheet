@@ -168,7 +168,12 @@ class PidApprovalController extends Controller {
         $subtask = Yii::app()->db->createCommand($query1)->queryAll();
 
         if (isset($_POST['PidApproval'])) {
-
+            if(isset($_POST['deleted_stask_id']) && !empty($_POST['deleted_stask_id']))
+            {
+                $delete_qry = "delete from tbl_sub_task where stask_id in ({$_POST['deleted_stask_id']})";
+                Yii::app()->db->createCommand($delete_qry)->execute();
+            }
+        
             $model->project_id = $_POST['project_id'];
             $model->sub_project_id = $_POST['sub_project_id'];
             $model->approved = 2;
