@@ -682,6 +682,7 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.stask_id";
                 $tblString .= "</tr>";
                 // print_r($all_data);exit;
             }
+            // print_r($all_data);die;
             $totalworkedHrs = array_sum($arrWrkhrs);
             $tblString .= "<tr bgcolor='#F4A460'><td></td><td><b>TOTAL</b></td><td></td><td></td><td></td><td><b>" . $totalworkedHrs . "</b></td><td></td></tr>";
             $tblString .= "</tbody></table>";
