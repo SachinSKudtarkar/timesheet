@@ -129,6 +129,7 @@ $cs->registerCssFile(Yii::app()->baseUrl . "/css/jquery-ui-timepicker-addon.css"
 <script type="text/javascript">
     $(document).ready(function() {
         $('#projectreports').DataTable( {
+            ordering: false,
             dom: 'Bfrtip',
             buttons: [
                 'copy','excel'

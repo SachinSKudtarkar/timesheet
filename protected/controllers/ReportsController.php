@@ -71,7 +71,7 @@ class ReportsController extends Controller {
                             st.sub_task_id,
                             st.sub_task_name,
                             st.est_hrs,
-                            (SELECT  SEC_TO_TIME( SUM( TIME_TO_SEC( `hours` ) ) )  FROM tbl_day_comment where spid=sp.spid) as utilized_hours,
+                            (SELECT  SEC_TO_TIME( SUM( TIME_TO_SEC( `hours` ) ) )  FROM tbl_day_comment where stask_id=st.stask_id) as utilized_hours,
                             (Select concat(first_name,' ',last_name) from tbl_employee where emp_id = st.created_by) as created_by,
                             st.created_at
                         from tbl_sub_task st
