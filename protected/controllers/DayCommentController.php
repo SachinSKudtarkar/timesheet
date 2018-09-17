@@ -1112,7 +1112,7 @@ where  st.emp_id = {$userId} group by st.stask_id"; //pa.approved = 2  and
         } else {
             $list = CHtml::listData($res, 'stask_id', 'sub_task_name');
             $hourslist = CHtml::listData($res, 'stask_id', 'hours');
-            echo 'asdasd';die;
+            
         }
 
 
