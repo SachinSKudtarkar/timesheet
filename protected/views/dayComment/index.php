@@ -89,8 +89,9 @@ Yii::app()->clientScript->registerCssFile(
                                             if (date('m', $time)==$month)       
                                                 $list[date('Y-m-d',$time)]=date('Y-m-d', $time);
                                         }
-					echo CHtml::dropDownList('selecting_weeks', $date,$list, array('class' => 'selecting_weeks', 'empty' => 'Select Value', 'options' => array($selecting_date => array('selected' => true))));
-
+					echo CHtml::dropDownList('selecting_weeks', $date,$list, array('class' => 'selecting_weeks', 'empty' => 'Select Value','options' => array($selecting_date => array('selected' => true))));?>
+                    <a id="changeurl" style="display:none;border-radius: 4px;    padding: 6px 12px;font-size:14px;margin-left:10px;text-decoration:none;background: #000;color:#fff">Get Records</a>
+                    <?php 
 					$btnShow = FALSE;
 					//$is_submitted = TRUE;
 //					if (strtotime($selecting_date) >= strtotime("monday this week") ) {
@@ -257,6 +258,7 @@ Yii::app()->clientScript->registerCssFile(
 						</div>	
 						
 						<hr style=" margin-top: 0px; margin-bottom: 3px;"/>
+                        
 					</div>
 				<?php
 				$i++;
@@ -776,7 +778,8 @@ Yii::app()->clientScript->registerCssFile(
             var data = $('.selecting_weeks').val();
             if(data != '')
             {
-                window.location.replace('CHelper::createUrl()/index/selecting_date/'+data);
+                $('#changeurl').attr('href',BASE_URL+'/daycomment/index/selecting_date/'+data).trigger('click');
+                $('#changeurl').css('display','inline-block');
             }
     });
 	$(document).on('change','.sub-project111',function(){
@@ -810,6 +813,7 @@ function checkLength(){
     
 <script>
  $(document).ready(function () {
+  
   $('#addC').click(function (e) {
             var isValid = true;
             $('.DayComment,.wrkmntClass,.sub-task,.sub-project,.proclass').each(function () {
@@ -850,8 +854,23 @@ function checkLength(){
 //         });
 //     });
 	
-	
+    // $("#selecting_weeks").on('change',function(){
+    //     var date = $(this).val();
+    //     alert(date);
+    //     // alert('asdasd');document.location.href='https://www.google.com';return false;
+    //     $('#changeurl').attr('href',window.location.href+'/foo');
+    //     alert(window.location.href);return false;
+    // });	
 });
+
+
+ function getDateRecords(element){
+    var date = $(element).val();
+    alert(date);
+    // alert('asdasd');document.location.href='https://www.google.com';return false;
+    window.location.href = window.location.href+'/foo';
+    alert(window.location.href);return false;
+ }
 </script>
 </form>
 
