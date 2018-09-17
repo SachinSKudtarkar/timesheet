@@ -31,7 +31,7 @@ class ReportsController extends Controller {
                 'users' => array('@'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update','getReports'),
+                'actions' => array('create', 'update','getReports','getTimesheet'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -84,6 +84,44 @@ class ReportsController extends Controller {
         $records = Yii::app()->db->createCommand($getRecords)->queryAll();
 
         $this->render('projectreports', array(
+            'records' => $records,
+        ));
+    }
+
+    public function actiongetTimesheet(){
+        $this->layout = 'column1';
+        $condition = '';
+        if(isset($_POST['from_date']) && isset($_POST['to_date']))
+        {
+            $from_date = $_POST['from_date'];
+            $to_date = $_POST['to_date'];
+            $condition = "where dc.day BETWEEN '{$from_date}' and '{$to_date}'";
+        }
+
+        $getRecords = "select date(dc.day) as day, 
+                            pm.project_name as program_name,
+                            sp.sub_project_name as project_name,
+                            pa.project_task_id,
+                            pa.task_title,
+                            pa.task_description,
+                            st.sub_task_id, 
+                            st.sub_task_name,
+                            st.est_hrs,
+                            concat(em.first_name,' ',em.last_name) as username,
+                            dc.comment, 
+                            dc.hours
+                        from tbl_day_comment dc
+                        inner join tbl_project_management pm on pm.pid = dc.pid
+                        inner join tbl_sub_project sp on sp.spid = dc.spid
+                        inner join tbl_sub_task st on st.stask_id = dc.stask_id
+                        inner join tbl_pid_approval pa on pa.pid_id = st.pid_approval_id
+                        inner join tbl_employee em on em.emp_id = dc.emp_id ".$condition."
+                        order by dc.created_at desc";
+        
+
+        $records = Yii::app()->db->createCommand($getRecords)->queryAll();
+
+        $this->render('timesheetreports', array(
             'records' => $records,
         ));
     }
