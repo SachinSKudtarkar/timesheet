@@ -173,7 +173,7 @@ for ($h = 0; $h <= 999; $h++) {
                                 echo CHtml::dropDownList("emp_id[]", $value['emp_id'], $emp_list,array('class'=>'emp_id_bud','options'=>$emp_data['options_data'], 'required'=>'true'));
                             ?>
                         </td>
-                        <td><?php echo CHtml::textField('sub_task_name[]', $value['sub_task_name'], array('data-name' => 'sub_task_name', 'style' => "width:210px;", "name" => "data[0][sub_task_name]", "class" => "sub_task_name", 'required'=>'true')); ?></td>
+                        <td><?php echo CHtml::textField('sub_task_name[]', $value['sub_task_name'], array('data-name' => 'sub_task_name', 'style' => "width:210px;", "name" => "data[0][sub_task_name]", "class" => "sub_task_name", 'required'=>'true',"data-taskid"=>$value['stask_id'])); ?></td>
                         <td><?php echo CHtml::textField('st_jira_id[]', $value['st_jira_id'], array('data-name' => 'st_jira_id', 'style' => "width:210px;", "name" => "data[0][st_jira_id]", "class" => "st_jira_id", 'required'=>'true')); ?></td>
                         <td><?php echo CHtml::textField('st_inception_date[]', $value['st_inception_date'], array('id' => 'st_inception_date_'.$key,'data-name' => 'st_inception_date_', 'style' => "width:100px;", "name" => "data[0][st_inception_date]", "class" => "st_inception_date datepicker", 'required'=>true)); ?></td>
                         <td><?php echo CHtml::numberField('est_hrs[]', $value['est_hrs'], array('data-name' => 'est_hrs', 'style' => "width:50px;", "name" => "data[0][est_hrs]", "class" => "est_hrs wrkhrsClass", 'required'=>'true', 'min'=>1)); ?></td>
