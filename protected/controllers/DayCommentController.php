@@ -155,7 +155,7 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.stask_id";
         $hours = array();
         if (isset($res)) {
             foreach ($res as $ke => $val) {
-                $query1 = "select sec_to_time(sum(time_to_sec(hours))) as hours,est_hrs
+                $query1 = "select BIG_SEC_TO_TIME(sum(BIG_TIME_TO_SEC(hours))) as hours,est_hrs
                         from tbl_sub_task as st
                         inner join tbl_day_comment as dc on (st.stask_id =dc.stask_id)
                         where st.emp_id ={$userId} and dc.stask_id ={$val['stask_id']}
@@ -972,7 +972,7 @@ where  st.emp_id = {$userId} group by st.stask_id"; //pa.approved = 2  and
         $hours = $newData = array();
         if (isset($res)) {
             foreach ($res as $ke => $val) {
-                $query1 = "select sec_to_time(sum(time_to_sec(hours))) as hours,est_hrs
+                $query1 = "select BIG_SEC_TO_TIME(sum(BIG_TIME_TO_SEC(hours))) as hours,est_hrs
                         from tbl_sub_task as st
                         inner join tbl_day_comment as dc on (st.stask_id =dc.stask_id)
                         where st.emp_id ={$userId} and dc.stask_id ={$val['stask_id']}
@@ -1070,7 +1070,7 @@ where  st.emp_id = {$userId} group by st.stask_id"; //pa.approved = 2  and
 
 
                 if (!empty($res2['stask_id'])) {
-                    $query = "SELECT sec_to_time(sum(time_to_sec(da.hours))) as hours ,sb.est_hrs,sb.stask_id,sb.sub_task_name
+                    $query = "SELECT BIG_SEC_TO_TIME(sum(BIG_TIME_TO_SEC(da.hours))) as hours ,sb.est_hrs,sb.stask_id,sb.sub_task_name
                                         from tbl_day_comment as da right join tbl_sub_task as sb on (da.stask_id=sb.stask_id ) right join
                                         tbl_project_management as pm on (da.pid=pm.pid) right join tbl_employee em on (da.emp_id=em.emp_id)
                                 WHERE  da.emp_id ={$userId} and da.stask_id = {$val['stask_id']}
@@ -1264,20 +1264,18 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.sub_project_i
         $sub_project_id = $_POST['sub_project_id'];
         $sub_task_id = $_POST['sub_task_id'];
         
-        $query = "SELECT SEC_TO_TIME((est_hrs*60)*60) as total_task_hrs from tbl_sub_task where sub_project_id = {$sub_project_id} and stask_id = {$sub_task_id}";
-        $task_total_time = Yii::app()->db->createCommand($query)->queryRow();
+        // $time_diff = "SELECT TIMEDIFF(BIG_SEC_TO_TIME((est_hrs*60)*60),BIG_SEC_TO_TIME( SUM( BIG_TIME_TO_SEC( `hours` ) ) )) as difference, BIG_SEC_TO_TIME((est_hrs*60)*60) as est_hrs, BIG_SEC_TO_TIME( SUM( BIG_TIME_TO_SEC( `hours` ) ) ) AS utilized_hrs  from tbl_sub_task as st inner join tbl_day_comment dc on dc.stask_id = st.stask_id where sub_project_id = {$sub_project_id} and st.stask_id = {$sub_task_id}";
+        $time_diff = "SELECT BIG_SEC_TO_TIME((est_hrs*60)*60) as est_hrs, BIG_SEC_TO_TIME( SUM( BIG_TIME_TO_SEC( `hours` ) ) ) AS utilized_hrs  from tbl_sub_task as st inner join tbl_day_comment dc on dc.stask_id = st.stask_id where sub_project_id = {$sub_project_id} and st.stask_id = {$sub_task_id}";
+
         
-        $query_utilized = "SELECT  SEC_TO_TIME( SUM( TIME_TO_SEC( `hours` ) ) ) AS utilized_hrs  FROM tbl_day_comment where spid={$sub_project_id} and stask_id = {$sub_task_id}";
-        $query_utilized_hrs = Yii::app()->db->createCommand($query_utilized)->queryRow();
-        
-        $time_diff = "SELECT TIMEDIFF(SEC_TO_TIME((est_hrs*60)*60),SEC_TO_TIME( SUM( TIME_TO_SEC( `hours` ) ) )) as difference, SEC_TO_TIME((est_hrs*60)*60) as est_hrs, SEC_TO_TIME( SUM( TIME_TO_SEC( `hours` ) ) ) AS utilized_hrs  from tbl_sub_task as st inner join tbl_day_comment dc on dc.stask_id = st.stask_id where sub_project_id = {$sub_project_id} and st.stask_id = {$sub_task_id}";
-        // echo $time_diff;die;
         $time_diff_hrs = Yii::app()->db->createCommand($time_diff)->queryRow();
         
-        if(!empty($time_diff_hrs['difference']))
+        $difference = DayComment::calculateTimeDiff($time_diff_hrs['est_hrs'],$time_diff_hrs['utilized_hrs']);
+
+
+        if(empty($time_diff_hrs['difference']))
         {
-            $time_diff_hrs_mins_q = "SELECT HOUR('{$time_diff_hrs['difference']}') as hours, MINUTE('{$time_diff_hrs['difference']}') as mins"; 
-        }else{
+            
             $time_diff_hrs_mins_q = "SELECT HOUR('{$time_diff_hrs['est_hrs']}') as hours, MINUTE('{$time_diff_hrs['est_hrs']}') as mins"; 
 
         }
@@ -1285,15 +1283,10 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.sub_project_i
         $time_diff_hrs_mins = Yii::app()->db->createCommand($time_diff_hrs_mins_q)->queryRow(); 
         
         if (!empty($time_diff_hrs)) {
-            if(!empty($time_diff_hrs['difference']))
-            {
-                $time_array['difference'] = $time_diff_hrs['difference'];
-            }else{
-                $time_array['difference'] = $time_diff_hrs['est_hrs'];
-            }
-            
-            $time_array['hours'] = $time_diff_hrs_mins['hours'];
-            $time_array['mins'] = $time_diff_hrs_mins['mins'];
+
+            $time_array['difference'] = $difference['difference'];
+            $time_array['hours'] = $difference['hours'];
+            $time_array['mins'] = $difference['mins'];
             
             $time_array['status'] = 1;
         }else{

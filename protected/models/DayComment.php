@@ -357,18 +357,42 @@ class DayComment extends CActiveRecord {
 
     public function getDifference($sub_project_id,$sub_task_id)
     {
-        $time_diff = "SELECT TIMEDIFF(SEC_TO_TIME((est_hrs*60)*60),SEC_TO_TIME( SUM( TIME_TO_SEC( `hours` ) ) )) as difference, SEC_TO_TIME((est_hrs*60)*60) as est_hrs, SEC_TO_TIME( SUM( TIME_TO_SEC( `hours` ) ) ) AS utilized_hrs  from tbl_sub_task as st inner join tbl_day_comment dc on dc.stask_id = st.stask_id where sub_project_id = {$sub_project_id} and st.stask_id = {$sub_task_id}";
-        // echo $time_diff;die;
+        $time_diff = "SELECT TIMEDIFF(BIG_SEC_TO_TIME((est_hrs*60)*60),BIG_SEC_TO_TIME( SUM( BIG_TIME_TO_SEC( `hours` ) ) )) as difference, BIG_SEC_TO_TIME((est_hrs*60)*60) as est_hrs, BIG_SEC_TO_TIME( SUM( BIG_TIME_TO_SEC( `hours` ) ) ) AS utilized_hrs  from tbl_sub_task as st inner join tbl_day_comment dc on dc.stask_id = st.stask_id where sub_project_id = {$sub_project_id} and st.stask_id = {$sub_task_id}";
+        
         $time_diff_hrs = Yii::app()->db->createCommand($time_diff)->queryRow();
             
-        $difference['difference'] = $time_diff_hrs['difference'];
-        $dif_exp = explode(":",$time_diff_hrs['difference']);
-        $difference['hours'] = $dif_exp[0];
-        $difference['mins'] = $dif_exp[1];
-        $difference['secs'] = $dif_exp[2];
+        $difference = $this->calculateTimeDiff($time_diff_hrs['est_hrs'],$time_diff_hrs['utilized_hrs']);
+        // $difference['difference'] = $time_diff_hrs['difference'];
+        // $dif_exp = explode(":",$time_diff_hrs['difference']);
+        // $difference['hours'] = $dif_exp[0];
+        // $difference['mins'] = $dif_exp[1];
+        // $difference['secs'] = $dif_exp[2];
         $difference['estimated'] = $time_diff_hrs['est_hrs'];  
         // print_r(explode(":",$time_diff_hrs['difference'])[0]);die;
 
         return $difference;
+    }
+
+    public function calculateTimeDiff($time1,$time2)
+    {
+        // 10:30:00 - 1:20:00
+        $time1_arr = explode(':',$time1);
+        $time2_arr = explode(':',$time2);
+
+        $hours = $time1_arr[0] - $time2_arr[0];
+
+        if($time2_arr[1] > 0)
+        {
+            $mins = 60 - $time2_arr;
+            $hours--;
+        }
+        
+        $difference['hours'] = $hours;
+        $difference['mins'] = $mins;
+        $difference['secs'] = $secs;
+        $difference['difference'] = sprintf("%02d",$hours).":".sprintf("%02d",$mins).":".sprintf("%02d",$secs);
+
+        return $difference;
+
     }
 }

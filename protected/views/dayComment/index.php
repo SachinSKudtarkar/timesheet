@@ -706,11 +706,11 @@ Yii::app()->clientScript->registerCssFile(
 	
 	function onChangeSubTask(thisid)
 	{
-		var project_id = $('.proclass').val();
-		var sub_project_id = $('.sub-project').val();
-		var sub_task_id = $('.sub-task').val();
+		var project_id = $('#proclass'+thisid[1]).val();
+		var sub_project_id = $('#subproclass'+thisid[1]).val();
+		var sub_task_id = $('#subtasks'+thisid[1]).val();
 		var hour = '';
-		console.log(project_id+'--'+sub_project_id+'--'+sub_task_id);
+		// console.log(project_id+'--'+sub_project_id+'--'+sub_task_id);
 		$.ajax({
                url: BASE_URL+'/daycomment/fetchRemainingHours',
                type: 'POST',
