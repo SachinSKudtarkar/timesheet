@@ -137,7 +137,7 @@ class SubProjectController extends Controller {
 
 
         $hours_label['allocated'] = Yii::app()->db->createCommand("select sum(st.est_hrs) as allocated_hrs from tbl_sub_project sp left join tbl_sub_task st on st.sub_project_id  = sp.spid where spid = {$id}")->queryRow();
-        $hours_label['utilized'] = Yii::app()->db->createCommand("SELECT  SEC_TO_TIME( SUM( TIME_TO_SEC( `hours` ) ) ) AS utilized_hrs  FROM tbl_day_comment where spid={$id}")->queryRow();
+        $hours_label['utilized'] = Yii::app()->db->createCommand("SELECT  BIG_SEC_TO_TIME( SUM( BIG_TIME_TO_SEC( `hours` ) ) ) AS utilized_hrs  FROM tbl_day_comment where spid={$id}")->queryRow();
 
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
@@ -203,7 +203,18 @@ class SubProjectController extends Controller {
      * @param integer $id the ID of the model to be deleted
      */
     public function actionDelete($id) {
-        $this->loadModel($id)->delete();
+        $model = $this->loadModel($id);
+
+        $tasks = PidApproval::model()->findByAttributes(array('sub_project_id'=>$id));
+        if(count($tasks) <= 0){
+            $model->delete();
+            //$model->is_deleted  = 1;
+            //$model->save();
+        }else{
+            //Yii::app()->user->setFlash('failed', "Program can not be deleted.");
+            echo 'could not be deleted';
+            // could not be deleted;
+        }
 
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
         if (!isset($_GET['ajax']))
