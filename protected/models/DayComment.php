@@ -390,7 +390,7 @@ class DayComment extends CActiveRecord {
         $difference['hours'] = $hours;
         $difference['mins'] = $mins;
         $difference['secs'] = $secs;
-        $difference['difference'] = sprintf("%02d",$hours).":".sprintf("%02d",$mins).":".sprintf("%02d",$secs);
+        $difference['difference'] = sprintf("%02d",$hours).":".sprintf("%02d",$mins);
 
         return $difference;
 

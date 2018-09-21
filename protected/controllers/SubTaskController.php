@@ -113,11 +113,28 @@ class SubTaskController extends Controller
 	 */
 	public function actionDelete($id)
 	{
-		$this->loadModel($id)->delete();
+		// $this->loadModel($id)->delete();
 
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-		if(!isset($_GET['ajax']))
-			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+		// if(!isset($_GET['ajax']))
+			// $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+
+		$model = $this->loadModel($id);
+
+        $tasks = SubTask::model()->findByAttributes(array('pid_approval_id'=>$id));
+        if(count($tasks) <= 0){
+            $model->delete();
+            //$model->is_deleted  = 1;
+            //$model->save();
+        }else{
+            //Yii::app()->user->setFlash('failed', "Program can not be deleted.");
+            echo 'could not be deleted';
+            // could not be deleted;
+        }
+
+        // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
+        if (!isset($_GET['ajax']))
+            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
 	}
 
 	/**
