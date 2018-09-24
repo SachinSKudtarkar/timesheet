@@ -54,7 +54,7 @@ $cs->registerCssFile(Yii::app()->baseUrl . "/css/jquery-ui-timepicker-addon.css"
 </div>
 <?php $this->endWidget(); ?>
 
-<div class="row span10">
+<div class="row span12"; style="padding:25px;">
 <table class="table table-bordered responsive" id="projectreports">
     <thead>
         <tr>
@@ -114,12 +114,18 @@ $cs->registerCssFile(Yii::app()->baseUrl . "/css/jquery-ui-timepicker-addon.css"
 <script type="text/javascript">
     $(document).ready(function() {
         $('#projectreports').DataTable( {
+                // processing: true,
+                // serverSide: true,
+            // ajax:'<?php //echo CHelper::createUrl('reports/ajaxTimesheet') ?>', // json datasource
             ordering: false,
             dom: 'Bfrtip',
             buttons: [
                 'copy','excel'
-            ]
+            ],
+            deferRender:    true,
+            
         } );
+
 
         $('.datepicker').datepicker({
              dateFormat: 'yy-m-d',

@@ -171,6 +171,26 @@ class ExportableGridBehavior extends CBehavior {
         );
     }
 
+    public function renderExportGridButton_Report(CGridView $grid, $label = 'Export', $htmlOptions = array()) {
+        if (!isset($htmlOptions['id'])) {
+            $htmlOptions['id'] = $this->buttonId;
+        }
+        echo CHtml::link($label, '#', $htmlOptions);
+        Yii::app()->clientScript->registerScript('exportgrid' . $htmlOptions['id'], "$('#" . $htmlOptions['id'] . "').on('click',function() { 
+                var downloadUrl=$('#" . $grid->id . "').yiiGridView('getUrl');
+                downloadUrl+=((downloadUrl.indexOf('?')==-1)?'?':'&');
+                downloadUrl+='{$this->exportParam}=1';
+                downloadUrl+='&from_date='+$('#from_date').val();
+                downloadUrl+='&to_date='+$('#to_date').val();
+                if(!confirm('As soon as the data has been downloaded from the portal, the downloaded data will be treated as offline data and is subject to change without any prior notice. Do you want to continue?')){
+                    return false;
+                }else{
+                    window.open( downloadUrl ,'_self');
+                }                
+            });"
+        );
+    }
+
 }
 
 ?>
