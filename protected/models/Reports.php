@@ -41,6 +41,9 @@ class Reports extends CActiveRecord
     public $sub_task_name;
     public $est_hrs;
     public $utilized_hours;
+    public $username;
+    public $comment;
+    public $hours;
     public $created_by;
     public $created_at;
 
