@@ -594,7 +594,14 @@ group by dc.stask_id order by em.emp_id;";
         $resources = Yii::app()->db->createCommand($query)->queryRow();
 
         if (!empty($resources['allocated_resource'])) {
-            $query = 'SELECT emp_id,CONCAT(first_name," ",last_name) as full_name FROM tbl_employee WHERE emp_id IN(' . $resources['allocated_resource'] . ') and is_active = 1 and is_password_changed="yes"';
+            /***************************************************************************
+             * removed the condition, :: and is_active = 1 and is_password_changed="yes"
+             * it was giving issues of - getting resources de-allocated automatically
+             * Tirthesh::26092018
+             */
+            //$query = 'SELECT emp_id,CONCAT(first_name," ",last_name) as full_name FROM tbl_employee WHERE emp_id IN(' . $resources['allocated_resource'] . ') and is_active = 1 and is_password_changed="yes"';
+            $query = 'SELECT emp_id,CONCAT(first_name," ",last_name) as full_name FROM tbl_employee WHERE emp_id IN(' . $resources['allocated_resource'] . ') ';
+            /***************************************************************************/
             $empDetails = Yii::app()->db->createCommand($query)->queryAll();
             $rtrnstringarray = array();
             foreach ($empDetails as $indidetails) {
