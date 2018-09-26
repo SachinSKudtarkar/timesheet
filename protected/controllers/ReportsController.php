@@ -31,7 +31,7 @@ class ReportsController extends Controller {
                 'users' => array('@'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update','getReports','getTimesheet','isExportRequest'),
+                'actions' => array('create', 'update','getReports','getTimesheet','isExportRequest','allReports'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -246,9 +246,13 @@ class ReportsController extends Controller {
             $filename = "Timesheet All Reports " . date('d_m_Y') . "_" . date('H') . "_hr.csv";
             CommonUtility::generateExcel($export_column_name, $finalArr, $filename);
         }
+
+        $allcount = $this->getAllCount();
+
         $this->render('allreports', array(
             'model' => $model,
             'data' => $search_data,
+            'allcount' => $allcount
         ));
 
     }
@@ -326,8 +330,7 @@ class ReportsController extends Controller {
         
             $from_date = $_REQUEST['from_date'];
             $to_date = $_REQUEST['to_date'];
-            $datecondition = " st.created_at BETWEEN '{$from_date}' and '{$to_date}'";    
-        
+            $datecondition = " dc.day BETWEEN '{$from_date}' and '{$to_date}'";    
             
         }
 
@@ -395,10 +398,44 @@ class ReportsController extends Controller {
             $filename = "Timesheet All Comments " . date('d_m_Y') . "_" . date('H') . "_hr.csv";
             CommonUtility::generateExcel($export_column_name, $finalArr, $filename);
         }
+
+        $allcount = $this->getAllCount();
+
         $this->render('alltimesheet', array(
             'model' => $model,
             'data' => $search_data,
+            'allcount' => $allcount
         ));
 
     }
+
+    /**
+     * Function to fetch count of programs,projects, tasks and subtasks
+     */
+    public function getAllCount()
+    {
+        $count_qry = "select 
+                        (select count(*) from tbl_project_management) as Programs,
+                        (select count(*) from tbl_sub_project) as Projects,
+                        (select count(*) from tbl_pid_approval) as Tasks,
+                        (select count(*) from tbl_sub_task) as SubTasks";
+    
+        $counts = Yii::app()->db->createCommand($count_qry)->queryAll();
+
+        return $counts;
+    }
+
+    /**
+     * Get all reports
+     */
+    public function actionallReports()
+    {
+        $this->layout = 'column1';
+        $allcount = $this->getAllCount();
+        
+        $this->render('reports', array(
+            'allcount' => $allcount,
+        ));
+    }
+
 }
