@@ -42,7 +42,7 @@ for ($h = 0; $h <= 999; $h++) {
         // controller action is handling ajax validation correctly.
         // There is a call to performAjaxValidation() commented in generated controller code.
         // See class documentation of CActiveForm for details on this.
-        'enableAjaxValidation' => true,
+        'enableAjaxValidation' => false,
         'clientOptions' => array(
             'validateOnSubmit' => false,
 //        'afterValidate'=>'js:yiiFix.ajaxSubmit.afterValidate'
@@ -89,8 +89,6 @@ for ($h = 0; $h <= 999; $h++) {
                 }else{
                     $subprojectlist = '';
                 }
-
-
             ?>
             <?php echo CHtml::dropDownList('PidApproval[sub_project_id]', 'spid', $subprojectlist, array('prompt' => 'Select Project', 'options' => array($model->sub_project_id => array('selected' => true)),'required' => 'true')); ?>
             <?php echo $form->error($model, 'sub_project_id'); ?>
