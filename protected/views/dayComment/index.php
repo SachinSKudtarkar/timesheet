@@ -451,6 +451,15 @@ Yii::app()->clientScript->registerCssFile(
             $(this).attr('id',$(this).attr('id').replace('wrkhrs'+oldId,'wrkhrs'+newId));
 		});
 		
+		clonned.find('#wrkhrsClass'+oldId).each(function() {
+            $(this).attr('id',$(this).attr('id').replace('wrkhrsClass'+oldId,'wrkhrsClass'+newId));
+		});
+
+		clonned.find('#wrkminsClass'+oldId).each(function() {
+            $(this).attr('id',$(this).attr('id').replace('wrkminsClass'+oldId,'wrkminsClass'+newId));
+		});
+		
+
 		clonned.find('#remhrs'+oldId).each(function() {
 
 			$(this).attr('id',$(this).attr('id').replace('remhrs'+oldId,'remhrs'+newId));
