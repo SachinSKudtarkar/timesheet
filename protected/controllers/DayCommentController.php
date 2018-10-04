@@ -255,7 +255,7 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.stask_id";
      * Lists all models.
      */
     public function actionIndex() {
-        
+
         if (isset(Yii::app()->session['login']['user_id'])) {
             $current_user_id = Yii::app()->session['login']['user_id'];
             $projectData = $combinearray = array();
@@ -366,39 +366,37 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.stask_id";
         $model->attributes = $_GET['DayComment'];
         $condition = $_GET['DayComment'];
         if (isset($_REQUEST['DayComment'])) {
-
-
             $day = trim($condition['day']);
             if($day){
-                $whrcondition = "DATE_FORMAT(t.day,'%Y-%m-%d') = '{$day}'";
+                $whrcondition = "DATE_FORMAT(t.day,'%Y-%m-%d') like '%{$day}%'";
             }
             $project_name = trim($condition['project_name']);
             if($project_name){
-                $whrcondition = "pm.project_name = '{$project_name}'";
+                $whrcondition = "pm.project_name like '%{$project_name}%'";
             }
             $sub_project_name = trim($condition['sub_project_name']);
             if($sub_project_name){
-                $whrcondition = "sb.sub_project_name = '{$sub_project_name}'";
+                $whrcondition = "sb.sub_project_name like '%{$sub_project_name}%'";
             }
             $task_name = trim($condition['sub_task_name']);
             if($task_name){
-                $whrcondition = "st.sub_task_name = '{$task_name}' ";
+                $whrcondition = "st.sub_task_name like '%{$task_name}%' ";
             }
-             $name = trim($condition['name']);
+            $name = trim($condition['name']);
             if($name){
-                $whrcondition = "CONCAT(first_name,' ',last_name) = '{$name}' ";
+                $whrcondition = "CONCAT(first_name,' ',last_name) like '%{$name}%' ";
             }
-
-            $sql1 = "select t.day,t.comment,t.hours,CONCAT(first_name,' ',last_name) as name,sb.sub_project_name,pm.project_name,st.sub_task_name from tbl_day_comment as t
-                  INNER JOIN tbl_project_management pm ON (t.pid = pm.pid) INNER JOIN tbl_employee emp ON (emp.emp_id = t.emp_id) LEFT join tbl_sub_project sb ON (sb.spid=t.spid )left Join tbl_sub_task as st on (st.stask_id = t.stask_id)
-                  where  $whrcondition  order by id, day DESC";
-            $search_data = Yii::app()->db->createCommand($sql1)->queryAll();
-        }else{
-            $sql1 = "select t.day,t.comment,t.hours,CONCAT(first_name,' ',last_name) as name,sb.sub_project_name,pm.project_name,st.sub_task_name from tbl_day_comment as t
-                  INNER JOIN tbl_project_management pm ON (t.pid = pm.pid) INNER JOIN tbl_employee emp ON (emp.emp_id = t.emp_id) LEFT join tbl_sub_project sb ON (sb.spid=t.spid )left Join tbl_sub_task as st on (st.stask_id = t.stask_id)
-                    order by id DESC";
-            $search_data = Yii::app()->db->createCommand($sql1)->queryAll();
+            $comment = trim($condition['comment']);
+            if($comment){
+                $whrcondition = "t.comment like '%{$comment}%' ";
+            }
         }
+
+        $sql1 = "select t.day,t.comment,t.hours,CONCAT(first_name,' ',last_name) as name,sb.sub_project_name,pm.project_name,st.sub_task_name from tbl_day_comment as t
+              INNER JOIN tbl_project_management pm ON (t.pid = pm.pid) INNER JOIN tbl_employee emp ON (emp.emp_id = t.emp_id) LEFT join tbl_sub_project sb ON (sb.spid=t.spid )left Join tbl_sub_task as st on (st.stask_id = t.stask_id)
+              where 1=1 ".((trim($whrcondition) != '') ? ' AND '.$whrcondition : '' )."  order by id desc, day DESC";
+        $search_data = Yii::app()->db->createCommand($sql1)->queryAll();
+
         if ($this->isExportRequest()) {
             $inpCount = 0;
             // $dataProvider1 = $model->searchAll(false);
@@ -1108,17 +1106,17 @@ where  st.emp_id = {$userId} group by st.stask_id"; //pa.approved = 2  and
             $list = CHtml::listData($nn, 'stask_id', 'sub_task_name');
             //$hourslist = CHtml::listData($hours);
             //$hourslist = CHtml::listData($nn, 's_task_id','hours');
-            
+
         } else {
             $list = CHtml::listData($res, 'stask_id', 'sub_task_name');
             $hourslist = CHtml::listData($res, 'stask_id', 'hours');
-            
+
         }
 
 
         $data['result'] = $list;
         $data['workhours'] = $hours;
-        
+
         $data['status'] = 'SUCCESS';
         if(!empty($data)){
         if($_POST['pid'])
@@ -1257,44 +1255,44 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.sub_project_i
         // echo CHtml::dropDownList('please select', CHtml::listData($list));
         // echo  json_encode($list);
     }
-    
+
     public function actionfetchRemainingHours()
     {
         $project_id = $_POST['project_id'];
         $sub_project_id = $_POST['sub_project_id'];
         $sub_task_id = $_POST['sub_task_id'];
-        
+
         // $time_diff = "SELECT TIMEDIFF(BIG_SEC_TO_TIME((est_hrs*60)*60),BIG_SEC_TO_TIME( SUM( BIG_TIME_TO_SEC( `hours` ) ) )) as difference, BIG_SEC_TO_TIME((est_hrs*60)*60) as est_hrs, BIG_SEC_TO_TIME( SUM( BIG_TIME_TO_SEC( `hours` ) ) ) AS utilized_hrs  from tbl_sub_task as st inner join tbl_day_comment dc on dc.stask_id = st.stask_id where sub_project_id = {$sub_project_id} and st.stask_id = {$sub_task_id}";
         $time_diff = "SELECT BIG_SEC_TO_TIME((est_hrs*60)*60) as est_hrs, BIG_SEC_TO_TIME( SUM( BIG_TIME_TO_SEC( `hours` ) ) ) AS utilized_hrs  from tbl_sub_task as st inner join tbl_day_comment dc on dc.stask_id = st.stask_id where sub_project_id = {$sub_project_id} and st.stask_id = {$sub_task_id}";
 
-        
+
         $time_diff_hrs = Yii::app()->db->createCommand($time_diff)->queryRow();
-        
+
         $difference = DayComment::calculateTimeDiff($time_diff_hrs['est_hrs'],$time_diff_hrs['utilized_hrs']);
 
 
         if(empty($time_diff_hrs['difference']))
         {
-            
-            $time_diff_hrs_mins_q = "SELECT HOUR('{$time_diff_hrs['est_hrs']}') as hours, MINUTE('{$time_diff_hrs['est_hrs']}') as mins"; 
+
+            $time_diff_hrs_mins_q = "SELECT HOUR('{$time_diff_hrs['est_hrs']}') as hours, MINUTE('{$time_diff_hrs['est_hrs']}') as mins";
 
         }
-        
-        $time_diff_hrs_mins = Yii::app()->db->createCommand($time_diff_hrs_mins_q)->queryRow(); 
-        
+
+        $time_diff_hrs_mins = Yii::app()->db->createCommand($time_diff_hrs_mins_q)->queryRow();
+
         if (!empty($time_diff_hrs)) {
 
             $time_array['difference'] = $difference['difference'];
             $time_array['hours'] = $difference['hours'];
             $time_array['mins'] = $difference['mins'];
-            
+
             $time_array['status'] = 1;
         }else{
             $time_array['status'] = 0;
         }
-        
+
         echo json_encode($time_array);die;
-        
+
     }
 
 }

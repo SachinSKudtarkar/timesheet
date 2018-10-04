@@ -352,7 +352,7 @@ group by dc.stask_id order by em.emp_id;";
 
     public function actionAllocate() {
 
-        $projectId = isset($_POST['ProjectName']) ? $_POST['ProjectName'] : 0;
+        echo $projectId = isset($_POST['ProjectName']) ? $_POST['ProjectName'] : 0;
 
         $_POST['txtarea2'] = array_filter($_POST['txtarea2']);
         $all_resources = isset($_POST['txtarea2']) ? implode(',', $_POST['txtarea2']) : '';
@@ -368,8 +368,6 @@ group by dc.stask_id order by em.emp_id;";
             $done = 1;
             $updateQuery = "UPDATE tbl_resource_allocation_project_work SET allocated_resource = '{$all_resources}', modified_by ='{$modified_by}' , modified_at = '{$modified_at}',day = '{$modified_at}'   WHERE id = '{$result['id']}'  ";
             Yii::app()->db->createCommand($updateQuery)->execute();
-
-
         } else {
             $model = new ResourceAllocationProjectWork;
             $model->pid = $projectId;

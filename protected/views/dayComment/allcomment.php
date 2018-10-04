@@ -12,19 +12,19 @@
 //);
 ?>
 
-<h1>Manage Day Comments</h1> 
+<h1>Manage Day Comments</h1>
 <!--<form class="form-inline no-mr clearfix" action="" method="get" id="graphFiltersForm">
-    <div style="position: relative; ">    
+    <div style="position: relative; ">
         <table>
             <tr>
                 <th><label><b>From</b></label></th>
                 <th><label><b>To</b></label></th>
                 <th width="40px;"></th>
-                <th><label><b>Program</b></label></th> 
+                <th><label><b>Program</b></label></th>
                 <th><label><b>Employee</b></label></th>
                 <th><label><b>Project</b></label></th>
                 <th></th>
-            </tr>    
+            </tr>
             <tr>
                 <td>
                     <?php
@@ -43,27 +43,27 @@
 //                    }
 //                    echo CHtml::textField('to_date', $toForTextbox, array('id' => 'to_date', 'class' => 'datepicker', 'placeholder' => 'To Date', 'style' => 'width:100px;'));
                     ?>
-                </td>   
+                </td>
                 <td width="40px;"></td>
                 <td id="project_name">
                     <?php // echo CHTML::dropDownList('ProjectName', $model->pid, CHtml::listData(ProjectManagement::model()->findAll(array('order' => 'project_name', 'condition' => 'is_deleted=0')), 'pid', 'project_name'), array('prompt' => 'Please select Project'));
-                    ?>  
+                    ?>
                 </td>
                 <td id="employee">
                      <?php
 //                     $emp_list = Employee::model()->getEmloyeeList();
 //                     echo CHTML::dropDownList('employee', $model->emp_id, $emp_list, array('prompt' => 'Please select Emlployee'));
-                    ?>	
-                </td> 
-                
+                    ?>
+                </td>
+
                 <td>
                     <?php // echo CHTML::dropDownList('Task_Name', $model->pid, CHtml::listData(SubProject::model()->findAll(array('order' => 'spid', 'condition' => 'is_deleted=0')), 'sub_project_name', 'sub_project_name'), array('prompt' => 'Please select Task'));
-                    ?>	
+                    ?>
                 </td>
 
                 <td align="left"><?php
 //                    echo CHtml::button('Submit', array('name' => "searchButton", 'id' => "searchButton", 'class' => 'btn-primary', 'style' => 'margin-left:10px; margin-bottom:8px;'));
-                    
+
                     ?></td>
             </tr>
         </table>
@@ -90,14 +90,14 @@
                 },
             });
 });
-    </script> 
-    </div> 
-  
+    </script>
+    </div>
+
 </form>  -->
 
-<?php 
+<?php
 
-  
+
 $x = $this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'day-comment-grid',
     // 'dataProvider' => $model->searchAll(),
@@ -110,16 +110,15 @@ $x = $this->widget('zii.widgets.grid.CGridView', array(
             'value' => array($model, 'getFormatedDate'),
             'type' => 'raw',
         ),
-        'project_name', 
+        'project_name',
         'sub_project_name',
         'sub_task_name',
         array(
             'name' => 'name',
         ),
-  
+
         array(
             'name' => 'comment',
-            'filter' => FALSE,
         )
         ,
         array(
@@ -128,12 +127,12 @@ $x = $this->widget('zii.widgets.grid.CGridView', array(
         )
         ,
 //         'comment',
-//        'hours', 
+//        'hours',
     ),
 ));
- 
+
 echo $this->renderExportGridButton($x, 'Export Grid Results', array('class' => 'btn btn-primary pull-left clearfix mr-tp-20'));
- 
+
 Yii::app()->clientScript->registerCoreScript('jquery.ui');
 $cs = Yii::app()->getClientScript();
 $cs->registerScriptFile(Yii::app()->baseUrl . "/js/jquery-ui-timepicker-addon.js");
@@ -145,7 +144,7 @@ Yii::app()->clientScript->registerCssFile(
 );
 //Yii::app()->clientScript->registerScript('search', "
 //    $('#searchButton').click(function()
-//    { 
+//    {
 //            var from_date = $('#from_date').val();
 //            var to_date = $('#to_date').val();
 //            var employee = $('#employee').val();
@@ -157,27 +156,27 @@ Yii::app()->clientScript->registerCssFile(
 //                var tarr = $('#to_date').val().split('-');
 //                var fromDate= new Date(farr[2] , farr[1] , farr[0]);
 //                var toDate = new Date(tarr[2], tarr[1], tarr[0]);
-//                if (fromDate > toDate) 
+//                if (fromDate > toDate)
 //                {
 //                   alert('To date should be greater than from date');
 //                   return false;
-//                }       
+//                }
 //                var from_date=$('#from_date').val();
-//                var to_date=$('#to_date').val(); 
-//                    window.location.replace('" . CHelper::createUrl() . "/adminAll/from/'+ from_date +'/to/' + to_date +'/employee/' + employee+'/ProjectName/' + ProjectName+'/Task_Name/' + Task_Name); 
-//                $('div.custom-loader').hide();  
+//                var to_date=$('#to_date').val();
+//                    window.location.replace('" . CHelper::createUrl() . "/adminAll/from/'+ from_date +'/to/' + to_date +'/employee/' + employee+'/ProjectName/' + ProjectName+'/Task_Name/' + Task_Name);
+//                $('div.custom-loader').hide();
 //            }else
 //            {
-//                 window.location.replace('" . CHelper::createUrl() . "/adminAll'); 
-//                $('div.custom-loader').hide();  
+//                 window.location.replace('" . CHelper::createUrl() . "/adminAll');
+//                $('div.custom-loader').hide();
 //                }
-//    }); 
+//    });
 //");
- 
-Yii::app()->clientScript->registerScript('filters', " 
+
+Yii::app()->clientScript->registerScript('filters', "
      $('.datepicker').datepicker({
-        dateFormat: 'd-m-yy', 
-        maxDate:0, 
+        dateFormat: 'd-m-yy',
+        maxDate:0,
     }).attr('readonly','readonly');
        ", CClientScript::POS_READY);
-?>   
+?>
