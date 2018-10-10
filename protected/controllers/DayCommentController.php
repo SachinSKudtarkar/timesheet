@@ -62,7 +62,7 @@ class DayCommentController extends Controller {
                 'users' => array('@'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'addcomment', 'GetProjName', 'getIrregularEmp', 'sendReminder', 'AdminAll', 'NotFilledStatus', 'fetchSubProject', 'fetchSubTask', 'StatusReport', 'getSubPStatus', 'getEmployeeList', 'fetchRemainingHours'),
+                'actions' => array('create', 'update', 'addcomment', 'GetProjName', 'getIrregularEmp', 'sendReminder', 'AdminAll', 'NotFilledStatus', 'fetchSubProject', 'fetchSubTask', 'StatusReport', 'getSubPStatus', 'getEmployeeList', 'fetchRemainingHours','ApproveHours'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -266,9 +266,10 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.stask_id";
                 $model->from = $_REQUEST['selecting_date'];
                 $model->to = date('Y-m-d', strtotime("+6 day", strtotime($_REQUEST['selecting_date'])));
             } else {
+                $today_Date = date('Y-m-d'); 
+                $model->to = $today_Date;
+                $model->from = date('Y-m-d', strtotime("-1 day",strtotime($today_Date)));
 
-                $model->from = '';
-                $model->to = '';
             }
             $dataProvider1 = $model->search(false);
 
@@ -317,6 +318,7 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.stask_id";
             $combinearray[] = "109";  //109 for common task
             $pidString = implode("','", $combinearray);
             $projectData = Yii::app()->db->createCommand("SELECT pid,project_name,project_description FROM tbl_project_management WHERE pid IN('" . $pidString . "')")->queryAll();
+            
             $this->render('index', array('dataProvider' => $dataProvider, 'allProjects' => $projectData, 'arrData' => $arrData, 'arrSubmitted' => $arrSubmitted));
         }
     }
@@ -392,7 +394,7 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.stask_id";
             }
         }
 
-        $sql1 = "select t.day,t.comment,t.hours,CONCAT(first_name,' ',last_name) as name,sb.sub_project_name,pm.project_name,st.sub_task_name from tbl_day_comment as t
+        $sql1 = "select t.id as day_id,t.day,t.comment,t.hours,t.approved_hrs,CONCAT(first_name,' ',last_name) as name,sb.sub_project_name,pm.project_name,st.stask_id,st.sub_task_name from tbl_day_comment as t
               INNER JOIN tbl_project_management pm ON (t.pid = pm.pid) INNER JOIN tbl_employee emp ON (emp.emp_id = t.emp_id) LEFT join tbl_sub_project sb ON (sb.spid=t.spid )left Join tbl_sub_task as st on (st.stask_id = t.stask_id)
               where 1=1 ".((trim($whrcondition) != '') ? ' AND '.$whrcondition : '' )."  order by id desc, day DESC";
         $search_data = Yii::app()->db->createCommand($sql1)->queryAll();
@@ -1292,6 +1294,54 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.sub_project_i
         }
 
         echo json_encode($time_array);die;
+
+    }
+
+    public function actionApproveHours($id)
+    {
+
+        $model = $this->loadModel($id);
+
+        $query = "select CONCAT(first_name,' ',last_name) as name,sb.sub_project_name,pm.project_name,st.sub_task_name,pa.task_title from tbl_day_comment as t
+              INNER JOIN tbl_project_management pm ON (t.pid = pm.pid) INNER JOIN tbl_employee emp ON (emp.emp_id = t.emp_id) LEFT join tbl_sub_project sb ON (sb.spid=t.spid )left Join tbl_sub_task as st on (st.stask_id = t.stask_id) left join tbl_pid_approval as pa on ( pa.pid_id = st.pid_approval_id) where id = $id";
+        $subTaskDetails = Yii::app()->db->createCommand($query)->queryRow();
+        // print_r($sub_task_name);die;
+        $model->sub_task_name = $subTaskDetails['sub_task_name'];
+        $model->program_name = $subTaskDetails['project_name'];
+        $model->project_name = $subTaskDetails['sub_project_name'];
+        $model->task_name = $subTaskDetails['task_title'];
+        $model->user_name = $subTaskDetails['name'];
+
+        // Uncomment the following line if AJAX validation is needed
+        // $this->performAjaxValidation($model);
+        $logmodel = Yii::app()->db->createCommand("SELECT * FROM tbl_day_comment_approved_hrs_log where stask_id = {$model->stask_id} order by created_at desc")->queryAll();
+        
+        if (isset($_POST['DayComment'])) {
+
+            $model->attributes = $_POST['DayComment'];
+
+            $model->approved_hrs = str_pad($_POST['hrs'], 2, "0", STR_PAD_LEFT) . ':' . str_pad($_POST['mins'], 2, "0", STR_PAD_LEFT) . ':00';
+            $model->remarks = $_POST['DayComment']['remarks'];
+        
+
+            if ($model->save(FALSE))
+            {
+            
+                $DcLog = new DayCommentApprovedHrsLog;
+                $DcLog->stask_id = $model->stask_id;
+                $DcLog->approved_hrs = $model->approved_hrs;
+                $DcLog->remarks = $model->remarks;
+                $DcLog->save(FALSE);
+                $this->redirect(array('approvehours', 'id' => $id));
+            }
+        }
+
+        // $Dclog = DayCommentApprovedHrsLog::model()->findByAttributes(array('stask_id'=>2323));
+        
+        $this->render('approvehours', array(
+            'model' => $model,
+            'logmodel' => $logmodel
+        ));
 
     }
 

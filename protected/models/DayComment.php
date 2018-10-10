@@ -14,11 +14,13 @@ class DayComment extends CActiveRecord {
 
     public $projectName;
     public $project_name;
+    public $program_name;
     public $sub_project_name;
     public $sub_task_name;
     public $task_name;
     //public $hours;
     public $name;
+    public $user_name;
     public $from;
     public $total_hours;
     public $range_days;
@@ -27,6 +29,8 @@ class DayComment extends CActiveRecord {
     public $to;
     public $shift;
     public $usedHrs;
+    public $approved_hrs;
+    public $remarks;
 
     /**
      * @return string the associated database table name
@@ -48,8 +52,8 @@ class DayComment extends CActiveRecord {
             array('comment', 'length', 'max' => 1000),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, pid, day, comment, created_by,hours, projectName, project_name ,sub_project_name, emp_id,name, is_submitted', 'safe', 'on' => 'search,searchAll'),
-            array('pid, day, comment,hours, projectName, project_name ,sub_project_name,shift,  ', 'safe'),
+            array('id, pid, day, comment, created_by,hours, projectName, project_name ,sub_project_name, emp_id,name, is_submitted,approved_hrs,remarks', 'safe', 'on' => 'search,searchAll'),
+            array('pid, day, comment,hours, projectName, project_name ,sub_project_name,shift,approved_hrs,remarks,  ', 'safe'),
         );
     }
 
@@ -79,7 +83,9 @@ class DayComment extends CActiveRecord {
             'hours' => 'Hours',
             'sub_project_name' => 'Project',
             'sub_task_name' => 'Task',
-            'shift' => 'Shift'
+            'shift' => 'Shift',
+            'approved_hrs' => 'Approved Hours',
+            'remarks' => 'Approval Remarks',
         );
     }
 
@@ -97,10 +103,13 @@ class DayComment extends CActiveRecord {
      */
     public function search($pagination = true) {
         // @todo Please modify the following code to remove attributes that should not be searched.
+        // echo $this->from;die;
+        $criteria = new CDbCriteria;
         if (!empty($this->from) && !empty($this->to)) {
             $criteria->condition = ' (t.day between "' . date('Y-m-d', strtotime($this->from)) . '" AND "' . date('Y-m-d', strtotime($this->to)) . ' 23:59:59")';
+        
         }
-        $criteria = new CDbCriteria;
+       
         $criteria->select = "t.*, pm.project_name,t.comment,t.day,t.comment,t.hours,t.emp_id,sb.sub_project_name,st.sub_task_name";
         $criteria->compare('id', $this->id);
         $criteria->compare('t.pid', $this->pid);
