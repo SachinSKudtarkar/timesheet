@@ -264,11 +264,10 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.stask_id";
             $model = new DayComment();
             if (isset($_REQUEST['selecting_date'])) {
                 $model->from = $_REQUEST['selecting_date'];
-                $model->to = date('Y-m-d', strtotime("+6 day", strtotime($_REQUEST['selecting_date'])));
+                $model->to = date('Y-m-d', strtotime("+1 day", strtotime($_REQUEST['selecting_date'])));
             } else {
-
-                $model->from = '';
-                $model->to = '';
+                $model->from = date('Y-m-d', strtotime('-1day'));
+                $model->to = date('Y-m-d');
             }
             $dataProvider1 = $model->search(false);
 
