@@ -102,14 +102,13 @@ class DayComment extends CActiveRecord {
      * based on the search/filter conditions.
      */
     public function search($pagination = true) {
+        $criteria = new CDbCriteria;
         // @todo Please modify the following code to remove attributes that should not be searched.
         // echo $this->from;die;
-        $criteria = new CDbCriteria;
         if (!empty($this->from) && !empty($this->to)) {
             $criteria->condition = ' (t.day between "' . date('Y-m-d', strtotime($this->from)) . '" AND "' . date('Y-m-d', strtotime($this->to)) . ' 23:59:59")';
-        
+
         }
-       
         $criteria->select = "t.*, pm.project_name,t.comment,t.day,t.comment,t.hours,t.emp_id,sb.sub_project_name,st.sub_task_name";
         $criteria->compare('id', $this->id);
         $criteria->compare('t.pid', $this->pid);
@@ -145,7 +144,7 @@ class DayComment extends CActiveRecord {
         }
 //		if($criteria->condition != '') $criteria->condition .= ' AND ';
 //		$criteria->condition .= ' (t.emp_id = ' . Yii::app()->session['login']['user_id'] . ' )';
-		
+
         $criteria->select = "t.*,CONCAT(first_name,' ',last_name) as name,sb.sub_project_name,pm.project_name, t.is_submitted,st.task_name ";
         $criteria->compare('id', $this->id);
         $criteria->compare('t.pid', $this->pid);
@@ -173,7 +172,7 @@ class DayComment extends CActiveRecord {
             ));
         }
     }
-    
+
     public function searchStatusIncomplete($pagination = true) {
         // @todo Please modify the following code to remove attributes that should not be searched.
         $criteria = new CDbCriteria;
@@ -181,7 +180,7 @@ class DayComment extends CActiveRecord {
             $criteria->condition = ' (t.day between "' . date('Y-m-d', strtotime($this->from)) . '" AND "' . date('Y-m-d', strtotime($this->to)) . ' 23:59:59")';
         }
 //		if($criteria->condition != '') $criteria->condition .= ' AND ';
-//		$criteria->condition .= ' (t.emp_id = ' . Yii::app()->session['login']['user_id'] . ' )';	
+//		$criteria->condition .= ' (t.emp_id = ' . Yii::app()->session['login']['user_id'] . ' )';
         $criteria->select = "t.*,CONCAT(first_name,' ',last_name) as name, sum(t.hours) as total_hours, count(DISTINCT(t.day)) as days_filled, GROUP_CONCAT(DISTINCT(DATE_FORMAT(t.day,'%d-%m-%Y'))) as dates_filled ";
         $criteria->compare('id', $this->id);
         $criteria->compare('t.pid', $this->pid);
@@ -269,10 +268,10 @@ class DayComment extends CActiveRecord {
         $query_str = implode(" AND ", $query_str_array);
         $query_str = "(" . $query_str . ")";
         $query = "SELECT DATE(dc.day),CONCAT(emp.first_name,' ',emp.last_name) as emp_name,emp.emp_id ,emp.email FROM tbl_employee emp left join tbl_day_comment dc on emp.emp_id=dc.emp_id WHERE is_active = 1 AND " . $query_str." group by emp_name";//
-        
+
         $emp_list = Yii::app()->db->createCommand($query)->queryAll();
         $emp_ids = "'" .implode(" ','", array_column($emp_list, 'emp_id')) ."'";
-       
+
         $query2 = "SELECT CONCAT(emp.first_name,' ',emp.last_name) as emp_name,emp.emp_id ,emp.email FROM tbl_employee emp WHERE is_active = 1 AND emp.emp_id not in ({$emp_ids})";//
         $emp_list2 = Yii::app()->db->createCommand($query2)->queryAll();
         foreach ($emp_list2 as $key => $value) {
@@ -288,15 +287,15 @@ class DayComment extends CActiveRecord {
             $message ."<BR /><br />";
             $from = "support@infinitylabs.in";
             $from_name = "Infinity Support";
-            $to = array(); 
+            $to = array();
             $cc = array();
             $bcc = array();
 //            $to[] = array("email" => "pm@infinitylabs.in", "name" => "PM");
 //            $to[] = array("email" => "kpanse@cisco.com", "name" => "Krishnaji");
 //            $value['email']="aashay.t@infintylabs.in";
-            $to[] = array("email" => $value['email'], "name" => $value['emp_name']); 
-            $cc[] = array("email" => "sachin.k@infinitylabs.in", "name" => "sachin Kudtarkar"); 
-            $subject = "Weekly Status Reminder - " . $value['emp_name'];   
+            $to[] = array("email" => $value['email'], "name" => $value['emp_name']);
+            $cc[] = array("email" => "sachin.k@infinitylabs.in", "name" => "sachin Kudtarkar");
+            $subject = "Weekly Status Reminder - " . $value['emp_name'];
 //            echo $message;
            echo CommonUtility::sendmail($to, null, $from, $from_name, $subject, $message, $cc, null, $bcc);
 //           break;
@@ -361,22 +360,22 @@ class DayComment extends CActiveRecord {
         echo $message;
         //return $message;
          echo  CommonUtility::sendmail($to, null, $from, $from_name, $subject, $message, $cc, null, $bcc);
-        
+
     }
 
     public function getDifference($sub_project_id,$sub_task_id)
     {
         $time_diff = "SELECT TIMEDIFF(BIG_SEC_TO_TIME((est_hrs*60)*60),BIG_SEC_TO_TIME( SUM( BIG_TIME_TO_SEC( `hours` ) ) )) as difference, BIG_SEC_TO_TIME((est_hrs*60)*60) as est_hrs, BIG_SEC_TO_TIME( SUM( BIG_TIME_TO_SEC( `hours` ) ) ) AS utilized_hrs  from tbl_sub_task as st inner join tbl_day_comment dc on dc.stask_id = st.stask_id where sub_project_id = {$sub_project_id} and st.stask_id = {$sub_task_id}";
-        
+
         $time_diff_hrs = Yii::app()->db->createCommand($time_diff)->queryRow();
-            
+
         $difference = $this->calculateTimeDiff($time_diff_hrs['est_hrs'],$time_diff_hrs['utilized_hrs']);
         // $difference['difference'] = $time_diff_hrs['difference'];
         // $dif_exp = explode(":",$time_diff_hrs['difference']);
         // $difference['hours'] = $dif_exp[0];
         // $difference['mins'] = $dif_exp[1];
         // $difference['secs'] = $dif_exp[2];
-        $difference['estimated'] = $time_diff_hrs['est_hrs'];  
+        $difference['estimated'] = $time_diff_hrs['est_hrs'];
         // print_r(explode(":",$time_diff_hrs['difference'])[0]);die;
 
         return $difference;
@@ -395,7 +394,7 @@ class DayComment extends CActiveRecord {
             $mins = 60 - $time2_arr;
             $hours--;
         }
-        
+
         $difference['hours'] = $hours;
         $difference['mins'] = $mins;
         $difference['secs'] = $secs;

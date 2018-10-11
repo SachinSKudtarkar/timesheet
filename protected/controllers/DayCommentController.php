@@ -264,12 +264,11 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.stask_id";
             $model = new DayComment();
             if (isset($_REQUEST['selecting_date'])) {
                 $model->from = $_REQUEST['selecting_date'];
-                $model->to = date('Y-m-d', strtotime("+6 day", strtotime($_REQUEST['selecting_date'])));
+                $model->to = date('Y-m-d', strtotime("+1 day", strtotime($_REQUEST['selecting_date'])));
             } else {
-                $today_Date = date('Y-m-d'); 
+                $today_Date = date('Y-m-d');
                 $model->to = $today_Date;
-                $model->from = date('Y-m-d', strtotime("-1 day",strtotime($today_Date)));
-
+                $model->from = date('Y-m-d', strtotime('-1day'));
             }
             $dataProvider1 = $model->search(false);
 
@@ -318,7 +317,7 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.stask_id";
             $combinearray[] = "109";  //109 for common task
             $pidString = implode("','", $combinearray);
             $projectData = Yii::app()->db->createCommand("SELECT pid,project_name,project_description FROM tbl_project_management WHERE pid IN('" . $pidString . "')")->queryAll();
-            
+
             $this->render('index', array('dataProvider' => $dataProvider, 'allProjects' => $projectData, 'arrData' => $arrData, 'arrSubmitted' => $arrSubmitted));
         }
     }
@@ -1315,18 +1314,18 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.sub_project_i
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
         $logmodel = Yii::app()->db->createCommand("SELECT * FROM tbl_day_comment_approved_hrs_log where stask_id = {$model->stask_id} order by created_at desc")->queryAll();
-        
+
         if (isset($_POST['DayComment'])) {
 
             $model->attributes = $_POST['DayComment'];
 
             $model->approved_hrs = str_pad($_POST['hrs'], 2, "0", STR_PAD_LEFT) . ':' . str_pad($_POST['mins'], 2, "0", STR_PAD_LEFT) . ':00';
             $model->remarks = $_POST['DayComment']['remarks'];
-        
+
 
             if ($model->save(FALSE))
             {
-            
+
                 $DcLog = new DayCommentApprovedHrsLog;
                 $DcLog->stask_id = $model->stask_id;
                 $DcLog->approved_hrs = $model->approved_hrs;
@@ -1337,7 +1336,7 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.sub_project_i
         }
 
         // $Dclog = DayCommentApprovedHrsLog::model()->findByAttributes(array('stask_id'=>2323));
-        
+
         $this->render('approvehours', array(
             'model' => $model,
             'logmodel' => $logmodel
