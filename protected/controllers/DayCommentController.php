@@ -1313,6 +1313,7 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.sub_project_i
         $model->user_name = $subTaskDetails['name'];
 
         // Uncomment the following line if AJAX validation is needed
+        
         // $this->performAjaxValidation($model);
         $logmodel = Yii::app()->db->createCommand("SELECT * FROM tbl_day_comment_approved_hrs_log where stask_id = {$model->stask_id} order by created_at desc")->queryAll();
         
