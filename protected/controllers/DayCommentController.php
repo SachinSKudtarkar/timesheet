@@ -391,12 +391,17 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.stask_id";
             if($comment){
                 $whrcondition = "t.comment like '%{$comment}%' ";
             }
-        }
 
-        $sql1 = "select t.id as day_id,t.day,t.comment,t.hours,t.approved_hrs,CONCAT(first_name,' ',last_name) as name,sb.sub_project_name,pm.project_name,st.stask_id,st.sub_task_name from tbl_day_comment as t
-              INNER JOIN tbl_project_management pm ON (t.pid = pm.pid) INNER JOIN tbl_employee emp ON (emp.emp_id = t.emp_id) LEFT join tbl_sub_project sb ON (sb.spid=t.spid )left Join tbl_sub_task as st on (st.stask_id = t.stask_id)
-              where 1=1 ".((trim($whrcondition) != '') ? ' AND '.$whrcondition : '' )."  order by id desc, day DESC";
-        $search_data = Yii::app()->db->createCommand($sql1)->queryAll();
+            $sql1 = "select t.day,t.comment,t.hours,CONCAT(first_name,' ',last_name) as name,sb.sub_project_name,pm.project_name,st.sub_task_name from tbl_day_comment as t
+                  INNER JOIN tbl_project_management pm ON (t.pid = pm.pid) INNER JOIN tbl_employee emp ON (emp.emp_id = t.emp_id) LEFT join tbl_sub_project sb ON (sb.spid=t.spid )left Join tbl_sub_task as st on (st.stask_id = t.stask_id)
+                  where  $whrcondition  order by id, day DESC";
+            $search_data = Yii::app()->db->createCommand($sql1)->queryAll();
+        }else{
+            $sql1 = "select t.day,t.comment,t.hours,CONCAT(first_name,' ',last_name) as name,sb.sub_project_name,pm.project_name,st.sub_task_name from tbl_day_comment as t
+                  INNER JOIN tbl_project_management pm ON (t.pid = pm.pid) INNER JOIN tbl_employee emp ON (emp.emp_id = t.emp_id) LEFT join tbl_sub_project sb ON (sb.spid=t.spid )left Join tbl_sub_task as st on (st.stask_id = t.stask_id)
+                    order by id DESC";
+            $search_data = Yii::app()->db->createCommand($sql1)->queryAll();
+        }
 
         if ($this->isExportRequest()) {
             $inpCount = 0;
