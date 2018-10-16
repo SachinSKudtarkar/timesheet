@@ -31,7 +31,7 @@ class ReportsController extends Controller {
                 'users' => array('@'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update','getReports','getTimesheet','isExportRequest','allReports'),
+                'actions' => array('create', 'update','getReports','getTimesheet','isExportRequest','allReports','fetchGraphData','graphReports','fetchBarData','fetchprojectData','fetchProjectReport','fetchTimesheetReport','timesheetReports','fetchResourcesData','fetchRTimesheetReport','fetchProjectTimeData'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -438,4 +438,267 @@ class ReportsController extends Controller {
         ));
     }
 
+    public function actionfetchGraphData()
+    {
+    
+        $graphArr = [];$programArr = [];$nodeArr = [];
+        $query = "select sp.spid,pm.pid,sp.sub_project_name as project_name,pm.project_name as program_name,(select sum(pl.level_hours * lm.budget_per_hour) from tbl_project_level_allocation pl inner join tbl_level_master lm on lm.level_id = pl.level_id where pl.project_id = sp.spid) as total_budget  from tbl_sub_project as sp left join tbl_project_management as pm on pm.pid = sp.pid where pm.project_name != '' order by program_name";
+        
+        $graphArr = Yii::app()->db->createCommand($query)->queryAll();
+        $graphArr[] = array('project_name' => '%Exit%', 'program_name'=>'','total_budget'=>999);
+    
+        if(!empty($graphArr))
+        {
+            $i = 1;
+            foreach ($graphArr as $key => $node) {
+                if(!empty($node['total_budget'])){
+                    
+                    if($program_name != $node['program_name'] && $i > 1)
+                    {
+                        
+                        $programArr[] = array('name' => $program_name,'children' => $nodeArr,'id'=>'program_'.$program_id);
+                        
+                        $nodeArr = [];
+                        if($node['project_name'] === '%Exit%'){
+                            break;
+                        }
+                    }
+                    if($program_name == $node['program_name'] || $i > 1)
+                    {
+                        
+                        $nodeArr[] = array('name' => $node['project_name'],'size'=>1,'id'=>'project_'.$node['spid']);
+                    }
+                    
+                    $program_name = $node['program_name'];
+                    $program_id = $node['pid'];
+                    $i++;
+                }
+                
+
+            }
+
+            $graphArr = array('name'=>'ProjectReports', 'children'=>$programArr);
+        }
+  
+        echo json_encode($graphArr);
+        
+        die;
+
+        
+    }
+
+    public function actiongraphReports()
+    {
+        $this->layout = 'column1';
+        $this->render('graphreports');
+    }
+
+    public function actiontimesheetReports()
+    {
+        $this->layout = 'column1';
+        $emp_id  = Yii::app()->session['login']['user_id'];
+    $data = Yii::app()->db->createCommand("SELECT  TIME_FORMAT(BIG_SEC_TO_TIME( SUM( BIG_TIME_TO_SEC( `hours` )) ),'%H:%i') AS utilized_hrs, SUM((TIME_FORMAT(`hours`,'%H.%i') * budget_per_hour)) as utilized_budget FROM tbl_day_comment dc left join tbl_assign_resource_level rl on rl.emp_id = dc.emp_id left join tbl_level_master lm on lm.level_id= rl.level_id where dc.emp_id={$emp_id}")->queryRow();
+        $this->render('timesheetgraphreports', array('data'=>$data));
+    }
+
+
+    public function actionfetchBarData()
+    {
+        $graphArr = [];$barArr = [];$nodeArr = [];
+        $query = "";
+        $barArr = Yii::app()->db->createCommand("select pid_id,task_title,
+                    (select sum(est_hrs) from tbl_sub_task where pid_approval_id = pa.pid_id ) as allocated_hrs, 
+                    (SELECT  TIME_FORMAT(SEC_TO_TIME( SUM( TIME_TO_SEC( `hours` ) ) ), '%h:%i') from tbl_day_comment dc inner join tbl_sub_task st on st.stask_id = dc.stask_id where st.pid_approval_id = pa.pid_id) as utilized_hrs
+                from tbl_pid_approval pa 
+                where sub_project_id = 341;
+                ")->queryAll();
+
+        if(!empty($barArr)) {
+            foreach ($barArr as $key => $value) {
+                $allocated_hrs = !empty($value['allocated_hrs']) ? $value['allocated_hrs'] : 0;
+                $utilized_hrs = !empty($value['utilized_hrs']) ? $value['utilized_hrs'] : 0; 
+                $values[] = array('value'=>$allocated_hrs,'rate'=>'Allocated');
+                $values[] = array('value'=>$utilized_hrs,'rate'=>'Utilized');
+                $barData[] = array('categorie' => $value['task_title'],'values'=>$values);
+                $values = [];
+            }
+        }
+        // print_r($barData);
+        echo json_encode($barData);die;        
+     
+    }
+
+    public function actionfetchProjectData()
+    {
+
+        $projectData['allocated'] =Yii::app()->db->createCommand("select sum(st.est_hrs) as allocated_hrs,SUM(st.est_hrs * lm.budget_per_hour) AS allocated_budget from tbl_sub_task st left join tbl_assign_resource_level rl on rl.emp_id = st.emp_id left join tbl_level_master lm on lm.level_id = rl.level_id where sub_project_id = {$_POST['project_id']}")->queryRow();
+        $projectData['estimated'] = Yii::app()->db->createCommand("select sum(pl.level_hours * lm.budget_per_hour) as estimated_budget,sum(level_hours) as estimated_hrs from tbl_sub_project sp  left join tbl_project_level_allocation pl on pl.project_id = sp.spid left join tbl_level_master lm on lm.level_id = pl.level_id where spid = {$_POST['project_id']}")->queryRow();
+        // $projectData['utilized'] = Yii::app()->db->createCommand("SELECT  SEC_TO_TIME( SUM( TIME_TO_SEC( `hours` ) ) ) AS utilized_hrs  FROM tbl_day_comment where spid={$_POST['project_id']}")->queryRow();
+        $projectData['utilized'] = Yii::app()->db->createCommand("SELECT  TIME_FORMAT(BIG_SEC_TO_TIME( SUM( BIG_TIME_TO_SEC( `hours` )) ),'%H:%i') AS utilized_hrs, SUM((TIME_FORMAT(`hours`,'%H.%i') * budget_per_hour)) as utilized_budget FROM tbl_day_comment dc left join tbl_assign_resource_level rl on rl.emp_id = dc.emp_id left join tbl_level_master lm on lm.level_id= rl.level_id where dc.spid={$_POST['project_id']}")->queryRow();
+        $projectData['tasks'] = Yii::app()->db->createCommand("select count(*) as tasks from tbl_pid_approval where sub_project_id={$_POST['project_id']}")->queryRow();
+        $projectData['sub_tasks'] = Yii::app()->db->createCommand("select count(*) as sub_tasks from tbl_sub_task where sub_project_id={$_POST['project_id']}")->queryRow();
+        $resources = Yii::app()->db->createCommand("select emp_id from tbl_day_comment where spid = {$_POST['project_id']} group by emp_id")->queryRow();
+        $projectData['resources'] = count($resources);
+        $projectData['project_id'] = $_POST['project_id'];
+        echo json_encode($projectData);die;
+    }
+
+
+    public function actionfetchProjectReport()
+    {
+        $data = [];
+        $taskDetails = Yii::app()->db->createCommand("select project_task_id,task_title,task_name,sub_task_id,sub_task_name,concat(first_name,' ',last_name),est_hrs,
+            (SELECT  BIG_SEC_TO_TIME( SUM( BIG_TIME_TO_SEC( `hours` ) ) )  FROM tbl_day_comment where stask_id=st.stask_id) as utilized_hours
+            from tbl_pid_approval pa 
+            left join tbl_sub_task st on st.pid_approval_id = pa.pid_id 
+            left join tbl_task tk on tk.task_id = st.task_id
+            left join tbl_employee em on em.emp_id = st.emp_id
+            where pa.sub_project_id = {$_POST['project_id']}")->queryAll();
+
+        if(!empty($taskDetails))
+        {
+            foreach($taskDetails as $task) {
+                $taskArr = [];
+                foreach ($task as $key => $value) {
+                    $taskArr[] = $value;
+                }
+                $data[] = $taskArr;
+            }
+        }
+        
+        $count = count($data);
+        $jsonArray['recordsTotal'] = $count;
+        $jsonArray['recordsFiltered'] = $count;
+        $jsonArray['data'] = $data;
+        echo json_encode($jsonArray);die;
+
+    }
+
+    public function actionfetchTimesheetReport()
+    {
+        $data = [];
+        $taskDetails = Yii::app()->db->createCommand("select sp.project_id, sp.sub_project_name, pa.project_task_id, pa.task_title,st.sub_task_id,st.sub_task_name ,dc.day, concat(first_name,' ',last_name) as username,dc.hours, dc.comment 
+        from tbl_day_comment dc
+            left join tbl_sub_task st on st.stask_id = dc.stask_id
+            left join tbl_sub_project sp on sp.spid = dc.spid
+            left join tbl_pid_approval pa on pa.sub_project_id = sp.spid
+            left join tbl_employee em on em.emp_id = dc.emp_id
+            where dc.spid = {$_POST['project_id']}")->queryAll();
+
+        if(!empty($taskDetails))
+        {
+            foreach($taskDetails as $task) {
+                $taskArr = [];
+                foreach ($task as $key => $value) {
+                    $taskArr[] = $value;
+                }
+                $data[] = $taskArr;
+            }
+        }
+        
+        $count = count($data);
+        $jsonArray['recordsTotal'] = $count;
+        $jsonArray['recordsFiltered'] = $count;
+        $jsonArray['data'] = $data;
+        echo json_encode($jsonArray);die;
+
+    }
+
+    public function actionfetchResourcesData()
+    {
+        $emp_id  = Yii::app()->session['login']['user_id'];
+        $emp_name = ucwords(Yii::app()->session['login']['first_name'].' '.Yii::app()->session['login']['last_name']);
+        $graphArr = [];$programArr = [];$nodeArr = [];
+        $query = "select sub_project_id as project_id,sub_project_name as project_name ,pm.pid as program_id,project_name as program_name from tbl_sub_task st left join tbl_sub_project sp on sp.spid = sub_project_id left join tbl_project_management pm on pm.pid = sp.pid where emp_id = {$emp_id} group by sub_project_id order by project_name";
+        
+        $graphArr = Yii::app()->db->createCommand($query)->queryAll();
+        $graphArr[] = array('project_id'=>'#99','project_name' => '%Exit%', 'program_id'=>'','program_name'=>'test');
+        
+        
+        if(!empty($graphArr))
+        {
+            $i = 1;
+            foreach ($graphArr as $key => $node) {
+                if(!empty($node['project_id'])){
+                    
+                    if($program_name != $node['program_name'] && $flag == true)
+                    {
+                        
+                        $programArr[] = array('name' => $program_name,'children' => $nodeArr,'id'=>'program_'.$program_id);
+                        // print_r($programArr);
+                        $nodeArr = [];
+                        $i = 1;
+                        if($node['project_name'] === '%Exit%'){
+                            break;
+                        }
+                    }
+                    if($program_name == $node['program_name'] || $i == 1)
+                    {
+                        
+                        $nodeArr[] = array('name' => $node['project_name'],'id'=>'project_'.$node['project_id']);
+                        
+                        $flag = true;
+                    }
+                    
+                    $program_name = $node['program_name'];
+                    $program_id = $node['program_id'];
+                    $i++;
+                }
+                
+
+            }
+
+            $graphArr = array('name'=>$emp_name, 'children'=>$programArr);
+        }
+        // print_r($graphArr);die;
+        echo json_encode($graphArr);
+        
+        die;       
+    }
+
+    public function actionfetchRTimesheetReport()
+    {
+        $data = [];
+        $where ='';
+        if(!empty($_POST['project_id']) && !empty($_POST['emp_id'])){
+            $where = 'where dc.emp_id='.$_POST['emp_id'].' and dc.spid='.$_POST['project_id'];
+        }else{
+            $where = 'where dc.emp_id='.$_POST['emp_id'];
+        }
+        // echo $where;die;
+        $taskDetails = Yii::app()->db->createCommand("select sp.project_id, sp.sub_project_name, pa.project_task_id, pa.task_title,st.sub_task_id,st.sub_task_name ,dc.day, concat(first_name,' ',last_name) as username,dc.hours, dc.comment 
+        from tbl_day_comment dc
+            left join tbl_sub_task st on st.stask_id = dc.stask_id
+            left join tbl_sub_project sp on sp.spid = dc.spid
+            left join tbl_pid_approval pa on pa.sub_project_id = sp.spid
+            left join tbl_employee em on em.emp_id = dc.emp_id
+            {$where} order by day desc")->queryAll();
+
+        if(!empty($taskDetails))
+        {
+            foreach($taskDetails as $task) {
+                $taskArr = [];
+                foreach ($task as $key => $value) {
+                    $taskArr[] = $value;
+                }
+                $data[] = $taskArr;
+            }
+        }
+        
+        $count = count($data);
+        $jsonArray['recordsTotal'] = $count;
+        $jsonArray['recordsFiltered'] = $count;
+        $jsonArray['data'] = $data;
+        echo json_encode($jsonArray);die;
+    }
+
+    public function actionfetchProjectTimeData()
+    {
+        // print_r($_POST);die;
+        $project_total =Yii::app()->db->createCommand("SELECT SUM((TIME_FORMAT(`hours`,'%H.%i') * budget_per_hour)) as total_budget FROM tbl_day_comment dc left join tbl_assign_resource_level rl on rl.emp_id = dc.emp_id left join tbl_level_master lm on lm.level_id= rl.level_id where dc.emp_id={$_POST['emp_id']}")->queryRow();
+        $projectData['utilized'] = Yii::app()->db->createCommand("SELECT  TIME_FORMAT(BIG_SEC_TO_TIME( SUM( BIG_TIME_TO_SEC( `hours` )) ),'%H:%i') AS utilized_hrs, SUM((TIME_FORMAT(`hours`,'%H.%i') * budget_per_hour)) as utilized_budget FROM tbl_day_comment dc left join tbl_assign_resource_level rl on rl.emp_id = dc.emp_id left join tbl_level_master lm on lm.level_id= rl.level_id where dc.spid={$_POST['project_id']} and dc.emp_id={$_POST['emp_id']}")->queryRow();
+        $projectData['project_per'] = round(($projectData['utilized']['utilized_budget'] / $project_total['total_budget']) * 100);
+        $projectData['project_id'] = $_POST['project_id'];
+        echo json_encode($projectData);die;
+    }
 }

@@ -623,7 +623,7 @@ class PidApprovalController extends Controller {
 
         $projectformat['allocated'] = Yii::app()->db->createCommand("select sum(st.est_hrs) as allocated_hrs from tbl_sub_project sp left join tbl_sub_task st on st.sub_project_id  = sp.spid where spid = {$_POST['project_id']}")->queryRow();
         $projectformat['estimated'] = Yii::app()->db->createCommand("select sum(pl.level_hours * lm.budget_per_hour) as total_budget,sum(level_hours) as estimated_hrs from tbl_sub_project sp  left join tbl_project_level_allocation pl on pl.project_id = sp.spid left join tbl_level_master lm on lm.level_id = pl.level_id where spid = {$_POST['project_id']}")->queryRow();
-        $projectformat['utilized'] = Yii::app()->db->createCommand("SELECT  TIME_FORMAT(SEC_TO_TIME( SUM( TIME_TO_SEC( `hours` ) ) ), '%h:%i') AS utilized_hrs  FROM tbl_day_comment where spid={$_POST['project_id']}")->queryRow();
+        $projectformat['utilized'] = Yii::app()->db->createCommand("SELECT  TIME_FORMAT(BIG_SEC_TO_TIME( SUM( BIG_TIME_TO_SEC( `hours` ) ) ), '%H:%i') AS utilized_hrs  FROM tbl_day_comment where spid={$_POST['project_id']}")->queryRow();
         echo json_encode($projectformat);
     }
 

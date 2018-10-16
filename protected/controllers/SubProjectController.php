@@ -64,7 +64,7 @@ class SubProjectController extends Controller {
      */
     public function actionCreate() {
         $model = new SubProject;
-        //print_r($model);exit;
+
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
 
@@ -106,7 +106,6 @@ class SubProjectController extends Controller {
                         $modelPLALog->created_at = date("Y-m-d h:i:s");
                         $modelPLALog->save(false);
                     }
-                    //$importData[] = $modelST->getAttributes();
                 }
 
                 $this->redirect(array('admin'));
@@ -135,7 +134,6 @@ class SubProjectController extends Controller {
             $hours_label['estimated']['estimated_hrs'] += $e['level_hours'];
         }
 
-
         $hours_label['allocated'] = Yii::app()->db->createCommand("select sum(st.est_hrs) as allocated_hrs from tbl_sub_project sp left join tbl_sub_task st on st.sub_project_id  = sp.spid where spid = {$id}")->queryRow();
         $hours_label['utilized'] = Yii::app()->db->createCommand("SELECT  TIME_FORMAT(BIG_SEC_TO_TIME( SUM( BIG_TIME_TO_SEC( `hours` ) ) ), '%h:%i') AS utilized_hrs  FROM tbl_day_comment where spid={$id}")->queryRow();
 
@@ -143,7 +141,7 @@ class SubProjectController extends Controller {
         // $this->performAjaxValidation($model);
 
         if (isset($_POST['SubProject'])) {
-            // echo '<pre>';print_r($_POST);die;
+            
             $model->attributes = $_POST['SubProject'];
             $model->project_id = $_POST['sub_project_id'];
             $model->updated_date = date('Y-m-d h:i:s');
@@ -211,7 +209,7 @@ class SubProjectController extends Controller {
             //$model->is_deleted  = 1;
             //$model->save();
         }else{
-            //Yii::app()->user->setFlash('failed', "Program can not be deleted.");
+            //Yii::app( )->user->setFlash('failed', "Program can not be deleted.");
             echo 'could not be deleted';
             // could not be deleted;
         }

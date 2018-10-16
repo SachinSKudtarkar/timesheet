@@ -91,15 +91,16 @@ class AccessRoleMaster extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
-		$criteria->compare('parent_id',$this->parent_id);
-		$criteria->compare('emp_id',$this->emp_id);
+		$criteria->compare('concat(em.first_name, " ",em.last_name)',$this->parent_id,true);
+		$criteria->compare('concat(emp.first_name, " ",emp.last_name)',$this->emp_id,true);
 		$criteria->compare('access_type',$this->access_type);
 		$criteria->compare('is_active',$this->is_active);
 		$criteria->compare('created_by',$this->created_by);
 		$criteria->compare('created_date',$this->created_date,true);
 		$criteria->compare('updated_date',$this->updated_date,true);
 		$criteria->compare('updated_by',$this->updated_by);
-
+		$criteria->join = "INNER join tbl_employee em ON (em.emp_id=t.parent_id) ";
+		$criteria->join = "INNER join tbl_employee emp ON (emp.emp_id=t.emp_id) ";				
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));

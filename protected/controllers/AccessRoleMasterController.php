@@ -142,23 +142,23 @@ class AccessRoleMasterController extends Controller
 
 			// CHelper::debug($_GET['AccessRoleMaster']);
 
-			if($_GET['AccessRoleMaster']['parent_id']){
-			 $fullname['first_name'] = explode(" ", trim($_GET['AccessRoleMaster']['parent_id']))[0];
-			 $fullname['last_name'] = explode(" ", trim($_GET['AccessRoleMaster']['parent_id']))[1];
+		// 	if($_GET['AccessRoleMaster']['parent_id']){
+		// 	 $fullname['first_name'] = explode(" ", trim($_GET['AccessRoleMaster']['parent_id']))[0];
+		// 	 $fullname['last_name'] = explode(" ", trim($_GET['AccessRoleMaster']['parent_id']))[1];
 
-			 // CHelper::debug($_GET['AccessRoleMaster']['parent_id']);
-			$emp_id = Employee::model()->returnEmp_id($fullname);
-			$_GET['AccessRoleMaster']['parent_id'] = $emp_id;
-		}
+		// 	 // CHelper::debug($_GET['AccessRoleMaster']['parent_id']);
+		// 	$emp_id = Employee::model()->returnEmp_id($fullname);
+		// 	$_GET['AccessRoleMaster']['parent_id'] = $emp_id;
+		// }
 
-		if($_GET['AccessRoleMaster']['emp_id']){
-			 $fullname['first_name'] = explode(" ", trim($_GET['AccessRoleMaster']['emp_id']))[0];
-			 $fullname['last_name'] = explode(" ", trim($_GET['AccessRoleMaster']['emp_id']))[1];
+		// if($_GET['AccessRoleMaster']['emp_id']){
+		// 	 $fullname['first_name'] = explode(" ", trim($_GET['AccessRoleMaster']['emp_id']))[0];
+		// 	 $fullname['last_name'] = explode(" ", trim($_GET['AccessRoleMaster']['emp_id']))[1];
 
-			 // CHelper::debug($_GET['AccessRoleMaster']['parent_id']);
-			$emp_id = Employee::model()->returnEmp_id($fullname);
-			$_GET['AccessRoleMaster']['emp_id'] = $emp_id;
-		}
+		// 	 // CHelper::debug($_GET['AccessRoleMaster']['parent_id']);
+		// 	$emp_id = Employee::model()->returnEmp_id($fullname);
+		// 	$_GET['AccessRoleMaster']['emp_id'] = $emp_id;
+		// }
 
 
 		$model->attributes=$_GET['AccessRoleMaster'];

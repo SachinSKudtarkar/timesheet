@@ -40,7 +40,7 @@ class ProjectManagement extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('project_id,project_name, project_description, requester,estimated_start_date, estimated_end_date, total_hr_estimation_hour,', 'required'),//, estimated_end_date,estimated_start_date, status, type
+            array('project_id,project_name, project_description, requester,estimated_start_date, estimated_end_date,', 'required'),//, estimated_end_date,estimated_start_date, status, type
             array('type, hr_clocked,category, is_billable, created_by, updated_by, is_deleted', 'numerical', 'integerOnly' => true),
             array('project_name, project_description, requester', 'length', 'max' => 250),
             array('total_hr_estimation_hour', 'length', 'max' => 10),
