@@ -62,8 +62,11 @@ var pid = $(this).val();
 });
 var tval = $(this).val();
 
- if(tval != '')
+// $('.custom-loader').css('display','block');
+if(tval != '')
 {
+    // alert(tval);
+    $('#allocateR').attr('disabled',true);
 $('.custom-loader').show();
 $.ajax({
 				url: '" . CHelper::createUrl("resourceallocationprojectwork/fetchAllocatedResource") . "',
@@ -71,20 +74,22 @@ $.ajax({
 			    data: {pid : pid},
                 success:function(data)
                 {
-                $('.custom-loader').hide();
-                 if(data != 0)
-                 {
-
-                    var allocation = data.split(',');
-                    var length = allocation.length;
-                    for(var i = 0; i < length; i++)
+                    
+                    if(data != 0)
                     {
-                        var nextsplit = allocation[i].split('==');
-                        $('#txtarea2').append('<option value = '+nextsplit[0]+' >'+nextsplit[1]+'</option>');
-                        //$('#txtarea1 option[value='+nextsplit[0]+']').remove();
-                    }
+
+                        var allocation = data.split(',');
+                        var length = allocation.length;
+                        for(var i = 0; i < length; i++)
+                        {
+                            var nextsplit = allocation[i].split('==');
+                            $('#txtarea2').append('<option value = '+nextsplit[0]+' >'+nextsplit[1]+'</option>');
+                            //$('#txtarea1 option[value='+nextsplit[0]+']').remove();
+                        }
 
                     }
+                    $('.custom-loader').hide();
+                    $('#allocateR').attr('disabled',false);
                 }
 
             });
