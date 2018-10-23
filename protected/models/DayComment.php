@@ -370,16 +370,16 @@ class DayComment extends CActiveRecord {
         
         $time_diff_hrs = Yii::app()->db->createCommand($time_diff)->queryRow();
             
-        $difference = $this->calculateTimeDiff($time_diff_hrs['est_hrs'],$time_diff_hrs['utilized_hrs']);
+        // $difference = $this->calculateTimeDiff($time_diff_hrs['est_hrs'],$time_diff_hrs['utilized_hrs']);
         // $difference['difference'] = $time_diff_hrs['difference'];
         // $dif_exp = explode(":",$time_diff_hrs['difference']);
         // $difference['hours'] = $dif_exp[0];
         // $difference['mins'] = $dif_exp[1];
         // $difference['secs'] = $dif_exp[2];
-        $difference['estimated'] = $time_diff_hrs['est_hrs'];  
+        //$difference['estimated'] = $time_diff_hrs['est_hrs'];  
         // print_r(explode(":",$time_diff_hrs['difference'])[0]);die;
 
-        return $difference;
+        return $time_diff_hrs;
     }
 
     public function calculateTimeDiff($time1,$time2)
