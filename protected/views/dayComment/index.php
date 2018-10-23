@@ -840,6 +840,35 @@ function checkLength(){
                     });
                 }
             });
+
+            $('.wrkhrsClass').each(function () {
+            	var hrsId = $(this).attr('id');
+            	// alert('asdasd');
+            	var matched = hrsId.match(/wrkhrsClass(.*)/)
+            	// alert(matched[1]);
+            	if($(this).val() == '00' && $('#wrkminsClass'+matched[1]).val() == '00') {
+
+            		isValid = false;
+                	$(this).css({
+                    	"border": "1px solid red",
+                    	"background": "#FFCECE"
+                	});
+                	$('#wrkminsClass'+matched[1]).css({
+                    	"border": "1px solid red",
+                    	"background": "#FFCECE"
+                	});
+	            } else {
+	                $(this).css({
+	                    "border": "",
+	                    "background": ""
+	                });
+                	$('#wrkminsClass'+matched[1]).css({
+                    	"border": "",
+                    	"background": ""
+                	});	                     
+	            }
+            });
+            
             if (isValid == false)
                 e.preventDefault();
 

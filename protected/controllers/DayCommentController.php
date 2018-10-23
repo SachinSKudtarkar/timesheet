@@ -1055,6 +1055,7 @@ where  st.emp_id = {$userId} group by st.stask_id"; //pa.approved = 2  and
                  $query = "select * from tbl_sub_task as st inner join tbl_pid_approval as pa on (st.pid_approval_id = pa.pid_id)"
                     . " where  st.sub_project_id={$spid} and emp_id ={$userId} "; // pa.approved = 2 and
             $res = Yii::app()->db->createCommand($query)->queryAll();
+            
             }else{
                  $query = "select * from tbl_sub_task as st inner join tbl_pid_approval as pa on (st.pid_approval_id = pa.pid_id)"
                     . " where emp_id ={$userId} "; // pa.approved = 2 and
@@ -1074,7 +1075,7 @@ where  st.emp_id = {$userId} group by st.stask_id"; //pa.approved = 2  and
 
 
                 if (!empty($res2['stask_id'])) {
-                    $query = "SELECT BIG_SEC_TO_TIME(sum(BIG_TIME_TO_SEC(da.hours))) as hours ,sb.est_hrs,sb.stask_id,sb.sub_task_name
+                    $query = "SELECT BIG_SEC_TO_TIME(sum(BIG_TIME_TO_SEC(da.hours))) as hours ,sb.est_hrs,sb.stask_id,da.stask_id as dstask_id,sb.sub_task_name
                                         from tbl_day_comment as da right join tbl_sub_task as sb on (da.stask_id=sb.stask_id ) right join
                                         tbl_project_management as pm on (da.pid=pm.pid) right join tbl_employee em on (da.emp_id=em.emp_id)
                                 WHERE  da.emp_id ={$userId} and da.stask_id = {$val['stask_id']}
@@ -1091,23 +1092,34 @@ where  st.emp_id = {$userId} group by st.stask_id"; //pa.approved = 2  and
                 $hours[$val['stask_id']] = $this->getTimeToHrs($timeRem);
             }
 
-
+            
             foreach ($newData as $key => $val) {
-                $hours_old = explode(":",$val['hours'])[0];
-                if (empty($val)) {
-                    continue;
-                }
-                if (empty($hours_old)) {
-                    continue;
-                }
-                if ($val['est_hrs'] > $hours_old) {
-
+                
+                if($val['stask_id'] == $val['dstask_id']){
+                    
+                    // echo $val['hours'].'my<br>';
                     $nn[] = $val;
-                    $timeRem = $val['est_hrs'] - $hours_old;
-                    $hours[$val['stask_id']] = $timeRem;
+                }else{
+                    $hours_old = explode(":",$val['hours'])[0];
+                    if (empty($val)) {
+                        continue;
+                    }
+                    if (empty($hours_old) && $hours_old != 0) {
+                        // echo $val['hours'];
+                        // echo explode(":",$val['hours'])[0];
+
+                        continue;
+                    }
+                    // echo '-'.$hours_old.'<br>';
+                    if ($val['est_hrs'] > $hours_old || $hours_old == 0) {
+                        // alert('asdasd');
+                        $nn[] = $val;
+                        $timeRem = $val['est_hrs'] - $hours_old;
+                        $hours[$val['stask_id']] = $timeRem;
+                    }
                 }
             }
-
+            // die;
 
             $list = CHtml::listData($nn, 'stask_id', 'sub_task_name');
             //$hourslist = CHtml::listData($hours);
@@ -1317,6 +1329,7 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.sub_project_i
         $model->user_name = $subTaskDetails['name'];
 
         // Uncomment the following line if AJAX validation is needed
+        
         // $this->performAjaxValidation($model);
         $logmodel = Yii::app()->db->createCommand("SELECT * FROM tbl_day_comment_approved_hrs_log where stask_id = {$model->stask_id} order by created_at desc")->queryAll();
 

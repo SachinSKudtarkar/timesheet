@@ -106,26 +106,55 @@ $x = $this->widget('zii.widgets.grid.CGridView', array(
     'columns' => array(
         //'pid',
         array(
+            'header' => 'Day',
             'name' => 'day',
             'value' => array($model, 'getFormatedDate'),
             'type' => 'raw',
         ),
-        'project_name',
-        'sub_project_name',
-        'sub_task_name',
         array(
+            'header'=> 'Program Name',
+            'name' => 'project_name',
+        ),
+        array(
+            'header'=> 'Project Name',
+            'name' => 'sub_project_name',
+        ),
+        array(
+            'header'=> 'Sub Task Name',
+            'name' => 'sub_task_name',
+        ),
+        array(
+            'header' => 'Commented By',
             'name' => 'name',
         ),
-
         array(
+            'header' => 'Comment',
             'name' => 'comment',
         )
         ,
         array(
+            'header' => 'Utilized Hours',
             'name' => 'hours',
             'filter' => FALSE,
-        )
-        ,
+        ),
+        array(
+            'header'=> 'Approved Hours',
+            'name' => 'approved_hrs',
+            'filter' => FALSE,
+        ),
+        array(
+            'header' => 'Approve Button',
+            'class'=>'CButtonColumn',
+            'template' => '{update}',
+            'buttons' => array
+                ('update' => array
+                    (
+                    'label' => 'Update',
+                    'url' => 'Yii::app()->createUrl("/daycomment/ApproveHours", array("id"=>$data["day_id"]))',
+                    'visible' => "CHelper::isAccess('MANAGER','update')",
+                ),
+            ),
+        ),
 //         'comment',
 //        'hours',
     ),
