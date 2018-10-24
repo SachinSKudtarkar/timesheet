@@ -86,7 +86,7 @@ $cs = Yii::app()->getClientScript();
 <!-- <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#barChartModal" id="barChartBtn">Open Modal</button> -->
 
 <!-- Modal -->
-<div id="timesheetModal" class="modal fade" role="dialog" style="z-index:0">
+<div id="timesheetModal" class="modal fade" role="dialog" style="z-index:0;">
   <div class="modal-dialog" style="height:auto">
 
     <!-- Modal content-->
@@ -95,7 +95,7 @@ $cs = Yii::app()->getClientScript();
         <button type="button" class="close" data-dismiss="modal">&times;</button>
             <h4 class="modal-title">Project Timesheet Records</h4>
         </div>
-        <div class="modal-body" style="padding: 10px;height:auto;" >
+        <div class="modal-body" style="padding: 10px;height:auto;overflow: scroll;" >
             <table id="timesheetreports" class="display table table-bordered table-striped" style="width:100%;height:auto">
                 <thead>
                     <tr>
@@ -451,12 +451,17 @@ Yii::app()->clientScript->registerCssFile(
             "dom": "BfrtiS",
             "processing": true,
             "serverSide": true,
+            "ordering": false,
             "ajax": {
                 "url": "<?php echo CHelper::createUrl('reports/fetchRTimesheetReport/') ?>",
                 "type": "POST",
                 "data": {"project_id":project_id,"emp_id": $("#emp_id").val(),"loaddata":loaddata},
                 // "success":{alert('asdasd');}
             },
+            "start":0,
+            "length": 5,
+            // "pageLength":3,
+            // "pagingType": "full_numbers",
             // "dom": 'Bfrtip',
             "buttons": [
                 {
@@ -464,8 +469,9 @@ Yii::app()->clientScript->registerCssFile(
                         "title": 'Export Timesheet Reports'
                 }
             ],
-            "scrollY": 300,
+            "scrollY": 260,
             "deferRender": true,
+            // "deferLoading": 10,
             "scroller": {
                 loadingIndicator: true
             }

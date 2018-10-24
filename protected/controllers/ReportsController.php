@@ -686,9 +686,11 @@ class ReportsController extends Controller {
         }
         
         $count = count($data);
+        $jsonArray['draw'] = $_REQUEST['draw'];
         $jsonArray['recordsTotal'] = $count;
-        $jsonArray['recordsFiltered'] = $count;
+        $jsonArray['recordsFiltered'] = 10;
         $jsonArray['data'] = $data;
+
         echo json_encode($jsonArray);die;
     }
 
@@ -701,4 +703,6 @@ class ReportsController extends Controller {
         $projectData['project_id'] = $_POST['project_id'];
         echo json_encode($projectData);die;
     }
+
+
 }
