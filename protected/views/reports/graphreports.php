@@ -102,7 +102,7 @@ $cs = Yii::app()->getClientScript();
         <button type="button" class="close" data-dismiss="modal">&times;</button>
             <h4 class="modal-title">Project Task and Sub Tasks Report With Hours</h4>
         </div>
-        <div class="modal-body" style="padding: 10px;height:auto;overflow:scroll" >
+        <div class="modal-body" style="padding: 10px;height:auto;" >
             <table id="projectreports" class="display table table-bordered table-striped" style="width:100%;height:auto">
                 <thead>
                     <tr>
@@ -119,7 +119,7 @@ $cs = Yii::app()->getClientScript();
 
                     </tr>
                 </thead>
-                <tfoot>
+                <!-- <tfoot>
                     <tr>
                         <td>Task ID</td>
                         <td>Task Name</td>
@@ -130,16 +130,16 @@ $cs = Yii::app()->getClientScript();
                         <td>Estimated Hrs</td>
                         <td>Utilized Hrs</td>
                         
-                        <!-- <td>Created At</td> -->
+                        //<td>Created At</td> 
 
                     </tr>
-                </tfoot>
+                </tfoot> -->
             </table>
         </div>
 
-        <div class="modal-footer">
+<!--         <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        </div>
+        </div> -->
     </div>
 
   </div>
@@ -173,7 +173,7 @@ $cs = Yii::app()->getClientScript();
 
                     </tr>
                 </thead>
-                <tfoot>
+<!--                 <tfoot>
                     <tr>
                         <td>Project Id</td>
                         <td>Project Name</td>
@@ -186,13 +186,13 @@ $cs = Yii::app()->getClientScript();
                         <td>Hours</td>
                         <td>Comments</td>
                     </tr>
-                </tfoot>
+                </tfoot> -->
             </table>
         </div>
 
-        <div class="modal-footer">
+<!--         <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        </div>
+        </div> -->
     </div>
 
   </div>
@@ -426,8 +426,8 @@ Yii::app()->clientScript->registerCssFile(
 
         // Avoid upside-down labels
         // return 0;
-        return (angle < 120 || angle > 270) ? angle : angle + 180;  // labels as rims
-        //return (angle < 180) ? angle - 90 : angle + 90;  // labels as spokes
+        // return (angle < 120 || angle > 270) ? angle : angle;  // labels as rims
+        return (angle < 180) ? angle - 90 : angle + 90;  // labels as spokes
     }
 
 
@@ -435,8 +435,9 @@ Yii::app()->clientScript->registerCssFile(
     {
         var project_arr = project_id.split('_');
         var project_id = project_arr[1];
-        
+        $(".custom-loader").show();
         if(project_arr[0] !=  'project') {
+            $(".custom-loader").hide();
             alert('Please select a valid project. It seems you have selected a program');
             return false;
         }
@@ -468,6 +469,7 @@ Yii::app()->clientScript->registerCssFile(
         $("#resources").text(resources);
         // alert(projectData.project_id);
         $("#project_id").val(projectData.project_id);
+        $(".custom-loader").hide();
     }
 
     
@@ -480,7 +482,7 @@ Yii::app()->clientScript->registerCssFile(
         var project_id = $("#project_id").val();
         
         $('#projectreports').DataTable( {
-            "dom": "Bfrtip",
+            "dom": "BfrtiS",
             "processing": true,
             "serverSide": true,
             "ajax": {
@@ -494,7 +496,12 @@ Yii::app()->clientScript->registerCssFile(
                         "extend": 'excelHtml5',
                         "title": 'Export Project Reports'
                 }
-            ]
+            ],
+            "scrollY": 300,
+            "deferRender": true,
+            "scroller": {
+                loadingIndicator: true
+            }
         });
     });
 
@@ -508,7 +515,7 @@ Yii::app()->clientScript->registerCssFile(
         var project_id = $("#project_id").val();
         
         $('#timesheetreports').DataTable( {
-            "dom": "Bfrtip",
+            "dom": "BfrtiS",
             "processing": true,
             "serverSide": true,
             "ajax": {
@@ -522,7 +529,12 @@ Yii::app()->clientScript->registerCssFile(
                         "extend": 'excelHtml5',
                         "title": 'Export Timesheet Reports'
                 }
-            ]
+            ],
+            "scrollY": 300,
+            "deferRender": true,
+            "scroller": {
+                loadingIndicator: true
+            }
         });
     });
 

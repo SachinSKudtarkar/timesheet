@@ -32,11 +32,12 @@ $cs = Yii::app()->getClientScript();
         <div class="span6" style="margin-left: 40%">
             <table class="table table-bordered text-center">
                 <tr>
-                    <th class="hidden" id="prjrep"><a><h1 data-toggle="modal" data-target="#timesheetModal" class="timesheetBtn" >Project Timesheet </h1></a>
+                    <th class="hidden" id="prjrep"><a><h1 data-toggle="modal" data-target="#timesheetModal" class="timesheetBtn" data-loaddata="1">Project Timesheet </h1></a>
                         <input type="hidden" id="project_id">
                     </th>
-                    <th><a><h1 data-toggle="modal" data-target="#timesheetModal" class="timesheetBtn" >All Timesheet </h1></a>
+                    <th><a><h1 data-toggle="modal" data-target="#timesheetModal" class="timesheetBtn" data-loaddata="2">All Timesheet </h1></a>
                         <input type="hidden" id="emp_id" value="<?php echo Yii::app()->session['login']['user_id']; ?>">
+                        <input type="hidden" id="loaddata">
                     </th>
                     
                 </tr>
@@ -94,7 +95,7 @@ $cs = Yii::app()->getClientScript();
         <button type="button" class="close" data-dismiss="modal">&times;</button>
             <h4 class="modal-title">Project Timesheet Records</h4>
         </div>
-        <div class="modal-body" style="padding: 10px;height:auto;overflow:scroll" >
+        <div class="modal-body" style="padding: 10px;height:auto;" >
             <table id="timesheetreports" class="display table table-bordered table-striped" style="width:100%;height:auto">
                 <thead>
                     <tr>
@@ -113,7 +114,7 @@ $cs = Yii::app()->getClientScript();
 
                     </tr>
                 </thead>
-                <tfoot>
+<!--                 <tfoot>
                     <tr>
                         <td>Project Id</td>
                         <td>Project Name</td>
@@ -126,13 +127,13 @@ $cs = Yii::app()->getClientScript();
                         <td>Hours</td>
                         <td>Comments</td>
                     </tr>
-                </tfoot>
+                </tfoot> -->
             </table>
         </div>
-
+<!-- 
         <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        </div>
+        </div> -->
     </div>
 
   </div>
@@ -382,8 +383,9 @@ Yii::app()->clientScript->registerCssFile(
     {
         var project_arr = project_id.split('_');
         var project_id = project_arr[1];
-        
+        $(".custom-loader").show();
         if(project_arr[0] !=  'project') {
+            $(".custom-loader").hide();
             // alert('Please select a valid project. It seems you have selected a program');
             return false;
         }
@@ -405,6 +407,8 @@ Yii::app()->clientScript->registerCssFile(
         $("#project_per").text(project_per+'%');
         $("#project_id").val(projectData.project_id);
         $("#prjrep").removeClass('hidden');
+        $(".custom-loader").hide();
+        
     }
 
     
@@ -441,15 +445,17 @@ Yii::app()->clientScript->registerCssFile(
         // datatable.destroy();
         // alert($("#project_id").val());
         var project_id = $("#project_id").val();
+        var loaddata = $("#loaddata").val();
         $('.modal').css('z-index',1050);
         $('#timesheetreports').DataTable( {
-            "dom": "Bfrtip",
+            "dom": "BfrtiS",
             "processing": true,
             "serverSide": true,
             "ajax": {
                 "url": "<?php echo CHelper::createUrl('reports/fetchRTimesheetReport/') ?>",
                 "type": "POST",
-                "data": {"project_id":project_id,"emp_id": $("#emp_id").val()}
+                "data": {"project_id":project_id,"emp_id": $("#emp_id").val(),"loaddata":loaddata},
+                // "success":{alert('asdasd');}
             },
             // "dom": 'Bfrtip',
             "buttons": [
@@ -457,21 +463,28 @@ Yii::app()->clientScript->registerCssFile(
                         "extend": 'excelHtml5',
                         "title": 'Export Timesheet Reports'
                 }
-            ]
+            ],
+            "scrollY": 300,
+            "deferRender": true,
+            "scroller": {
+                loadingIndicator: true
+            }
         });
+
+
     });
 
 
     $("#barChartBtn").click(function(){
-        // drawBarChart();
-        // $("#barchartDiv").show();
-                $('#projectreports').DataTable().destroy();
+        $('#projectreports').DataTable().destroy();
     });
 
     $(".timesheetBtn").click(function(){
-        // drawBarChart();
-        // $("#barchartDiv").show();
-                $('#timesheetreports').DataTable().destroy();
+
+            var targetData = $(this).data('loaddata');
+            $("#loaddata").val(targetData);
+        
+            $('#timesheetreports').DataTable().destroy();
     });
 
 

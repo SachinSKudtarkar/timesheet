@@ -497,7 +497,7 @@ class ReportsController extends Controller {
     {
         $this->layout = 'column1';
         $emp_id  = Yii::app()->session['login']['user_id'];
-    $data = Yii::app()->db->createCommand("SELECT  TIME_FORMAT(BIG_SEC_TO_TIME( SUM( BIG_TIME_TO_SEC( `hours` )) ),'%H:%i') AS utilized_hrs, SUM((TIME_FORMAT(`hours`,'%H.%i') * budget_per_hour)) as utilized_budget FROM tbl_day_comment dc left join tbl_assign_resource_level rl on rl.emp_id = dc.emp_id left join tbl_level_master lm on lm.level_id= rl.level_id where dc.emp_id={$emp_id}")->queryRow();
+        $data = Yii::app()->db->createCommand("SELECT  TIME_FORMAT(BIG_SEC_TO_TIME( SUM( BIG_TIME_TO_SEC( `hours` )) ),'%H:%i') AS utilized_hrs, SUM((TIME_FORMAT(`hours`,'%H.%i') * budget_per_hour)) as utilized_budget FROM tbl_day_comment dc left join tbl_assign_resource_level rl on rl.emp_id = dc.emp_id left join tbl_level_master lm on lm.level_id= rl.level_id where dc.emp_id={$emp_id}")->queryRow();
         $this->render('timesheetgraphreports', array('data'=>$data));
     }
 
@@ -660,7 +660,7 @@ class ReportsController extends Controller {
     {
         $data = [];
         $where ='';
-        if(!empty($_POST['project_id']) && !empty($_POST['emp_id'])){
+        if($_POST['loaddata'] == "1"){
             $where = 'where dc.emp_id='.$_POST['emp_id'].' and dc.spid='.$_POST['project_id'];
         }else{
             $where = 'where dc.emp_id='.$_POST['emp_id'];
