@@ -836,6 +836,7 @@ text.source {
 }
 #treecontainer svg{
     padding-left:50px;
+    overflow: visible;
 }
 .node circle {
   fill: #fff;

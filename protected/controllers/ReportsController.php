@@ -496,9 +496,10 @@ class ReportsController extends Controller {
     public function actiontimesheetReports()
     {
         $this->layout = 'column1';
-        $emp_id  = Yii::app()->session['login']['user_id'];
-        $data = Yii::app()->db->createCommand("SELECT  TIME_FORMAT(BIG_SEC_TO_TIME( SUM( BIG_TIME_TO_SEC( `hours` )) ),'%H:%i') AS utilized_hrs, SUM((TIME_FORMAT(`hours`,'%H.%i') * budget_per_hour)) as utilized_budget FROM tbl_day_comment dc left join tbl_assign_resource_level rl on rl.emp_id = dc.emp_id left join tbl_level_master lm on lm.level_id= rl.level_id where dc.emp_id={$emp_id}")->queryRow();
-        $this->render('timesheetgraphreports', array('data'=>$data));
+        
+
+        
+        $this->render('timesheetgraphreports');
     }
 
 
@@ -606,10 +607,14 @@ class ReportsController extends Controller {
 
     public function actionfetchResourcesData()
     {
-        $emp_id  = Yii::app()->session['login']['user_id'];
-        $emp_name = ucwords(Yii::app()->session['login']['first_name'].' '.Yii::app()->session['login']['last_name']);
+        $emp_id  = $_POST['emp_id'];
+        // $emp_name = ucwords(Yii::app()->session['login']['first_name'].' '.Yii::app()->session['login']['last_name']);
+        $emp_name = Yii::app()->db->createCommand("Select concat(first_name,' ',last_name) as emp_name from tbl_employee where emp_id = {$emp_id}")->queryRow();
+        
         $graphArr = [];$programArr = [];$nodeArr = [];
         $query = "select sub_project_id as project_id,sub_project_name as project_name ,pm.pid as program_id,project_name as program_name from tbl_sub_task st left join tbl_sub_project sp on sp.spid = sub_project_id left join tbl_project_management pm on pm.pid = sp.pid where emp_id = {$emp_id} group by sub_project_id order by project_name";
+
+        $emp_project_data = Yii::app()->db->createCommand("SELECT  TIME_FORMAT(BIG_SEC_TO_TIME( SUM( BIG_TIME_TO_SEC( `hours` )) ),'%H:%i') AS utilized_hrs, SUM((TIME_FORMAT(`hours`,'%H.%i') * budget_per_hour)) as utilized_budget FROM tbl_day_comment dc left join tbl_assign_resource_level rl on rl.emp_id = dc.emp_id left join tbl_level_master lm on lm.level_id= rl.level_id where dc.emp_id={$emp_id}")->queryRow();
         
         $graphArr = Yii::app()->db->createCommand($query)->queryAll();
         $graphArr[] = array('project_id'=>'#99','project_name' => '%Exit%', 'program_id'=>'','program_name'=>'test');
@@ -648,10 +653,13 @@ class ReportsController extends Controller {
 
             }
 
-            $graphArr = array('name'=>$emp_name, 'children'=>$programArr);
+            $graphDataArr['graphdata'] = array('name'=>ucwords($emp_name['emp_name']), 'children'=>$programArr);
         }
+
+
+        $graphDataArr['empdata'] = $emp_project_data;
         // print_r($graphArr);die;
-        echo json_encode($graphArr);
+        echo json_encode($graphDataArr);
         
         die;       
     }

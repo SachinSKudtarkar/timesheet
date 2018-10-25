@@ -24,6 +24,21 @@ $cs = Yii::app()->getClientScript();
 
 <h1>Resource Timesheet Reports</h1>
 <div class="span11">
+
+    <?php
+
+            $employeeData = Employee::model()->findAll(array('select' => "emp_id,first_name,last_name,email", 'order' => 'first_name', 'condition' => 'is_active=1'));
+            $emp_list[] = 'Select Employee';
+            foreach ($employeeData as $key => $value) {
+                $emp_list[$value['emp_id']] = $value['first_name'] . " " . $value['last_name']."  (".$value['email'].")";
+            }
+            // echo CHtml::label('Select Employee', '');
+            echo CHtml::dropDownList("emplist", '', $emp_list);
+
+
+        ?>
+</div>
+<div class="span11" id="graphDataDiv" style="display:none;">
     <div class="span6" id="treecontainer">
 
         <!-- <svg id="gameboard"></svg> -->
@@ -168,17 +183,39 @@ Yii::app()->clientScript->registerCssFile(
 <script type="text/javascript">
     var treeData = [];
     var barData = [];
-    $(document).ready(function() {
+    $('#emplist').change(function(e) {
         
-  
-
+        $("#emp_id").val($(this).val());
+        
+        if($('svg').length > 0) {
+            $('svg').remove();
+        }
         treeData = $.parseJSON($.ajax({
         url:  '<?php echo CHelper::createUrl('reports/fetchResourcesData') ?>',
+        type: 'post',
+        data: {emp_id: $(this).val() },
         dataType: "json", 
         async: false
         }).responseText);
 
-        drawGraph(treeData);
+        console.log(treeData.empdata);
+        if(treeData.graphdata.children != '')
+        {
+            drawGraph(treeData.graphdata);
+            var projectData = treeData.empdata;
+            var revenue_generated = projectData.utilized_budget != null ? projectData.utilized_budget : 0;
+            $("#revenue_generated").text(revenue_generated);
+            $("#revenue_text").text('Project Revenue Generated');
+            var hours_worked = projectData.utilized_hrs != null ? projectData.utilized_hrs : 0;
+            $("#hours_worked").text(hours_worked);
+            $("#hours_text").text('Project Hours Worked');
+            
+            $("#graphDataDiv").show();
+        }else{
+            alert('The selected user does not have any timesheet records.');
+            $("#graphDataDiv").hide();
+        }
+        
         // drawBarChart();
     }); 
 
