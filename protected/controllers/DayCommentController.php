@@ -292,6 +292,7 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.stask_id";
                     $hours = explode(':', $v->hours);
                     $arrData[$day][$dayNo]['hrs'] = $hours[0];
                     $arrData[$day][$dayNo]['mnts'] = $hours[1];
+                    $arrData[$day][$dayNo]['remarks'] = $v->remarks;
                     $arrData[$day][$dayNo]['is_submitted'] = $v->is_submitted;
                     $arrData[$day][$dayNo]['shift'] = $v->shift;
 
@@ -392,15 +393,17 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.stask_id";
                 $whrcondition = "t.comment like '%{$comment}%' ";
             }
 
-            $sql1 = "select t.day,t.comment,t.hours,CONCAT(first_name,' ',last_name) as name,sb.sub_project_name,pm.project_name,st.sub_task_name from tbl_day_comment as t
+            $sql1 = "select t.id as day_id,t.day,t.comment,t.hours,CONCAT(first_name,' ',last_name) as name,sb.sub_project_name,pm.project_name,st.sub_task_name,t.logged_hrs from tbl_day_comment as t
                   INNER JOIN tbl_project_management pm ON (t.pid = pm.pid) INNER JOIN tbl_employee emp ON (emp.emp_id = t.emp_id) LEFT join tbl_sub_project sb ON (sb.spid=t.spid )left Join tbl_sub_task as st on (st.stask_id = t.stask_id)
                   where  $whrcondition  order by id, day DESC";
             $search_data = Yii::app()->db->createCommand($sql1)->queryAll();
         }else{
-            $sql1 = "select t.day,t.comment,t.hours,CONCAT(first_name,' ',last_name) as name,sb.sub_project_name,pm.project_name,st.sub_task_name from tbl_day_comment as t
+            $sql1 = "select t.id as day_id,t.day,t.comment,t.hours,CONCAT(first_name,' ',last_name) as name,sb.sub_project_name,pm.project_name,st.sub_task_name,t.logged_hrs from tbl_day_comment as t
                   INNER JOIN tbl_project_management pm ON (t.pid = pm.pid) INNER JOIN tbl_employee emp ON (emp.emp_id = t.emp_id) LEFT join tbl_sub_project sb ON (sb.spid=t.spid )left Join tbl_sub_task as st on (st.stask_id = t.stask_id)
                     order by id DESC";
             $search_data = Yii::app()->db->createCommand($sql1)->queryAll();
+            // echo '<pre>';
+            // print_r($search_data);die;
         }
 
         if ($this->isExportRequest()) {
@@ -419,10 +422,11 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.stask_id";
                     $value['name'],
                     $value['comment'],
                     $value['hours'],
+                    $value['logged_hrs']
                 );
             }
 
-            $export_column_name = array('Sr No.','Day', 'Program Name','Project Name', 'Task Name', 'Employee name',  'Comment', 'Hours');
+            $export_column_name = array('Sr No.','Day', 'Program Name','Project Name', 'Task Name', 'Employee name',  'Comment', 'Hours','Logged Hours');
             $filename = "daily_comment " . date('d_m_Y') . "_" . date('H') . "_hr.csv";
             CommonUtility::downloadDataInCSV($export_column_name, $finalArr, $filename);
         }
@@ -622,6 +626,7 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.stask_id";
         $arrWrkmnts = isset($_POST['mnts']) ? $_POST['mnts'] : '';
         $is_submitted = isset($_POST['yt1']) ? 1 : 0;
         $selected_date = isset($_REQUEST['selected_date']) ? $_REQUEST['selected_date'] : '';
+        $remarks = isset($_REQUEST['remarks']) ? $_REQUEST['remarks'] : null;
         $shift = isset($_REQUEST['shift']) ? $_REQUEST['shift'] : '';
         $importData = array();
         $pidsarray = explode(',', $pidsid);
@@ -647,17 +652,27 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.stask_id";
 
 
         if (!empty($projectsName)) {
+            $emp_id = Yii::app()->session['login']['user_id'];
             foreach ($projectsName as $key => $value) {
+                $commentHours = str_pad($arrWrkhrs[$key], 2, "0", STR_PAD_LEFT) . ':' . str_pad($arrWrkmnts[$key], 2, "0", STR_PAD_LEFT) . ':00';
+                // echo "select remarks from tbl_day_comment where day LIKE '{$selected_date}' and emp_id = {$emp_id} and stask_id = {$SubTaskName[$key]}";
+                $checkApprove = Yii::app()->db->createCommand("select remarks from tbl_day_comment where day = '{$selected_date}' and emp_id = {$emp_id} and stask_id = {$SubTaskName[$key]}")->queryRow();
+                if($checkApprove['remarks'] != null)
+                {
+                    continue;
+                }
                 $all_data[] = array(
                     'day' => $selected_date,
-                    'emp_id' => Yii::app()->session['login']['user_id'],
+                    'emp_id' => $emp_id,
                     'comment' => $comments[$key],
                     'pid' => $value,
                     'spid' => $SubProjectName[$key],
                     'stask_id' => $SubTaskName[$key],
-                    'hours' => str_pad($arrWrkhrs[$key], 2, "0", STR_PAD_LEFT) . ':' . str_pad($arrWrkmnts[$key], 2, "0", STR_PAD_LEFT) . ':00',
+                    'hours' => $commentHours,
+                    'logged_hrs' => $commentHours,
                     'is_submitted' => $is_submitted,
                     'shift'=> $shift,
+                    'remarks' => $remarks[$key],
                     'created_by' => Yii::app()->session['login']['user_id'],
                     'created_at' => date('Y-m-d H:i:s')
                 );
@@ -1257,8 +1272,8 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.sub_project_i
 
             foreach ($all_data as $k => $v) {
                 $command = Yii::app()->db->createCommand();
-                $condition = 'day = :day AND emp_id=:emp_id';
-                $params = array(':day' => $v['day'], ':emp_id' => $v['emp_id']);
+                $condition = 'day = :day AND emp_id=:emp_id AND stask_id=:stask_id';
+                $params = array(':day' => $v['day'], ':emp_id' => $v['emp_id'], ':stask_id' => $v['stask_id']);
                 $command->delete('tbl_day_comment', $condition, $params);
             }
         }
@@ -1286,25 +1301,14 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.sub_project_i
 
         $time_diff_hrs = Yii::app()->db->createCommand($time_diff)->queryRow();
 
-        $difference = DayComment::calculateTimeDiff($time_diff_hrs['est_hrs'],$time_diff_hrs['utilized_hrs']);
-
-
-        if(empty($time_diff_hrs['difference']))
-        {
-
-            $time_diff_hrs_mins_q = "SELECT HOUR('{$time_diff_hrs['est_hrs']}') as hours, MINUTE('{$time_diff_hrs['est_hrs']}') as mins";
-
-        }
-
-        $time_diff_hrs_mins = Yii::app()->db->createCommand($time_diff_hrs_mins_q)->queryRow();
-
         if (!empty($time_diff_hrs)) {
-
+            $difference = DayComment::calculateTimeDiff($time_diff_hrs['est_hrs'],$time_diff_hrs['utilized_hrs']);
             $time_array['difference'] = $difference['difference'];
             $time_array['hours'] = $difference['hours'];
             $time_array['mins'] = $difference['mins'];
 
             $time_array['status'] = 1;
+
         }else{
             $time_array['status'] = 0;
         }
@@ -1337,7 +1341,7 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.sub_project_i
 
             $model->attributes = $_POST['DayComment'];
 
-            $model->approved_hrs = str_pad($_POST['hrs'], 2, "0", STR_PAD_LEFT) . ':' . str_pad($_POST['mins'], 2, "0", STR_PAD_LEFT) . ':00';
+            $model->hours = str_pad($_POST['hrs'], 2, "0", STR_PAD_LEFT) . ':' . str_pad($_POST['mins'], 2, "0", STR_PAD_LEFT) . ':00';
             $model->remarks = $_POST['DayComment']['remarks'];
 
 
@@ -1346,7 +1350,7 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.sub_project_i
 
                 $DcLog = new DayCommentApprovedHrsLog;
                 $DcLog->stask_id = $model->stask_id;
-                $DcLog->approved_hrs = $model->approved_hrs;
+                $DcLog->approved_hrs = $model->logged_hrs;
                 $DcLog->remarks = $model->remarks;
                 $DcLog->save(FALSE);
                 $this->redirect(array('approvehours', 'id' => $id));

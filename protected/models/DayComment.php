@@ -31,6 +31,7 @@ class DayComment extends CActiveRecord {
     public $usedHrs;
     public $approved_hrs;
     public $remarks;
+    public $logged_hrs;
 
     /**
      * @return string the associated database table name
@@ -52,7 +53,7 @@ class DayComment extends CActiveRecord {
             array('comment', 'length', 'max' => 1000),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, pid, day, comment, created_by,hours, projectName, project_name ,sub_project_name, emp_id,name, is_submitted,approved_hrs,remarks', 'safe', 'on' => 'search,searchAll'),
+            array('id, pid, day, comment, created_by,hours, projectName, project_name ,sub_project_name, emp_id,name, is_submitted,approved_hrs,logged_hrs,remarks', 'safe', 'on' => 'search,searchAll'),
             array('pid, day, comment,hours, projectName, project_name ,sub_project_name,shift,approved_hrs,remarks,  ', 'safe'),
         );
     }
@@ -85,6 +86,7 @@ class DayComment extends CActiveRecord {
             'sub_task_name' => 'Task',
             'shift' => 'Shift',
             'approved_hrs' => 'Approved Hours',
+            'logged_hrs' => 'Logged Hours',
             'remarks' => 'Approval Remarks',
         );
     }
@@ -109,7 +111,7 @@ class DayComment extends CActiveRecord {
             $criteria->condition = ' (t.day between "' . date('Y-m-d', strtotime($this->from)) . '" AND "' . date('Y-m-d', strtotime($this->to)) . ' 23:59:59")';
 
         }
-        $criteria->select = "t.*, pm.project_name,t.comment,t.day,t.comment,t.hours,t.emp_id,sb.sub_project_name,st.sub_task_name";
+        $criteria->select = "t.*, pm.project_name,t.comment,t.day,t.comment,t.hours,t.emp_id,sb.sub_project_name,st.sub_task_name,t.remarks";
         $criteria->compare('id', $this->id);
         $criteria->compare('t.pid', $this->pid);
         $criteria->compare('t.emp_id', Yii::app()->session['login']['user_id']);
@@ -117,6 +119,7 @@ class DayComment extends CActiveRecord {
         $criteria->compare('t.comment', $this->comment, true);
         $criteria->compare('t.hours', $this->hours, true);
         $criteria->compare('created_by', $this->created_by);
+        $criteria->compare('t.remarks', $this->remarks);
         $criteria->compare('sb.sub_project_name', $this->sub_project_name);
         $criteria->compare('pm.project_name', $this->project_name, true);
         $criteria->join = "INNER JOIN tbl_project_management pm ON t.pid = pm.pid LEFT join tbl_sub_project sb ON sb.spid=t.spid LEFT join tbl_sub_task as st ON st.stask_id=t.stask_id";
@@ -365,11 +368,11 @@ class DayComment extends CActiveRecord {
 
     public function getDifference($sub_project_id,$sub_task_id)
     {
-        $time_diff = "SELECT TIMEDIFF(BIG_SEC_TO_TIME((est_hrs*60)*60),BIG_SEC_TO_TIME( SUM( BIG_TIME_TO_SEC( `hours` ) ) )) as difference, BIG_SEC_TO_TIME((est_hrs*60)*60) as est_hrs, BIG_SEC_TO_TIME( SUM( BIG_TIME_TO_SEC( `hours` ) ) ) AS utilized_hrs  from tbl_sub_task as st inner join tbl_day_comment dc on dc.stask_id = st.stask_id where sub_project_id = {$sub_project_id} and st.stask_id = {$sub_task_id}";
+        $time_diff = "SELECT BIG_SEC_TO_TIME((est_hrs*60)*60) as est_hrs, BIG_SEC_TO_TIME( SUM( BIG_TIME_TO_SEC( `hours` ) ) ) AS utilized_hrs  from tbl_sub_task as st inner join tbl_day_comment dc on dc.stask_id = st.stask_id where sub_project_id = {$sub_project_id} and st.stask_id = {$sub_task_id}";
 
         $time_diff_hrs = Yii::app()->db->createCommand($time_diff)->queryRow();
 
-        // $difference = $this->calculateTimeDiff($time_diff_hrs['est_hrs'],$time_diff_hrs['utilized_hrs']);
+        $difference = $this->calculateTimeDiff($time_diff_hrs['est_hrs'],$time_diff_hrs['utilized_hrs']);
         // $difference['difference'] = $time_diff_hrs['difference'];
         // $dif_exp = explode(":",$time_diff_hrs['difference']);
         // $difference['hours'] = $dif_exp[0];
@@ -379,28 +382,34 @@ class DayComment extends CActiveRecord {
         $difference['estimated'] = $time_diff_hrs['est_hrs'];
         // print_r(explode(":",$time_diff_hrs['difference'])[0]);die;
 
-        return $time_diff_hrs;
+        return $difference;
     }
 
     public function calculateTimeDiff($time1,$time2)
     {
         // 10:30:00 - 1:20:00
+        // $difference = 0;
+        $hours = 0;
+        $mins = 0;
+
         $time1_arr = explode(':',$time1);
         $time2_arr = explode(':',$time2);
-
+        // echo '<pre>';
+        // print_r($time1_arr);
+        // print_r($time2_arr);
         $hours = $time1_arr[0] - $time2_arr[0];
 
         if($time2_arr[1] > 0)
         {
-            $mins = 60 - $time2_arr;
+            $mins = 60 - $time2_arr[1];
             $hours--;
         }
-
+        
         $difference['hours'] = $hours;
         $difference['mins'] = $mins;
-        $difference['secs'] = $secs;
+        // $difference['secs'] = $secs;
         $difference['difference'] = sprintf("%02d",$hours).":".sprintf("%02d",$mins);
-
+        
         return $difference;
 
     }

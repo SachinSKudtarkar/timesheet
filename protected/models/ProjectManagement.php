@@ -163,4 +163,24 @@ class ProjectManagement extends CActiveRecord {
         return parent::model($className);
     }
 
+
+    public function fetchProgramWithResourceAllocationId($project_id,$emp_id) {
+
+        // $query = "select allocated_resource from tbl_resource_allocation_project_work  where pid =$project_id";
+        // $allocated_resource = Yii::app()->db->createCommand($query)->queryRow();
+        $resource['options_data'] = array();
+
+
+            $query = "select project_name,pm.pid,ra.id from tbl_project_management pm left join tbl_resource_allocation_project_work ra on ra.pid = pm.pid order by project_name";
+            $resource['program_list'] = Yii::app()->db->createCommand($query)->queryAll();
+
+            foreach ($resource['program_list'] as $value => $name) {
+                $options_data[$name['pid']] = array('id'=>$name['id']);
+                
+            }
+
+            $resource['options_data'] = $options_data;
+        // }
+        return $resource;
+    }
 }

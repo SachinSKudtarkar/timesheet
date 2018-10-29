@@ -15,7 +15,12 @@
         <div class="row">
             <h3>Resource Allocation</h3>
             <?php echo CHtml::label('Program Name', ''); ?>
-            <?php echo CHtml::dropDownList('ProjectName', $model->pid, CHtml::listData(ProjectManagement::model()->findAll(array('order' => 'project_name', 'condition' => 'is_deleted=0')), 'pid', 'project_name'), array('prompt' => 'Please select Program'));
+
+            <?php 
+
+                $programs = ProjectManagement::model()->fetchProgramWithResourceAllocationId();
+                $programList = CHtml::listData($programs['program_list'],'pid', 'project_name'); 
+                echo CHtml::dropDownList('ProjectName', $model->pid, $programList, array('options'=>$programs['options_data'],'prompt' => 'Please select Program'));
             ?>
         </div>
         <div class="row">
@@ -51,10 +56,26 @@
 
 </div><!-- form -->
 
+<script type="text/javascript">
+    
+    $('#ProjectName').change(function(){
+        var resourceid = $(this).children(":selected").attr("id");
+        
+        if(resourceid) {
+            window.location.href = "<?php echo Yii::app()->baseUrl; ?>/resourceallocationprojectwork/update/"+resourceid;    
+        }
+        
+
+    });
+</script>
+
 <?php
+
+
 Yii::app()->clientScript->registerScript('MoveElements', "
 
-$('#ProjectName').change(function(){
+
+$('#ProjectName1').change(function(){
 var pid = $(this).val();
 
  $('#txtarea2 option').each(function(index, option) {

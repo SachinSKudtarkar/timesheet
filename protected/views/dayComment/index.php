@@ -216,34 +216,46 @@ Yii::app()->clientScript->registerCssFile(
 							<div class="span1" style="margin-left:10px; ">
 								<?php echo CHTML::label('Hour', '', array('style' => 'width:50px;font-weight:bold; ')); ?>
 								<?php
-									$arrHrs = array();
-									$hrs = 23;
-                                    if(isset($difference['estimated']) && !empty($difference['estimated']))
-                                    {
-                                        $hrs = $difference['hours'] < 23 ? $difference['estimated']  : 23;    
-                                    }
+										$hidden = '';
+										$arrHrs = array();
+										$hrs = 23;
+	                                    if(isset($difference['estimated']) && !empty($difference['estimated']))
+	                                    {
+	                                        $hrs = $difference['hours'] < 23 ? $difference['estimated']  : 23;    
+	                                    }
 
-                                    for($h=0; $h<=$hrs; $h++) {
-										$h = (strlen($h) < 2) ? "0".$h : $h;
-										$arrHrs[$h] = $h;
-									}
-									echo CHTML::dropDownList('hrs[]', $eachproject['hrs'], $arrHrs, array('style' => 'width:50px;  ', 'class'=>'wrkhrsClass', 'disabled' => ($is_submitted ? 'disabled' : ''), 'id' => 'wrkhrsClass' . $date_id ."_". $pid));
+	                                    for($h=0; $h<=$hrs; $h++) {
+											$h = (strlen($h) < 2) ? "0".$h : $h;
+											$arrHrs[$h] = $h;
+										}
+										
+										echo CHTML::dropDownList('hrs[]', $eachproject['hrs'], $arrHrs, array('style' => 'width:50px;  ', 'class'=>'wrkhrsClass', 'disabled' => ($is_submitted ? 'disabled' : ''), 'id' => 'wrkhrsClass' . $date_id ."_". $pid));
+									
 								?>
 							</div>
 							<div class="span1" style="margin-left:10px; ">
 								<?php echo CHTML::label('Minutes', '', array('style' => 'width:50px;font-weight:bold; ')); ?>
 								<?php
-									$arrMnts = array();
-									for($m=0; $m<=59; $m+=5) {
-										$m = (strlen($m) < 2) ? "0".$m : $m;
-										$arrMnts[$m] = $m;
-									}
-									echo CHTML::dropDownList('mnts[]', $eachproject['mnts'], $arrMnts, array('style' => 'width:50px;  ', 'class'=>'wrkmntClass',  'disabled' => ($is_submitted ? 'disabled' : ''), 'id' => 'wrkminsClass' . $date_id ."_". $pid));
+									
+										// $hidden = '';
+										$arrMnts = array();
+										for($m=0; $m<=59; $m+=5) {
+											$m = (strlen($m) < 2) ? "0".$m : $m;
+											$arrMnts[$m] = $m;
+										}
+										// if($eachproject['remarks'] != null){	
+										// 	echo '<p class="texthours">'.$eachproject['mnts'].'</p>';
+										// 	$hidden = ' hidden';
+										// }
+										echo CHTML::dropDownList('mnts[]', $eachproject['mnts'], $arrMnts, array('style' => 'width:50px;  ', 'class'=>'wrkmntClass',  'disabled' => ($is_submitted ? 'disabled' : ''), 'id' => 'wrkminsClass' . $date_id ."_". $pid));
+									
 								?>
 							</div>
 							<div class="span2">
 								<?php echo CHTML::label('Comment :', '', array('style' => 'width:130px;font-weight:bold; ')); ?>
 								<?php echo CHtml::textArea('procomment[]', $eachproject['comment'], array('style' => ' height:40px; width:200px; ','class' =>'DayComment', 'disabled' => ($is_submitted ? 'disabled' : ''), 'id' => 'comment' . $date_id ."_". $pid ,'onclick'=>'checkLength()'));
+								?>
+								<?php echo CHtml::textArea('remarks[]', $eachproject['remarks'], array('class' =>'remarks hidden'));
 								?>
 							</div>
 							<div class="span2">

@@ -133,13 +133,13 @@ $x = $this->widget('zii.widgets.grid.CGridView', array(
         )
         ,
         array(
-            'header' => 'Utilized Hours',
+            'header' => 'Approved Hours',
             'name' => 'hours',
             'filter' => FALSE,
         ),
         array(
-            'header'=> 'Approved Hours',
-            'name' => 'approved_hrs',
+            'header'=> 'Logged Hours',
+            'name' => 'logged_hrs',
             'filter' => FALSE,
         ),
         array(

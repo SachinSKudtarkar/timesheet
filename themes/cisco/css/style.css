@@ -855,3 +855,10 @@ text.source {
   stroke: #ccc;
   stroke-width: 2px;
 }
+.texthours{
+    padding: 24px;
+    margin-top: 9px;
+    /* margin-left: 23px; */
+    font-size: 16px;
+    font-weight: 600;
+}
