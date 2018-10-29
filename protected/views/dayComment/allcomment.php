@@ -137,24 +137,24 @@ $x = $this->widget('zii.widgets.grid.CGridView', array(
             'name' => 'hours',
             'filter' => FALSE,
         ),
-        array(
-            'header'=> 'Logged Hours',
-            'name' => 'logged_hrs',
-            'filter' => FALSE,
-        ),
-        array(
-            'header' => 'Approve Button',
-            'class'=>'CButtonColumn',
-            'template' => '{update}',
-            'buttons' => array
-                ('update' => array
-                    (
-                    'label' => 'Update',
-                    'url' => 'Yii::app()->createUrl("/daycomment/ApproveHours", array("id"=>$data["day_id"]))',
-                    'visible' => "CHelper::isAccess('MANAGER','update')",
-                ),
-            ),
-        ),
+        // array(
+        //     'header'=> 'Logged Hours',
+        //     'name' => 'logged_hrs',
+        //     'filter' => FALSE,
+        // ),
+        // array(
+        //     'header' => 'Approve Button',
+        //     'class'=>'CButtonColumn',
+        //     'template' => '{update}',
+        //     'buttons' => array
+        //         ('update' => array
+        //             (
+        //             'label' => 'Update',
+        //             'url' => 'Yii::app()->createUrl("/daycomment/ApproveHours", array("id"=>$data["day_id"]))',
+        //             'visible' => "CHelper::isAccess('MANAGER','update')",
+        //         ),
+        //     ),
+        // ),
 //         'comment',
 //        'hours',
     ),
