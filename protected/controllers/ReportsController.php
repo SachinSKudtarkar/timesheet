@@ -260,7 +260,7 @@ class ReportsController extends Controller {
     /**
      * Function to generate report based on all the timesheet entries entered by users.
      */
-    public function actiongetTimesheet() {
+    public function actiongetTimesheet($emp_id='',$project_id='') {
     
         $model = new Reports('search');
         $model->unsetAttributes();  // clear any default values
@@ -347,6 +347,17 @@ class ReportsController extends Controller {
                 $allcondition = ' where '.$datecondition;
         }
             
+
+        if(!empty($emp_id))
+        {
+            $allcondition = ' and dc.emp_id='.$emp_id;
+        }
+
+
+        if(!empty($project_id))
+        {
+            $allcondition = ' and dc.spid='.$project_id;
+        }
 
         $sql1 = "select date(dc.day) as day, 
                         pm.project_name as program_name,

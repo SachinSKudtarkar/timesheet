@@ -18,8 +18,8 @@ $cs = Yii::app()->getClientScript();
 // $cs->registerScriptFile("https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css");
 
 ?>
-<link rel="stylesheet"  type="text/css" href="<?php echo Yii::app()->baseUrl."/css/jquery.dataTables.min.css"; ?>">
-<link rel="stylesheet"  type="text/css" href="<?php echo Yii::app()->baseUrl."/css/buttons.dataTables.min.css"; ?>">
+<!-- <link rel="stylesheet"  type="text/css" href="<?php echo Yii::app()->baseUrl."/css/jquery.dataTables.min.css"; ?>"> -->
+<!-- <link rel="stylesheet"  type="text/css" href="<?php echo Yii::app()->baseUrl."/css/buttons.dataTables.min.css"; ?>"> -->
 
 
 <h1>Resource Timesheet Reports</h1>
@@ -101,17 +101,18 @@ $cs = Yii::app()->getClientScript();
 <!-- <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#barChartModal" id="barChartBtn">Open Modal</button> -->
 
 <!-- Modal -->
-<div id="timesheetModal" class="modal fade" role="dialog" style="z-index:0;">
-  <div class="modal-dialog" style="height:auto">
+<div id="timesheetModal" class="modal fade" role="dialog" style="z-index:-1;">
+  <div class="modal-dialog" style="height:100%">
 
     <!-- Modal content-->
     <div class="modal-content">
-        <div class="modal-header">
+        <div class="modal-header" style="display: none">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
             <h4 class="modal-title">Project Timesheet Records</h4>
         </div>
-        <div class="modal-body" style="padding: 10px;height:auto;overflow: scroll;" >
-            <table id="timesheetreports" class="display table table-bordered table-striped" style="width:100%;height:auto">
+        <div class="modal-body" style="padding: 10px;overflow: none;max-height: 460px!important" >
+            <iframe src="" style="display: none"></iframe>
+            <table id="timesheetreports" class="display table table-bordered table-striped" style="width:100%;height:auto;display: none">
                 <thead>
                     <tr>
                         <th>Project Id</th>
@@ -169,11 +170,11 @@ Yii::app()->clientScript->registerCssFile(
 ?>
     <!-- <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script> -->
     <script src="<?php echo Yii::app()->baseUrl."/js/d3.v4.min.js"; ?>"></script>
-    <script src="<?php echo Yii::app()->baseUrl."/js/jquery.dataTables.min.js"?>"></script>
-    <script src="<?php echo Yii::app()->baseUrl."/js/dataTables.buttons.min.js"?>"></script>
-    <script src="<?php echo Yii::app()->baseUrl."/js/buttons.flash.min.js"?>"></script>
-    <script src="<?php echo Yii::app()->baseUrl."/js/jszip.min.js"?>"></script>
-    <script src="<?php echo Yii::app()->baseUrl."/js/buttons.html5.min.js"?>"></script>
+    <!-- <script src="<?php echo Yii::app()->baseUrl."/js/jquery.dataTables.min.js"?>"></script> -->
+    <!-- <script src="<?php echo Yii::app()->baseUrl."/js/dataTables.buttons.min.js"?>"></script> -->
+    <!-- <script src="<?php echo Yii::app()->baseUrl."/js/buttons.flash.min.js"?>"></script> -->
+    <!-- <script src="<?php echo Yii::app()->baseUrl."/js/jszip.min.js"?>"></script> -->
+    <!-- <script src="<?php echo Yii::app()->baseUrl."/js/buttons.html5.min.js"?>"></script> -->
 
 <?php 
 
@@ -478,46 +479,62 @@ Yii::app()->clientScript->registerCssFile(
 
     $("#timesheetModal").on("shown.bs.modal", function () { 
         // drawBarChart();
+        // alert('adsa');
         var datatable = '';
         // datatable.destroy();
         // alert($("#project_id").val());
         var project_id = $("#project_id").val();
+        var emp_id = $("#emp_id").val()
         var loaddata = $("#loaddata").val();
         $('.modal').css('z-index',1050);
-        $('#timesheetreports').DataTable( {
-            "dom": "BfrtiS",
-            "processing": true,
-            "serverSide": true,
-            "ordering": false,
-            "ajax": {
-                "url": "<?php echo CHelper::createUrl('reports/fetchRTimesheetReport/') ?>",
-                "type": "POST",
-                "data": {"project_id":project_id,"emp_id": $("#emp_id").val(),"loaddata":loaddata},
-                // "success":{alert('asdasd');}
-            },
-            "start":0,
-            "length": 5,
-            // "pageLength":3,
-            // "pagingType": "full_numbers",
-            // "dom": 'Bfrtip',
-            "buttons": [
-                {
-                        "extend": 'excelHtml5',
-                        "title": 'Export Timesheet Reports'
-                }
-            ],
-            "scrollY": 260,
-            "deferRender": true,
-            // "deferLoading": 10,
-            "scroller": {
-                loadingIndicator: true
-            }
-        });
+        $('iframe').show();
+        if(loaddata == 1)
+        {
+            var src = "<?php echo Yii::app()->baseUrl.'/reports/gettimesheet?';?>emp_id="+emp_id+"&project_id="+project_id;
+        }else{
+            var src = "<?php echo Yii::app()->baseUrl.'/reports/gettimesheet?';?>emp_id="+emp_id;
+        }
+        $('iframe').attr('src',src);
+        // $('#timesheetreports1').DataTable( {
+        //     "dom": "lBfrtiS",
+        //     "processing": true,
+        //     "serverSide": true,
+        //     "ordering": false,
+        //     "ajax": {
+        //         "url": "<?php echo CHelper::createUrl('reports/fetchRTimesheetReport/') ?>",
+        //         "type": "POST",
+        //         "data": {"project_id":project_id,"emp_id": $("#emp_id").val(),"loaddata":loaddata},
+        //         // "success":{alert('asdasd');}
+        //     },
+        //     "start":0,
+        //     "length": 5,
+        //     // "pageLength":3,
+        //     // "pagingType": "full_numbers",
+        //     // "dom": 'Bfrtip',
+        //     "lengthChange": false,
+        //     "buttons": [
+        //         {
+        //                 "extend": 'excelHtml5',
+        //                 "title": 'Export Timesheet Reports'
+        //         }
+        //     ],
+        //     "scrollY": 260,
+        //     "deferRender": true,
+        //     // "deferLoading": 10,
+        //     "scroller": {
+        //         loadingIndicator: true
+        //     }
+        // });
 
 
     });
 
-
+    $("#timesheetModal").on("hidden.bs.modal", function () { 
+        $('iframe').hide();
+        $('iframe').attr('src','');
+        $('.modal').css('z-index',-1);
+    });
+    
     $("#barChartBtn").click(function(){
         $('#projectreports').DataTable().destroy();
     });
@@ -526,8 +543,8 @@ Yii::app()->clientScript->registerCssFile(
 
             var targetData = $(this).data('loaddata');
             $("#loaddata").val(targetData);
-        
-            $('#timesheetreports').DataTable().destroy();
+            $('iframe').attr('src','');
+            // $('#timesheetreports').DataTable().destroy();
     });
 
 
