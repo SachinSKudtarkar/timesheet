@@ -1350,7 +1350,7 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.sub_project_i
 
                 $DcLog = new DayCommentApprovedHrsLog;
                 $DcLog->stask_id = $model->stask_id;
-                $DcLog->approved_hrs = $model->logged_hrs;
+                $DcLog->approved_hrs = $model->hours;
                 $DcLog->remarks = $model->remarks;
                 $DcLog->save(FALSE);
                 $this->redirect(array('approvehours', 'id' => $id));
