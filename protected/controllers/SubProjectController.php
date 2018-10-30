@@ -135,7 +135,7 @@ class SubProjectController extends Controller {
         }
 
         $hours_label['allocated'] = Yii::app()->db->createCommand("select sum(st.est_hrs) as allocated_hrs from tbl_sub_project sp left join tbl_sub_task st on st.sub_project_id  = sp.spid where spid = {$id}")->queryRow();
-        $hours_label['utilized'] = Yii::app()->db->createCommand("SELECT  TIME_FORMAT(BIG_SEC_TO_TIME( SUM( BIG_TIME_TO_SEC( `hours` ) ) ), '%h:%i') AS utilized_hrs  FROM tbl_day_comment where spid={$id}")->queryRow();
+        $hours_label['utilized'] = Yii::app()->db->createCommand("SELECT  BIG_SEC_TO_TIME( SUM( BIG_TIME_TO_SEC( `hours` ) ) ) AS utilized_hrs  FROM tbl_day_comment where spid={$id}")->queryRow();
 
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
