@@ -59,11 +59,15 @@
 <script type="text/javascript">
     
     $('#ProjectName').change(function(){
+        // alert('false');
+        $('.custom-loader').css('display','block');
+        // return false;
         var resourceid = $(this).children(":selected").attr("id");
         
         if(resourceid) {
             window.location.href = "<?php echo Yii::app()->baseUrl; ?>/resourceallocationprojectwork/update/"+resourceid;    
         }
+        $('.custom-loader').css('display','block');
         
 
     });
