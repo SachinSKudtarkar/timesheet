@@ -34,7 +34,7 @@ $cs = Yii::app()->getClientScript();
                     <th><a><h1 data-toggle="modal" data-target="#timesheetModal" class="timesheetBtn" data-loaddata="1">Project Report </h1></a>
                         <input type="hidden" id="project_id">
                     </th>
-                    <th><a><h1 data-toggle="modal" data-target="#timesheetModal" id="timesheetBtn" data-loaddata="2">Timesheet Report </h1></a>
+                    <th><a><h1 data-toggle="modal" data-target="#timesheetModal" class="timesheetBtn" data-loaddata="2">Timesheet Report </h1></a>
                        
                         <input type="hidden" id="loaddata">
                     </th>
@@ -88,11 +88,6 @@ $cs = Yii::app()->getClientScript();
 
     </div> 
 </div>
-
-
-
-<!-- Trigger the modal with a button -->
-<!-- <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#barChartModal" id="barChartBtn">Open Modal</button> -->
 
 
 <!-- Modal -->
@@ -388,39 +383,7 @@ Yii::app()->clientScript->registerCssFile(
         $("#project_id").val(projectData.project_id);
         $(".custom-loader").hide();
     }
-
     
-    $("#barChartModal").on("shown.bs.modal", function () { 
-        // drawBarChart();
-        var datatable = '';
-        // datatable.destroy();
-        // alert($("#project_id").val());
-        $('.modal').css('z-index',1050);
-        var project_id = $("#project_id").val();
-        
-        $('#projectreports').DataTable( {
-            "dom": "BfrtiS",
-            "processing": true,
-            "serverSide": true,
-            "ajax": {
-                "url": "<?php echo CHelper::createUrl('reports/fetchProjectReport/') ?>",
-                "type": "POST",
-                "data": {"project_id": $("#project_id").val()}
-            },
-            // "dom": 'Bfrtip',
-            "buttons": [
-                {
-                        "extend": 'excelHtml5',
-                        "title": 'Export Project Reports'
-                }
-            ],
-            "scrollY": 300,
-            "deferRender": true,
-            "scroller": {
-                loadingIndicator: true
-            }
-        });
-    });
 
     $("#timesheetModal").on("shown.bs.modal", function () { 
         // drawBarChart();
@@ -433,6 +396,7 @@ Yii::app()->clientScript->registerCssFile(
         var loaddata = $("#loaddata").val();
         $('.modal').css('z-index',1050);
         $('iframe').show();
+
         if(loaddata == 1)
         {
             var src = "<?php echo Yii::app()->baseUrl.'/reports/getreports?';?>project_id="+project_id;
@@ -449,17 +413,12 @@ Yii::app()->clientScript->registerCssFile(
         $('iframe').attr('src','');
         $('.modal').css('z-index',-1);
     });
-    
-    $("#barChartBtn").click(function(){
-        $('#projectreports').DataTable().destroy();
-    });
 
     $(".timesheetBtn").click(function(){
 
             var targetData = $(this).data('loaddata');
             $("#loaddata").val(targetData);
             $('iframe').attr('src','');
-            // $('#timesheetreports').DataTable().destroy();
     });
 
 
