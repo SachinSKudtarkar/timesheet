@@ -214,8 +214,8 @@ Yii::app()->clientScript->registerCssFile(
         newSlice.append("text")
             .attr("transform", function(d) {
                 return "translate(" + arc.centroid(d) + ")rotate(" + computeTextRotation(d) + ")"; })
-            .attr("dx", "-20")
-            .attr("dy", ".5em")
+            .attr("dx", "-50")
+            .attr("dy", ".35em")
             .text(function(d) { return d.parent ? d.data.name : "" })
             .attr("id", function(d) { return d.parent ? d.data.id : "" });
 

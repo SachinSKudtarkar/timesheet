@@ -523,7 +523,7 @@ class ReportsController extends Controller {
         $projectData['utilized'] = Yii::app()->db->createCommand("SELECT  BIG_SEC_TO_TIME( SUM( BIG_TIME_TO_SEC( `hours` )) ) AS utilized_hrs, SUM((TIME_FORMAT(`hours`,'%H.%i') * budget_per_hour)) as utilized_budget FROM tbl_day_comment dc left join tbl_assign_resource_level rl on rl.emp_id = dc.emp_id left join tbl_level_master lm on lm.level_id= rl.level_id where dc.spid={$_POST['project_id']}")->queryRow();
         $projectData['tasks'] = Yii::app()->db->createCommand("select count(*) as tasks from tbl_pid_approval where sub_project_id={$_POST['project_id']}")->queryRow();
         $projectData['sub_tasks'] = Yii::app()->db->createCommand("select count(*) as sub_tasks from tbl_sub_task where sub_project_id={$_POST['project_id']}")->queryRow();
-        $resources = Yii::app()->db->createCommand("select emp_id from tbl_day_comment where spid = {$_POST['project_id']} group by emp_id")->queryRow();
+        $resources = Yii::app()->db->createCommand("select emp_id from tbl_sub_task where sub_project_id = {$_POST['project_id']} group by emp_id")->queryAll();
         $projectData['resources'] = count($resources);
         $projectData['project_id'] = $_POST['project_id'];
         echo json_encode($projectData);die;
