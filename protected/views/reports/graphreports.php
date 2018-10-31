@@ -31,14 +31,16 @@ $cs = Yii::app()->getClientScript();
         <div class="span6" style="margin-left: 40%">
             <table class="table table-bordered text-center">
                 <tr>
-                    <th><a><h1 data-toggle="modal" data-target="#barChartModal" id="barChartBtn" >Project Report </h1></a>
+                    <th><a><h1 data-toggle="modal" data-target="#timesheetModal" class="timesheetBtn" data-loaddata="1">Project Report </h1></a>
                         <input type="hidden" id="project_id">
                     </th>
-                    <th><a><h1 data-toggle="modal" data-target="#timesheetModal" id="timesheetBtn" >Timesheet Report </h1></a>
-                        <input type="hidden" id="project_id">
+                    <th><a><h1 data-toggle="modal" data-target="#timesheetModal" id="timesheetBtn" data-loaddata="2">Timesheet Report </h1></a>
+                       
+                        <input type="hidden" id="loaddata">
                     </th>
                     
                 </tr>
+
             </table>
             <table class="table table-bordered text-center">
                 <tr colspan="3"><h1>Project Budget</h1></tr>
@@ -92,107 +94,22 @@ $cs = Yii::app()->getClientScript();
 <!-- Trigger the modal with a button -->
 <!-- <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#barChartModal" id="barChartBtn">Open Modal</button> -->
 
+
 <!-- Modal -->
-<div id="barChartModal" class="modal fade" role="dialog" style="z-index:0">
-  <div class="modal-dialog" style="height:auto">
+<div id="timesheetModal" class="modal fade" role="dialog" style="z-index:-1;">
+  <div class="modal-dialog" style="height:100%">
 
     <!-- Modal content-->
     <div class="modal-content">
-        <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title">Project Task and Sub Tasks Report With Hours</h4>
-        </div>
-        <div class="modal-body" style="padding: 10px;height:auto;" >
-            <table id="projectreports" class="display table table-bordered table-striped" style="width:100%;height:auto">
-                <thead>
-                    <tr>
-                        <th>Task ID</th>
-                        <th>Task Name</th>
-                        <th>Sub Task Type</th>
-                        <th>Sub Task Id</th>
-                        <th>Sub Task Name</th>
-                        <th>Assigned User</th>
-                        <th>Estimated Hrs</th>
-                        <th>Utilized Hrs</th>
-                        
-                        <!-- <th>Created At</th> -->
-
-                    </tr>
-                </thead>
-                <!-- <tfoot>
-                    <tr>
-                        <td>Task ID</td>
-                        <td>Task Name</td>
-                        <td>Sub Task Type</td>
-                        <td>Sub Task Id</td>
-                        <td>Sub Task Name</td>
-                        <td>Assigned User</td>
-                        <td>Estimated Hrs</td>
-                        <td>Utilized Hrs</td>
-                        
-                        //<td>Created At</td> 
-
-                    </tr>
-                </tfoot> -->
-            </table>
-        </div>
-
-<!--         <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        </div> -->
-    </div>
-
-  </div>
-</div>
-<!-- Modal -->
-<div id="timesheetModal" class="modal fade" role="dialog" style="z-index:0">
-  <div class="modal-dialog" style="height:auto">
-
-    <!-- Modal content-->
-    <div class="modal-content">
-        <div class="modal-header">
+        <div class="modal-header" style="display: none">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
             <h4 class="modal-title">Project Timesheet Records</h4>
         </div>
-        <div class="modal-body" style="padding: 10px;height:auto;overflow:scroll" >
-            <table id="timesheetreports" class="display table table-bordered table-striped" style="width:100%;height:auto">
-                <thead>
-                    <tr>
-                        <th>Project Id</th>
-                        <th>Project Name</th>
-                        <th>Task ID</th>
-                        <th>Task Name</th>
-                        <th>Sub Task Id</th>
-                        <th>Sub Task Name</th>
-                        <th>Date</th>
-                        <th>User Name</th>
-                        <th>Hours</th>
-                        <th>Comments</th>
-                        
-                        <!-- <th>Created At</th> -->
-
-                    </tr>
-                </thead>
-<!--                 <tfoot>
-                    <tr>
-                        <td>Project Id</td>
-                        <td>Project Name</td>
-                        <td>Task ID</td>
-                        <td>Task Name</td>
-                        <td>Sub Task Id</td>
-                        <td>Sub Task Name</td>
-                        <td>Date</td>
-                        <td>User Name</td>
-                        <td>Hours</td>
-                        <td>Comments</td>
-                    </tr>
-                </tfoot> -->
-            </table>
+        <div class="modal-body" style="padding: 10px;overflow: none;max-height: 460px!important" >
+            <iframe src="" style="display: none"></iframe>
+            
         </div>
 
-<!--         <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        </div> -->
     </div>
 
   </div>
@@ -505,50 +422,44 @@ Yii::app()->clientScript->registerCssFile(
         });
     });
 
-
     $("#timesheetModal").on("shown.bs.modal", function () { 
         // drawBarChart();
+        // alert('adsa');
         var datatable = '';
         // datatable.destroy();
         // alert($("#project_id").val());
-        $('.modal').css('z-index',1050);
         var project_id = $("#project_id").val();
-        
-        $('#timesheetreports').DataTable( {
-            "dom": "BfrtiS",
-            "processing": true,
-            "serverSide": true,
-            "ajax": {
-                "url": "<?php echo CHelper::createUrl('reports/fetchTimesheetReport/') ?>",
-                "type": "POST",
-                "data": {"project_id": $("#project_id").val()}
-            },
-            // "dom": 'Bfrtip',
-            "buttons": [
-                {
-                        "extend": 'excelHtml5',
-                        "title": 'Export Timesheet Reports'
-                }
-            ],
-            "scrollY": 300,
-            "deferRender": true,
-            "scroller": {
-                loadingIndicator: true
-            }
-        });
+        var emp_id = $("#emp_id").val()
+        var loaddata = $("#loaddata").val();
+        $('.modal').css('z-index',1050);
+        $('iframe').show();
+        if(loaddata == 1)
+        {
+            var src = "<?php echo Yii::app()->baseUrl.'/reports/getreports?';?>project_id="+project_id;
+        }else{
+            
+            var src = "<?php echo Yii::app()->baseUrl.'/reports/gettimesheet?';?>project_id="+project_id;
+        }
+        $('iframe').attr('src',src);
+
     });
 
-
+    $("#timesheetModal").on("hidden.bs.modal", function () { 
+        $('iframe').hide();
+        $('iframe').attr('src','');
+        $('.modal').css('z-index',-1);
+    });
+    
     $("#barChartBtn").click(function(){
-        // drawBarChart();
-        // $("#barchartDiv").show();
-                $('#projectreports').DataTable().destroy();
+        $('#projectreports').DataTable().destroy();
     });
 
-    $("#timesheetBtn").click(function(){
-        // drawBarChart();
-        // $("#barchartDiv").show();
-                $('#timesheetreports').DataTable().destroy();
+    $(".timesheetBtn").click(function(){
+
+            var targetData = $(this).data('loaddata');
+            $("#loaddata").val(targetData);
+            $('iframe').attr('src','');
+            // $('#timesheetreports').DataTable().destroy();
     });
 
 

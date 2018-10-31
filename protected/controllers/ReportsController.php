@@ -58,56 +58,14 @@ class ReportsController extends Controller {
         ));
     }
 
-
-    public function actiongetTimesheet1(){
-        $this->layout = 'column1';
-        $condition = '';
-        
-        if(isset($_POST['from_date']) && isset($_POST['to_date']))
-        {
-            $from_date = $_POST['from_date'];
-            $to_date = $_POST['to_date'];
-            $condition = "where dc.day BETWEEN '{$from_date}' and '{$to_date}'";
-        }
-
-        $getRecords = "select date(dc.day) as day, 
-                            pm.project_name as program_name,
-                            sp.sub_project_name as project_name,
-                            pa.project_task_id,
-                            pa.task_title,
-                            pa.task_description,
-                            st.sub_task_id, 
-                            st.sub_task_name,
-                            st.est_hrs,
-                            concat(em.first_name,' ',em.last_name) as username,
-                            dc.comment, 
-                            dc.hours
-                        from tbl_day_comment dc
-                        inner join tbl_project_management pm on pm.pid = dc.pid
-                        inner join tbl_sub_project sp on sp.spid = dc.spid
-                        inner join tbl_sub_task st on st.stask_id = dc.stask_id
-                        inner join tbl_pid_approval pa on pa.pid_id = st.pid_approval_id
-                        inner join tbl_employee em on em.emp_id = dc.emp_id ".$condition."
-                        order by dc.created_at desc";
-        
-
-        $records = Yii::app()->db->createCommand($getRecords)->queryAll();
-
-    
-        $this->render('timesheetreports', array(
-            'records' => $records,
-        ));
-    }
-
-
     /**
      * Function to generate records based on all program, project, task and sub task
      */
-    public function actiongetReports() {
+    public function actiongetReports($project_id) {
     
         $model = new Reports('search');
         $model->unsetAttributes();  // clear any default values
-        $this->layout = 'column1';
+        $this->layout = 'report';
 
         $_GET['DayComment'] = array_map('trim', $_GET['DayComment']);
         // $model->attributes = $_GET['DayComment'];
@@ -189,6 +147,14 @@ class ReportsController extends Controller {
                 $allcondition = ' where '.$datecondition;
         }
             
+        if(!empty($project_id))
+        {
+            if(empty($allcondition)){
+                $allcondition .= ' where st.sub_project_id='.$project_id;
+            } else {
+                $allcondition .= ' and st.sub_project_id='.$project_id;
+            }
+        }
 
         $sql1 = "select pm.project_id as program_id,
                 pm.project_name as program_name,

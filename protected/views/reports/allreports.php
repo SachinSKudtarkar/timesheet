@@ -21,7 +21,7 @@ $cs->registerCssFile(Yii::app()->baseUrl . "/css/jquery-ui-timepicker-addon.css"
 
 <h1>All Reports</h1>
 
-<?php $this->renderPartial('_count', array('model'=>$model,'allcount'=>$allcount)); ?>
+<?php //$this->renderPartial('_count', array('model'=>$model,'allcount'=>$allcount)); ?>
 <?php $this->renderPartial('_form', array('model'=>$model)); ?>
 
 <div class="row span11" style="margin-bottom: 100px">
