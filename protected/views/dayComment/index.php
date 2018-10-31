@@ -158,6 +158,7 @@ Yii::app()->clientScript->registerCssFile(
 			foreach ($arrData[$date_id] as $key=>$eachproject) {
 				
 				// CHelper::debug($eachproject);
+				
 				$tmpcls = ($i > 0) ? '' : '';
 				$nxt = $i + 1;
 				$day = explode(" ", $eachproject['day'])[0];
@@ -192,7 +193,7 @@ Yii::app()->clientScript->registerCssFile(
 								<?php echo CHTML::label('Project :', '', array('style' => 'width:90px;font-weight:bold; ')); ?>
 								<?php
 									//$result = array();
-									echo CHTML::dropDownList('SubProjectName[]', $eachproject['spid']['selected'], $eachproject['spid']['result'], array('class'=>'sub-project','style' => 'width:150px;  ', 'prompt' => 'Please select  Project', 'disabled' => ($is_submitted ? 'disabled' : ''), 'id' => 'subproclass' . $date_id ."_". $pid ));
+									echo CHTML::dropDownList('SubProjectName[]', $eachproject['spid']['selected'], $eachproject['spid']['result'], array('class'=>'sub-project','style' => 'width:150px;  ', 'prompt' => 'Please select  Project', 'disabled' => ($is_submitted ? 'disabled' : ''), 'id' => 'subproclass' . $date_id ."_". $pid, 'data-stkid' => $eachproject['stask_id']['selected']));
 								?>
 							</div>
 							<div class="span2"  style="margin-left:10px;">
@@ -620,6 +621,7 @@ Yii::app()->clientScript->registerCssFile(
        if($(this).val() != '')
        {
          	var thisId = $(this).attr('id');
+         	var stkid = $(this).data('stkid');
            var is = thisId.substr(11, 13);
            var sub_id=$(this).val(); 
            //  alert(is);
@@ -628,7 +630,7 @@ Yii::app()->clientScript->registerCssFile(
                url: BASE_URL+'/daycomment/fetchSubTask',
                type: 'POST',
                dataType: 'json',
-               data:{ pid:sub_id},
+               data:{ pid:sub_id,stkid:stkid},
                // beforeSend:function(){
                //      $('.custom-loader').show();
                //  },
@@ -689,7 +691,7 @@ Yii::app()->clientScript->registerCssFile(
 		for(var m=0;m<=hrtime;m++){
 			optminstr = optminstr+'<option value='+m+'>'+m+'</option>';
 		}
-		console.log(optstr);
+		// console.log(optstr);
 		$('#wrkhrsClass'+thisid[1]).html(optstr);
 		$('#wrkminsClass'+thisid[1]).html(optminstr);*/
 	});
@@ -752,11 +754,22 @@ Yii::app()->clientScript->registerCssFile(
 						
 						var optstr = '';
 						var optminstr = '';
-						for(var h=0;h<=hrs;h++){
+						for(var h=00;h<=hrs;h++){
+							
+							if(h < 10)
+							{
+								h = '0'+h;
+							}
 							
 							optstr = optstr+'<option value='+h+'>'+ h +'</option>';
 						}
 						for(var m=0;m<=mins;m++){
+							
+							if(m < 10)
+							{
+								m = '0'+m;
+							}
+							
 							optminstr = optminstr+'<option value='+m+'>'+m+'</option>';
 						}
 						
@@ -855,12 +868,13 @@ function checkLength(){
 
             $('.wrkhrsClass').each(function () {
             	var hrsId = $(this).attr('id');
-            	// alert('asdasd');
+            	
             	var matched = hrsId.match(/wrkhrsClass(.*)/)
             	// alert(matched[1]);
             	if($(this).val() == '00' && $('#wrkminsClass'+matched[1]).val() == '00') {
 
             		isValid = false;
+                	// alert('asdasd');
                 	$(this).css({
                     	"border": "1px solid red",
                     	"background": "#FFCECE"

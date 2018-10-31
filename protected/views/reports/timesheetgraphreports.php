@@ -13,13 +13,7 @@ Yii::app()->clientScript->registerCssFile(
 );
 $cs = Yii::app()->getClientScript();
 
-// $cs->registerScriptFile(Yii::app()->baseUrl . "/js/jquery-ui-timepicker-addon.js");
-// $cs->registerCssFile(Yii::app()->baseUrl . "/css/jquery-ui-timepicker-addon.css");
-// $cs->registerScriptFile("https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css");
-
 ?>
-<!-- <link rel="stylesheet"  type="text/css" href="<?php echo Yii::app()->baseUrl."/css/jquery.dataTables.min.css"; ?>"> -->
-<!-- <link rel="stylesheet"  type="text/css" href="<?php echo Yii::app()->baseUrl."/css/buttons.dataTables.min.css"; ?>"> -->
 
 
 <h1>Resource Timesheet Reports</h1>
@@ -112,39 +106,7 @@ $cs = Yii::app()->getClientScript();
         </div>
         <div class="modal-body" style="padding: 10px;overflow: none;max-height: 460px!important" >
             <iframe src="" style="display: none"></iframe>
-            <table id="timesheetreports" class="display table table-bordered table-striped" style="width:100%;height:auto;display: none">
-                <thead>
-                    <tr>
-                        <th>Project Id</th>
-                        <th>Project Name</th>
-                        <th>Task ID</th>
-                        <th>Task Name</th>
-                        <th>Sub Task Id</th>
-                        <th>Sub Task Name</th>
-                        <th>Date</th>
-                        <th>User Name</th>
-                        <th>Hours</th>
-                        <th>Comments</th>
-                        
-                        <!-- <th>Created At</th> -->
-
-                    </tr>
-                </thead>
-<!--                 <tfoot>
-                    <tr>
-                        <td>Project Id</td>
-                        <td>Project Name</td>
-                        <td>Task ID</td>
-                        <td>Task Name</td>
-                        <td>Sub Task Id</td>
-                        <td>Sub Task Name</td>
-                        <td>Date</td>
-                        <td>User Name</td>
-                        <td>Hours</td>
-                        <td>Comments</td>
-                    </tr>
-                </tfoot> -->
-            </table>
+            
         </div>
 <!-- 
         <div class="modal-footer">
@@ -199,7 +161,7 @@ Yii::app()->clientScript->registerCssFile(
         async: false
         }).responseText);
 
-        console.log(treeData.empdata);
+        // console.log(treeData.empdata);
         if(treeData.graphdata.children != '')
         {
             drawGraph(treeData.graphdata);
@@ -408,6 +370,7 @@ Yii::app()->clientScript->registerCssFile(
                 }
                 
                 update(d);
+                $('.custom-loader').css('display','block');
                 // console.log(node.data.id);
                 getProjectData(d.data.id);
             }
@@ -421,7 +384,7 @@ Yii::app()->clientScript->registerCssFile(
     {
         var project_arr = project_id.split('_');
         var project_id = project_arr[1];
-        $(".custom-loader").show();
+        // $(".custom-loader").show();
         if(project_arr[0] !=  'project') {
             $(".custom-loader").hide();
             // alert('Please select a valid project. It seems you have selected a program');
@@ -445,7 +408,7 @@ Yii::app()->clientScript->registerCssFile(
         $("#project_per").text(project_per+'%');
         $("#project_id").val(projectData.project_id);
         $("#prjrep").removeClass('hidden');
-        $(".custom-loader").hide();
+        $(".custom-loader").css('display','none');
         
     }
 
@@ -495,37 +458,6 @@ Yii::app()->clientScript->registerCssFile(
             var src = "<?php echo Yii::app()->baseUrl.'/reports/gettimesheet?';?>emp_id="+emp_id;
         }
         $('iframe').attr('src',src);
-        // $('#timesheetreports1').DataTable( {
-        //     "dom": "lBfrtiS",
-        //     "processing": true,
-        //     "serverSide": true,
-        //     "ordering": false,
-        //     "ajax": {
-        //         "url": "<?php echo CHelper::createUrl('reports/fetchRTimesheetReport/') ?>",
-        //         "type": "POST",
-        //         "data": {"project_id":project_id,"emp_id": $("#emp_id").val(),"loaddata":loaddata},
-        //         // "success":{alert('asdasd');}
-        //     },
-        //     "start":0,
-        //     "length": 5,
-        //     // "pageLength":3,
-        //     // "pagingType": "full_numbers",
-        //     // "dom": 'Bfrtip',
-        //     "lengthChange": false,
-        //     "buttons": [
-        //         {
-        //                 "extend": 'excelHtml5',
-        //                 "title": 'Export Timesheet Reports'
-        //         }
-        //     ],
-        //     "scrollY": 260,
-        //     "deferRender": true,
-        //     // "deferLoading": 10,
-        //     "scroller": {
-        //         loadingIndicator: true
-        //     }
-        // });
-
 
     });
 

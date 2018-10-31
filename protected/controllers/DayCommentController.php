@@ -284,7 +284,7 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.stask_id";
                     $arrData[$day][$dayNo]['pid'] = $v->pid;
                     $arrData[$day][$dayNo]['spid']['result'] = $this->actionfetchSubProject($v->pid); //fetchSubProject
                     $arrData[$day][$dayNo]['spid']['selected'] = $v->spid;
-                    $arrData[$day][$dayNo]['stask_id']['result'] = $this->actionfetchSubTask($v->spid);
+                    $arrData[$day][$dayNo]['stask_id']['result'] = $this->actionfetchSubTask($v->spid,$v->stask_id);
                     $arrData[$day][$dayNo]['stask_id']['selected'] = $v->stask_id;
                     $arrData[$day][$dayNo]['emp_id'] = $v->emp_id;
                     $arrData[$day][$dayNo]['day'] = $v->day;
@@ -1054,7 +1054,7 @@ where  st.emp_id = {$userId} group by st.stask_id"; //pa.approved = 2  and
         return $time;
     }
 
-    public function actionfetchSubTask($pid = '') {
+    public function actionfetchSubTask($pid = '',$stkid = '') {
         $newData = $da = $nn = $result = $data = array();
         if ($pid) {
             $spid = $pid;
@@ -1062,6 +1062,11 @@ where  st.emp_id = {$userId} group by st.stask_id"; //pa.approved = 2  and
             $spid = $_POST['pid'];
         }
 
+        if ($stkid) {
+            $stkid = $stkid;
+        } else {
+            $stkid = $_POST['stkid'];
+        }
 
         $userId = Yii::app()->session['login']['user_id'];
 
@@ -1110,7 +1115,7 @@ where  st.emp_id = {$userId} group by st.stask_id"; //pa.approved = 2  and
             
             foreach ($newData as $key => $val) {
                 
-                if($val['stask_id'] == $val['dstask_id']){
+                if($val['stask_id'] == $stkid && !empty($stkid)){
                     
                     // echo $val['hours'].'my<br>';
                     $nn[] = $val;

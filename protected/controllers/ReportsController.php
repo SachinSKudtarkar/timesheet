@@ -265,7 +265,7 @@ class ReportsController extends Controller {
         $model = new Reports('search');
         $model->unsetAttributes();  // clear any default values
     
-        $this->layout = 'column1';
+        $this->layout = 'report';
 
         $_GET['DayComment'] = array_map('trim', $_GET['DayComment']);
     
@@ -350,15 +350,23 @@ class ReportsController extends Controller {
 
         if(!empty($emp_id))
         {
-            $allcondition = ' and dc.emp_id='.$emp_id;
+            if(empty($allcondition)){
+                $allcondition .= ' where dc.emp_id='.$emp_id;
+            } else {
+                $allcondition .= ' and dc.emp_id='.$emp_id;
+            }
         }
 
 
         if(!empty($project_id))
         {
-            $allcondition = ' and dc.spid='.$project_id;
+            if(empty($allcondition)){
+                $allcondition .= ' where dc.spid='.$project_id;
+            } else {
+                $allcondition .= ' and dc.spid='.$project_id;
+            }
         }
-
+        
         $sql1 = "select date(dc.day) as day, 
                         pm.project_name as program_name,
                         sp.sub_project_name as project_name,
