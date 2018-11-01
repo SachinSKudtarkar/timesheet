@@ -869,3 +869,22 @@ iframe{
     height: 100%;
     min-height:500px;
 }
+.node rect {
+  cursor: pointer;
+  fill: #fff;
+  fill-opacity: 0.9;
+  stroke: #000;
+  stroke-width: 1.5px;
+}
+
+.node text {
+  font: 14px sans-serif;
+  pointer-events: none;
+  fill:#fff;
+}
+
+.link {
+  fill: none;
+  stroke: #E06A66;
+  stroke-width: 1.5px;
+}

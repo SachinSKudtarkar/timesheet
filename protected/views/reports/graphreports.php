@@ -43,7 +43,7 @@ $cs = Yii::app()->getClientScript();
 
             </table>
             <table class="table table-bordered text-center">
-                <tr colspan="3"><h1>Project Budget</h1></tr>
+                <tr colspan="3"><h1 class="budtext"><span>Project</span> Budget</h1></tr>
                 <tr>
                     <th><h1>Estimated </h1></th>
                     <th><h1>Allocated </h1></th>
@@ -57,7 +57,7 @@ $cs = Yii::app()->getClientScript();
             </table>
 
             <table class="table table-bordered text-center">
-                <tr colspan="3"><h1>Project Hours</h1></tr>
+                <tr colspan="3"><h1 class="budtext"><span>Project</span> Hours</h1></tr>
                 <tr>
                     <th><h1>Estimated </h1></th>
                     <th><h1>Allocated </h1></th>
@@ -72,7 +72,7 @@ $cs = Yii::app()->getClientScript();
 
 
             <table class="table table-bordered text-center">
-                <tr colspan="3"><h1>Project Details</h1></tr>
+                <tr colspan="3"><h1 class="budtext"><span>Project</span> Details</h1></tr>
                 <tr>
                     <th><h1>Tasks </h1></th>
                     <th><h1>Sub Tasks </h1></th>
@@ -150,207 +150,164 @@ Yii::app()->clientScript->registerCssFile(
         async: false
         }).responseText);
 
-        drawGraph(nodeData);
+        // drawGraph(nodeData);
         // drawBarChart();
+        var margin = {top: 30, right: 20, bottom: 30, left: 20},
+            width = 960,
+            barHeight = 30,
+            barWidth = (width - margin.left - margin.right) * 0.8;
+
+        var i = 0,
+            duration = 400,
+            root;
+
+        var diagonal = d3.linkHorizontal()
+            .x(function(d) { return d.y; })
+            .y(function(d) { return d.x; });
+
+        var svg = d3.select("svg")
+            .attr("width", width) // + margin.left + margin.right)
+          .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        // d3.json("flare.json", function(error, flare) {
+          // if (error) throw error;
+          root = d3.hierarchy(nodeData);
+          root.x0 = 0;
+          root.y0 = 0;
+          update(root);
+        // });
+
+        function update(source) {
+
+          // Compute the flattened node list.
+          var nodes = root.descendants();
+
+          var height = Math.max(500, nodes.length * barHeight + margin.top + margin.bottom);
+
+          d3.select("svg").transition()
+              .duration(duration)
+              .attr("height", height);
+
+          d3.select(self.frameElement).transition()
+              .duration(duration)
+              .style("height", height + "px");
+
+          // Compute the "layout". TODO https://github.com/d3/d3-hierarchy/issues/67
+          var index = -1;
+          root.eachBefore(function(n) {
+            n.x = ++index * barHeight;
+            n.y = n.depth * 20;
+          });
+
+          // Update the nodes…
+          var node = svg.selectAll(".node")
+            .data(nodes, function(d) { return d.id || (d.id = ++i); });
+
+          var nodeEnter = node.enter().append("g")
+              .attr("class", "node")
+              .attr("transform", function(d) { return "translate(" + source.y0 + "," + source.x0 + ")"; })
+              .style("opacity", 0);
+
+          // Enter any new nodes at the parent's previous position.
+          nodeEnter.append("rect")
+              .attr("y", -barHeight / 2)
+              .attr("height", barHeight)
+              .attr("width", barWidth)
+              .style("fill", color)
+              .on("click", click);
+
+          nodeEnter.append("text")
+              .attr("dy", 3.5)
+              .attr("dx", 5.5)
+              .text(function(d) { return d.data.name; })
+              .attr("id", function(d) { return d.parent ? d.data.id : "" });
+
+          // Transition nodes to their new position.
+          nodeEnter.transition()
+              .duration(duration)
+              .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; })
+              .style("opacity", 1);
+
+          node.transition()
+              .duration(duration)
+              .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; })
+              .style("opacity", 1)
+            .select("rect")
+              .style("fill", color);
+
+          // Transition exiting nodes to the parent's new position.
+          node.exit().transition()
+              .duration(duration)
+              .attr("transform", function(d) { return "translate(" + source.y + "," + source.x + ")"; })
+              .style("opacity", 0)
+              .remove();
+
+          // Update the links…
+          var link = svg.selectAll(".link")
+            .data(root.links(), function(d) { return d.target.id; });
+
+          // Enter any new links at the parent's previous position.
+          link.enter().insert("path", "g")
+              .attr("class", "link")
+              .attr("d", function(d) {
+                var o = {x: source.x0, y: source.y0};
+                return diagonal({source: o, target: o});
+              })
+            .transition()
+              .duration(duration)
+              .attr("d", diagonal);
+
+          // Transition links to their new position.
+          link.transition()
+              .duration(duration)
+              .attr("d", diagonal);
+
+          // Transition exiting nodes to the parent's new position.
+          link.exit().transition()
+              .duration(duration)
+              .attr("d", function(d) {
+                var o = {x: source.x, y: source.y};
+                return diagonal({source: o, target: o});
+              })
+              .remove();
+
+          // Stash the old positions for transition.
+          root.each(function(d) {
+            d.x0 = d.x;
+            d.y0 = d.y;
+          });
+        }
+
+        // Toggle children on click.
+        function click(d) {
+          if (d.children) {
+            d._children = d.children;
+            d.children = null;
+          } else {
+            d.children = d._children;
+            d._children = null;
+          }
+          update(d);
+         
+          getProjectData(d.data.id,d.data.name);
+        }
+
+        function color(d) {
+          return d._children ? "#E06A66" : d.children ? "#201F24" : "#E06A66";
+        }
     }); 
 
     
-    function drawGraph(nodeData)
-    {
 
-    // Variables
-        var width = 700;
-        var height = 700;
-        var radius = Math.min(width, height) / 2;
-        var color = d3.scaleOrdinal(d3.schemeCategory20b).range(["#FF3D00", "#FF5916", "#FF1744", "#00BFA5", "#880E4F", "#E5ACB6", "#ff8c00"]);
-        var color2 = d3.scaleOrdinal(d3.schemeCategory20b).range(["#FFAD36", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
-
-        d3.selectAll('button').style("background-color",
-        color2()
-        );
-
-        // Size our <svg> element, add a <g> element, and move translate 0,0 to the center of the element.
-        var g = d3.select('svg')
-            .attr('width', width)
-            .attr('height', height)
-            .append('g')
-            .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')');
-
-        // Create our sunburst data structure and size it.
-        var partition = d3.partition()
-            .size([2 * Math.PI, radius]);
-
-        drawSunburst(nodeData,partition,g,color);
-    }
-
-    function drawSunburst(data,partition,g,color) {
-
-        // Find the root node, calculate the node.value, and sort our nodes by node.value
-        root = d3.hierarchy(data)
-            .sum(function (d) { return d.size; })
-            .sort(function (a, b) { return b.value - a.value; });
-
-        // Calculate the size of each arc; save the initial angles for tweening.
-        partition(root);
-        arc = d3.arc()
-            .startAngle(function (d) { d.x0s = d.x0; return d.x0; })
-            .endAngle(function (d) { d.x1s = d.x1; return d.x1; })
-            .innerRadius(function (d) { return d.y0; })
-            .outerRadius(function (d) { return d.y1; });
-
-        // Add a <g> element for each node; create the slice variable since we'll refer to this selection many times
-        slice = g.selectAll('g.node').data(root.descendants(), function(d) { return d.data.name; }); // .enter().append('g').attr("class", "node");
-        newSlice = slice.enter().append('g').attr("class", "node").merge(slice);
-        slice.exit().remove();
-
-        slice.selectAll('path').remove();
-        newSlice.append('path').attr("display", function (d) { return d.depth ? null : "none"; })
-            .attr("d", arc)
-            .style('stroke', '#fff')
-            .style("fill", function (d) { return color((d.children ? d : d.parent).data.name); });
-
-        // Populate the <text> elements with our data-driven titles.
-        slice.selectAll('text').remove();
-        newSlice.append("text")
-            .attr("transform", function(d) {
-                return "translate(" + arc.centroid(d) + ")rotate(" + computeTextRotation(d) + ")"; })
-            .attr("dx", "-50")
-            .attr("dy", ".35em")
-            .text(function(d) { return d.parent ? d.data.name : "" })
-            .attr("id", function(d) { return d.parent ? d.data.id : "" });
-
-        newSlice.on("click", highlightSelectedSlice);
-    };
-
-    d3.selectAll(".showSelect").on("click", showTopTopics);
-    d3.selectAll(".sizeSelect").on("click", sliceSizer);
-
-    // Redraw the Sunburst Based on User Input
-    function highlightSelectedSlice(c,i) {
-
-        clicked = c;
-
-        var rootPath = clicked.path(root).reverse();
-        rootPath.shift(); // remove root node from the array
-
-        newSlice.style("opacity", 0.4);
-        newSlice.filter(function(d) {
-            if (d === clicked && d.prevClicked) {
-                d.prevClicked = false;
-                newSlice.style("opacity", 1);
-                return true;
-
-            } else if (d === clicked) {
-                d.prevClicked = true;
-                return true;
-            } else {
-                d.prevClicked = false;
-                return (rootPath.indexOf(d) >= 0);
-            }
-        })
-            .style("opacity", 1);
-
-        //d3.select("#sidebar").text("another!");
-        getProjectData(c.data.id);
-    };
-
-    // Redraw the Sunburst Based on User Input
-    function sliceSizer(r, i) {
-
-        // Determine how to size the slices.
-        if (this.value === "size") {
-            root.sum(function (d) { return d.size; });
-        } else {
-            root.count();
-        }
-        root.sort(function(a, b) { return b.value - a.value; });
-
-        partition(root);
-
-        newSlice.selectAll("path").transition().duration(750).attrTween("d", arcTweenPath);
-        newSlice.selectAll("text").transition().duration(750).attrTween("transform", arcTweenText);
-    };
-
-    // Redraw the Sunburst Based on User Input
-    function showTopTopics(r, i) {
-        //alert(this.value);
-        var showCount;
-
-        // Determine how to size the slices.
-        if (this.value === "top3") {
-            showCount = 3;
-        } else if (this.value === "top6") {
-            showCount = 6;
-        } else {
-            showCount = 100;
-        }
-
-        var showNodes = JSON.parse(JSON.stringify(allNodes));
-        showNodes.children.splice(showCount, (showNodes.children.length - showCount));
-
-        drawSunburst(showNodes);
-
-    };
-
-    /**
-     * When switching data: interpolate the arcs in data space.
-     * @param {Node} a
-     * @param {Number} i
-     * @return {Number}
-     */
-    function arcTweenPath(a, i) {
-
-        var oi = d3.interpolate({ x0: a.x0s, x1: a.x1s }, a);
-
-        function tween(t) {
-            var b = oi(t);
-            a.x0s = b.x0;
-            a.x1s = b.x1;
-            return arc(b);
-        }
-
-        return tween;
-    }
-
-    /**
-     * When switching data: interpolate the text centroids and rotation.
-     * @param {Node} a
-     * @param {Number} i
-     * @return {Number}
-     */
-    function arcTweenText(a, i) {
-
-        var oi = d3.interpolate({ x0: a.x0s, x1: a.x1s }, a);
-        function tween(t) {
-            var b = oi(t);
-            return "translate(" + arc.centroid(b) + ")rotate(" + computeTextRotation(b) + ")";
-        }
-        return tween;
-    }
-
-    /**
-     * Calculate the correct distance to rotate each label based on its location in the sunburst.
-     * @param {Node} d
-     * @return {Number}
-     */
-    function computeTextRotation(d) {
-        var angle = (d.x0 + d.x1) / Math.PI * 90;
-
-        // Avoid upside-down labels
-        // return 0;
-        // return (angle < 120 || angle > 270) ? angle : angle;  // labels as rims
-        return (angle < 180) ? angle - 90 : angle + 90;  // labels as spokes
-    }
-
-
-    function getProjectData(project_id)
+    function getProjectData(project_id,project_name)
     {
         var project_arr = project_id.split('_');
         var project_id = project_arr[1];
         $(".custom-loader").show();
         if(project_arr[0] !=  'project') {
             $(".custom-loader").hide();
-            alert('Please select a valid project. It seems you have selected a program');
+            // alert('Please select a valid project. It seems you have selected a program');
             return false;
         }
         projectData = $.parseJSON($.ajax({
@@ -381,6 +338,7 @@ Yii::app()->clientScript->registerCssFile(
         $("#resources").text(resources);
         // alert(projectData.project_id);
         $("#project_id").val(projectData.project_id);
+        $(".budtext span").text(project_name);
         $(".custom-loader").hide();
     }
     
