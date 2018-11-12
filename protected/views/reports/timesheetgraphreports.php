@@ -18,7 +18,7 @@ $cs = Yii::app()->getClientScript();
 
 <h1>Resource Timesheet Reports</h1>
 <div class="span11">
-
+    <p>Select resource in the below dropdown to fetch the respective reports</p>
     <?php
 
             $employeeData = Employee::model()->findAll(array('select' => "emp_id,first_name,last_name,email", 'order' => 'first_name', 'condition' => 'is_active=1'));

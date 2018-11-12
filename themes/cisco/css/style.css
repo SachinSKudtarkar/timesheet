@@ -869,7 +869,7 @@ iframe{
     height: 100%;
     min-height:500px;
 }
-.node rect {
+svg#gameboard .node rect {
   cursor: pointer;
   fill: #fff;
   fill-opacity: 0.9;
@@ -877,7 +877,7 @@ iframe{
   stroke-width: 1.5px;
 }
 
-.node text {
+svg#gameboard .node text {
   font: 14px sans-serif;
   pointer-events: none;
   fill:#fff;
