@@ -114,6 +114,7 @@ class SubmitStatusCommand extends CConsoleCommand {
         $cc = array();
         $bcc = array();
         $to[] = array("email" => "pm@infinitylabs.in", "name" => "PM");
+        $to[] = array("email" => "sujishin@cisco.com", "name" => "PM");
        // $to[] = array("email" => "umang.s@infinitylabs.in", "name" => "Umang T Shukla");
         $cc[] = array("email" => "sachin.k@infinitylabs.in", "name" => "Sachin Kudtarkar");
 //            $to[] = array("email" => "kpanse@cisco.com", "name" => "Krishnaji");
@@ -208,6 +209,7 @@ class SubmitStatusCommand extends CConsoleCommand {
              $manager_name = explode("@",$manager)[0];
 
                 $to[] =  array("email" => $manager, "name" => $manager_name);
+                $to[] = array("email" => "sujishin@cisco.com", "name" => "Sujishin");
                 $bcc[] = array("email" =>"sachin.k@infinitylabs.in","name"=>"Sachin Kudtarkar");
              $subject = "Daily Status Submission";
             echo CommonUtility::sendmail($to, null, $from, $from_name, $subject, $message, $cc, null, $bcc);
