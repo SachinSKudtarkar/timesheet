@@ -24,10 +24,15 @@ $cs = Yii::app()->getClientScript();
 <h1>All Reports</h1>
 <div class="span11">
     <div class="span6">
-
+        <div class="span7">     
+            <p>Click on the Project name to fetch the detailed report for that project.</p>
+        </div>
+        <div class="span5">
+            <p><strong>Legend:</strong> <span style="display: inline-block;width:40px;height: 15px;background: #201F24;"></span> Program <span style="display: inline-block;width:40px;height: 15px;background: #e06a66;"></span> Project</p>
+        </div>
         <svg id="gameboard"></svg>
     </div>
-    <div class="span6 text-center" id="graphreport">
+    <div class="span6 text-center" id="graphreport" style="display: none">
         <div class="span6" style="margin-left: 40%">
             <table class="table table-bordered text-center">
                 <tr>
@@ -40,7 +45,7 @@ $cs = Yii::app()->getClientScript();
                     </th>
                     
                 </tr>
-
+                <p>Click on the links given below to fetch the respective reports for the project.</p>
             </table>
             <table class="table table-bordered text-center">
                 <tr colspan="3"><h1 class="budtext"><span>Project</span> Budget</h1></tr>
@@ -294,7 +299,7 @@ Yii::app()->clientScript->registerCssFile(
         }
 
         function color(d) {
-          return d._children ? "#E06A66" : d.children ? "#201F24" : "#E06A66";
+          return d._children ? "#201F24" : d.children ? "#201F24" : "#E06A66";
         }
     }); 
 
@@ -340,6 +345,7 @@ Yii::app()->clientScript->registerCssFile(
         $("#project_id").val(projectData.project_id);
         $(".budtext span").text(project_name);
         $(".custom-loader").hide();
+        $("#graphreport").show();
     }
     
 
