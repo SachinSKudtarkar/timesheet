@@ -189,6 +189,12 @@ class SubProjectController extends Controller {
                 }
                 //$importData[] = $modelST->getAttributes();
             }
+            $this->sendApprovalMail($id);
+            if($model->approval_status != 1)
+            {
+                Yii::app()->user->setFlash('success', "{$valid['sub_project_name']} has been updated and a mail for project approval has been sent successfully.");
+            }   
+            
             $this->redirect(array('admin'));
         }
 
@@ -372,6 +378,7 @@ class SubProjectController extends Controller {
     public function sendApprovalMail($project_id)
     {
         $total_hours = 0;
+        $hostName = $_SERVER['SERVER_NAME'];
         $projectDetails = Yii::app()->db->createCommand("select sub_project_name,sub_project_description,pa.level_id ,lm.level_name,level_hours,concat(em.first_name,' ',em.last_name) as username from  tbl_project_level_allocation pa left join tbl_sub_project sp  on sp.spid = pa.project_id left join tbl_level_master lm on lm.level_id = pa.level_id left join tbl_employee em on em.emp_id = sp.created_by where spid = {$project_id}")->queryAll();
         $baseurl =  Yii::app()->getBaseUrl(true);
         
@@ -410,6 +417,7 @@ class SubProjectController extends Controller {
             }
             
             $to[] = array("email" => "mudliyarp@hcl.com", "name" => "Prabhakar");
+           // $to[] = array("email" => "ridhisha.joshi@infinitylabs.in", "name" => "Ridhisha Joshi");
            // $cc[] = array("email" => "sachin.k@infinitylabs.in", "name" => "sachin Kudtarkar");
             $subject = "New Project Approval";
             // echo $message;die;
