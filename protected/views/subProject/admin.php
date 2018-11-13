@@ -55,6 +55,13 @@ $this->widget('zii.widgets.grid.CGridView', array(
             //'filter' => false,
             'value' => array($model, 'getUpdatedBy')
               ),
+           array(
+            'header'=>'Approval Status',
+            'name' => 'approval_status',
+            'type' => 'raw',
+            //'filter' => false,
+            'value' => array($model, 'getApprovalStatus')
+              ),
           'updated_date',
           'is_deleted',
         array(

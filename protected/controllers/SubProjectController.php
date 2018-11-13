@@ -29,7 +29,7 @@ class SubProjectController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow all users to perform 'index' and 'view' actions
-                'actions' => array('index', 'view'),
+                'actions' => array('index', 'view','updateStatus'),
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -64,7 +64,7 @@ class SubProjectController extends Controller {
      */
     public function actionCreate() {
         $model = new SubProject;
-
+        $hostName = $_SERVER['SERVER_NAME'];
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
 
@@ -74,41 +74,47 @@ class SubProjectController extends Controller {
             $model->created_date = date('Y-m-d h:i:s');
             $model->project_id = $_POST['sub_project_id'];
             $model->created_by = Yii::app()->session['login']['user_id'];
+            $model->approval_status = 2;
             $valid = $_POST['SubProject'];
-
+            // print_r($model);die;
             if (empty($valid['pid']) || empty($valid['sub_project_name']) || empty($valid['sub_project_description']) || empty($valid['requester']) || empty($valid['status']) || empty($valid['priority'])) {
-                Yii::app()->user->setFlash('error', 'Please fill all required filleds');
+                Yii::app()->user->setFlash('error', 'Please fill all required fields.');
             } else {
-
+                
                 if ($model->save())
+                {    
                     $insert_id = Yii::app()->db->getLastInsertID();
-                Yii::app()->user->setFlash('success', "ProjectId is {$insert_id}");
+                    
+                    
+                    foreach ($_POST['group-a'] as $key => $val) {
+                        if (!empty($val['level_hours'])) {
+                            $modelPLA = new ProjectLevelAllocation;
+                            $modelPLA->project_id = $insert_id;
+                            $modelPLA->level_id = $val['level_id'];
+                            $modelPLA->level_hours = $val['level_hours'];
+                            $modelPLA->created_by = Yii::app()->session["login"]["user_id"];
+                            $modelPLA->created_at = date("Y-m-d h:i:s");
+                            $modelPLA->save(false);
 
-                foreach ($_POST['group-a'] as $key => $val) {
-                    if (!empty($val['level_hours'])) {
-                        $modelPLA = new ProjectLevelAllocation;
-                        $modelPLA->project_id = $insert_id;
-                        $modelPLA->level_id = $val['level_id'];
-                        $modelPLA->level_hours = $val['level_hours'];
-                        $modelPLA->created_by = Yii::app()->session["login"]["user_id"];
-                        $modelPLA->created_at = date("Y-m-d h:i:s");
-                        $modelPLA->save(false);
-
-                        //Update recorded as log in tbl_project_level_allocation_log for every update / insert
-                        $modelPLALog = new ProjectLevelAllocationLog;
-                        $modelPLALog->project_id = $insert_id;
-                        $modelPLALog->level_id = $val['level_id'];
-                        $modelPLALog->old_level_hours = 0;
-                        $modelPLALog->new_level_hours = $val['level_hours'];
-                        $modelPLALog->comments = 'Initial estimation';
-                        $modelPLALog->rl_log_id = 0;
-                        $modelPLALog->created_by = Yii::app()->session["login"]["user_id"];
-                        $modelPLALog->created_at = date("Y-m-d h:i:s");
-                        $modelPLALog->save(false);
+                            //Update recorded as log in tbl_project_level_allocation_log for every update / insert
+                            $modelPLALog = new ProjectLevelAllocationLog;
+                            $modelPLALog->project_id = $insert_id;
+                            $modelPLALog->level_id = $val['level_id'];
+                            $modelPLALog->old_level_hours = 0;
+                            $modelPLALog->new_level_hours = $val['level_hours'];
+                            $modelPLALog->comments = 'Initial estimation';
+                            $modelPLALog->rl_log_id = 0;
+                            $modelPLALog->created_by = Yii::app()->session["login"]["user_id"];
+                            $modelPLALog->created_at = date("Y-m-d h:i:s");
+                            $modelPLALog->save(false);
+                        }
                     }
-                }
 
-                $this->redirect(array('admin'));
+
+                    $this->sendApprovalMail($insert_id);   
+                    Yii::app()->user->setFlash('success', "{$valid['sub_project_name']} has been created and a mail for project approval has been sent successfully.");
+                    $this->redirect(array('admin'));
+                }
             }
         }
 
@@ -361,5 +367,67 @@ class SubProjectController extends Controller {
             echo 'Sub Task has been updated successfully';
         }
         die;
+    }
+
+    public function sendApprovalMail($project_id)
+    {
+        $total_hours = 0;
+        $projectDetails = Yii::app()->db->createCommand("select sub_project_name,sub_project_description,pa.level_id ,lm.level_name,level_hours,concat(em.first_name,' ',em.last_name) as username from  tbl_project_level_allocation pa left join tbl_sub_project sp  on sp.spid = pa.project_id left join tbl_level_master lm on lm.level_id = pa.level_id left join tbl_employee em on em.emp_id = sp.created_by where spid = {$project_id}")->queryAll();
+        $baseurl =  Yii::app()->getBaseUrl(true);
+        
+        $message = "";
+            $message .= "<br>";
+            $message .= "<b>Team,</b> <br><br>";
+            $message .= "Please find the details of the newly created project by ".ucwords($projectDetails[0]['username'])."<br><br>";
+            // $message .= "Project Name: " . $value['emp_name'] . "<br>";
+            $message .= "<table border = 1>";
+            $message .= "<tr><td>Project Name: </td><td>".$projectDetails[0]['sub_project_name']."</td></tr>";
+            $message .= "<tr><td>Project Description: </td><td>".$projectDetails[0]['sub_project_description']."</td></tr>";
+            foreach ($projectDetails as $key => $value) {
+                $total_hours += $value['level_hours'];
+                $message .= "<tr><td>".$value['level_name']." </td><td>".$value['level_hours']."</td></tr>";
+            }
+            $message .= "<tr><td>Total Estimated Hours: </td><td>".$total_hours."</td></tr>";
+            $message .= "</table></br>";
+            $message .= "<p>Please click on one of the below links to approve or reject the project estimation.</p>";
+            $message .= "<p><a href='{$baseurl}/subproject/updateStatus/1{$project_id}'>Approve </a><strong> OR </strong><a href='{$baseurl}/subproject/updateStatus/0{$project_id}'>Reject </a>";
+            $message .= "Note: This is still under testing.";
+            $message .= "<br><br>";
+            $message .= "Regards,";
+            $message .= "<br>Infinity Team";
+            $message . "<BR /><br />";
+            $from = "support@infinitylabs.in";
+            $from_name = "Infinity Support";
+            $to = array();
+            $cc = array();
+            $bcc = array();
+            if($hostName != 'localhost')
+            {
+                $to[] =  array("email" => "Vinay.Nataraj@infinitylabs.in", "name" => "Vinay Nataraj");
+                $to[] =  array("email" => "sachin.potdar@infinitylabs.in", "name" => "Sachin Potdar");
+    //            $to[] = array("email" => "pm@infinitylabs.in", "name" => "PM");
+                $to[] = array("email" => "ridhisha.joshi@infinitylabs.in", "name" => "Ridhisha Joshi");
+            }
+            
+            $to[] = array("email" => "mudliyarp@hcl.com", "name" => "Prabhakar");
+           // $cc[] = array("email" => "sachin.k@infinitylabs.in", "name" => "sachin Kudtarkar");
+            $subject = "New Project Approval";
+            // echo $message;die;
+            echo CommonUtility::sendmail($to, null, $from, $from_name, $subject, $message, $cc, null, $bcc);
+    }
+
+    public function actionupdateStatus($id)
+    {
+        $status = $id[0];
+        $project_id = substr($id, 1);
+        $projectDetails = Yii::app()->db->createCommand("update tbl_sub_project set approval_status = {$status} where spid={$project_id} and approval_status = 2")->execute();        
+
+        $appstatus = $status == 1 ? 'Approved.' : 'Rejected.'; 
+ 
+        echo "Project Estimation has been {$appstatus}";
+        
+        
+
+        // echo base64_decode($project_id);
     }
 }

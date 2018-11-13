@@ -16,6 +16,7 @@
  * @property integer $updated_by
  * @property string $updated_date
  * @property integer $is_deleted
+ * @property integer $approval_status
  */
 class SubProject extends CActiveRecord
 {
@@ -33,7 +34,7 @@ class SubProject extends CActiveRecord
     public $Task;
     public $Estimated_hours;
     public $consumed_hours;
-
+    public $approval_status;
     /**
      * @return string the associated database table name
      */
@@ -51,12 +52,12 @@ class SubProject extends CActiveRecord
             // will receive user inputs.
             return array(
                     array('pid, sub_project_name, sub_project_description,status,priority,requester', 'required'),
-                    array('pid, created_by, updated_by, is_deleted', 'numerical', 'integerOnly'=>true),
+                    array('pid, created_by, updated_by, is_deleted,approval_status', 'numerical', 'integerOnly'=>true),
                     array('sub_project_name, sub_project_description, requester', 'length', 'max'=>250),
                     array('total_hr_estimation_hour', 'numerical' ),
                     // The following rule is used by search().
                     // @todo Please remove those attributes that should not be searched. estimated_end_date, total_hr_estimation_hour,estimated_start_date,
-                    array('spid, pid, project_id, sub_project_name, sub_project_description, requester, estimated_end_date, total_hr_estimation_hour, ,estimated_start_date , created_by, created_date, updated_by, updated_date,project_name', 'safe', 'on'=>'search'),
+                    array('spid, pid, project_id, sub_project_name, sub_project_description, requester, estimated_end_date, total_hr_estimation_hour, ,estimated_start_date , created_by, created_date, updated_by, updated_date,project_name,approval_status', 'safe', 'on'=>'search'),
             );
     }
 
@@ -93,6 +94,7 @@ class SubProject extends CActiveRecord
                     'updated_by' => 'Updated By',
                     'updated_date' => 'Updated Date',
                     'is_deleted' => 'Is Deleted',
+                    'approval_status' => 'Approval Status',
             );
     }
 
@@ -126,7 +128,7 @@ class SubProject extends CActiveRecord
             $criteria->compare('concat(cEmp.first_name, " ", cEmp.last_name)',$this->created_by, true);
             $criteria->compare('created_date',$this->created_date,true);
             $criteria->compare('concat(mEmp.first_name, " ", mEmp.last_name)',$this->updated_by, true);
-            //$criteria->compare('updated_by',$this->updated_by);
+            $criteria->compare('approval_status',$this->approval_status);
             $criteria->compare('updated_date',$this->updated_date,true);
             $criteria->compare('is_deleted',$this->is_deleted);
             $criteria->compare('project_name',$this->project_name);
@@ -169,6 +171,19 @@ class SubProject extends CActiveRecord
             return $emp['first_name'] . " " . $emp['last_name'];
     }
 
+    public function getApprovalStatus($model) {
+
+        $status = '<span style="color:blue"><strong>Pending</strong></span>';
+        // print_r($model->approval_status);die;
+        if($model->approval_status == 0)
+        {
+            $status = '<span style="color:#f00"><strong>Rejected</strong></span>';
+        }else if($model->approval_status == 1)
+        {
+            $status = '<span style="color:#00CC00"><strong>Approved</strong></span>';
+        }
+        return $status;
+    }
 
     public function getAllProject() {
             $pro = array();
