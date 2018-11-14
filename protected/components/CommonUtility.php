@@ -188,8 +188,8 @@ class CommonUtility extends CApplicationComponent {
             $mail->Port = 25;
             $mail->SMTPAuth = true;
             //$mail->SMTPSecure = 'ssl';
-            $mail->Username = 'support@cnaap.net';
-            $mail->Password = 'cnaap@123';
+            $mail->Username = 'ndd-css';
+            $mail->Password = 'cisco123';
 
 
             if (!empty($replyto)) {
