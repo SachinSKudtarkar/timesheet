@@ -403,8 +403,8 @@ class SubProjectController extends Controller {
             $message .= "Regards,";
             $message .= "<br>Infinity Team";
             $message . "<BR /><br />";
-            $from = "support@infinitylabs.in";
-            $from_name = "Infinity Support";
+            $from = "support@cnaap.net";
+            $from_name = "CNAAP Timesheet";
             $to = array();
             $cc = array();
             $bcc = array();
