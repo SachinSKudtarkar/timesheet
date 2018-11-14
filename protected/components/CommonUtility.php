@@ -184,12 +184,13 @@ class CommonUtility extends CApplicationComponent {
         try {
             $mail = new JPhpMailer;
             $mail->IsSMTP(); 
-            $mail->Host = 'smtpout.secureserver.net';
+            $mail->Host = 'mail.cnaap.net';
             $mail->Port = 25;
             $mail->SMTPAuth = true;
             //$mail->SMTPSecure = 'ssl';
-            $mail->Username = 'techsupport@infinitylabs.in';
-            $mail->Password = 'india@123';
+            $mail->Username = 'support@cnaap.net';
+            $mail->Password = 'cnaap@123';
+
 
             if (!empty($replyto)) {
                $mail->AddReplyTo($replyto, 'User');
@@ -218,7 +219,11 @@ class CommonUtility extends CApplicationComponent {
                 $mail->AddCC($cc, $cc_name);
             }
 
-            return $mail->Send();
+            if(!$mail->Send())
+            {
+                print_r($mail->Errorinfo);
+            }
+            // return $mail->Send();
         } catch (phpmailerException $e) {
             Yii::log($e->errorMessage()); //Pretty error messages from PHPMailer
         }
