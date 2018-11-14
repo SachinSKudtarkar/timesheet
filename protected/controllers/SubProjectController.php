@@ -401,7 +401,7 @@ class SubProjectController extends Controller {
             $message .= "Note: This is still under testing.";
             $message .= "<br><br>";
             $message .= "Regards,";
-            $message .= "<br>Infinity Team";
+            $message .= "<br>CNAAP";
             $message . "<BR /><br />";
             $from = "support@cnaap.net";
             $from_name = "CNAAP Timesheet";
