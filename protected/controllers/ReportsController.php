@@ -427,7 +427,7 @@ class ReportsController extends Controller {
     {
     
         $graphArr = [];$programArr = [];$nodeArr = [];
-        $query = "select sp.spid,pm.pid,sp.sub_project_name as project_name,pm.project_name as program_name,(select sum(pl.level_hours * lm.budget_per_hour) from tbl_project_level_allocation pl inner join tbl_level_master lm on lm.level_id = pl.level_id where pl.project_id = sp.spid) as total_budget  from tbl_sub_project as sp left join tbl_project_management as pm on pm.pid = sp.pid where pm.project_name != '' order by program_name";
+        $query = "select sp.spid,pm.pid,sp.sub_project_name as project_name,pm.project_name as program_name,(select sum(pl.level_hours * lm.budget_per_hour) from tbl_project_level_allocation pl inner join tbl_level_master lm on lm.level_id = pl.level_id where pl.project_id = sp.spid) as total_budget  from tbl_sub_project as sp left join tbl_project_management as pm on pm.pid = sp.pid where pm.project_name != '' and sp.approval_status = 1 order by program_name";
         
         $graphArr = Yii::app()->db->createCommand($query)->queryAll();
         $graphArr[] = array('project_name' => '%Exit%', 'program_name'=>'','total_budget'=>999);

@@ -161,8 +161,10 @@ class DayComment extends CActiveRecord {
         $criteria->compare('t.shift', $this->shift,true);
         $criteria->compare('CONCAT(first_name," ",last_name)', $this->name, true);
         // $criteria->with = array("Creater" => array("alias" => 'r', "select" => 'first_name, last_name'));
+        
         $criteria->join = "INNER JOIN tbl_project_management pm ON t.pid = pm.pid INNER JOIN tbl_employee emp ON emp.emp_id = t.emp_id LEFT join tbl_sub_project sb ON sb.spid=t.spid left Join tbl_task as st on st.task_id = t.stask_id";
-        $criteria->order = "id, day DESC";
+        // $criteria->order = "id, day DESC";
+
         if ($pagination) {
             return new CActiveDataProvider($this, array(
                 'criteria' => $criteria,

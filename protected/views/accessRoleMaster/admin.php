@@ -10,7 +10,7 @@ $this->breadcrumbs=array(
 $this->menu=array(
 array('label' => 'Set Manager', 'url' => array('SetManager')),
     array('label' => 'Assign Resource Under Manager', 'url' => array('SetRoles')),
-    array('label' => 'View Resource Allocation List', 'url' => array('Admin')),
+    array('label' => 'Manage Resource Allocation List', 'url' => array('Admin')),
 );
 
 

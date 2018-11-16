@@ -385,7 +385,7 @@ class SubProjectController extends Controller {
         $message = "";
             $message .= "<br>";
             $message .= "<b>Team,</b> <br><br>";
-            $message .= "Please find the details of the newly created project by ".ucwords($projectDetails[0]['username'])."<br><br>";
+            $message .= "Please find the details of the project created by ".ucwords($projectDetails[0]['username'])."<br><br>";
             // $message .= "Project Name: " . $value['emp_name'] . "<br>";
             $message .= "<table border = 1>";
             $message .= "<tr><td>Project Name: </td><td>".$projectDetails[0]['sub_project_name']."</td></tr>";

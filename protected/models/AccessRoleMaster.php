@@ -99,8 +99,8 @@ class AccessRoleMaster extends CActiveRecord
 		$criteria->compare('created_date',$this->created_date,true);
 		$criteria->compare('updated_date',$this->updated_date,true);
 		$criteria->compare('updated_by',$this->updated_by);
-		$criteria->join = "INNER join tbl_employee em ON (em.emp_id=t.parent_id) ";
-		$criteria->join = "INNER join tbl_employee emp ON (emp.emp_id=t.emp_id) ";				
+		$criteria->join = "INNER join tbl_employee em ON (em.emp_id=t.parent_id) INNER join tbl_employee emp ON (emp.emp_id=t.emp_id)";
+		// $criteria->join = " ";				
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));
