@@ -398,7 +398,7 @@ class SubProjectController extends Controller {
             $message .= "</table></br>";
             $message .= "<p>Please click on one of the below links to approve or reject the project estimation.</p>";
             $message .= "<p><a href='{$baseurl}/subproject/updateStatus/1{$project_id}'>Approve </a><strong> OR </strong><a href='{$baseurl}/subproject/updateStatus/0{$project_id}'>Reject </a>";
-            $message .= "Note: This is still under testing.";
+            // $message .= "Note: This is still under testing.";
             $message .= "<br><br>";
             $message .= "Regards,";
             $message .= "<br>CNAAP";
