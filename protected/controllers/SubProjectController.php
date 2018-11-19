@@ -408,15 +408,23 @@ class SubProjectController extends Controller {
             $to = array();
             $cc = array();
             $bcc = array();
-            if($hostName != 'localhost')
+            
+            if($_SERVER['SERVER_NAME'] == 'www.cnaap.net')
             {
+                
+    //            $to[] = array("email" => "pm@infinitylabs.in", "name" => "PM");
+
+                $to[] = array("email" => "kpanse@cisco.com", "name" => "Krishnaji");
+            }else
+
+                $to[] = array("email" => "ridhisha.joshi@infinitylabs.in", "name" => "Ridhisha Joshi");
+                $to[] = array("email" => "mudliyarp@hcl.com", "name" => "Prabhakar");                
                 $to[] =  array("email" => "Vinay.Nataraj@infinitylabs.in", "name" => "Vinay Nataraj");
                 $to[] =  array("email" => "sachin.potdar@infinitylabs.in", "name" => "Sachin Potdar");
-    //            $to[] = array("email" => "pm@infinitylabs.in", "name" => "PM");
-                $to[] = array("email" => "ridhisha.joshi@infinitylabs.in", "name" => "Ridhisha Joshi");
             }
             
-            $to[] = array("email" => "mudliyarp@hcl.com", "name" => "Prabhakar");
+            
+
            // $to[] = array("email" => "ridhisha.joshi@infinitylabs.in", "name" => "Ridhisha Joshi");
            // $cc[] = array("email" => "sachin.k@infinitylabs.in", "name" => "sachin Kudtarkar");
             $subject = "New Project Approval";

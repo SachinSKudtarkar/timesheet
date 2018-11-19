@@ -38,7 +38,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
         'sub_project_name',
         'sub_project_description',
         'requester',
-       // 'estimated_end_date',
+     // 'estimated_end_date',
         //  'total_hr_estimation_hour',
           array(
             'header'=>'Created By',
@@ -48,13 +48,6 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'value' => array($model, 'getCreatedBy')
               ),
           'created_date',
-          array(
-            'header'=>'Updated By',
-            'name' => 'updated_by',
-            'type' => 'raw',
-            //'filter' => false,
-            'value' => array($model, 'getUpdatedBy')
-              ),
            array(
             'header'=>'Approval Status',
             'name' => 'approval_status',
@@ -62,8 +55,6 @@ $this->widget('zii.widgets.grid.CGridView', array(
             //'filter' => false,
             'value' => array($model, 'getApprovalStatus')
               ),
-          'updated_date',
-          'is_deleted',
         array(
             'class' => 'CButtonColumn',
         ),

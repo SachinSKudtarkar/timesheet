@@ -180,7 +180,7 @@ $img_path = Yii::app()->theme->baseUrl . "/img/add_image.png";
                     ?>
                     <div data-repeater-item class="row">
                         <?php echo CHtml::dropDownList('level_id', "", CHtml::listData(LevelMaster::model()->findAll(array('order' => 'level_name ASC')), 'level_id', 'level_name'), array('data-name' => 'level_id', 'style' => "width:150px;margin-right:20px", "class" => "level_id_hrs", "options" => $options_data)); ?>
-                        <?php echo CHtml::textField('level_hours', '', array('data-name' => 'level_hours', 'style' => "width:100px;", "name" => "data[0][level_hours]", "class" => "level_hours")); ?>
+                        <?php echo CHtml::textField('level_hours', '', array('data-name' => 'level_hours', 'style' => "width:100px;", "name" => "data[0][level_hours]", "class" => "level_hours","required"=>true)); ?>
                         <input data-repeater-delete type="button" style="background: red;padding: 0px 5px; font-weight: bold;" value="x"/>
                     </div>
                 </div>
