@@ -121,7 +121,7 @@ class SubProject extends CActiveRecord
             $criteria->compare('pr.project_name',$this->pid, true);
             $criteria->compare('sub_project_name',$this->sub_project_name,true);
             $criteria->compare('sub_project_description',$this->sub_project_description,true);
-            $criteria->compare('requester',$this->requester,true);
+            $criteria->compare('t.requester',$this->requester,true);
             $criteria->compare('estimated_end_date',$this->estimated_end_date,true);
             $criteria->compare('total_hr_estimation_hour',$this->total_hr_estimation_hour,true);
             //$criteria->compare('created_by',$this->created_by);
