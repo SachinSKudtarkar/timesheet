@@ -151,7 +151,7 @@ class PidApprovalController extends Controller {
 
     public function validated($post) {
 
-        Yii::app()->user->setFlash('error', 'Please fill All Filleds are Required');
+        Yii::app()->user->setFlash('error', 'Please fill All Fields are Required');
         $this->render('create', array(
             'model' => $model
         ));

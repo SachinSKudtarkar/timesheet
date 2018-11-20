@@ -219,7 +219,7 @@ $access_type = AccessRoleMaster::model()->findByAttributes(array('emp_id' => $em
 //                                    ),
                                     array('label' => 'Daily task submission records',
                                         'url' => array('//daycomment/adminAll'),
-                                        'visible' => CHelper::isAccess("STATUS", "full_access"),
+                                        'visible' => ($access_type->access_type == 1),
                                         'active' => (Yii::app()->controller->id == 'daycomment' && Yii::app()->controller->action->id == 'adminAll')
                                     ),
                                    array('label' => 'Manage Resource',
