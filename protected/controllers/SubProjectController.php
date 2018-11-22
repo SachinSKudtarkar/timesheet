@@ -408,25 +408,19 @@ class SubProjectController extends Controller {
             $to = array();
             $cc = array();
             $bcc = array();
-            
-            if($_SERVER['SERVER_NAME'] == 'www.cnaap.net')
+
+            // $to[] = array("email" => "kpanse@cisco.com", "name" => "Krishnaji");  
+            if($baseurl == "http://localhost:8012/timesheet" || $baseurl == "https://staging.cnaap.net/timesheet")
             {
                 
-    //            $to[] = array("email" => "pm@infinitylabs.in", "name" => "PM");
-
-                $to[] = array("email" => "kpanse@cisco.com", "name" => "Krishnaji");
-            }else{
-
                 $to[] = array("email" => "ridhisha.joshi@infinitylabs.in", "name" => "Ridhisha Joshi");
                 $to[] = array("email" => "mudliyarp@hcl.com", "name" => "Prabhakar");                
                 $to[] =  array("email" => "Vinay.Nataraj@infinitylabs.in", "name" => "Vinay Nataraj");
-                $to[] =  array("email" => "sachin.potdar@infinitylabs.in", "name" => "Sachin Potdar");
+                $to[] =  array("email" => "sachin.potdar@infinitylabs.in", "name" => "Sachin Potdar");   
+            }else{
+                echo 'sdasd';die;
             }
-            
-            
 
-           // $to[] = array("email" => "ridhisha.joshi@infinitylabs.in", "name" => "Ridhisha Joshi");
-           // $cc[] = array("email" => "sachin.k@infinitylabs.in", "name" => "sachin Kudtarkar");
             $subject = "New Project Approval";
             // echo $message;die;
             echo CommonUtility::sendmail($to, null, $from, $from_name, $subject, $message, $cc, null, $bcc);
@@ -439,10 +433,13 @@ class SubProjectController extends Controller {
         $projectDetails = Yii::app()->db->createCommand("update tbl_sub_project set approval_status = {$status} where spid={$project_id} and approval_status = 2")->execute();        
 
         $appstatus = $status == 1 ? 'Approved.' : 'Rejected.'; 
- 
-        echo "Project Estimation has been {$appstatus}";
         
+        // echo "<h1>Project Estimation has been {$appstatus}</h1>";
         
+        $this->render('statusview', array(
+            'model' => $this->loadModel($id),
+            'data' => "The hours estimation for the project has been {$appstatus}."
+        ));
 
         // echo base64_decode($project_id);
     }
