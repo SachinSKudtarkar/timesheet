@@ -412,13 +412,14 @@ class SubProjectController extends Controller {
             // $to[] = array("email" => "kpanse@cisco.com", "name" => "Krishnaji");  
             if($baseurl == "http://localhost:8012/timesheet" || $baseurl == "https://staging.cnaap.net/timesheet")
             {
-                
+
                 $to[] = array("email" => "ridhisha.joshi@infinitylabs.in", "name" => "Ridhisha Joshi");
                 $to[] = array("email" => "mudliyarp@hcl.com", "name" => "Prabhakar");                
-                $to[] =  array("email" => "Vinay.Nataraj@infinitylabs.in", "name" => "Vinay Nataraj");
-                $to[] =  array("email" => "sachin.potdar@infinitylabs.in", "name" => "Sachin Potdar");   
+                $to[] = array("email" => "Vinay.Nataraj@infinitylabs.in", "name" => "Vinay Nataraj");
+                $to[] = array("email" => "sachin.potdar@infinitylabs.in", "name" => "Sachin Potdar");   
             }else{
-                echo 'sdasd';die;
+            
+                $to[] = array("email" => "kpanse@cisco.com", "name" => "Krishnaji");
             }
 
             $subject = "New Project Approval";
