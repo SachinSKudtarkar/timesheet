@@ -204,6 +204,15 @@ $img_path = Yii::app()->theme->baseUrl . "/img/add_image.png";
     <div class="row buttons span10">
         <?php echo $form->hiddenField($model, 'spid'); ?>
     <?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save', array('id' => 'ISSUB')); ?>
+    <?php if(!$model->isNewRecord && Yii::app()->session['login']['user_id'] == '6' && $model->approval_status == '2') { 
+        $baseurl = Yii::app()->getBaseUrl(true);
+        $approvalLink = "{$baseurl}/subproject/updateStatus/1{$model->spid}";
+        $rejectLink = "{$baseurl}/subproject/updateStatus/0{$model->spid}"; 
+
+    ?>
+        <a href="<?php echo $approvalLink; ?>" class="abutton">Approve</a>
+        <a href="<?php echo $rejectLink; ?>" class="abutton rejectBtn" >Reject</a>
+    <?php } ?>
     </div>
 <?php $this->endWidget(); ?>
 </div>
@@ -294,6 +303,15 @@ $img_path = Yii::app()->theme->baseUrl . "/img/add_image.png";
         });
     }
 
+    
+    $('.level_hours').each(function(){
+        if($(this).is(':visible') == true){
+            $(this).attr('required',true);
+        }else{
+            $(this).attr('required',false);
+        }
+    });
+    
 
 </script>
 <?php

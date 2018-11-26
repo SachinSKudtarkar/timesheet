@@ -33,7 +33,7 @@ class SubProjectController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'admin','fetchProjectId','updateLog','updateTask'),
+                'actions' => array('create', 'update', 'admin','fetchProjectId','updateLog','updateTask','uploadExcel'),
                 'expression' => 'CHelper::isAccess("PROJECTS", "full_access")',
                 'users' => array('@'),
             ),
@@ -152,6 +152,7 @@ class SubProjectController extends Controller {
             $model->project_id = $_POST['sub_project_id'];
             $model->updated_date = date('Y-m-d h:i:s');
             $model->updated_by = Yii::app()->session['login']['user_id'];
+            $model->approval_status = 2;
 
             if ($model->save())
                 $checkLogCount = Yii::app()->db->createCommand('Select rl_log_id from tbl_project_level_allocation_log where project_id=' . $id . ' order by created_at desc')->queryRow();
@@ -418,11 +419,14 @@ class SubProjectController extends Controller {
                 $to[] = array("email" => "Vinay.Nataraj@infinitylabs.in", "name" => "Vinay Nataraj");
                 $to[] = array("email" => "sachin.potdar@infinitylabs.in", "name" => "Sachin Potdar");   
             }else{
-            
+
                 $to[] = array("email" => "kpanse@cisco.com", "name" => "Krishnaji");
+                $bcc[] = array("email" => "Vinay.Nataraj@infinitylabs.in", "name" => "Vinay Nataraj");
+                $bcc[] = array("email" => "sachin.potdar@infinitylabs.in", "name" => "Sachin Potdar");
+                
             }
 
-            $subject = "New Project Approval";
+            $subject = "CNAAP New Project Approval";
             // echo $message;die;
             echo CommonUtility::sendmail($to, null, $from, $from_name, $subject, $message, $cc, null, $bcc);
     }
@@ -436,12 +440,22 @@ class SubProjectController extends Controller {
         $appstatus = $status == 1 ? 'Approved.' : 'Rejected.'; 
         
         // echo "<h1>Project Estimation has been {$appstatus}</h1>";
-        
-        $this->render('statusview', array(
-            'model' => $this->loadModel($id),
-            'data' => "The hours estimation for the project has been {$appstatus}."
-        ));
+        $message = "The hours estimation for the project has been {$appstatus}.";
+        // $this->render('statusview', array(
+        //     'model' => $this->loadModel($id),
+        //     'data' => "The hours estimation for the project has been {$appstatus}."
+        // ));
+        Yii::app()->user->setFlash('success', $message);
+        $this->redirect(array('admin'));
 
         // echo base64_decode($project_id);
+    }
+
+    public function actionuploadExcel()
+    {   
+        echo 'asdasd';
+        // print_r($_REQUEST);
+        // var_dump($_FILES);
+        die;
     }
 }
