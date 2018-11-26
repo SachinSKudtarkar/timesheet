@@ -433,19 +433,21 @@ class SubProjectController extends Controller {
 
     public function actionupdateStatus($id)
     {
-        $status = $id[0];
-        $project_id = substr($id, 1);
-        $projectDetails = Yii::app()->db->createCommand("update tbl_sub_project set approval_status = {$status} where spid={$project_id} and approval_status = 2")->execute();        
+        if(Yii::app()->session['login']['user_id'] == '3616' || Yii::app()->session['login']['user_id'] == '6'){ 
+            $status = $id[0];
+            $project_id = substr($id, 1);
+            $projectDetails = Yii::app()->db->createCommand("update tbl_sub_project set approval_status = {$status} where spid={$project_id} and approval_status = 2")->execute();        
 
-        $appstatus = $status == 1 ? 'Approved.' : 'Rejected.'; 
-        
-        // echo "<h1>Project Estimation has been {$appstatus}</h1>";
-        $message = "The hours estimation for the project has been {$appstatus}.";
-        // $this->render('statusview', array(
-        //     'model' => $this->loadModel($id),
-        //     'data' => "The hours estimation for the project has been {$appstatus}."
-        // ));
-        Yii::app()->user->setFlash('success', $message);
+            $appstatus = $status == 1 ? 'Approved.' : 'Rejected.'; 
+            
+            // echo "<h1>Project Estimation has been {$appstatus}</h1>";
+            $message = "The hours estimation for the project has been {$appstatus}.";
+            // $this->render('statusview', array(
+            //     'model' => $this->loadModel($id),
+            //     'data' => "The hours estimation for the project has been {$appstatus}."
+            // ));
+            Yii::app()->user->setFlash('success', $message);
+        }
         $this->redirect(array('admin'));
 
         // echo base64_decode($project_id);
