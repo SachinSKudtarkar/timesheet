@@ -29,7 +29,7 @@ class SubProjectController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow all users to perform 'index' and 'view' actions
-                'actions' => array('index', 'view','updateStatus'),
+                'actions' => array('index', 'view','updateStatus','updateApproval'),
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -457,5 +457,12 @@ class SubProjectController extends Controller {
         // print_r($_REQUEST);
         // var_dump($_FILES);
         die;
+    }
+
+    public function actionupdateApproval()
+    {
+        $projectDetails = Yii::app()->db->createCommand("update tbl_sub_project set approval_status = 1 where approval_status = 2")->execute();
+
+        echo "All project's approval status has been updated as approved";
     }
 }
