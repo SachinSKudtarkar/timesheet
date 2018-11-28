@@ -3,12 +3,12 @@
 /* @var $model ResourceAllocationProjectWork */
 
 $this->breadcrumbs = array(
-    'Resource Allocation Program Works' => array('index'),
+    // 'Resource Allocation Program Works' => array('index'),
     'Create',
 );
 
 $this->menu = array(
-    array('label' => 'Manage ResourceAllocation for Program Work', 'url' => array('admin')),
+    array('label' => 'Manage Resource Allocation', 'url' => array('admin')),
     array('label'=>'Manage Program', 'url'=>array('admin')),
    
 );

@@ -67,7 +67,7 @@
         if(resourceid) {
             window.location.href = "<?php echo Yii::app()->baseUrl; ?>/resourceallocationprojectwork/update/"+resourceid;    
         }
-        $('.custom-loader').css('display','block');
+        $('.custom-loader').css('display','none');
         
 
     });

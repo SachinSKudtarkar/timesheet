@@ -1166,9 +1166,12 @@ where  st.emp_id = {$userId} group by st.stask_id"; //pa.approved = 2  and
 
         $data['status'] = 'SUCCESS';
         if(!empty($data)){
-        if($_POST['pid'])
-        echo json_encode($data);
-        else return $data['result'];
+            if(isset($_POST['pid']) && !empty($_POST['pid'])){
+                echo json_encode($data);
+            }else{
+                return $data['result'];
+            } 
+                
         }
        // die();
     }
@@ -1316,7 +1319,7 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.sub_project_i
         $time_diff_hrs = Yii::app()->db->createCommand($time_diff)->queryRow();
 
         if (!empty($time_diff_hrs)) {
-            $difference = DayComment::calculateTimeDiff($time_diff_hrs['est_hrs'],$time_diff_hrs['utilized_hrs']);
+            $difference = (new DayComment)->calculateTimeDiff($time_diff_hrs['est_hrs'],$time_diff_hrs['utilized_hrs']);
             $time_array['difference'] = $difference['difference'];
             $time_array['hours'] = $difference['hours'];
             $time_array['mins'] = $difference['mins'];

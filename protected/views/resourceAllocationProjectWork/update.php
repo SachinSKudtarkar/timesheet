@@ -9,10 +9,10 @@ $this->breadcrumbs=array(
 );
 
 $this->menu=array(
-	array('label'=>'List ResourceAllocationProjectWork', 'url'=>array('index')),
-	array('label'=>'Create ResourceAllocationProjectWork', 'url'=>array('create')),
-	array('label'=>'View ResourceAllocationProjectWork', 'url'=>array('view', 'id'=>$model->id)),
-	array('label'=>'Manage ResourceAllocationProjectWork', 'url'=>array('admin')),
+	// array('label'=>'List ResourceAllocationProjectWork', 'url'=>array('index')),
+	array('label'=>'Allocate Resource', 'url'=>array('create')),
+	// array('label'=>'View ResourceAllocationProjectWork', 'url'=>array('view', 'id'=>$model->id)),
+	array('label'=>'Manage Resource Allocation', 'url'=>array('admin')),
         array('label'=>'View Resource Statistics', 'url'=>array('resourcemanagement')),
 );
 ?>

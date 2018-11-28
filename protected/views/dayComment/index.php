@@ -208,7 +208,7 @@ Yii::app()->clientScript->registerCssFile(
                                 <?php 
                                     $difference = '';
                                     $difference = DayComment::model()->getDifference($eachproject['spid']['selected'],$eachproject['stask_id']['selected']); 
-                                    
+                                    // print_r($difference);die;
                                 ?>
 								<?php echo CHTML::label('Time Remaining', '', array('style' => 'width:40px;font-weight:bold;margin-top:-10px ')); ?>
 								<?php echo CHTML::textField('rem_hrs', $difference['difference'], array('readonly' => 'readonly', 'class' => 'rem_hrs','style' => 'width:50px;color:#f00;','id' => 'remhrs' . $date_id ."_". $pid));
@@ -222,7 +222,7 @@ Yii::app()->clientScript->registerCssFile(
 										$hrs = 23;
 	                                    if(isset($difference['estimated']) && !empty($difference['estimated']))
 	                                    {
-	                                        $hrs = $difference['hours'] < 23 ? $difference['estimated']  : 23;    
+	                                        $hrs = $difference['hours'] < 23 ? $difference['hours']  : 23;    
 	                                    }
 
 	                                    for($h=0; $h<=$hrs; $h++) {

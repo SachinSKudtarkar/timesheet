@@ -106,7 +106,7 @@ class ResourceAllocationProjectWork extends CActiveRecord
                 $criteria->compare('project_name',$this->project_name,true);                
                 $criteria->select = "t.id, t.pid,t.date,t.allocated_resource,pm.project_name";
                 $criteria->join = "INNER JOIN tbl_project_management pm ON pm.pid = t.pid";
-                $criteria->order = "t.pid ASC";
+                $criteria->order = "t.pid DESC";
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

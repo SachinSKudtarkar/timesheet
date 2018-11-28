@@ -352,15 +352,23 @@ group by dc.stask_id order by em.emp_id;";
 
     public function actionAllocate() {
 
-        echo $projectId = isset($_POST['ProjectName']) ? $_POST['ProjectName'] : 0;
+        $projectId = isset($_POST['ProjectName']) ? $_POST['ProjectName'] : 0;
 
         $_POST['txtarea2'] = array_filter($_POST['txtarea2']);
+
+        // $query_allocate = "SELECT group_concat(distinct(emp_id)) as allocated_resource from tbl_sub_task where project_id = {$projectId}";
+
+        // $sub_task_resource = Yii::app()->db->createCommand($query_allocate)->queryRow();
+
+        // $_POST['txtarea2'] = array_unique(array_values($_POST['txtarea2'] + $sub_task_resource));
+        
         $all_resources = isset($_POST['txtarea2']) ? implode(',', $_POST['txtarea2']) : '';
         $resourceIds = isset($_POST['txtarea2']) ? implode("','", $_POST['txtarea2']) : '';
 
         $query = "SELECT id FROM tbl_resource_allocation_project_work WHERE pid = '{$projectId}'";
         $result = YII::app()->db->createCommand($query)->queryRow();
 
+        
         $done = 0;
         $modified_by = Yii::app()->session['login']['user_id'];
         $modified_at = date('Y-m-d H:i:s');
@@ -496,8 +504,10 @@ group by dc.stask_id order by em.emp_id;";
     }
 
     public function getReource($model) {
-        if (trim($model->allocated_resource) != '') {
-            $query = "SELECT CONCAT(first_name,' ',last_name) as rname FROM tbl_employee WHERE emp_id IN(" . $model->allocated_resource . ")";
+        $allocated_resource = rtrim($model->allocated_resource,',');
+        if ($allocated_resource != '') {
+            $query = "SELECT CONCAT(first_name,' ',last_name) as rname FROM tbl_employee WHERE emp_id IN(" . $allocated_resource . ")";
+
             $rsrce = Yii::app()->db->createCommand($query)->queryAll();
             $rname = array();
             foreach ($rsrce as $rc) {

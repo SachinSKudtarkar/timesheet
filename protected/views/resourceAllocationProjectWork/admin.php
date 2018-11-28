@@ -3,7 +3,7 @@
 /* @var $model ResourceAllocationProjectWork */
 
 $this->breadcrumbs=array(
-	'Resource Allocation Program Works'=>array('index'),
+	// 'Resource Allocation Program Works'=>array('index'),
 	'Manage',
 );
 
