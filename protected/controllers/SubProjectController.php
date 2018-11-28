@@ -33,7 +33,7 @@ class SubProjectController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'admin','fetchProjectId','updateLog','updateTask','uploadExcel'),
+                'actions' => array('create', 'update', 'admin','fetchProjectId','updateLog','updateTask','uploadExcel','replaceId'),
                 'expression' => 'CHelper::isAccess("PROJECTS", "full_access")',
                 'users' => array('@'),
             ),
@@ -466,5 +466,70 @@ class SubProjectController extends Controller {
         $projectDetails = Yii::app()->db->createCommand("update tbl_sub_project set approval_status = 1 where approval_status = 2")->execute();
 
         echo "All project's approval status has been updated as approved";
+    }
+
+    public function actionreplaceId()
+    {
+        echo 'Started<br>';
+        $find_id_1 = 6;
+        $find_id_2 = 6999;
+        $replace_id = 3616;
+        //{$replace_id}_{$find_id_1}_{$find_id_2}
+        // select * from tbl_project_management where created_by = 3616 or updated_by = 3616;
+        // update tbl_project_management set created_by = {$replace_id} where created_by = {$find_id_1} or created_by = {$find_id_2};
+        Yii::app()->db->createCommand("update tbl_project_management set created_by = {$replace_id} where created_by = {$find_id_1} or created_by = {$find_id_2}")->execute();
+        // update tbl_project_management set updated_by = {$replace_id} where updated_by = {$find_id_1} or updated_by = {$find_id_2};
+        Yii::app()->db->createCommand("update tbl_project_management set updated_by = {$replace_id} where updated_by = {$find_id_1} or updated_by = {$find_id_2}")->execute();
+        echo 'Projec Management Updated<br>';
+
+        // select * from tbl_sub_project where created_by = 3616 or updated_by = 3616;
+        // update tbl_sub_project set created_by = {$replace_id} where created_by = {$find_id_1} or created_by = {$find_id_2};
+        Yii::app()->db->createCommand("update tbl_sub_project set created_by = {$replace_id} where created_by = {$find_id_1} or created_by = {$find_id_2}")->execute();
+        // update tbl_sub_project set updated_by = {$replace_id} where updated_by = {$find_id_1} or updated_by = {$find_id_2};
+        Yii::app()->db->createCommand("update tbl_sub_project set updated_by = {$replace_id} where updated_by = {$find_id_1} or updated_by = {$find_id_2};")->execute();
+        echo 'Sub Project Updated<br>';
+
+        // select * from tbl_pid_approval where created_by = 3616;
+        // update tbl_pid_approval set created_by = {$replace_id} where created_by = {$find_id_1} or created_by = {$find_id_2};
+        Yii::app()->db->createCommand("update tbl_pid_approval set created_by = {$replace_id} where created_by = {$find_id_1} or created_by = {$find_id_2}")->execute();
+        echo 'Pid approval updated<br>';
+
+        // select * from tbl_sub_task where emp_id = 3616 or updated_by = 3616;
+        // update tbl_sub_task set emp_id = {$replace_id} where emp_id = {$find_id_1} or emp_id = {$find_id_2};
+        Yii::app()->db->createCommand("update tbl_sub_task set emp_id = {$replace_id} where emp_id = {$find_id_1} or emp_id = {$find_id_2}")->execute();
+        // update tbl_sub_task set updated_by = {$replace_id} where updated_by = {$find_id_1} or updated_by = {$find_id_2};
+        Yii::app()->db->createCommand("update tbl_sub_task set updated_by = {$replace_id} where updated_by = {$find_id_1} or updated_by = {$find_id_2}")->execute();
+        echo 'Sub Task Updated<br>';
+
+        // select * from tbl_day_comment where emp_id = 3616 or created_by = 3616;
+        // update tbl_day_comment set emp_id = {$replace_id} where emp_id = {$find_id_1} or emp_id = {$find_id_2};
+        Yii::app()->db->createCommand("update tbl_day_comment set emp_id = {$replace_id} where emp_id = {$find_id_1} or emp_id = {$find_id_2};")->execute();
+        // update tbl_day_comment set created_by = {$replace_id} where created_by = {$find_id_1} or created_by = {$find_id_2};
+        Yii::app()->db->createCommand("update tbl_day_comment set created_by = {$replace_id} where created_by = {$find_id_1} or created_by = {$find_id_2}")->execute();
+        echo 'Day Comment Updated<br>';
+
+        // select * from tbl_resource_allocation_project_work where FIND_IN_SET(6,allocated_resource);
+        // update tbl_resource_allocation_project_work set allocated_resource = replace(allocated_resource , '{$find_id_1}', '{$replace_id}') where FIND_IN_SET({$find_id_1},allocated_resource);
+        Yii::app()->db->createCommand("update tbl_resource_allocation_project_work set allocated_resource = replace(allocated_resource , '{$find_id_1}', '{$replace_id}') where FIND_IN_SET({$find_id_1},allocated_resource)")->execute();
+        // update tbl_resource_allocation_project_work set allocated_resource = replace(allocated_resource , '{$find_id_2}', '{$replace_id}') where FIND_IN_SET({$find_id_2},allocated_resource);
+        Yii::app()->db->createCommand("update tbl_resource_allocation_project_work set allocated_resource = replace(allocated_resource , '{$find_id_2}', '{$replace_id}') where FIND_IN_SET({$find_id_2},allocated_resource)")->execute();
+        // update tbl_resource_allocation_project_work set created_by = {$replace_id} where created_by = {$find_id_1} or created_by = {$find_id_2};
+        Yii::app()->db->createCommand("update tbl_resource_allocation_project_work set created_by = {$replace_id} where created_by = {$find_id_1} or created_by = {$find_id_2}")->execute();
+        // update tbl_resource_allocation_project_work set modified_by = {$replace_id} where modified_by = {$find_id_1} or modified_by = {$find_id_2};
+        Yii::app()->db->createCommand("update tbl_resource_allocation_project_work set modified_by = {$replace_id} where modified_by = {$find_id_1} or modified_by = {$find_id_2}")->execute();
+        echo 'Resource allocated updated<br>';
+
+        //update tbl_employee set last_name = concat(last_name,'*') where emp_id = 3616 or emp_id = 3617;
+        Yii::app()->db->createCommand("update tbl_employee set last_name = concat(last_name,'*') where emp_id = {$find_id_1} or emp_id = {$find_id_2}")->execute();
+        echo "Employee table updated<br>";
+        
+        // update tbl_access_role_master set parent_id = 6 where parent_id = 3616;
+        Yii::app()->db->createCommand("update tbl_access_role_master set parent_id = {$replace_id} where parent_id = {$find_id_1}")->execute();
+        Yii::app()->db->createCommand("update tbl_access_role_master set parent_id = {$replace_id} where parent_id = {$find_id_2}")->execute();
+
+        // update tbl_access_role_master set emp_id = 6 where emp_id = 3616;
+        Yii::app()->db->createCommand("update tbl_access_role_master set emp_id = {$replace_id} where emp_id = {$find_id_1}")->execute();
+        Yii::app()->db->createCommand("update tbl_access_role_master set emp_id = {$replace_id} where emp_id = {$find_id_2}")->execute();
+        echo "Employee table updated...done";
     }
 }
