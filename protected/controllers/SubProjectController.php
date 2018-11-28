@@ -471,9 +471,9 @@ class SubProjectController extends Controller {
     public function actionreplaceId()
     {
         echo 'Started<br>';
-        $find_id_1 = 6;
-        $find_id_2 = 6999;
-        $replace_id = 3616;
+        $find_id_1 = 4552;
+        $find_id_2 = 2448;
+        $replace_id = 14594;
         //{$replace_id}_{$find_id_1}_{$find_id_2}
         // select * from tbl_project_management where created_by = 3616 or updated_by = 3616;
         // update tbl_project_management set created_by = {$replace_id} where created_by = {$find_id_1} or created_by = {$find_id_2};
