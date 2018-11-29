@@ -497,8 +497,8 @@ class SubProjectController extends Controller {
         // select * from tbl_sub_task where emp_id = 3616 or updated_by = 3616;
         // update tbl_sub_task set emp_id = {$replace_id} where emp_id = {$find_id_1} or emp_id = {$find_id_2};
         Yii::app()->db->createCommand("update tbl_sub_task set emp_id = {$replace_id} where emp_id = {$find_id_1} or emp_id = {$find_id_2}")->execute();
-        // update tbl_sub_task set updated_by = {$replace_id} where updated_by = {$find_id_1} or updated_by = {$find_id_2};
-        Yii::app()->db->createCommand("update tbl_sub_task set updated_by = {$replace_id} where updated_by = {$find_id_1} or updated_by = {$find_id_2}")->execute();
+        // update tbl_sub_task set created_by = {$replace_id} where created_by = {$find_id_1} or created_by = {$find_id_2};
+        Yii::app()->db->createCommand("update tbl_sub_task set created_by = {$replace_id} where created_by = {$find_id_1} or created_by = {$find_id_2}")->execute();
         echo 'Sub Task Updated<br>';
 
         // select * from tbl_day_comment where emp_id = 3616 or created_by = 3616;
