@@ -222,7 +222,13 @@ Yii::app()->clientScript->registerCssFile(
 										$hrs = 23;
 	                                    if(isset($difference['estimated']) && !empty($difference['estimated']))
 	                                    {
-	                                        $hrs = $difference['hours'] < 23 ? $difference['hours']  : 23;    
+	                                    	if($difference['hours'] == 0)
+	                                    	{
+	                                    		$hhrs = $eachproject['hrs'];
+	                                    	}else{
+	                                    		$hhrs = $difference['estimated'];
+	                                    	}
+	                                        $hrs = $hhrs < 23 ? $hhrs  : 23;    
 	                                    }
 
 	                                    for($h=0; $h<=$hrs; $h++) {
