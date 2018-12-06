@@ -747,7 +747,7 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.stask_id";
 
            if ($timesheet_flag == 1 && $_SESSION['cnaap_flag'] == 1) {
                Yii::app()->user->setFlash('success', "Comment added successfully.");
-               $this->redirect('https://' . $_SERVER['SERVER_NAME'] . '/login?user_id=' . $model->emp_id, array('target' => '_blank'));
+               $this->redirect('https://' . $_SERVER['SERVER_NAME'] . '/timesheet/CaptureImage');
            } else {
                 Yii::app()->user->setFlash('success', "Comment added successfully.");
                 $this->redirect(array('daycomment/index/selecting_date/' . $selected_date));

@@ -46,14 +46,14 @@ $access_type = AccessRoleMaster::model()->findByAttributes(array('emp_id' => $em
         <div class="header-wrap-1">
 
             <span class="brand-name">Timesheet</span>
-            <span class="" style="font-size: 16px; color: #fff; right: 20px; position: fixed; top: 33px; z-index: 9999;">
+            <span class="" style="font-size: 16px; color: #fff; right: 20px; position: fixed; top: 20px; z-index: 9999;">
                 <small style="color: #aeaeae">Logged in as </small>&nbsp;&nbsp;
                 <?php echo $userName; ?>
             </span>
             <?php
             $this->widget('bootstrap.widgets.TbNavbar', array(
                 'type' => 'inverse', // null or 'inverse'
-                'brand' => '<img src="' . Yii::app()->baseUrl . '/images/infinity.jpg" />',
+                'brand' => '<img height="65" src="' . Yii::app()->baseUrl . '/images/infinity.jpg" />',
                 'brandOptions' => array('class' => 'no-link-cur span2'),
                 'brandUrl' => CHelper::baseUrl(true) . '/',
                 'collapse' => true, // requires bootstrap-responsive.css
@@ -194,8 +194,8 @@ $access_type = AccessRoleMaster::model()->findByAttributes(array('emp_id' => $em
                                             ),
                                         ),
                                     ),
-                                     array('label' => 'Manage Project Task',
-                                        'url' => array('//subtask/admin'),
+                                     array('label' => 'Manage Task Type',
+                                        'url' => array('//task/admin'),
                                        'visible' => ($access_type->access_type == 1),
                                         'active' => (Yii::app()->controller->id == 'subtask' && Yii::app()->controller->action->id == 'subtask')
                                     ),
@@ -205,6 +205,12 @@ $access_type = AccessRoleMaster::model()->findByAttributes(array('emp_id' => $em
 //                                        'active' => (Yii::app()->controller->id == 'resourceallocationprojectwork' && Yii::app()->controller->action->id == 'resourcemanagement')
 //                                    ),
                                 ),
+                            ),
+                            array(
+                                'label' => 'Capture Image',
+                                'url' => array('//CaptureImage'),
+                                'visible' => isset(Yii::app()->session['login']['user_id']),
+                                'active' => (Yii::app()->controller->id == 'profile' || Yii::app()->controller->id == 'changepassword' || Yii::app()->controller->id == 'logout'),
                             ),
                             array(
                                 'label' => 'Setting',
