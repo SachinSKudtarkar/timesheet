@@ -35,6 +35,10 @@ class SubProject extends CActiveRecord
     public $Estimated_hours;
     public $consumed_hours;
     public $approval_status;
+    public $chkHrs;
+    public $estHrsradio;
+    public $hoursArray;
+    public $unqid;
     /**
      * @return string the associated database table name
      */
@@ -95,6 +99,7 @@ class SubProject extends CActiveRecord
                     'updated_date' => 'Updated Date',
                     'is_deleted' => 'Is Deleted',
                     'approval_status' => 'Approval Status',
+                    'estHrsradio' => 'How would you like to add Estimated Hours?'
             );
     }
 

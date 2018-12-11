@@ -33,7 +33,7 @@ class SubProjectController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'admin','fetchProjectId','updateLog','updateTask','uploadExcel','replaceId'),
+                'actions' => array('create', 'update', 'admin','fetchProjectId','updateLog','updateTask','uploadExcel','replaceId','ajaxUpload','checkTasklist'),
                 'expression' => 'CHelper::isAccess("PROJECTS", "full_access")',
                 'users' => array('@'),
             ),
@@ -65,29 +65,37 @@ class SubProjectController extends Controller {
     public function actionCreate() {
         $model = new SubProject;
         $hostName = $_SERVER['SERVER_NAME'];
+        $model->estHrsradio = 'M';
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
 
         if (isset($_POST['SubProject'])) {
-
+            // print_r($_POST);die;
             $model->attributes = $_POST['SubProject'];
             $model->created_date = date('Y-m-d h:i:s');
-            $model->project_id = $_POST['sub_project_id'];
             $model->created_by = Yii::app()->session['login']['user_id'];
             $model->approval_status = 2;
+            $model->unqid = $_POST['unqid'];
             $valid = $_POST['SubProject'];
-            // print_r($model);die;
+            $model->project_id = $this->getProjectId($valid['pid']);
             if (empty($valid['pid']) || empty($valid['sub_project_name']) || empty($valid['sub_project_description']) || empty($valid['requester']) || empty($valid['status']) || empty($valid['priority'])) {
                 Yii::app()->user->setFlash('error', 'Please fill all required fields.');
             } else {
                 
-                if ($model->save())
+                if($model->save())
                 {    
                     $insert_id = Yii::app()->db->getLastInsertID();
+                    $postHrsArr = [];
+                    if($valid['estHrsradio'] == 'E') {
+                        $postHrsArr = json_decode($valid['hoursArray'], true);
+                    }elseif($valid['estHrsradio'] == 'M') {
+                        $postHrsArr = $_POST['group-a'];
+                    }
                     
-                    
-                    foreach ($_POST['group-a'] as $key => $val) {
+                    foreach ($postHrsArr as $key => $val) {
+                        
                         if (!empty($val['level_hours'])) {
+                            
                             $modelPLA = new ProjectLevelAllocation;
                             $modelPLA->project_id = $insert_id;
                             $modelPLA->level_id = $val['level_id'];
@@ -133,7 +141,7 @@ class SubProjectController extends Controller {
         $levels = ProjectLevelAllocation::model()->findAll("project_id=$id");
         $levels_log = Yii::app()->db->createCommand("SELECT CONCAT('CR',rl_log_id) as cr, project_id,GROUP_CONCAT(CONCAT(level_name, '(', new_level_hours, ')'), ' ') as log, comments FROM tbl_project_level_allocation_log pla join tbl_level_master lm on lm.level_id = pla.level_id where project_id = {$id} GROUP BY rl_log_id;")->queryAll();
         //$hours_label['estimated'] = Yii::app()->db->createCommand("select sum(level_hours) as estimated_hrs from tbl_sub_project sp  left join tbl_project_level_allocation pl on pl.project_id = sp.spid where spid = {$id}")->queryRow();
-        $estimatedArr = Yii::app()->db->createCommand("select level_name, level_hours from tbl_project_level_allocation pla inner join tbl_level_master lm on lm.level_id = pla.level_id  where pla.project_id = {$id}")->queryAll();
+        $estimatedArr = Yii::app()->db->createCommand("select level_name, level_hours, budget_per_hour from tbl_project_level_allocation pla inner join tbl_level_master lm on lm.level_id = pla.level_id  where pla.project_id = {$id}")->queryAll();
 
         $hours_label['estimated']['estimated_hrs'] = 0;
         foreach($estimatedArr as $e){
@@ -142,6 +150,8 @@ class SubProjectController extends Controller {
 
         $hours_label['allocated'] = Yii::app()->db->createCommand("select sum(st.est_hrs) as allocated_hrs from tbl_sub_project sp left join tbl_sub_task st on st.sub_project_id  = sp.spid where spid = {$id}")->queryRow();
         $hours_label['utilized'] = Yii::app()->db->createCommand("SELECT  BIG_SEC_TO_TIME( SUM( BIG_TIME_TO_SEC( `hours` ) ) ) AS utilized_hrs  FROM tbl_day_comment where spid={$id}")->queryRow();
+
+        $excelHours = $this->getExcelHours($model);
 
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
@@ -204,7 +214,8 @@ class SubProjectController extends Controller {
             'levels' => $levels,
             'hours_label' => $hours_label,
             'estimatedArr' => $estimatedArr,
-            'levels_log' => $levels_log
+            'levels_log' => $levels_log,
+            'excelHours' => $excelHours
         ));
     }
 
@@ -532,4 +543,143 @@ class SubProjectController extends Controller {
         Yii::app()->db->createCommand("update tbl_access_role_master set emp_id = {$replace_id} where emp_id = {$find_id_2}")->execute();
         echo "Employee table updated...done";
     }
+
+    public function actionajaxUpload()
+    {
+        // print_r($_POST);die;
+        $filePath = $_FILES['file']['tmp_name'];
+        $date = new DateTime();
+        $unqid = $_POST['unqid'];
+
+        $row = 0;
+        $est_hrs = 0;
+        $arraydata = array();
+        if (($handle = fopen($filePath, "r")) !== FALSE) {
+            while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+                if ($row < $fromRow) {
+                    $row++;
+                    continue;
+                }
+                $arraydata[$row] = $data;
+                $row++;
+            }
+            fclose($handle);
+            
+            $taskArray = [];
+            // $taskserial = 1;
+            
+            Yii::app()->db->createCommand("delete from tbl_task_temp where unqid = '{$unqid}'")->execute();
+            
+            foreach ($arraydata as $key => $value) {
+                if($key == 0) continue;
+                $tasktemp = new TaskTitle();
+                $tasktemp->unqid = $unqid;
+                $tasktemp->task_title = $value[1];
+                $tasktemp->task_description = $value[2];
+                $tasktemp->task_level = $value[3];
+                $tasktemp->task_est_hrs = $value[4];
+                $tasktemp->created_at = Yii::app()->session["login"]["user_id"];
+                $tasttemp->created_at = date("Y-m-d h:i:s");
+                $tasktemp->save(false);
+            }
+
+            $getHours = Yii::app()->db->createCommand("select unqid,task_level,SUM(task_est_hrs) as level_hours, (select level_id from tbl_level_master where level_name LIKE task_level) as level_id from tbl_task_temp where unqid LIKE '%{$unqid}%' group by task_level")->queryAll();
+            
+        
+            $returnTable .= '<table class="table table-bordered" id="hoursTableU" style="width:80%;margin-left:10%">';
+            $returnTable .= '<tr>';
+            $returnTable .= '<td>Total Estimated Hours</td>';
+            foreach ($getHours as $row) {
+                $est_hrs = $est_hrs + $row['level_hours'];          
+
+                
+                $returnTable .= '<td>'.$row['task_level'].'('.$row['level_hours'].')</td>';
+                
+            }
+            $returnTable .= '<td><strong>Total '.$est_hrs.' Hours</strong></td>';
+            $returnTable .= '</tr>';    
+            $returnTable .= '</table>';
+            $returnTable .= '<table class="table table-bordered" id="hoursTableU" style="width:99%"><tr><th colspan="5" style="text-align:center"><strong>Please check the tasks list, estimated hours for each task and total estimated hours calculated and then create the project.</strong></th></tr>';
+            foreach ($arraydata as $key => $row) {
+                # code...
+                $returnTable .= '<tr>';
+                foreach ($row as $value) {
+                    
+                    if($key == 0)
+                    {
+                        $returnTable .= '<th>'.$value.'</th>';
+
+                    }else{
+                        $returnTable .= '<td>'.$value.'</td>';
+                    }
+                }
+                
+                $returnTable .= '</tr>';
+
+            }
+            $returnData['table'] = $returnTable;
+            $returnData['hrsArr'] = json_encode($getHours);
+            echo  json_encode($returnData);die;
+            //echo "<pre>",print_r($arraydata),"</pre>"; die();
+        } else {
+            echo 0;die;
+        }
+        
+    }
+
+
+    public function getProjectId($pid) {
+
+        $name = ProjectManagement::model()->findByPk($pid);
+
+        
+        $TaskId = Yii::app()->db->createCommand('Select max(spid) as maxId from tbl_sub_project ')->queryRow();
+        $TaskId = $TaskId['maxId'] + 1;
+
+
+        $projectformat = $name['project_id'] . sprintf("%03d", $TaskId);
+        return $projectformat;
+    }
+
+    public function getExcelHours($model)
+    {
+
+        
+        $getHours = Yii::app()->db->createCommand("select unqid,task_level,SUM(task_est_hrs) as level_hours, (select level_id from tbl_level_master where level_name LIKE task_level) as level_id from tbl_task_temp where unqid LIKE '%{$model->unqid}%' group by task_level")->queryAll();
+    
+        $returnTable .= '<table class="table table-bordered" id="hoursTableU" style="width:80%;margin-left:10%">';
+        $returnTable .= '<tr>';
+        $returnTable .= '<td>Total Estimated Hours</td>';
+        foreach ($getHours as $row) {
+            $est_hrs = $est_hrs + $row['level_hours'];          
+
+            
+            $returnTable .= '<td>'.$row['task_level'].'('.$row['level_hours'].')</td>';
+            
+        }
+        $returnTable .= '<td><strong>Total '.$est_hrs.' Hours</strong></td>';
+        $returnTable .= '</tr>';    
+        $returnTable .= '</table>';
+        $returnTable .= '<table class="table table-bordered" id="hoursTableU" style="width:99%"><tr><th colspan="5" style="text-align:center"><strong>Please check the tasks list, estimated hours for each task and total estimated hours calculated and then create the project.</strong></th></tr>';
+
+        $arraydata = Yii::app()->db->createCommand("select task_title,task_description,task_level,task_est_hrs from tbl_task_temp where unqid LIKE '%{$model->unqid}%'")->queryAll();
+        
+        // print_r($arraydata);die;
+        $returnTable .= '<tr><th>Task Title</th><th>Task Description</th><th>Task Level</th><th>Task Hours</th></tr>';
+        foreach ($arraydata as $key => $row) {
+            # code...
+            $returnTable .= '<tr>';
+            foreach ($row as $value) {
+                
+                $returnTable .= '<td>'.$value.'</td>';
+                
+            }
+            
+            $returnTable .= '</tr>';
+
+        }
+
+        return $returnTable;
+    }
 }
+

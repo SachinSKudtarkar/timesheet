@@ -821,10 +821,25 @@ text.source {
     height: 500px;
     z-index:-1;
 }
+#excelModal,#excelHrsModal{
+    width: 75%;
+    left: 30%;
+    height: 500px;
+    z-index:-1;
+}
 
 #timesheetModal .model-dialog{
     width: 100%;
     
+}
+
+#uploadtable{
+    width: 200px;
+    margin-left: 28%
+}
+
+#uploadtable td{
+    padding-top: 20px;
 }
 
 	
@@ -920,4 +935,40 @@ a.abutton{
 .rejectBtn{
     background: #f00!important;
     border: 1px solid #dc2222!important;
+}
+.taskBtn{
+    background: #000!important;
+    border: 1px solid #ddd!important;   
+}
+.header-wrap-1 .brand-name {
+    
+    left: 50%;
+    top: 24px;
+    /*font-weight: bold;*/
+    font-size:25px;
+    /* margin: 59px auto; */
+}
+.header-wrap-1 .brand-name:hover{
+    border: none;
+}
+.nav.nav-tabs {
+    /*margin: 5px auto!important;*/
+    left:170px;
+    font-size: 14px;
+}
+.brand img{
+    height: 65px!important;
+}
+
+.navbar .nav > li > a {
+    font-size: 15px!important;
+}
+#SubProject_estHrsradio input{
+    margin-top: 15px;
+}
+#SubProject_estHrsradio label{
+    text-align :left;
+    padding: 13px;
+    width: auto;
+    /*margin-top: 15px;*/
 }

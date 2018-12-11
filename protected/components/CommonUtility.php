@@ -234,13 +234,13 @@ class CommonUtility extends CApplicationComponent {
         Yii::import('application.extensions.phpmailer.JPhpMailer');
         try {
             $mail = new JPhpMailer;
-            $mail->IsSMTP();
-            $mail->Host = 'smtpout.secureserver.net';
+            $mail->IsSMTP(); 
+            $mail->Host = 'mail.cnaap.net';
             $mail->Port = 25;
             $mail->SMTPAuth = true;
-            // $mail->SMTPSecure = 'ssl';
-            $mail->Username = 'techsupport@infinitylabs.in';
-            $mail->Password = 'india@123';
+            //$mail->SMTPSecure = 'ssl';
+            $mail->Username = 'ndd-css';
+            $mail->Password = 'cisco123';
             $mail->SetFrom($from, $from_name);
             $mail->Subject = $subject;
             $mail->AltBody = 'To view the message, please use an HTML compatible email viewer!';
