@@ -644,40 +644,44 @@ class SubProjectController extends Controller {
     public function getExcelHours($model)
     {
 
-        
+        $returnTable = "<h4>Since for this project, the estimation of hours were added manually and not using excel import, there are no task associated with this project.</h4>";
         $getHours = Yii::app()->db->createCommand("select unqid,task_level,SUM(task_est_hrs) as level_hours, (select level_id from tbl_level_master where level_name LIKE task_level) as level_id from tbl_task_temp where unqid LIKE '%{$model->unqid}%' group by task_level")->queryAll();
-    
-        $returnTable .= '<table class="table table-bordered" id="hoursTableU" style="width:80%;margin-left:10%">';
-        $returnTable .= '<tr>';
-        $returnTable .= '<td>Total Estimated Hours</td>';
-        foreach ($getHours as $row) {
-            $est_hrs = $est_hrs + $row['level_hours'];          
-
-            
-            $returnTable .= '<td>'.$row['task_level'].'('.$row['level_hours'].')</td>';
-            
-        }
-        $returnTable .= '<td><strong>Total '.$est_hrs.' Hours</strong></td>';
-        $returnTable .= '</tr>';    
-        $returnTable .= '</table>';
-        $returnTable .= '<table class="table table-bordered" id="hoursTableU" style="width:99%"><tr><th colspan="5" style="text-align:center"><strong>Please check the tasks list, estimated hours for each task and total estimated hours calculated and then create the project.</strong></th></tr>';
-
-        $arraydata = Yii::app()->db->createCommand("select task_title,task_description,task_level,task_est_hrs from tbl_task_temp where unqid LIKE '%{$model->unqid}%'")->queryAll();
         
-        // print_r($arraydata);die;
-        $returnTable .= '<tr><th>Task Title</th><th>Task Description</th><th>Task Level</th><th>Task Hours</th></tr>';
-        foreach ($arraydata as $key => $row) {
-            # code...
+        if(!empty($getHours))
+        {
+            $returnTable = '<table class="table table-bordered" id="hoursTableU" style="width:80%;margin-left:10%">';
             $returnTable .= '<tr>';
-            foreach ($row as $value) {
+            $returnTable .= '<td>Total Estimated Hours</td>';
+            foreach ($getHours as $row) {
+                $est_hrs = $est_hrs + $row['level_hours'];          
+
                 
-                $returnTable .= '<td>'.$value.'</td>';
+                $returnTable .= '<td>'.$row['task_level'].'('.$row['level_hours'].')</td>';
                 
             }
-            
-            $returnTable .= '</tr>';
+            $returnTable .= '<td><strong>Total '.$est_hrs.' Hours</strong></td>';
+            $returnTable .= '</tr>';    
+            $returnTable .= '</table>';
+            $returnTable .= '<table class="table table-bordered" id="hoursTableU" style="width:99%"><tr><th colspan="5" style="text-align:center"><strong>Please check the tasks list, estimated hours for each task and total estimated hours calculated and then create the project.</strong></th></tr>';
 
+            $arraydata = Yii::app()->db->createCommand("select task_title,task_description,task_level,task_est_hrs from tbl_task_temp where unqid LIKE '%{$model->unqid}%'")->queryAll();
+            
+            // print_r($arraydata);die;
+            $returnTable .= '<tr><th>Task Title</th><th>Task Description</th><th>Task Level</th><th>Task Hours</th></tr>';
+            foreach ($arraydata as $key => $row) {
+                # code...
+                $returnTable .= '<tr>';
+                foreach ($row as $value) {
+                    
+                    $returnTable .= '<td>'.$value.'</td>';
+                    
+                }
+                
+                $returnTable .= '</tr>';
+
+            }    
         }
+        
 
         return $returnTable;
     }
