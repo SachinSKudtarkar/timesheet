@@ -722,7 +722,11 @@ Yii::app()->clientScript->registerCssFile(
                 $('#addC').attr('disabled', false);
                 var flag = false;
             }
-            values.push(this.value);
+            if(this.value > 0)
+            {
+            	values.push(this.value);	
+            }
+            
         });
 
         if(flag == true)
