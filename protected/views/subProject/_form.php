@@ -122,13 +122,28 @@ $img_path = Yii::app()->theme->baseUrl . "/img/add_image.png";
                             <th>Hours</th>
                             <th>Level Budget</th>
                         </tr>
-                        <?php foreach ($estimatedArr as $key => $row) { ?>
+                        <?php
+                            $totalHours = 0;
+                            $budget = 0;
+                            $totalBudget = 0;
+                            foreach ($estimatedArr as $key => $row) { 
+                            
+                                $totalHours = $totalHours + $row['level_hours'];
+                                $budget = $row['level_hours'] * $row['budget_per_hour']; 
+                                $totalBudget = $totalBudget + $budget; 
+                            ?>
                             <tr>
                                 <td><?php echo $row['level_name']; ?></td>
                                 <td><?php echo $row['level_hours']; ?></td>
-                                <td><?php echo $row['budget_per_hour']; ?></td>
+                                <td><?php echo $budget; ?></td>
                             </tr>
                         <?php } ?>
+                        <tr>
+                            <td><strong>Total</strong></td>
+                            <td><strong><?php echo $totalHours; ?></strong></td>
+                            <td><strong><?php echo $totalBudget; ?></strong></td>
+                        </tr>
+
                     </table>
                 <?php } ?>
             </div>

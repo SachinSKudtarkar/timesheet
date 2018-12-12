@@ -554,16 +554,9 @@ class SubProjectController extends Controller {
         $row = 0;
         $est_hrs = 0;
         $arraydata = array();
-        if (($handle = fopen($filePath, "r")) !== FALSE) {
-            while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
-                if ($row < $fromRow) {
-                    $row++;
-                    continue;
-                }
-                $arraydata[$row] = $data;
-                $row++;
-            }
-            fclose($handle);
+
+        $arraydata = $this->getExcelData($filePath);
+        if (!empty($arraydata)) {
             
             $taskArray = [];
             // $taskserial = 1;
@@ -680,6 +673,36 @@ class SubProjectController extends Controller {
         }
 
         return $returnTable;
+    }
+
+    public function getExcelData($filePath)
+    {
+        $phpExcelPath = Yii::getPathOfAlias('ext.PHPExcel.Classes');
+        // Turn off our amazing library autoload
+        spl_autoload_unregister(array('YiiBase', 'autoload'));
+        include_once($phpExcelPath . DIRECTORY_SEPARATOR . 'PHPExcel.php');
+        /* Call the excel file and read it */
+        $inputFileType = PHPExcel_IOFactory::identify($filePath);
+        $objReader = PHPExcel_IOFactory::createReader($inputFileType);
+        $objReader->setReadDataOnly(true);
+        $objPHPExcel = $objReader->load($filePath);
+        //$total_sheets = $objPHPExcel->getSheetCount();
+        //$allSheetName = $objPHPExcel->getSheetNames();
+        $objWorksheet = $objPHPExcel->setActiveSheetIndex(0);
+        $highestRow = $objWorksheet->getHighestRow();
+        $highestColumn = $objWorksheet->getHighestColumn();
+        $highestColumnIndex = PHPExcel_Cell::columnIndexFromString($highestColumn);
+
+        for ($row = 1; $row <= $highestRow; ++$row) {
+            for ($col = 0; $col < 5; ++$col) {
+                $value = $objWorksheet->getCellByColumnAndRow($col, $row)->getFormattedValue();
+                $arraydata[$row - 1][$col] = $value;
+            }
+        }
+        //echo "<pre>",print_r($arraydata),"</pre>"; die();
+        spl_autoload_register(array('YiiBase', 'autoload'));
+
+        return $arraydata;
     }
 }
 
