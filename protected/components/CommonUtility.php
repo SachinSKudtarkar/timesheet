@@ -135,14 +135,17 @@ class CommonUtility extends CApplicationComponent {
 
         Yii::import('application.extensions.phpmailer.JPhpMailer', true);
         try {
+
             $mail = new JPhpMailer;
             $mail->IsSMTP();
-            $mail->Host = 'smtpout.secureserver.net';
+
+            $mail->Host = 'mail.cnaap.net';
             $mail->Port = 25;
             $mail->SMTPAuth = true;
-            //$mail->SMTPSecure = '';
-            $mail->Username = 'techsupport@infinitylabs.in';
-            $mail->Password = 'india@123';
+            //$mail->SMTPSecure = 'ssl';
+            $mail->Username = 'ndd-css';
+            $mail->Password = 'cisco123';
+            $mail->SMTPDebug = 2;
             $mail->SetFrom($from, $from_name);
             $mail->Subject = $subject;
             $mail->AltBody = 'To view the message, please use an HTML compatible email viewer!';
@@ -172,7 +175,7 @@ class CommonUtility extends CApplicationComponent {
                 }
             }
 
-            return $mail->Send();
+            return 'asdasd'.$mail->Send();
         } catch (phpmailerException $e) {
             Yii::log($e->errorMessage()); //Pretty error messages from PHPMailer
         }
