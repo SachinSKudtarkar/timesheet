@@ -637,12 +637,11 @@ class SubProjectController extends Controller {
     public function getExcelHours($model)
     {
 
-        $returnTable = "<h4>Since for this project, the estimation of hours were added manually and not using excel import, there are no task associated with this project.</h4>";
-        $checkUnqidExist = Yii::app()->db->createCommand("select unqid from tbl_sub_project where spid={$model->spid}")->queryRow();
+        $returnTable = "<h4>Since for this project, the estimation of hours were added manually and not using the excel import method, there are no reports associated with this project.</h4>";
         
         $getHours = Yii::app()->db->createCommand("select unqid,task_level,SUM(task_est_hrs) as level_hours, (select level_id from tbl_level_master where level_name LIKE task_level) as level_id from tbl_task_temp where unqid LIKE '%{$model->unqid}%' group by task_level")->queryAll();
         
-        if(!empty($getHours) && !empty($checkUnqidExist['unqid']))
+        if(!empty($getHours) && !empty($model->unqid))
         {
 
             $returnTable = '<table class="table table-bordered" id="hoursTableU" style="width:80%;margin-left:10%">';
