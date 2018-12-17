@@ -118,7 +118,7 @@ class SubProjectController extends Controller {
                         }
                     }
 
-
+                    
                     $this->sendApprovalMail($insert_id);   
                     Yii::app()->user->setFlash('success', "{$valid['sub_project_name']} has been created and a mail for project approval has been sent successfully.");
                     $this->redirect(array('admin'));
@@ -638,10 +638,13 @@ class SubProjectController extends Controller {
     {
 
         $returnTable = "<h4>Since for this project, the estimation of hours were added manually and not using excel import, there are no task associated with this project.</h4>";
+        $checkUnqidExist = Yii::app()->db->createCommand("select unqid from tbl_sub_project where spid={$model->spid}")->queryRow();
+        
         $getHours = Yii::app()->db->createCommand("select unqid,task_level,SUM(task_est_hrs) as level_hours, (select level_id from tbl_level_master where level_name LIKE task_level) as level_id from tbl_task_temp where unqid LIKE '%{$model->unqid}%' group by task_level")->queryAll();
         
-        if(!empty($getHours))
+        if(!empty($getHours) && !empty($checkUnqidExist['unqid']))
         {
+
             $returnTable = '<table class="table table-bordered" id="hoursTableU" style="width:80%;margin-left:10%">';
             $returnTable .= '<tr>';
             $returnTable .= '<td>Total Estimated Hours</td>';
