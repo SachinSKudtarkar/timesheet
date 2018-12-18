@@ -46,7 +46,7 @@ class CaptureImageController extends Controller {
         $TotalHours = '';
         $id = Yii::app()->session['login']['user_id'];
         $emp = Employee::model()->findByPk($id);
-        $u_email = 'mudliyarp@hcl.com';
+        $u_email = $emp->email;
         $last_name = $emp->last_name;
         // catch and convert the canvas into .png image
         //$bpath = Yii::app()->getBasePath();
@@ -78,11 +78,11 @@ class CaptureImageController extends Controller {
             $tdate = date('Y-m-d');
             $model->todaydate = $tdate;
             $message = '';
-            // $cc = array(
-            //     array('email' => "pm-cnaap@infinitylabs.in", 'name' => "PM"),
-            //     array('email' => "reema.dhanwani@infinitylabs.in", 'name' => "Reema Dhanwani"),
-            //     array('email' => "sameer.joshi@infinitylabs.in", 'name' => "Sameer Joshi"),
-            // );
+            $cc = array(
+                array('email' => "pm-cnaap@infinitylabs.in", 'name' => "PM"),
+                array('email' => "reema.dhanwani@infinitylabs.in", 'name' => "Reema Dhanwani"),
+                array('email' => "sameer.joshi@infinitylabs.in", 'name' => "Sameer Joshi"),
+            );
             $subject = 'CNAAP Team attendance - Employee - ' . $user_name;
             $sql = "SELECT * FROM tbl_capture_img WHERE user_id =$id AND todaydate = '$tdate'";
             //echo  $sql;exit;
