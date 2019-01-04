@@ -179,7 +179,7 @@ $this->beginWidget('zii.widgets.jui.CJuiDialog', array(// the dialog
       var intime = $(this).data("intime");
       var is_timesheet = $(this).data("user-timesheet");
 
-      if(is_timesheet == 0 && intime != "" )
+      if(is_timesheet == 0 && intime == "Text" )
       {
 
            $('#dialogSiteForm').dialog('close');

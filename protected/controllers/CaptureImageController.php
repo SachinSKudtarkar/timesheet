@@ -92,6 +92,7 @@ class CaptureImageController extends Controller {
             //Check If the user record is present for the same date
             if (empty($row))
             {
+
                 $model->in_time = $intime;
                 $model->out_time = $outtime;
                 $model->in_image_url = $in_img;
@@ -147,7 +148,6 @@ class CaptureImageController extends Controller {
               // echo $emp['is_timesheet']."-".$row['in_time'];exit;
                if( $emp['is_timesheet'] == 0 && $row['in_time'] != '00:00:00')
                {
-               // echo "i am here!!!";exit;
                 if (Yii::app()->request->isAjaxRequest) {
                     echo CJSON::encode(array(
                         'status' => 'failure',
