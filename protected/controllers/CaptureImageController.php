@@ -1238,25 +1238,61 @@ class CaptureImageController extends Controller {
             }
         }
     }
+      
       public function  actionDailyLoginStatus(){
-//        ini_set('display_errors',1);
-//        error_reporting(E_ALL);
+       ini_set('display_errors',1);
+       error_reporting(E_ALL);
         $start_date = $end_dat ='';
-        if($_REQUEST['start_date'] && $_REQUEST['end_date']){
+        if(isset($_REQUEST['start_date']) && $_REQUEST['start_date'] && isset($_REQUEST['end_date']) && $_REQUEST['end_date']){
             $start_date = $_REQUEST['start_date'];
             $end_date = $_REQUEST['end_date'];
             $condition = " where todaydate between {$start_date} and {$end_date} ";
         }else{
             $condition = " where todaydate >= CURDATE()";
         }
-        
+
         $query = " select CONCAT(first_name,' ',last_name) as name ,in_time,out_time,todaydate from tbl_capture_img as t inner join tbl_employee as em on (emp_id = user_id) {$condition} order by in_time asc";
-        $emp_list = Yii::app()->db->createCommand($query)->queryAll();
-       
-        
-        $attributes = array('name','in_time','out_time','todaydate');
-         $filename = 'DailyLoginStatus_' . date('Y-m-d H:i:s') . ".xls";
-            CommonUtility::generateExcel($attributes, $emp_list, $filename);
+        $row = Yii::app()->db->createCommand($query)->queryAll();
+        if(!empty($row)){
+            $data = array();
+            foreach($row as $key => $val){
+                $data[$key]['username'] = $val['name'];
+                $data[$key]['date'] = $val['todaydate'];
+                $data[$key]['in'] = $val['in_time'];
+                $data[$key]['out'] = $val['out_time'];
+                // if(!empty($val['in_time']) && !empty($val['out_time'])){
+                //     $data[$key]['total'] = $this->getTimeDiff($val['in_time'],$val['out_time']);
+                // }else{
+                //     $data[$key]['total'] = "";
+                // }                
+            }
+            $header = array('Employee Name','Date','In Time','Out Time');
+            $file_name = "Daily-Login-Time-Report-". $today . ".xls";
+            $attachment_path = "/tmp/";            
+            $file_name1 = CommonUtility::generateExcelSaveFileOnServer($header, $data, $file_name, $attachment_path);
+            $destination_path = $attachment_path.$file_name;
+            $to_name = "Prabhakar Mudliyar";
+            $to = "mudliyarp@hcl.com";
+            $cc[] = array("email" => "tirthesh.trivedi@infinitylabs.in");
+            // $cc[] = array("email" => "hr@infinitylabs.in");
+            // $cc[] = array("email" => "reema.dhanwani@infinitylabs.in");
+            $from = "support@cnaap.net";
+            $from_name = "CNAAP TEAM";
+            $subject = "Employee Login Time Monthly Report";
+            $message = 'Team,'
+                        . ''
+                        . '<p>The attached document is the list of all employee\'s login time & logout time '.date("d/m/Y")
+                        . '<p><p><br/><br/>'
+                        . '<p>Thanks & Regards,</p>'
+                        ;
+            $result = CommonUtility::sendmailWithAttachment($to, $to_name, $from, $from_name, $subject, $message, $destination_path, $file_name, $cc);
+            if ($result) {
+                echo "Email Sent\n";
+                @unlink("/tmp/" .$file_name);
+            } else {
+                echo "Failed\n";
+            }
+        }
     }
     public function actionMonthlyLoginTimeReport(){
         $today = date('Y-m-d');
