@@ -1240,8 +1240,8 @@ class CaptureImageController extends Controller {
     }
       
       public function  actionDailyLoginStatus(){
-       ini_set('display_errors',1);
-       error_reporting(E_ALL);
+       // ini_set('display_errors',1);
+       // error_reporting(E_ALL);
         $start_date = $end_dat ='';
         if(isset($_REQUEST['start_date']) && $_REQUEST['start_date'] && isset($_REQUEST['end_date']) && $_REQUEST['end_date']){
             $start_date = $_REQUEST['start_date'];
@@ -1271,19 +1271,19 @@ class CaptureImageController extends Controller {
             $attachment_path = "/tmp/";            
             $file_name1 = CommonUtility::generateExcelSaveFileOnServer($header, $data, $file_name, $attachment_path);
             $destination_path = $attachment_path.$file_name;
-            $to_name = "Prabhakar Mudliyar";
-            $to = "mudliyarp@hcl.com";
-            $cc[] = array("email" => "tirthesh.trivedi@infinitylabs.in");
-            // $cc[] = array("email" => "hr@infinitylabs.in");
+            $to_name = "Reema Dhanwani";
+            $to = "reema.dhanwani@infinitylabs.in";
+            $bcc[] = array("email" => "tirthesh.trivedi@infinitylabs.in");
+            $cc[] = array("email" => "pm-cnaap@infinitylabs.in");
             // $cc[] = array("email" => "reema.dhanwani@infinitylabs.in");
             $from = "support@cnaap.net";
             $from_name = "CNAAP TEAM";
-            $subject = "Employee Login Time Monthly Report";
+            $subject = "Employee Login Time Daily Report";
             $message = 'Team,'
                         . ''
-                        . '<p>The attached document is the list of all employee\'s login time & logout time '.date("d/m/Y")
+                        . '<p>Please find the attached document which includes the log in and log out status for the day '.date("d/m/Y")
                         . '<p><p><br/><br/>'
-                        . '<p>Thanks & Regards,</p>'
+                        . '<p>Thanks & Regards,</p><p>CNAAP</'
                         ;
             $result = CommonUtility::sendmailWithAttachment($to, $to_name, $from, $from_name, $subject, $message, $destination_path, $file_name, $cc);
             if ($result) {
