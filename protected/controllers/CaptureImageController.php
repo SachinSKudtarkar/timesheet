@@ -1281,7 +1281,7 @@ class CaptureImageController extends Controller {
             $subject = "Employee Login Time Daily Report";
             $message = 'Team,'
                         . ''
-                        . '<p>Please find the attached document which includes the log in and log out status for the day '.date("d/m/Y")
+                        . '<p>Please find the attached document which includes the employees log in and log out status for the day '.date("d/m/Y")
                         . '<p><p><br/><br/>'
                         . '<p>Thanks & Regards,</p><p>CNAAP</'
                         ;
