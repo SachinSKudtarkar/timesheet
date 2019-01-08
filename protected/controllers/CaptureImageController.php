@@ -1246,14 +1246,17 @@ class CaptureImageController extends Controller {
         if(isset($_REQUEST['start_date']) && $_REQUEST['start_date'] && isset($_REQUEST['end_date']) && $_REQUEST['end_date']){
             $start_date = $_REQUEST['start_date'];
             $end_date = $_REQUEST['end_date'];
-            $condition = " where todaydate between {$start_date} and {$end_date} ";
+            $condition = ' where todaydate between "'.$start_date.'" and "'.$end_date.'" ';
         }else{
             $condition = " where todaydate >= CURDATE()";
         }
 
         $query = " select CONCAT(first_name,' ',last_name) as name ,in_time,out_time,todaydate from tbl_capture_img as t inner join tbl_employee as em on (emp_id = user_id) {$condition} order by in_time asc";
+        
         $row = Yii::app()->db->createCommand($query)->queryAll();
+        
         if(!empty($row)){
+            
             $data = array();
             foreach($row as $key => $val){
                 $data[$key]['username'] = $val['name'];
@@ -1265,6 +1268,7 @@ class CaptureImageController extends Controller {
                 // }else{
                 //     $data[$key]['total'] = "";
                 // }                
+                
             }
             $header = array('Employee Name','Date','In Time','Out Time');
             $file_name = "Daily-Login-Time-Report-". $today . ".xls";
