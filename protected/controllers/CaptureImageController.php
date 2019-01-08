@@ -183,8 +183,8 @@ class CaptureImageController extends Controller {
                                                <tr><td style='vertical-align:top;font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;'>Date</td><td style='vertical-align:top;font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;'>In time</td><td style='vertical-align:top;font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;'>Out Time</td><td style='vertical-align:top;font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;'>Total Hours</td></tr>
                                                <tr><td style='vertical-align:top;font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;'>$tdate</td><td style='vertical-align:top;font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;'>$rin</td><td style='vertical-align:top;font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;'>$outtime</td><td style='vertical-align:top;font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;'>$TotalHours</td></tr>
                                            </table>";
-                       /* $result = CommonUtility::sendmailWithAttachment($u_email, $user_name, 'support@cnaap.net', 'CNAAP Team', $subject, $message, $file, $img_name, $cc);
-                       */
+                        $result = CommonUtility::sendmailWithAttachment($u_email, $user_name, 'support@cnaap.net', 'CNAAP Team', $subject, $message, $file, $img_name, $cc);
+                       
                        $result = 1;
                         if ($result)
                         {
