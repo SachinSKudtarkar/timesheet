@@ -439,3 +439,6 @@ background-color: #f2dede;
 border-color: #eed3d7; padding: 8px;}
 
 #login-form span.error {border-radius:4px}
+#login_top_right ul li:after {
+    content: ""!important;
+}

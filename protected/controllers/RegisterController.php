@@ -173,8 +173,9 @@ class RegisterController extends BaseLoginController {
     /**
      * Lists all models.
      */
-    public function actionIndex() {
-
+    //Register functionlity is temporarily stopped for timesheet
+    // public function actionIndex() {
+    public function actionIndex1() {
         $model = new Employee('register');
         $model_employee_details = new EmployeeDetail('register');
         // Uncomment the following line if AJAX validation is needed

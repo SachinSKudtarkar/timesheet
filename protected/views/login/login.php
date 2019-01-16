@@ -32,8 +32,8 @@
 <!--        <div class="new_login_logo"><a href="#"><img src="<?php echo Yii::app()->baseUrl ?>/themes/cisco/img/cis_logo.jpg"/></a></div>-->
         <nav id="login_top_right">
             <ul>
-                <li><a href="#" onclick="">Home</a></li>
-                <li class="no-pipe"><?php echo CHtml::link('Register', array('//register')); ?>
+                <li><a href="#" class="no-pipe" onclick="">Home</a></li>
+                <!-- <li class="no-pipe"><?php //echo CHtml::link('Register', array('//register')); ?> -->
             </ul>
         </nav>
 
@@ -131,10 +131,10 @@ $cs = Yii::app()->getClientScript();
                 </div>
                 <div class="control-group">
                     <div class="controls">
-                        <a  href="#forgotpassword" role="button" data-toggle="modal">Forgot password?</a>
+                        <!-- <a  href="#forgotpassword1" role="button" data-toggle="modal">Forgot password?</a> -->
                     </div>
                     <div class="controls">
-                        <?php echo CHtml::link('Register Now', array('//register')); ?>   
+                        <?php //echo CHtml::link('Register Now', array('//register')); ?>   
                     </div>
 
                 </div>
