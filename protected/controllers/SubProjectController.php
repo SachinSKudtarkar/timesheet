@@ -686,7 +686,7 @@ class SubProjectController extends Controller {
             $arraydata = Yii::app()->db->createCommand("select task_title,task_description,task_level,task_est_hrs,IF(approval_status = '0','Not Approved','Approved') as approval_status from tbl_task_temp where unqid LIKE '%{$model->unqid}%' order by id desc")->queryAll();
             
             // print_r($arraydata);die;
-            $returnTable .= '<tr><th>Task Title</th><th>Task Description</th><th>Task Level</th><th>Task Hours</th><th>Task Hours</th></tr>';
+            $returnTable .= '<tr><th>Task Title</th><th>Task Description</th><th>Task Level</th><th>Task Hours</th><th>Task Status</th></tr>';
             foreach ($arraydata as $key => $row) {
                 # code...
                 $returnTable .= '<tr>';
