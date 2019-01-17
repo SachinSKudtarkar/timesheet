@@ -464,7 +464,10 @@ class SubProjectController extends Controller {
             $status = $id[0];
             $project_id = substr($id, 1);
             $projectDetails = Yii::app()->db->createCommand("update tbl_sub_project set approval_status = {$status} where spid={$project_id} and approval_status = 2")->execute();        
-
+            
+            if($status == 1){
+                Yii::app()->db->createCommand("UPDATE tbl_task_temp T1 LEFT JOIN tbl_sub_project T2 ON T2.unqid = T1.unqid SET T1.approval_status = '{$status}' WHERE T2.spid = {$project_id}")->execute();        
+            }
             $appstatus = $status == 1 ? 'Approved.' : 'Rejected.'; 
             
             // echo "<h1>Project Estimation has been {$appstatus}</h1>";
@@ -680,10 +683,10 @@ class SubProjectController extends Controller {
             $returnTable .= '</table>';
             $returnTable .= '<table class="table table-bordered" id="hoursTableU" style="width:99%"><tr><th colspan="5" style="text-align:center"><strong>Please check the tasks list, estimated hours for each task and total estimated hours calculated and then create the project.</strong></th></tr>';
 
-            $arraydata = Yii::app()->db->createCommand("select task_title,task_description,task_level,task_est_hrs from tbl_task_temp where unqid LIKE '%{$model->unqid}%'")->queryAll();
+            $arraydata = Yii::app()->db->createCommand("select task_title,task_description,task_level,task_est_hrs,IF(approval_status = '0','Not Approved','Approved') as approval_status from tbl_task_temp where unqid LIKE '%{$model->unqid}%' order by id desc")->queryAll();
             
             // print_r($arraydata);die;
-            $returnTable .= '<tr><th>Task Title</th><th>Task Description</th><th>Task Level</th><th>Task Hours</th></tr>';
+            $returnTable .= '<tr><th>Task Title</th><th>Task Description</th><th>Task Level</th><th>Task Hours</th><th>Task Hours</th></tr>';
             foreach ($arraydata as $key => $row) {
                 # code...
                 $returnTable .= '<tr>';
