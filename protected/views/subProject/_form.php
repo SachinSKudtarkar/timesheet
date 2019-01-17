@@ -80,7 +80,7 @@ $img_path = Yii::app()->theme->baseUrl . "/img/add_image.png";
         </div>
     </div>
     <div class="span5">
-        <?php if ($model->isNewRecord) { ?>
+        <?php if (true) { ?>
         <div class="row">
             <?php echo $form->labelEx($model,'estHrsradio'); ?>
             <?php echo $form->radioButtonList($model,'estHrsradio',array('E'=>'Excel Upload','M'=>'Manual'), array('onchange' => 'return hrsRadioChange(this);','class'=>'radiolabel','separator'=>'')); ?>
@@ -217,9 +217,9 @@ $img_path = Yii::app()->theme->baseUrl . "/img/add_image.png";
     <div class="row buttons span10">
         <?php echo $form->hiddenField($model, 'spid'); ?>
         <?php if ($model->isNewRecord) { ?>
-            <?php echo $form->hiddenField($model, 'hoursArray'); ?>
             <?php echo Chtml::hiddenField('unqid',uniqid()); ?>
         <?php } ?>
+        <?php echo $form->hiddenField($model, 'hoursArray'); ?>
     <?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save', array('id' => 'ISSUB')); ?>
     <?php if(!$model->isNewRecord && (Yii::app()->session['login']['user_id'] == '6' || Yii::app()->session['login']['user_id'] == '3616')  && $model->approval_status == '2') { 
         $baseurl = Yii::app()->getBaseUrl(true);
@@ -256,7 +256,10 @@ $img_path = Yii::app()->theme->baseUrl . "/img/add_image.png";
                         </tr>
                         <tr>
                             <td><input type="file" name="hrsExcel" id="hrsExcel"></td>
-                            <td><input type="button" name="uploadFileBtn" id="uploadFileBtn" value="Upload"></td>
+                            <td>
+                                <input type="button" name="uploadFileBtn" id="uploadFileBtn" value="Upload">
+                                <input type="hidden" name="checkTaskData" id="checkTaskData" value="<?php echo $model->unqid; ?>">
+                            </td>
                         </tr>
                     </table>
                 </div>
@@ -307,9 +310,10 @@ $img_path = Yii::app()->theme->baseUrl . "/img/add_image.png";
             form_data.append('file', file_data);
             form_data.append('project_id', $('#sub_project_id').val());
             form_data.append('unqid', $('#unqid').val());
-        
+            form_data.append('checkTaskData', $('#checkTaskData').val());
+            
             $.ajax({
-                url: 'ajaxUpload', // point to server-side PHP script 
+                url: '/timesheet/subproject/ajaxUpload', // point to server-side PHP script 
                 dataType: 'json',  // what to expect back from the PHP script, if anything
                 cache: false,
                 contentType: false,

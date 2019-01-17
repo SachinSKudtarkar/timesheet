@@ -82,8 +82,10 @@ class SubProjectController extends Controller {
                 Yii::app()->user->setFlash('error', 'Please fill all required fields.');
             } else {
                 
+                // if($model->save())
                 if($model->save())
                 {    
+                    //$this->insertUpdateEmployee(1, $model);
                     $insert_id = Yii::app()->db->getLastInsertID();
                     $postHrsArr = [];
                     if($valid['estHrsradio'] == 'E') {
@@ -115,6 +117,8 @@ class SubProjectController extends Controller {
                             $modelPLALog->created_by = Yii::app()->session["login"]["user_id"];
                             $modelPLALog->created_at = date("Y-m-d h:i:s");
                             $modelPLALog->save(false);
+
+
                         }
                     }
 
@@ -165,9 +169,21 @@ class SubProjectController extends Controller {
             $model->approval_status = 2;
 
             if ($model->save())
+                //$this->insertUpdateEmployee(2,$model);
+                // echo 'asdasd';die;
+                $postHrsArr = [];
+            // print_r($_POST);
+                $radioArray = $_POST['SubProject']['estHrsradio'];
+                if($radioArray == 'E') {
+                    $postHrsArr = json_decode($_POST['SubProject']['hoursArray'], true);
+                    
+                }elseif($radioArray == 'M') {
+                    $postHrsArr = $_POST['group-a'];
+                }
+                
                 $checkLogCount = Yii::app()->db->createCommand('Select rl_log_id from tbl_project_level_allocation_log where project_id=' . $id . ' order by created_at desc')->queryRow();
             $rl_log_id = $checkLogCount['rl_log_id'] + 1;
-            foreach ($_POST['group-a'] as $key => $val) {
+            foreach ($postHrsArr as $key => $val) {
 
                 if (!empty($val['level_hours'])) {
                     $checkCount = Yii::app()->db->createCommand('Select * from tbl_project_level_allocation where project_id=' . $id . ' and level_id=' . $val['level_id'])->queryRow();
@@ -550,7 +566,11 @@ class SubProjectController extends Controller {
         $filePath = $_FILES['file']['tmp_name'];
         $date = new DateTime();
         $unqid = $_POST['unqid'];
-
+        $checkTaskData = $_POST['checkTaskData'];
+        if(!empty($checkTaskData)){
+            $unqid = $checkTaskData;
+        }
+        // echo json_encode(array($unqid,$checkTaskData));die;
         $row = 0;
         $est_hrs = 0;
         $arraydata = array();
@@ -560,8 +580,9 @@ class SubProjectController extends Controller {
             
             $taskArray = [];
             // $taskserial = 1;
-            
-            Yii::app()->db->createCommand("delete from tbl_task_temp where unqid = '{$unqid}'")->execute();
+            if ($checkTaskData == '') {
+                Yii::app()->db->createCommand("delete from tbl_task_temp where unqid = '{$unqid}'")->execute();
+            }
             
             foreach ($arraydata as $key => $value) {
                 if($key == 0) continue;
@@ -710,5 +731,20 @@ class SubProjectController extends Controller {
 
         return $arraydata;
     }
+
+    // public function insertUpdateEmployee($type, $model)
+    // {
+    //     if($type == 1)
+    //     {
+    //         $model->created_date = date('Y-m-d h:i:s');
+    //         $model->created_by = Yii::app()->session['login']['user_id'];
+    //         Yii::app()->db1->createCommand()->insert('tbl_employee',$model);    
+    //     }else if($type == 2) {
+    //         $model->modified_date = date('Y-m-d h:i:s');
+    //         $model->modified_by = Yii::app()->session['login']['user_id'];
+    //         Yii::app()->db1->createCommand()->update('tbl_employee',$model,'spid ='.$model->spid);    
+    //     }
+    // }
+
 }
 
