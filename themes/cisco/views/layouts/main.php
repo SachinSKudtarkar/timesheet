@@ -70,7 +70,7 @@ $access_type = AccessRoleMaster::model()->findByAttributes(array('emp_id' => $em
                             // ),
                             array(
                                 'label' => 'Dashboard',
-                                'url' => array('//pidapproval/admin'),
+                                'url' => array('//'),
                                 'visible' => (CHelper::isAccess("DASHBOARD", "full_access")),
                                 'active' => (Yii::app()->controller->id == 'dashboard' && Yii::app()->controller->action->id == 'index'),
                             ),

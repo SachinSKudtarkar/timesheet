@@ -146,8 +146,8 @@ class CaptureImageController extends Controller {
             {
 
               // echo $emp['is_timesheet']."-".$row['in_time'];exit;
-               // if( $emp['is_timesheet'] == 0 && $row['in_time'] != '00:00:00')
-               if( $emp['is_timesheet'] == 0 && $row['in_time'] == '00:00:00')
+               // if( $emp['is_timesheet'] == 0 && $row['in_time'] == '00:00:00') --To remove strict timesheet fill
+               if( $emp['is_timesheet'] == 0 && $row['in_time'] != '00:00:00')
                {
                 if (Yii::app()->request->isAjaxRequest) {
                     echo CJSON::encode(array(

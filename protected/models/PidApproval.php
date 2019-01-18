@@ -42,7 +42,7 @@ class PidApproval extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('project_id, sub_project_id, inception_date, jira_id, project_task_id, task_title', 'required'),
+            array('project_id, sub_project_id, inception_date, project_task_id, task_title', 'required'),
             array('project_id, sub_project_id, total_est_hrs, status, created_by, approved, is_deleted', 'numerical', 'integerOnly' => true),
             array('comments, task_description', 'length', 'max' => 255),
             array('jira_id', 'unique', 'message' => 'jira id already exists!'),

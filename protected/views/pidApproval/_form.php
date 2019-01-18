@@ -111,7 +111,7 @@ for ($h = 0; $h <= 999; $h++) {
         </div>
         <div class="row">
             <?php echo $form->labelEx($model, 'jira_id'); ?>
-            <?php echo $form->textField($model, 'jira_id', array('size' => '1', 'style' => 'width:50px', 'required'=>true)); ?>
+            <?php echo $form->textField($model, 'jira_id', array('size' => '1', 'style' => 'width:50px')); ?>
             <?php echo $form->error($model, 'jira_id'); ?>
         </div>
 
@@ -172,7 +172,7 @@ for ($h = 0; $h <= 999; $h++) {
                             ?>
                         </td>
                         <td><?php echo CHtml::textField('sub_task_name[]', $value['sub_task_name'], array('data-name' => 'sub_task_name', 'style' => "width:210px;", "name" => "data[0][sub_task_name]", "class" => "sub_task_name", 'required'=>'true',"data-taskid"=>$value['stask_id'])); ?></td>
-                        <td><?php echo CHtml::textField('st_jira_id[]', $value['st_jira_id'], array('data-name' => 'st_jira_id', 'style' => "width:210px;", "name" => "data[0][st_jira_id]", "class" => "st_jira_id", 'required'=>'true')); ?></td>
+                        <td><?php echo CHtml::textField('st_jira_id[]', $value['st_jira_id'], array('data-name' => 'st_jira_id', 'style' => "width:210px;", "name" => "data[0][st_jira_id]", "class" => "st_jira_id")); ?></td>
                         <td><?php echo CHtml::textField('st_inception_date[]', $value['st_inception_date'], array('id' => 'st_inception_date_'.$key,'data-name' => 'st_inception_date_', 'style' => "width:100px;", "name" => "data[0][st_inception_date]", "class" => "st_inception_date datepicker", 'required'=>true)); ?></td>
                         <td><?php echo CHtml::numberField('est_hrs[]', $value['est_hrs'], array('data-name' => 'est_hrs', 'style' => "width:50px;", "name" => "data[0][est_hrs]", "class" => "est_hrs wrkhrsClass", 'required'=>'true', 'min'=>1)); ?></td>
                         <td><?php if($task_count['count'] <= 0){echo CHtml::link('', 'javascript:void(0);', array('class' => 'icon-remove-sign l2_ring customRemoveRowl2_ring'));} ?></td>
@@ -189,7 +189,7 @@ for ($h = 0; $h <= 999; $h++) {
                     ?>
                     </td>
                     <td><?php echo CHtml::textField('sub_task_name[]', $value->sub_task_name, array('data-name' => 'sub_task_name', 'style' => "width:210px;", "name" => "data[0][sub_task_name]", "class" => "sub_task_name", 'required'=>'true')); ?></td>
-                    <td><?php echo CHtml::textField('st_jira_id[]', $value->st_jira_id, array('data-name' => 'st_jira_id', 'style' => "width:50px;", "name" => "data[0][st_jira_id]", "class" => "st_jira_id", 'required'=>'true')); ?></td>
+                    <td><?php echo CHtml::textField('st_jira_id[]', $value->st_jira_id, array('data-name' => 'st_jira_id', 'style' => "width:50px;", "name" => "data[0][st_jira_id]", "class" => "st_jira_id")); ?></td>
                     <td><?php echo CHtml::textField('st_inception_date[]', $value->st_inception_date, array('id' => 'st_inception_date', 'data-name' => 'st_inception_date', 'style' => "width:100px;", "name" => "data[0][st_inception_date]", "class" => "st_inception_date datepicker", 'required'=>true)); ?></td>
                     <td><?php echo CHtml::numberField('est_hrs[]', $value->est_hrs, array('data-name' => 'est_hrs', 'style' => "width:50px;", "name" => "data[0][est_hrs]", "class" => "est_hrs wrkhrsClass", "required" => 'true', "min" => '1')); ?></td>
                     <td><?php echo CHtml::link('', 'javascript:void(0);', array('class' => 'icon-plus-sign l2_ring customAddMorel2_ring')); ?></td>
