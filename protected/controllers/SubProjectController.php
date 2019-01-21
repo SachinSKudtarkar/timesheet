@@ -771,7 +771,7 @@ class SubProjectController extends Controller {
                         $modelPLA->modified_by = Yii::app()->session["login"]["user_id"];
                         $modelPLA->updated_at = date("Y-m-d h:i:s");         
                         $modelPLA->save(false);
-                        print_r($modelPLA);die;
+                        print_r($modelPLA);
                     }
                 }else{
                     $modelPLA = new ProjectLevelAllocation;
@@ -781,7 +781,7 @@ class SubProjectController extends Controller {
                     $modelPLA->created_by = Yii::app()->session["login"]["user_id"];
                     $modelPLA->created_at = date("Y-m-d h:i:s");
                     $modelPLA->save(false);
-                    print_r($modelPLA);die;
+                    print_r($modelPLA);
                 }
 
             }
