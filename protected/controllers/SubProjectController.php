@@ -33,7 +33,7 @@ class SubProjectController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'admin','fetchProjectId','updateLog','updateTask','uploadExcel','replaceId','ajaxUpload','checkTasklist','updateHrs'),
+                'actions' => array('create', 'update', 'admin','fetchProjectId','updateLog','updateTask','uploadExcel','replaceId','ajaxUpload','checkTasklist','updateHrs','updateCap'),
                 'expression' => 'CHelper::isAccess("PROJECTS", "full_access")',
                 'users' => array('@'),
             ),
@@ -785,7 +785,12 @@ class SubProjectController extends Controller {
                 }
 
             }
-            echo 'Nothing to update';die;
+            echo 'Nothing to updated    ';die;
+    }
+
+    public function actionupdateCap($id)
+    {
+        Yii::app()->db->createCommand("update tbl_employee set is_timesheet = '1' where emp_id = {$id}")->execute();
     }
 }
 
