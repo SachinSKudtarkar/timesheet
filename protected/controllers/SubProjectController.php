@@ -33,7 +33,7 @@ class SubProjectController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'admin','fetchProjectId','updateLog','updateTask','uploadExcel','replaceId','ajaxUpload','checkTasklist'),
+                'actions' => array('create', 'update', 'admin','fetchProjectId','updateLog','updateTask','uploadExcel','replaceId','ajaxUpload','checkTasklist','updateHrs'),
                 'expression' => 'CHelper::isAccess("PROJECTS", "full_access")',
                 'users' => array('@'),
             ),
@@ -748,6 +748,44 @@ class SubProjectController extends Controller {
     //         Yii::app()->db1->createCommand()->update('tbl_employee',$model,'spid ='.$model->spid);    
     //     }
     // }
+    public function actionupdateHrs($id)
+    {
+            $tempFinalArr = [];
+            //get unqid
+            $project = Yii::app()->db->createCommand("select unqid,sub_project_name from tbl_sub_project where spid = {$id}")->queryRow();
+            
+            //get hrs from task temp
+            $tasktemp = Yii::app()->db->createCommand("select SUM(task_est_hrs) as level_hours, (select level_id from tbl_level_master where level_name LIKE task_level) as level_id from tbl_task_temp where unqid LIKE '%{$project['unqid']}%' group by task_level")->queryAll();
+            foreach ($tasktemp as $value) {
+            
+                // $tempFinalArr[$value['level_id']] = $value['level_hours'];
+                $tempLevelId = $value['level_id'];
+                $projectLA = Yii::app()->db->createCommand("select level_hours, level_id from tbl_project_level_allocation where project_id = {$id} and level_id = {$tempLevelId}")->queryAll();
+                                echo '<pre>';
+                
+                if(!empty($projectLA)) {
+                    if($value['level_hours'] != $projectLA[0]['level_hours']) {
+                        
+                        $modelPLA = ProjectLevelAllocation::model()->findByAttributes(array('project_id' => $id, 'level_id' => $value['level_id']));
+                        $modelPLA->level_hours = $value['level_hours'];
+                        $modelPLA->modified_by = Yii::app()->session["login"]["user_id"];
+                        $modelPLA->updated_at = date("Y-m-d h:i:s");         
+                        $modelPLA->save(false);
+                        print_r($modelPLA);die;
+                    }
+                }else{
+                    $modelPLA = new ProjectLevelAllocation;
+                    $modelPLA->project_id = $id;
+                    $modelPLA->level_id = $value['level_id'];
+                    $modelPLA->level_hours = $value['level_hours'];
+                    $modelPLA->created_by = Yii::app()->session["login"]["user_id"];
+                    $modelPLA->created_at = date("Y-m-d h:i:s");
+                    $modelPLA->save(false);
+                    print_r($modelPLA);die;
+                }
 
+            }
+            echo 'Nothing to update';die;
+    }
 }
 
