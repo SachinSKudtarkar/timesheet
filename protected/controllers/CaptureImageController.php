@@ -19,7 +19,7 @@ class CaptureImageController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'create','addremoveuser','SendMajorActivityEmail','DailyLoginStatus','DailyLoginTimeReport'),
+                'actions' => array('index', 'create','addremoveuser','SendMajorActivityEmail','DailyLoginStatus','DailyLoginTimeReport','LoginTimeReport'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -27,6 +27,7 @@ class CaptureImageController extends Controller {
             ),
         );
     }
+
     public function actionIndex() {
         $today_date = date('Y-m-d');
         $model = new TblCaptureImg();
@@ -110,7 +111,7 @@ class CaptureImageController extends Controller {
                                                <tr><td style='vertical-align:top;font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;'>Date</td><td style='vertical-align:top;font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;'>In time</td><td style='vertical-align:top;font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;'>Out Time</td><td style='vertical-align:top;font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;'>Total Hours</td></tr>
                                                <tr><td style='vertical-align:top;font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;'>$tdate</td><td style='vertical-align:top;font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;'>$intime</td><td style='vertical-align:top;font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;'>$outtime</td><td style='vertical-align:top;font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;'>$TotalHours</td></tr>
                                            </table>";
-                        //$result=CommonUtility::sendmail('smita.dhore@infinitylabs.in', 'Smita', $u_email, $user_name, 'Attendance In Out', $message, null, null, null);									
+                        //$result=CommonUtility::sendmail('smita.dhore@infinitylabs.in', 'Smita', $u_email, $user_name, 'Attendance In Out', $message, null, null, null);                                   
                         $result = CommonUtility::sendmailWithAttachment($u_email, $user_name, 'support@cnaap.net', 'CNAAP Team', $subject, $message, $file, $img_name, $cc);
                        
                        $result = 1;
@@ -632,28 +633,28 @@ class CaptureImageController extends Controller {
         $message_HTML = '<!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="description" content="">
-	<meta name="author" content="">
-	<title>Email Templates</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Email Templates</title>
 </head>
 
 <body style="background:#efefef; margin:0px; font-family:Verdana;">
-	<div style="width:600px; margin:0 auto; font-size:14px;">
-		<p style="margin:10px 0 0 0; padding:0px;">Hello All,</p>
-		<p style="margin:8px 0 10px 0; padding:0px;">Please find major activities below : </p>
-	</div>
-	<div style="width:600px; margin:0 auto;">
-		<div style="background:#3c6aa1; padding:5px;">
-			<img src="https://www.cnaap.net/images/new-logo.png" width="30%" />
-		</div>
-		<table style="width:100%; border-spacing:0px; background: #fff; margin-bottom: 10px;">
-			<tr>
-				<td style="width:50%; vertical-align:text-top;">
-					<div style="padding:5px; clear:both;">
-						<h5 style="padding:0px; margin:0px; background:#c4dffe; padding:5px;">Device Management</h5>
+    <div style="width:600px; margin:0 auto; font-size:14px;">
+        <p style="margin:10px 0 0 0; padding:0px;">Hello All,</p>
+        <p style="margin:8px 0 10px 0; padding:0px;">Please find major activities below : </p>
+    </div>
+    <div style="width:600px; margin:0 auto;">
+        <div style="background:#3c6aa1; padding:5px;">
+            <img src="https://www.cnaap.net/images/new-logo.png" width="30%" />
+        </div>
+        <table style="width:100%; border-spacing:0px; background: #fff; margin-bottom: 10px;">
+            <tr>
+                <td style="width:50%; vertical-align:text-top;">
+                    <div style="padding:5px; clear:both;">
+                        <h5 style="padding:0px; margin:0px; background:#c4dffe; padding:5px;">Device Management</h5>
                                                 <table style="border:1px solid #ddd; cellpadding:0; cellspacing:0; border-collapse: collapse; font-size:11px; width:100%;">
                                                     <tr>
                                                         <th style="border:1px solid #ddd; width:60%; padding:2px;"></th>
@@ -741,403 +742,403 @@ class CaptureImageController extends Controller {
                                                         <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['devicemgmt_ONDATE']['URR'].'</td>
                                                     </tr>    
                                                 </table>                                               
-					</div>
-				</td>
-				<td style="width:50%; vertical-align:text-top;">
-					<div style="padding:5px; clear:both;">
-						<h5 style="padding:0px; margin:0px; background:#c4dffe; padding:5px;">Service NIP</h5>
-						<table style="border:1px solid #ddd; cellpadding:0; cellspacing:0; border-collapse: collapse; font-size:11px; width:100%;">
-						  <tr>
-							<th style="border:1px solid #ddd; width:60%; padding:2px;"></th>
-							<th style="border:1px solid #ddd; width:20%; padding:4px;">Till Date</th>
-							<th style="border:1px solid #ddd; width:20%; padding:2px;">In Last 24hrs </th>
-						  </tr>
-						  <tr>
-							<td style="border:1px solid #ddd; padding:2px;">Wifi</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['wifi_service_TILLDATE'].'</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['wifi_service_ONDATE'].'</td>
-						  </tr>
-						  <tr>
-							<td style="border:1px solid #ddd; padding:2px;">Wifi 4k</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['ndd4k_service_TILLDATE'].'</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['ndd4k_service_ONDATE'].'</td>
-						  </tr>
-						  <tr>
-							<td style="border:1px solid #ddd; padding:2px;">ILL</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['nddill_service_TILLDATE'].'</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['nddill_service_ONDATE'].'</td>
-						  </tr>
-						  <tr>
-							<td style="border:1px solid #ddd; padding:2px;">CCTV</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['nddmp_service_TILLDATE'].'</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['nddmp_service_ONDATE'].'</td>
-						  </tr>
-						  <tr>
-							<td style="border:1px solid #ddd; padding:2px;">Jio Centre</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['nddjio_service_TILLNDATE'].'</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['nddjio_service_ONDATE'].'</td>
-						  </tr>
-						  <tr>
-							<td style="border:1px solid #ddd; padding:2px;">Small Cell</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['nddcell_service_TILLDATE'].'</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['nddcell_service_ONDATE'].'</td>
-						  </tr>
-						  <tr>
-							<td style="border:1px solid #ddd; padding:2px;">MPLS-TP</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['nddmpls_service_TILLDATE'].'</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['nddmpls_service_ONDATE'].'</td>
-						  </tr>
-						  <tr>
-							<td style="border:1px solid #ddd; padding:2px;">JIO CALL & Verification Centre</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['nddcall_service_TILLDATE'].'</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['nddcall_service_ONDATE'].'</td>
-						  </tr>
-						  <tr>
-							<td style="border:1px solid #ddd; padding:2px;"> L2 VPN</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['nddl2vpn_service_TILLDATE'].'</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['nddl2vpn_service_ONDATE'].'</td>
-						  </tr>
-						  <tr>
-							<td style="border:1px solid #ddd; padding:2px;"> L3 VPN</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['nddap_service_TILLDATE'].'</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['nddap_service_ONDATE'].'</td>
-						  </tr>						  
-						</table>
-					</div>
-				</td>
-			</tr>
-		</table>
-		
-		
-		<table style="width:100%; border-spacing:0px; background: #fff; margin-bottom: 10px;">
-			<tr>
-				<td style="width:50%; vertical-align:text-top;">
-					<div style="padding:5px; clear:both;">
+                    </div>
+                </td>
+                <td style="width:50%; vertical-align:text-top;">
+                    <div style="padding:5px; clear:both;">
+                        <h5 style="padding:0px; margin:0px; background:#c4dffe; padding:5px;">Service NIP</h5>
+                        <table style="border:1px solid #ddd; cellpadding:0; cellspacing:0; border-collapse: collapse; font-size:11px; width:100%;">
+                          <tr>
+                            <th style="border:1px solid #ddd; width:60%; padding:2px;"></th>
+                            <th style="border:1px solid #ddd; width:20%; padding:4px;">Till Date</th>
+                            <th style="border:1px solid #ddd; width:20%; padding:2px;">In Last 24hrs </th>
+                          </tr>
+                          <tr>
+                            <td style="border:1px solid #ddd; padding:2px;">Wifi</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['wifi_service_TILLDATE'].'</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['wifi_service_ONDATE'].'</td>
+                          </tr>
+                          <tr>
+                            <td style="border:1px solid #ddd; padding:2px;">Wifi 4k</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['ndd4k_service_TILLDATE'].'</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['ndd4k_service_ONDATE'].'</td>
+                          </tr>
+                          <tr>
+                            <td style="border:1px solid #ddd; padding:2px;">ILL</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['nddill_service_TILLDATE'].'</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['nddill_service_ONDATE'].'</td>
+                          </tr>
+                          <tr>
+                            <td style="border:1px solid #ddd; padding:2px;">CCTV</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['nddmp_service_TILLDATE'].'</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['nddmp_service_ONDATE'].'</td>
+                          </tr>
+                          <tr>
+                            <td style="border:1px solid #ddd; padding:2px;">Jio Centre</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['nddjio_service_TILLNDATE'].'</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['nddjio_service_ONDATE'].'</td>
+                          </tr>
+                          <tr>
+                            <td style="border:1px solid #ddd; padding:2px;">Small Cell</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['nddcell_service_TILLDATE'].'</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['nddcell_service_ONDATE'].'</td>
+                          </tr>
+                          <tr>
+                            <td style="border:1px solid #ddd; padding:2px;">MPLS-TP</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['nddmpls_service_TILLDATE'].'</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['nddmpls_service_ONDATE'].'</td>
+                          </tr>
+                          <tr>
+                            <td style="border:1px solid #ddd; padding:2px;">JIO CALL & Verification Centre</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['nddcall_service_TILLDATE'].'</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['nddcall_service_ONDATE'].'</td>
+                          </tr>
+                          <tr>
+                            <td style="border:1px solid #ddd; padding:2px;"> L2 VPN</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['nddl2vpn_service_TILLDATE'].'</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['nddl2vpn_service_ONDATE'].'</td>
+                          </tr>
+                          <tr>
+                            <td style="border:1px solid #ddd; padding:2px;"> L3 VPN</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['nddap_service_TILLDATE'].'</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['nddap_service_ONDATE'].'</td>
+                          </tr>                       
+                        </table>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        
+        
+        <table style="width:100%; border-spacing:0px; background: #fff; margin-bottom: 10px;">
+            <tr>
+                <td style="width:50%; vertical-align:text-top;">
+                    <div style="padding:5px; clear:both;">
                                                 <h5 style="padding:0px; margin:0px; background:#c4dffe; padding:5px;">Config Creation</h5>
-						<table style="border:1px solid #ddd; cellpadding:0; cellspacing:0; border-collapse: collapse; font-size:11px; width:100%;">
-						  <tr>
-							<th style="border:1px solid #ddd; width:60%; padding:2px;"></th>
-							<th style="border:1px solid #ddd; width:20%; padding:4px;">Till Date</th>
-							<th style="border:1px solid #ddd; width:20%; padding:2px;">In Last 24hrs</th>
-						  </tr>
-						  <tr>
-							<td style="border:1px solid #ddd; padding:2px;">CSS NIP created</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['CSS_NIP_TILLDATE'].'</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['CSS_NIP_ONDATE'].'</td>
-						  </tr>
-						  <tr>
-							<td style="border:1px solid #ddd; padding:2px;">Metro ag1 NIP created</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['Metro_Ag1_nip_TILLDATE'].'</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['Metro_Ag1_nip_ONDATE'].'</td>
-						  </tr>
-						  <tr>
-							<td style="border:1px solid #ddd; padding:2px;">NLD ag1 NIP created</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['NLD_Ag1_nip_TILLDATE'].'</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['NLD_Ag1_nip_ONDATE'].'</td>
-						  </tr>
-						  <tr>
-							<td style="border:1px solid #ddd; padding:2px;">L3 switch NIP create3d</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['l3switch_nip_TILLDATE'].'</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['l3switch_nip_ONDATE'].'</td>
-						  </tr>
-						  <tr>
-							<td style="border:1px solid #ddd; padding:2px;">Cisco L2 switch NIPs created</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['cisco_l2switch_nip_TILLDATE'].'</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['cisco_l2switch_nip_ONDATE'].'</td>
-						  </tr>
-						  <!--tr>
-							<td style="border:1px solid #ddd; padding:2px;">Other L2 switch NIPs created</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;"></td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;"></td>
-						  </tr-->
-						  <tr>
-							<td style="border:1px solid #ddd; padding:2px;">Services NIP created</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$services_nip_tilldate_total.'</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$services_nip_ondate_total.'</td>
-						  </tr>
-						</table>
-						<h5 style="padding:0px; margin:0px; background:#c4dffe; padding:5px;">Device Integration </h5>
-						<table style="border:1px solid #ddd; cellpadding:0; cellspacing:0; border-collapse: collapse; font-size:11px; width:100%;">
-						  <tr>
-							<th style="border:1px solid #ddd; width:60%; padding:2px;"></th>
-							<th style="border:1px solid #ddd; width:20%; padding:4px;">Till Date</th>
-							<th style="border:1px solid #ddd; width:20%; padding:2px;">In Last 24hrs</th>
-						  </tr>
-						  <tr>
-							<td style="border:1px solid #ddd; padding:2px;">Device</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['device_inte_total_tilldate'].'</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['device_inte_total_ondate'].'</td>
-						  </tr>
-						  <tr>
-							<td style="border:1px solid #ddd; padding:2px;">CSS</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['deviceint_TILLDATE']['ESR'].'</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['deviceint_ONDATE']['ESR'].'</td>
-						  </tr>
-						  <tr>
-							<td style="border:1px solid #ddd; padding:2px;">AG1</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['deviceint_TILLDATE']['PAR'].'</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['deviceint_ONDATE']['PAR'].'</td>
-						  </tr>
-						  <!--tr>
-							<td style="border:1px solid #ddd; padding:2px;">Cisco L3 Switch </td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;"></td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;"></td>
-						  </tr-->
-						  <tr>
-							<td style="border:1px solid #ddd; padding:2px;">Cisco L2 Switch</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['deviceint_TILLDATE']['ESS'].'</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['deviceint_ONDATE']['ESS'].'</td>
-						  </tr>
-						</table>
-					</div>
-				</td>
-				<td style="width:50%; vertical-align:text-top;">
-					<div style="padding:5px; clear:both;">
-						<h5 style="padding:0px; margin:0px; background:#c4dffe; padding:5px;">CSS Integration - 100% Automated</h5>
-						<table style="border:1px solid #ddd; cellpadding:0; cellspacing:0; border-collapse: collapse; font-size:11px; width:100%;">
-						  <tr>
-							<th style="border:1px solid #ddd; width:60%; padding:2px;"></th>
-							<th style="border:1px solid #ddd; width:20%; padding:4px;">Till Date</th>
-							<th style="border:1px solid #ddd; width:20%; padding:2px;">In Last 24hrs </th>
-						  </tr>
-						  <tr>
-							<td style="border:1px solid #ddd; padding:2px;">Upcoming Requests</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['ztpint_uconfig_TILLDATE'].'</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['ztpint_uconfig_ONDATE'].'</td>
-						  </tr>
-						  <tr>
-							<td style="border:1px solid #ddd; padding:2px;">File Config</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['ztpint_file_Config_TILLDATE'].'</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['ztpint_file_Config_ONDATE'].'</td>
-						  </tr>
-						  <tr>
-							<td style="border:1px solid #ddd; padding:2px;">Dhcp Binding Happened</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['ztpint_DHCP_Binding_TILLDATE'].'</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['ztpint_DHCP_Binding_ONDATE'].'</td>
-						  </tr>
-						  <tr>
-							<td style="border:1px solid #ddd; padding:2px;">NIP Replaced</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['ztpint_NIP_Replace_TILLDATE'].'</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['ztpint_NIP_Replace_ONDATE'].'</td>
-						  </tr>
-						  <tr>
-							<td style="border:1px solid #ddd; padding:2px;">Sites Become Noc Reachable</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['ztpint_NOC_Replace_TILLDATE'].'</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['ztpint_NOC_Replace_ONDATE'].'</td>
-						  </tr>
-						  <tr>
-							<td style="border:1px solid #ddd; padding:2px;">IOS Upgraded</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['ztpint_Image_Upgrade_TILLDATE'].'</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['ztpint_Image_Upgrade_ONDATE'].'</td>
-						  </tr>
-						  <tr>
-							<td style="border:1px solid #ddd; padding:2px;">Post Logs</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['ztpint_Post_Log_TILLDATE'].'</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['ztpint_Post_Log_ONDATE'].'</td>
-						  </tr>
-						  <tr>
-							<td style="border:1px solid #ddd; padding:2px;">ATP1B</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['ztpint_ATP1B_TILLDATE'].'</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['ztpint_ATP1B_ONDATE'].'</td>
-						  </tr>
-						  <tr>
-							<td style="border:1px solid #ddd; padding:2px;">Total Sites Requested</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['ztpint_Total_Sites_Requested_TILLDATE'].'</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['ztpint_Total_Sites_Requested_ONDATE'].'</td>
-						  </tr>
-						  <tr>
-							<td style="border:1px solid #ddd; padding:2px;">Total ZTP Ready Site</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['ztpint_Total_ZTP_Ready_Site_TILLDATE'].'</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['ztpint_Total_ZTP_Ready_Site_ONDATE'].'</td>
-						  </tr>
-						  <tr>
-							<td style="border:1px solid #ddd; padding:2px;">Total ZTP Rejected Sites</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['ztpint_rejection_TILLDATE'].'</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['ztpint_rejection_ONDATE'].'</td>
-						  </tr>
-						</table>
-					</div>
-				</td>
-			</tr>
-			<tr>
-				<td colspan="2">
-					<div style="padding:5px; clear:both;">
-						<h5 style="padding:0px; margin:0px; background:#c4dffe; padding:5px;">CSS Integration using automatic integration flow - non ztp </h5>
-						<table style="border:1px solid #ddd; cellpadding:0; cellspacing:0; border-collapse: collapse; font-size:11px; width:100%;">
-						  <tr>
-							<th style="border:1px solid #ddd; width:60%; padding:2px;"></th>
-							<th style="border:1px solid #ddd; width:20%; padding:4px;">Till Date</th>
-							<th style="border:1px solid #ddd; width:20%; padding:2px;">In Last 24hrs </th>
-						  </tr>
-						  <tr>
-							<td style="border:1px solid #ddd; padding:2px;">Requested</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['ztp_requested_TILLDATE'].'</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['ztp_requested_ONDATE'].'</td>
-						  </tr>
-						  <tr>
-							<td style="border:1px solid #ddd; padding:2px;">Completed</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['ztp_completed_TILLDATE'].'</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['ztp_completed_ONDATE'].'</td>
-						  </tr>
-						  <tr>
-							<td style="border:1px solid #ddd; padding:2px;">Rejected</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['ztp_rejected_TILLDATE'].'</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['ztp_rejected_ONDATE'].'</td>
-						  </tr>						  
-						</table>
-					</div>
-				</td>
-			</tr>
-		</table>
-		
-		<table style="width:100%; border-spacing:0px; background: #fff; margin-bottom: 10px;">
-			<tbody>
-			<tr>
-				<td style="width:50%;">
-					<div style="padding:5px; clear:both;">
-						<h5 style="padding:0px; margin:0px; background:#c4dffe; padding:5px;">Atp1b Approved</h5>
-						<table style="border:1px solid #ddd; cellpadding:0; cellspacing:0; border-collapse: collapse; font-size:11px; width:100%;">
-						  <tbody><tr>
-							<th style="border:1px solid #ddd; width:60%; padding:2px;"></th>
-							<th style="border:1px solid #ddd; width:20%; padding:4px;">Till Date</th>
-							<th style="border:1px solid #ddd; width:20%; padding:2px;">In Last 24hrs</th>
-						  </tr>
+                        <table style="border:1px solid #ddd; cellpadding:0; cellspacing:0; border-collapse: collapse; font-size:11px; width:100%;">
+                          <tr>
+                            <th style="border:1px solid #ddd; width:60%; padding:2px;"></th>
+                            <th style="border:1px solid #ddd; width:20%; padding:4px;">Till Date</th>
+                            <th style="border:1px solid #ddd; width:20%; padding:2px;">In Last 24hrs</th>
+                          </tr>
+                          <tr>
+                            <td style="border:1px solid #ddd; padding:2px;">CSS NIP created</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['CSS_NIP_TILLDATE'].'</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['CSS_NIP_ONDATE'].'</td>
+                          </tr>
+                          <tr>
+                            <td style="border:1px solid #ddd; padding:2px;">Metro ag1 NIP created</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['Metro_Ag1_nip_TILLDATE'].'</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['Metro_Ag1_nip_ONDATE'].'</td>
+                          </tr>
+                          <tr>
+                            <td style="border:1px solid #ddd; padding:2px;">NLD ag1 NIP created</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['NLD_Ag1_nip_TILLDATE'].'</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['NLD_Ag1_nip_ONDATE'].'</td>
+                          </tr>
+                          <tr>
+                            <td style="border:1px solid #ddd; padding:2px;">L3 switch NIP create3d</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['l3switch_nip_TILLDATE'].'</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['l3switch_nip_ONDATE'].'</td>
+                          </tr>
+                          <tr>
+                            <td style="border:1px solid #ddd; padding:2px;">Cisco L2 switch NIPs created</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['cisco_l2switch_nip_TILLDATE'].'</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['cisco_l2switch_nip_ONDATE'].'</td>
+                          </tr>
+                          <!--tr>
+                            <td style="border:1px solid #ddd; padding:2px;">Other L2 switch NIPs created</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;"></td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;"></td>
+                          </tr-->
+                          <tr>
+                            <td style="border:1px solid #ddd; padding:2px;">Services NIP created</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$services_nip_tilldate_total.'</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$services_nip_ondate_total.'</td>
+                          </tr>
+                        </table>
+                        <h5 style="padding:0px; margin:0px; background:#c4dffe; padding:5px;">Device Integration </h5>
+                        <table style="border:1px solid #ddd; cellpadding:0; cellspacing:0; border-collapse: collapse; font-size:11px; width:100%;">
+                          <tr>
+                            <th style="border:1px solid #ddd; width:60%; padding:2px;"></th>
+                            <th style="border:1px solid #ddd; width:20%; padding:4px;">Till Date</th>
+                            <th style="border:1px solid #ddd; width:20%; padding:2px;">In Last 24hrs</th>
+                          </tr>
+                          <tr>
+                            <td style="border:1px solid #ddd; padding:2px;">Device</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['device_inte_total_tilldate'].'</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['device_inte_total_ondate'].'</td>
+                          </tr>
+                          <tr>
+                            <td style="border:1px solid #ddd; padding:2px;">CSS</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['deviceint_TILLDATE']['ESR'].'</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['deviceint_ONDATE']['ESR'].'</td>
+                          </tr>
+                          <tr>
+                            <td style="border:1px solid #ddd; padding:2px;">AG1</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['deviceint_TILLDATE']['PAR'].'</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['deviceint_ONDATE']['PAR'].'</td>
+                          </tr>
+                          <!--tr>
+                            <td style="border:1px solid #ddd; padding:2px;">Cisco L3 Switch </td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;"></td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;"></td>
+                          </tr-->
+                          <tr>
+                            <td style="border:1px solid #ddd; padding:2px;">Cisco L2 Switch</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['deviceint_TILLDATE']['ESS'].'</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['deviceint_ONDATE']['ESS'].'</td>
+                          </tr>
+                        </table>
+                    </div>
+                </td>
+                <td style="width:50%; vertical-align:text-top;">
+                    <div style="padding:5px; clear:both;">
+                        <h5 style="padding:0px; margin:0px; background:#c4dffe; padding:5px;">CSS Integration - 100% Automated</h5>
+                        <table style="border:1px solid #ddd; cellpadding:0; cellspacing:0; border-collapse: collapse; font-size:11px; width:100%;">
+                          <tr>
+                            <th style="border:1px solid #ddd; width:60%; padding:2px;"></th>
+                            <th style="border:1px solid #ddd; width:20%; padding:4px;">Till Date</th>
+                            <th style="border:1px solid #ddd; width:20%; padding:2px;">In Last 24hrs </th>
+                          </tr>
+                          <tr>
+                            <td style="border:1px solid #ddd; padding:2px;">Upcoming Requests</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['ztpint_uconfig_TILLDATE'].'</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['ztpint_uconfig_ONDATE'].'</td>
+                          </tr>
+                          <tr>
+                            <td style="border:1px solid #ddd; padding:2px;">File Config</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['ztpint_file_Config_TILLDATE'].'</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['ztpint_file_Config_ONDATE'].'</td>
+                          </tr>
+                          <tr>
+                            <td style="border:1px solid #ddd; padding:2px;">Dhcp Binding Happened</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['ztpint_DHCP_Binding_TILLDATE'].'</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['ztpint_DHCP_Binding_ONDATE'].'</td>
+                          </tr>
+                          <tr>
+                            <td style="border:1px solid #ddd; padding:2px;">NIP Replaced</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['ztpint_NIP_Replace_TILLDATE'].'</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['ztpint_NIP_Replace_ONDATE'].'</td>
+                          </tr>
+                          <tr>
+                            <td style="border:1px solid #ddd; padding:2px;">Sites Become Noc Reachable</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['ztpint_NOC_Replace_TILLDATE'].'</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['ztpint_NOC_Replace_ONDATE'].'</td>
+                          </tr>
+                          <tr>
+                            <td style="border:1px solid #ddd; padding:2px;">IOS Upgraded</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['ztpint_Image_Upgrade_TILLDATE'].'</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['ztpint_Image_Upgrade_ONDATE'].'</td>
+                          </tr>
+                          <tr>
+                            <td style="border:1px solid #ddd; padding:2px;">Post Logs</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['ztpint_Post_Log_TILLDATE'].'</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['ztpint_Post_Log_ONDATE'].'</td>
+                          </tr>
+                          <tr>
+                            <td style="border:1px solid #ddd; padding:2px;">ATP1B</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['ztpint_ATP1B_TILLDATE'].'</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['ztpint_ATP1B_ONDATE'].'</td>
+                          </tr>
+                          <tr>
+                            <td style="border:1px solid #ddd; padding:2px;">Total Sites Requested</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['ztpint_Total_Sites_Requested_TILLDATE'].'</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['ztpint_Total_Sites_Requested_ONDATE'].'</td>
+                          </tr>
+                          <tr>
+                            <td style="border:1px solid #ddd; padding:2px;">Total ZTP Ready Site</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['ztpint_Total_ZTP_Ready_Site_TILLDATE'].'</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['ztpint_Total_ZTP_Ready_Site_ONDATE'].'</td>
+                          </tr>
+                          <tr>
+                            <td style="border:1px solid #ddd; padding:2px;">Total ZTP Rejected Sites</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['ztpint_rejection_TILLDATE'].'</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['ztpint_rejection_ONDATE'].'</td>
+                          </tr>
+                        </table>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <div style="padding:5px; clear:both;">
+                        <h5 style="padding:0px; margin:0px; background:#c4dffe; padding:5px;">CSS Integration using automatic integration flow - non ztp </h5>
+                        <table style="border:1px solid #ddd; cellpadding:0; cellspacing:0; border-collapse: collapse; font-size:11px; width:100%;">
+                          <tr>
+                            <th style="border:1px solid #ddd; width:60%; padding:2px;"></th>
+                            <th style="border:1px solid #ddd; width:20%; padding:4px;">Till Date</th>
+                            <th style="border:1px solid #ddd; width:20%; padding:2px;">In Last 24hrs </th>
+                          </tr>
+                          <tr>
+                            <td style="border:1px solid #ddd; padding:2px;">Requested</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['ztp_requested_TILLDATE'].'</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['ztp_requested_ONDATE'].'</td>
+                          </tr>
+                          <tr>
+                            <td style="border:1px solid #ddd; padding:2px;">Completed</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['ztp_completed_TILLDATE'].'</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['ztp_completed_ONDATE'].'</td>
+                          </tr>
+                          <tr>
+                            <td style="border:1px solid #ddd; padding:2px;">Rejected</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['ztp_rejected_TILLDATE'].'</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['ztp_rejected_ONDATE'].'</td>
+                          </tr>                       
+                        </table>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        
+        <table style="width:100%; border-spacing:0px; background: #fff; margin-bottom: 10px;">
+            <tbody>
+            <tr>
+                <td style="width:50%;">
+                    <div style="padding:5px; clear:both;">
+                        <h5 style="padding:0px; margin:0px; background:#c4dffe; padding:5px;">Atp1b Approved</h5>
+                        <table style="border:1px solid #ddd; cellpadding:0; cellspacing:0; border-collapse: collapse; font-size:11px; width:100%;">
+                          <tbody><tr>
+                            <th style="border:1px solid #ddd; width:60%; padding:2px;"></th>
+                            <th style="border:1px solid #ddd; width:20%; padding:4px;">Till Date</th>
+                            <th style="border:1px solid #ddd; width:20%; padding:2px;">In Last 24hrs</th>
+                          </tr>
                                                   <tr>
-							<td style="border:1px solid #ddd; padding:2px;">CSS</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['atp1b_approvedsites_TILLDATE']['CSS'].'</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['atp1b_approvedsites_ONDATE']['CSS'].'</td>
-						  </tr>
-						  <tr>
-							<td style="border:1px solid #ddd; padding:2px;">AG1</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['atp1b_approvedsites_TILLDATE']['AG1'].'</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['atp1b_approvedsites_ONDATE']['AG1'].'</td>
-						  </tr>
-						  <tr>
-							<td style="border:1px solid #ddd; padding:2px;">L3</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['atp1b_approvedsites_TILLDATE']['L3_Device'].'</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['atp1b_approvedsites_ONDATE']['L3_Device'].'</td>
-						  </tr>
-						  <tr>
-							<td style="border:1px solid #ddd; padding:2px;">901</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['atp1b_approvedsites_TILLDATE']['901'].'</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['atp1b_approvedsites_ONDATE']['901'].'</td>
-						  </tr>
-						  <tr>
-							<td style="border:1px solid #ddd; padding:2px;">RAD</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['atp1b_approvedsites_TILLDATE']['RAD'].'</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['atp1b_approvedsites_ONDATE']['RAD'].'</td>
-						  </tr>
-						  <tr>
-							<td style="border:1px solid #ddd; padding:2px;">VOLTEK</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['atp1b_approvedsites_TILLDATE']['VOLTEK'].'</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['atp1b_approvedsites_ONDATE']['VOLTEK'].'</td>
-						  </tr>
-						  <tr>
-							<td style="border:1px solid #ddd; padding:2px;">TECHROUTE</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['atp1b_approvedsites_TILLDATE']['TECHROUTE'].'</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['atp1b_approvedsites_ONDATE']['TECHROUTE'].'</td>
-						  </tr>
-						</tbody></table>
-					</div>
-				</td>
-				<td style="width:50%; vertical-align:text-top;">
-					<div style="padding:5px; clear:both;">
-						<h5 style="padding:0px; margin:0px; background:#c4dffe; padding:5px;">Atp1b Submitted Sites</h5>
-						<table style="border:1px solid #ddd; cellpadding:0; cellspacing:0; border-collapse: collapse; font-size:11px; width:100%;">
-						  <tbody><tr>
-							<th style="border:1px solid #ddd; width:60%; padding:2px;"></th>
-							<th style="border:1px solid #ddd; width:20%; padding:4px;">Till Date</th>
-							<th style="border:1px solid #ddd; width:20%; padding:2px;">In Last 24hrs </th>
-						  </tr>
-						  <tr>
-							<td style="border:1px solid #ddd; padding:2px;">CSS</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['atp1b_submittedsites_TILLDATE']['CSS'].'</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['atp1b_submittedsites_ONDATE']['CSS'].'</td>
-						  </tr>
-						  <tr>
-							<td style="border:1px solid #ddd; padding:2px;">AG1</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['atp1b_submittedsites_TILLDATE']['AG1'].'</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['atp1b_submittedsites_ONDATE']['AG1'].'</td>
-						  </tr>
-						  <tr>
-							<td style="border:1px solid #ddd; padding:2px;">L3</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['atp1b_submittedsites_TILLDATE']['L3_Device'].'</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['atp1b_submittedsites_ONDATE']['L3_Device'].'</td>
-						  </tr>
-						  <tr>
-							<td style="border:1px solid #ddd; padding:2px;">901</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['atp1b_submittedsites_TILLDATE']['901'].'</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['atp1b_submittedsites_ONDATE']['901'].'</td>
-						  </tr>
-						  <tr>
-							<td style="border:1px solid #ddd; padding:2px;">RAD</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['atp1b_submittedsites_TILLDATE']['RAD'].'</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['atp1b_submittedsites_ONDATE']['RAD'].'</td>
-						  </tr>
-						  <tr>
-							<td style="border:1px solid #ddd; padding:2px;">VOLTEK</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['atp1b_submittedsites_TILLDATE']['VOLTEK'].'</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['atp1b_submittedsites_ONDATE']['VOLTEK'].'</td>
-						  </tr>
-						  <tr>
-							<td style="border:1px solid #ddd; padding:2px;">TECHROUTE   </td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['atp1b_submittedsites_TILLDATE']['TECHROUTE'].'</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['atp1b_submittedsites_ONDATE']['TECHROUTE'].'</td>
-						  </tr>
-						</tbody></table>
-					</div>
-				</td>
-			</tr>
-			</tbody>
-		</table>
-		
-		
-		
-		<table style="width:100%; border-spacing:0px; background: #fff; margin-bottom: 10px;">
-			<tbody>
-			<tr>
-				<td>
-					<div style="padding:5px; clear:both;">
-						<h5 style="padding:0px; margin:0px; background:#c4dffe; padding:5px;">Hotoed</h5>
-						<table style="border:1px solid #ddd; cellpadding:0; cellspacing:0; border-collapse: collapse; font-size:11px; width:100%;">
-						  <tbody><tr>
-							<th style="border:1px solid #ddd; width:60%; padding:2px;"></th>
-							<th style="border:1px solid #ddd; width:20%; padding:4px;">Till Date</th>
-							<th style="border:1px solid #ddd; width:20%; padding:2px;">In Last 24hrs </th>
-						  </tr>
-						  <tr>
-							<td style="border:1px solid #ddd; padding:2px;">CSS</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['css_hoto_TILLDATE'].'</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['css_hoto_ONDATE'].'</td>
-						  </tr>
-						  <tr>
-							<td style="border:1px solid #ddd; padding:2px;">AG1</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['ag1_hoto_TILLDATE'].'</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['ag1_hoto_ONDATE'].'</td>
-						  </tr>
-						  <!--tr>
-							<td style="border:1px solid #ddd; padding:2px;">L3</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">7</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">8</td>
-						  </tr>
-						  <tr>
-							<td style="border:1px solid #ddd; padding:2px;">L2</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">7</td>
-							<td style="border:1px solid #ddd; padding:2px; text-align:center;">8</td>
-						  </tr-->
-						</tbody></table>
-					</div>
-				</td>
-			</tr>
-			</tbody>
-		</table>
-	</div>
-	<div style="width:600px; margin:0 auto; font-size:14px;">
-		<p style="margin:10px 0 0 0; padding:0px;font-weight:bold;">Regards,</p>
-		<p style="margin:2px 0 10px 0; padding:0px;font-weight:bold;">CINAAP Team</p>
-		<p style="margin:2px 0 10px 0; padding:0px;font-weight:bold;">(Cisco Intelligent Network Automation and Analytics Platform)</p>
-		<p style="text-align:center; font-size:12px; font-weight:bold; margin:10px 0; color: #a94442; background-color: #f2dede; padding:8px; border:1px solid #a94442;">*This is an auto generated email. PLEASE DO NOT REPLY TO THIS EMAIL.*</p>
-	</div>
+                            <td style="border:1px solid #ddd; padding:2px;">CSS</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['atp1b_approvedsites_TILLDATE']['CSS'].'</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['atp1b_approvedsites_ONDATE']['CSS'].'</td>
+                          </tr>
+                          <tr>
+                            <td style="border:1px solid #ddd; padding:2px;">AG1</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['atp1b_approvedsites_TILLDATE']['AG1'].'</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['atp1b_approvedsites_ONDATE']['AG1'].'</td>
+                          </tr>
+                          <tr>
+                            <td style="border:1px solid #ddd; padding:2px;">L3</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['atp1b_approvedsites_TILLDATE']['L3_Device'].'</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['atp1b_approvedsites_ONDATE']['L3_Device'].'</td>
+                          </tr>
+                          <tr>
+                            <td style="border:1px solid #ddd; padding:2px;">901</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['atp1b_approvedsites_TILLDATE']['901'].'</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['atp1b_approvedsites_ONDATE']['901'].'</td>
+                          </tr>
+                          <tr>
+                            <td style="border:1px solid #ddd; padding:2px;">RAD</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['atp1b_approvedsites_TILLDATE']['RAD'].'</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['atp1b_approvedsites_ONDATE']['RAD'].'</td>
+                          </tr>
+                          <tr>
+                            <td style="border:1px solid #ddd; padding:2px;">VOLTEK</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['atp1b_approvedsites_TILLDATE']['VOLTEK'].'</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['atp1b_approvedsites_ONDATE']['VOLTEK'].'</td>
+                          </tr>
+                          <tr>
+                            <td style="border:1px solid #ddd; padding:2px;">TECHROUTE</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['atp1b_approvedsites_TILLDATE']['TECHROUTE'].'</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['atp1b_approvedsites_ONDATE']['TECHROUTE'].'</td>
+                          </tr>
+                        </tbody></table>
+                    </div>
+                </td>
+                <td style="width:50%; vertical-align:text-top;">
+                    <div style="padding:5px; clear:both;">
+                        <h5 style="padding:0px; margin:0px; background:#c4dffe; padding:5px;">Atp1b Submitted Sites</h5>
+                        <table style="border:1px solid #ddd; cellpadding:0; cellspacing:0; border-collapse: collapse; font-size:11px; width:100%;">
+                          <tbody><tr>
+                            <th style="border:1px solid #ddd; width:60%; padding:2px;"></th>
+                            <th style="border:1px solid #ddd; width:20%; padding:4px;">Till Date</th>
+                            <th style="border:1px solid #ddd; width:20%; padding:2px;">In Last 24hrs </th>
+                          </tr>
+                          <tr>
+                            <td style="border:1px solid #ddd; padding:2px;">CSS</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['atp1b_submittedsites_TILLDATE']['CSS'].'</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['atp1b_submittedsites_ONDATE']['CSS'].'</td>
+                          </tr>
+                          <tr>
+                            <td style="border:1px solid #ddd; padding:2px;">AG1</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['atp1b_submittedsites_TILLDATE']['AG1'].'</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['atp1b_submittedsites_ONDATE']['AG1'].'</td>
+                          </tr>
+                          <tr>
+                            <td style="border:1px solid #ddd; padding:2px;">L3</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['atp1b_submittedsites_TILLDATE']['L3_Device'].'</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['atp1b_submittedsites_ONDATE']['L3_Device'].'</td>
+                          </tr>
+                          <tr>
+                            <td style="border:1px solid #ddd; padding:2px;">901</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['atp1b_submittedsites_TILLDATE']['901'].'</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['atp1b_submittedsites_ONDATE']['901'].'</td>
+                          </tr>
+                          <tr>
+                            <td style="border:1px solid #ddd; padding:2px;">RAD</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['atp1b_submittedsites_TILLDATE']['RAD'].'</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['atp1b_submittedsites_ONDATE']['RAD'].'</td>
+                          </tr>
+                          <tr>
+                            <td style="border:1px solid #ddd; padding:2px;">VOLTEK</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['atp1b_submittedsites_TILLDATE']['VOLTEK'].'</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['atp1b_submittedsites_ONDATE']['VOLTEK'].'</td>
+                          </tr>
+                          <tr>
+                            <td style="border:1px solid #ddd; padding:2px;">TECHROUTE   </td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['atp1b_submittedsites_TILLDATE']['TECHROUTE'].'</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['atp1b_submittedsites_ONDATE']['TECHROUTE'].'</td>
+                          </tr>
+                        </tbody></table>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        
+        
+        
+        <table style="width:100%; border-spacing:0px; background: #fff; margin-bottom: 10px;">
+            <tbody>
+            <tr>
+                <td>
+                    <div style="padding:5px; clear:both;">
+                        <h5 style="padding:0px; margin:0px; background:#c4dffe; padding:5px;">Hotoed</h5>
+                        <table style="border:1px solid #ddd; cellpadding:0; cellspacing:0; border-collapse: collapse; font-size:11px; width:100%;">
+                          <tbody><tr>
+                            <th style="border:1px solid #ddd; width:60%; padding:2px;"></th>
+                            <th style="border:1px solid #ddd; width:20%; padding:4px;">Till Date</th>
+                            <th style="border:1px solid #ddd; width:20%; padding:2px;">In Last 24hrs </th>
+                          </tr>
+                          <tr>
+                            <td style="border:1px solid #ddd; padding:2px;">CSS</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['css_hoto_TILLDATE'].'</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['css_hoto_ONDATE'].'</td>
+                          </tr>
+                          <tr>
+                            <td style="border:1px solid #ddd; padding:2px;">AG1</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['ag1_hoto_TILLDATE'].'</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">'.$master_data['ag1_hoto_ONDATE'].'</td>
+                          </tr>
+                          <!--tr>
+                            <td style="border:1px solid #ddd; padding:2px;">L3</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">7</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">8</td>
+                          </tr>
+                          <tr>
+                            <td style="border:1px solid #ddd; padding:2px;">L2</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">7</td>
+                            <td style="border:1px solid #ddd; padding:2px; text-align:center;">8</td>
+                          </tr-->
+                        </tbody></table>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div style="width:600px; margin:0 auto; font-size:14px;">
+        <p style="margin:10px 0 0 0; padding:0px;font-weight:bold;">Regards,</p>
+        <p style="margin:2px 0 10px 0; padding:0px;font-weight:bold;">CINAAP Team</p>
+        <p style="margin:2px 0 10px 0; padding:0px;font-weight:bold;">(Cisco Intelligent Network Automation and Analytics Platform)</p>
+        <p style="text-align:center; font-size:12px; font-weight:bold; margin:10px 0; color: #a94442; background-color: #f2dede; padding:8px; border:1px solid #a94442;">*This is an auto generated email. PLEASE DO NOT REPLY TO THIS EMAIL.*</p>
+    </div>
 
 </body>
 </html>
@@ -1240,8 +1241,8 @@ class CaptureImageController extends Controller {
     }
       
       public function  actionDailyLoginStatus(){
-       // ini_set('display_errors',1);
-       // error_reporting(E_ALL);
+       ini_set('display_errors',1);
+        error_reporting(E_ALL);
         $start_date = $end_dat ='';
         if(isset($_REQUEST['start_date']) && $_REQUEST['start_date'] && isset($_REQUEST['end_date']) && $_REQUEST['end_date']){
             $start_date = $_REQUEST['start_date'];
@@ -1298,15 +1299,33 @@ class CaptureImageController extends Controller {
             }
         }
     }
-    public function actionMonthlyLoginTimeReport(){
+    public function actionLoginTimeReport(){
         $today = date('Y-m-d');
-        $sql = "select concat(t1.first_name,' ',t1.last_name) as username ,t.todaydate,t.in_time,t.out_time 
+                          
+        $start_date = $end_dat ='';
+        if(isset($_REQUEST['start_date']) && $_REQUEST['start_date'] && isset($_REQUEST['end_date']) && $_REQUEST['end_date']){
+            $start_date = $_REQUEST['start_date'];
+            $end_date = $_REQUEST['end_date'];
+            $condition = ' where todaydate between "'.$start_date.'" and "'.$end_date.'" ';
+            $subject = "Employee Login Time Report From $start_date to $end_date";
+            $file_name = "Login-Time-Report-From-". $start_date . "-To-".$end_date.".xls";
+            $text = "from $start_date to $end_date";
+        }else{
+            $condition = " where todaydate = '$today'";
+         $subject = "Employee Login Time Report for $today";
+         $file_name = "Login-Time-Report-". $today . ".xls";
+         $text = "for $today";
+        }
+
+
+     $sql = "select concat(t1.first_name,' ',t1.last_name) as username ,t.todaydate,t.in_time,t.out_time 
                 from tbl_capture_img t
                 inner join tbl_employee t1 on t1.emp_id = t.user_id
-                where t.todaydate >= DATE_FORMAT( CURRENT_DATE - INTERVAL 1 MONTH, '%Y/%m/01' )
-                and t.todaydate < DATE_FORMAT( CURRENT_DATE, '%Y/%m/01' )
-                order by t.user_id";                
+                {$condition} order by t.user_id"; 
+//        $sql = " select CONCAT(first_name,' ',last_name) as name ,in_time,out_time,todaydate from tbl_capture_img as t inner join tbl_employee as em on (emp_id = user_id) {$condition} order by in_time asc";
+
         $row = Yii::app()->db->createCommand($sql)->queryAll();
+
         if(!empty($row)){
             $data = array();
             foreach($row as $key => $val){
@@ -1321,29 +1340,33 @@ class CaptureImageController extends Controller {
                 }                
             }
             $header = array('Employee Name','Date','In Time','Out Time','Total Hours');
-            $file_name = "Monthly-Login-Time-Report-". $today . ".xls";
-            $attachment_path = "/tmp/";            
+            //$file_name = "Login-Time-Report-". $today . ".xls";
+            $attachment_path = "/var/www/html/timesheet/tm_reports/";            
             $file_name1 = CommonUtility::generateExcelSaveFileOnServer($header, $data, $file_name, $attachment_path);
+
             $destination_path = $attachment_path.$file_name;
-            $to_name = "Abhishek Pathak";
-            $to = "abhishek.pathak@infinitylabs.in";
-            $cc[] = array("email" => "dhara.patel@infinitylabs.in");
-            $cc[] = array("email" => "hr@infinitylabs.in");
-            $cc[] = array("email" => "reema.dhanwani@infinitylabs.in");
+            $to_name = "Reema Dhanwani";
+            // $to = "reema.dhanwani@infinitylabs.in";
+            $to = "mudliyarp@hcl.com";
+            $cc[] = array("email" => "pm-cnaap@infinitylabs.in");
+            $bcc[] = array("email" => "tirthesh.trivedi@infinitylabs.in");
+            $bcc[] = array("email" => "mudliyarp@hcl.com");
+            $cc = [];
             $from = "support@cnaap.net";
             $from_name = "CNAAP TEAM";
-            $subject = "Employee Login Time Monthly Report";
-            $message = 'Hello Abhishek,'
+            
+            $message = 'Team,'
                         . ''
-                        . '<p>The attached document is the list of all employee\'s login time & logout time '
-                        . 'FROM <b>'.date_create("last day of -1 month")->format('Y-m-d')."</b> TO <b>".date_create("first day of -1 month")->format('Y-m-d')
+                        . '<p>The attached document is the list of all employee\'s login time & logout time '.$text.
                         . '<p><p><br/><br/>'
                         . '<p>Thanks & Regards,</p>'
                         ;
             $result = CommonUtility::sendmailWithAttachment($to, $to_name, $from, $from_name, $subject, $message, $destination_path, $file_name, $cc);
             if ($result) {
-                echo "Email Sent\n";
-                @unlink("/tmp/" .$file_name);
+                $link = "http://$_SERVER[HTTP_HOST]/timesheet/tm_reports/".$file_name1;              
+                echo "<h3>Email has been sent successfully with the report as attachment, to download the report click on the link:. <a href='{$link}' download>Download</a></h3>";
+
+                //@unlink("/tmp/" .$file_name);
             } else {
                 echo "Failed\n";
             }
