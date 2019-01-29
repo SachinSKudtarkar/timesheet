@@ -1346,11 +1346,11 @@ class CaptureImageController extends Controller {
 
             $destination_path = $attachment_path.$file_name;
             $to_name = "Reema Dhanwani";
-            // $to = "reema.dhanwani@infinitylabs.in";
-            $to = "mudliyarp@hcl.com";
-            //$cc[] = array("email" => "pm-cnaap@infinitylabs.in");
-            $bcc[] = array("email" => "tirthesh.trivedi@infinitylabs.in");
-            $bcc[] = array("email" => "mudliyarp@hcl.com");
+            $to = "reema.dhanwani@infinitylabs.in";
+            // $to = "mudliyarp@hcl.com";
+            $cc[] = array("email" => "pm-cnaap@infinitylabs.in");
+            $cc[] = array("email" => "tirthesh.trivedi@infinitylabs.in");
+            // $bcc[] = array("email" => "mudliyarp@hcl.com");
             $cc = [];
             $from = "support@cnaap.net";
             $from_name = "CNAAP TEAM";
