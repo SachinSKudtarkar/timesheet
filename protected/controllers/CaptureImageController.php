@@ -1357,7 +1357,7 @@ class CaptureImageController extends Controller {
             
             $message = 'Team,'
                         . ''
-                        . '<p>The attached document contains the list of all employee\'s login time & logout time '.$text.
+                        . '<p>The attached document contains the list of all employee\'s login time & logout time '.$text
                         . '<p><p><br/><br/>'
                         . '<p>Thanks & Regards,</p>'
                         ;
