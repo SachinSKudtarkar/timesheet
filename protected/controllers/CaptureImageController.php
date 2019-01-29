@@ -1348,7 +1348,7 @@ class CaptureImageController extends Controller {
             $to_name = "Reema Dhanwani";
             // $to = "reema.dhanwani@infinitylabs.in";
             $to = "mudliyarp@hcl.com";
-            $cc[] = array("email" => "pm-cnaap@infinitylabs.in");
+            //$cc[] = array("email" => "pm-cnaap@infinitylabs.in");
             $bcc[] = array("email" => "tirthesh.trivedi@infinitylabs.in");
             $bcc[] = array("email" => "mudliyarp@hcl.com");
             $cc = [];
@@ -1357,7 +1357,7 @@ class CaptureImageController extends Controller {
             
             $message = 'Team,'
                         . ''
-                        . '<p>The attached document is the list of all employee\'s login time & logout time '.$text.
+                        . '<p>The attached document contains the list of all employee\'s login time & logout time '.$text.
                         . '<p><p><br/><br/>'
                         . '<p>Thanks & Regards,</p>'
                         ;
