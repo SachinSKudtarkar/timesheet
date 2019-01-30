@@ -1360,7 +1360,7 @@ class CaptureImageController extends Controller {
                         . '<p>The attached document contains the list of all employee\'s login time & logout time '.$text
                         . '<p><p><br/><br/>'
                         . '<p>Thanks & Regards,</p>'
-                        ;
+                        .'<p>CNAAP Team</p>';
             $result = CommonUtility::sendmailWithAttachment($to, $to_name, $from, $from_name, $subject, $message, $destination_path, $file_name, $cc);
             if ($result) {
                 $link = "http://$_SERVER[HTTP_HOST]/timesheet/tm_reports/".$file_name1;              
