@@ -53,7 +53,7 @@ $access_type = AccessRoleMaster::model()->findByAttributes(array('emp_id' => $em
             <?php
             $this->widget('bootstrap.widgets.TbNavbar', array(
                 'type' => 'inverse', // null or 'inverse'
-                'brand' => '<img height="65" src="' . Yii::app()->baseUrl . '/images/infinity.jpg" />',
+                'brand' => '<img height="65" src="' . Yii::app()->baseUrl . '/images/cisco.jpg" />',
                 'brandOptions' => array('class' => 'no-link-cur span2'),
                 'brandUrl' => CHelper::baseUrl(true) . '/',
                 'collapse' => true, // requires bootstrap-responsive.css
