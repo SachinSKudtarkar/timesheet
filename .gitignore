@@ -8,3 +8,6 @@ assets/*
 protected/runtime/*
 !protected/runtime/empty
 /.htaccess
+images/*
+css/*
+js/*
