@@ -1300,8 +1300,7 @@ class CaptureImageController extends Controller {
         }
     }
     public function actionLoginTimeReport(){
-        $today = date('Y-m-d');
-                          
+        $today = date('Y-m-d');          
         $start_date = $end_dat ='';
         if(isset($_REQUEST['start_date']) && $_REQUEST['start_date'] && isset($_REQUEST['end_date']) && $_REQUEST['end_date']){
             $start_date = $_REQUEST['start_date'];
