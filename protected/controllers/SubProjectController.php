@@ -407,7 +407,7 @@ class SubProjectController extends Controller {
     {
         $total_hours = 0;
         $hostName = $_SERVER['SERVER_NAME'];
-        $projectDetails = Yii::app()->db->createCommand("select sub_project_name,sub_project_description,pa.level_id ,lm.level_name,level_hours,concat(em.first_name,' ',em.last_name) as username from  tbl_project_level_allocation pa left join tbl_sub_project sp  on sp.spid = pa.project_id left join tbl_level_master lm on lm.level_id = pa.level_id left join tbl_employee em on em.emp_id = sp.created_by where spid = {$project_id}")->queryAll();
+        $projectDetails = Yii::app()->db->createCommand("select sub_project_name,sub_project_description,pa.level_id ,lm.level_name,level_hours,concat(em.first_name,' ',em.last_name) as username,sp.created_by as emp_id from  tbl_project_level_allocation pa left join tbl_sub_project sp  on sp.spid = pa.project_id left join tbl_level_master lm on lm.level_id = pa.level_id left join tbl_employee em on em.emp_id = sp.created_by where spid = {$project_id}")->queryAll();
         $baseurl =  Yii::app()->getBaseUrl(true);
         
         $message = "";
@@ -438,21 +438,20 @@ class SubProjectController extends Controller {
             $bcc = array();
 
             // $to[] = array("email" => "kpanse@cisco.com", "name" => "Krishnaji");  
-            if($baseurl == "http://localhost:8012/timesheet" || $baseurl == "https://staging.cnaap.net/timesheet")
+            $manager_details = Yii::app()->db->createCommand("select parent_id,rm.emp_id,concat(first_name,' ',last_name) as username, email from tbl_access_role_master rm inner join tbl_employee em on em.emp_id = rm.parent_id where rm.emp_id = {$projectDetails[0]['emp_id']}")->queryRow();
+            
+            if($baseurl == "http://localhost:8081/timesheet" || $baseurl == "https://staging.cnaap.net/timesheet")
             {
 
-                $to[] = array("email" => "ridhisha.joshi@infinitylabs.in", "name" => "Ridhisha Joshi");
-                $to[] = array("email" => "mudliyarp@hcl.com", "name" => "Prabhakar");                
-                $to[] = array("email" => "Vinay.Nataraj@infinitylabs.in", "name" => "Vinay Nataraj");
-                $to[] = array("email" => "sachin.potdar@infinitylabs.in", "name" => "Sachin Potdar");   
+                $to[] = array("email" => $manager_details['email'], "name" => $manager_details['username']);  
             }else{
 
-                $to[] = array("email" => "kpanse@cisco.com", "name" => "Krishnaji");
-                $bcc[] = array("email" => "Vinay.Nataraj@infinitylabs.in", "name" => "Vinay Nataraj");
-                $bcc[] = array("email" => "sachin.potdar@infinitylabs.in", "name" => "Sachin Potdar");
+                //$to[] = array("email" => "kpanse@cisco.com", "name" => "Krishnaji");
+                //$bcc[] = array("email" => "Vinay.Nataraj@infinitylabs.in", "name" => "Vinay Nataraj");
+                //$bcc[] = array("email" => "sachin.potdar@infinitylabs.in", "name" => "Sachin Potdar");
                 
             }
-
+            
             $subject = "CNAAP New Project Approval";
             // echo $message;die;
             echo CommonUtility::sendmail($to, null, $from, $from_name, $subject, $message, $cc, null, $bcc);
