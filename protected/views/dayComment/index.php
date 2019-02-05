@@ -78,17 +78,30 @@ Yii::app()->clientScript->registerCssFile(
                                        $list=array();
                                        $date =  date('Y-m-d');
                                        $date = explode("-", $date);
-                                        $month = $date[1];
-                                        $year = $date[0];
-                                        
-                                         $number = cal_days_in_month(CAL_GREGORIAN,$month, $year);
+                                       $prev_date = date('Y-m-d', strtotime('-1 months'));
+                                       $prev_date = explode("-", $prev_date);
 
+                                        $month = $date[1];
+                                        $prev_month = $prev_date[1];
+                                        $year = $date[0];
+                                        $prev_year = $prev_date[0];
+                                        $number = cal_days_in_month(CAL_GREGORIAN,$month, $year);
+                                        $prev_number = cal_days_in_month(CAL_GREGORIAN,$prev_month, $prev_year);
+                                         
+
+                                        for($i=1; $i<=$prev_number; $i++)
+                                        {
+                                            $time=mktime(12, 0, 0, $prev_month, $i, $prev_year);          
+                                            if (date('m', $time)==$prev_month)       
+                                                $list[date('Y-m-d',$time)]=date('Y-m-d', $time);
+                                        }
                                         for($d=1; $d<=$number; $d++)
                                         {
                                             $time=mktime(12, 0, 0, $month, $d, $year);          
                                             if (date('m', $time)==$month)       
                                                 $list[date('Y-m-d',$time)]=date('Y-m-d', $time);
                                         }
+
 					echo CHtml::dropDownList('selecting_weeks', $date,$list, array('class' => 'selecting_weeks', 'empty' => 'Select Value','options' => array($selecting_date => array('selected' => true))));?>
                     <a id="changeurl" style="display:none;border-radius: 4px;    padding: 6px 12px;font-size:14px;margin-left:10px;text-decoration:none;background: #000;color:#fff">Get Records</a>
                     <?php 
