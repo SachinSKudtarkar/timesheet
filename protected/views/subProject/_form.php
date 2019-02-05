@@ -221,10 +221,15 @@ $img_path = Yii::app()->theme->baseUrl . "/img/add_image.png";
         <?php } ?>
         <?php echo $form->hiddenField($model, 'hoursArray'); ?>
     <?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save', array('id' => 'ISSUB')); ?>
-    <?php if(!$model->isNewRecord && (Yii::app()->session['login']['user_id'] == '6' || Yii::app()->session['login']['user_id'] == '3616')  && $model->approval_status == '2') { 
-        $baseurl = Yii::app()->getBaseUrl(true);
-        $approvalLink = "{$baseurl}/subproject/updateStatus/1{$model->spid}";
-        $rejectLink = "{$baseurl}/subproject/updateStatus/0{$model->spid}"; 
+    <?php 
+        $logged_user_id = Yii::app()->session['login']['user_id'];
+        $resourcesGroup = Yii::app()->db->createCommand("select group_concat(emp_id) as resources from tbl_access_role_master where parent_id = {$logged_user_id}")->queryAll();
+        $resourcesArr = explode(',',$resourcesGroup[0]['resources']);
+        
+        if(!$model->isNewRecord && (Yii::app()->session['login']['user_id'] == '6' || Yii::app()->session['login']['user_id'] == '3616' || in_array($model->created_by, $resourcesArr))  && $model->approval_status == '2') { 
+            $baseurl = Yii::app()->getBaseUrl(true);
+            $approvalLink = "{$baseurl}/subproject/updateStatus/1{$model->spid}";
+            $rejectLink = "{$baseurl}/subproject/updateStatus/0{$model->spid}"; 
 
     ?>
         <a href="<?php echo $approvalLink; ?>" class="abutton">Approve</a>
