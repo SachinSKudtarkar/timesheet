@@ -37,10 +37,10 @@ class ReportCommand extends CConsoleCommand
                 $data[$key]['date'] = $val['todaydate'];
                 $data[$key]['in'] = $val['in_time'];
                 $data[$key]['out'] = $val['out_time'];
-                if (!empty($val['in_time']) && !empty($val['out_time'])) {
+                if (!empty($val['in_time']) && !empty($val['out_time']) && $val['out_time'] != '00:00:00' && $val['in_time'] != '00:00:00') {
                     $data[$key]['total'] = $this->getTimeDiff($val['in_time'], $val['out_time']);
                 } else {
-                    $data[$key]['total'] = "";
+                    $data[$key]['total'] = "00:00:00";
                 }
             }
             $header = array('Employee Name', 'Date', 'In Time', 'Out Time', 'Total Hours');

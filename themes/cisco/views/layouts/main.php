@@ -106,7 +106,7 @@ $access_type = AccessRoleMaster::model()->findByAttributes(array('emp_id' => $em
                                                 'active' => (Yii::app()->controller->id == 'daycomment' && Yii::app()->controller->action->id == 'index'),
                                             ),
                                             array('label' => 'Allocate Resource for Program',
-                                                'url' => array('//resourceallocationprojectwork/create'),
+                                                'url' => array('//resourceallocationprojectwork/admin'),
                                                 'encodeLabel' => false,
                                                 'visible' => 1,
                                                 'active' => (Yii::app()->controller->id == 'daycomment' && Yii::app()->controller->action->id == 'index'),

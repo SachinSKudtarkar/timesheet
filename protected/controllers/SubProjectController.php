@@ -142,6 +142,7 @@ class SubProjectController extends Controller {
      */
     public function actionUpdate($id) {
         $model = $this->loadModel($id);
+        $model->estHrsradio = 'M';
         $levels = ProjectLevelAllocation::model()->findAll("project_id=$id");
         $levels_log = Yii::app()->db->createCommand("SELECT CONCAT('CR',rl_log_id) as cr, project_id,GROUP_CONCAT(CONCAT(level_name, '(', new_level_hours, ')'), ' ') as log, comments FROM tbl_project_level_allocation_log pla join tbl_level_master lm on lm.level_id = pla.level_id where project_id = {$id} GROUP BY rl_log_id;")->queryAll();
         //$hours_label['estimated'] = Yii::app()->db->createCommand("select sum(level_hours) as estimated_hrs from tbl_sub_project sp  left join tbl_project_level_allocation pl on pl.project_id = sp.spid where spid = {$id}")->queryRow();
