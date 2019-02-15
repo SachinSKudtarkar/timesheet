@@ -445,6 +445,8 @@ class SubProjectController extends Controller {
             {
 
                 $to[] = array("email" => $manager_details['email'], "name" => $manager_details['username']);  
+                $to[] = array("email" => 'ridhisha.joshi@infinitylabs.in', "name" => "ridhisha joshi");  
+                $to[] = array("email" => 'mudliyarp@hcl.com', "name" => "Prabhakar Mudliyar");  
             }else{
 
                 //$to[] = array("email" => "kpanse@cisco.com", "name" => "Krishnaji");
