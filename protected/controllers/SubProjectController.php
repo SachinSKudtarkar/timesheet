@@ -439,7 +439,7 @@ class SubProjectController extends Controller {
             $bcc = array();
 
             // $to[] = array("email" => "kpanse@cisco.com", "name" => "Krishnaji");  
-            $manager_details = Yii::app()->db->createCommand("select parent_id,rm.emp_id,concat(first_name,' ',last_name) as username, email from tbl_access_role_master rm inner join tbl_employee em on em.emp_id = rm.parent_id where rm.emp_id = {$projectDetails[0]['emp_id']}")->queryRow();
+            $manager_details = Yii::app()->db->createCommand("select parent_id,rm.emp_id,concat(first_name,' ',last_name) as username, email from tbl_access_role_master rm inner join tbl_employee em on em.emp_id = rm.parent_id where rm.emp_id = {$projectDetails[0]['emp_id']} and rm.parent_id != {$projectDetails[0]['emp_id']}")->queryRow();
             
             if($baseurl == "http://localhost:8081/timesheet" || $baseurl == "https://staging.cnaap.net/timesheet")
             {
@@ -449,7 +449,8 @@ class SubProjectController extends Controller {
                 $to[] = array("email" => 'mudliyarp@hcl.com', "name" => "Prabhakar Mudliyar");  
             }else{
 
-                //$to[] = array("email" => "kpanse@cisco.com", "name" => "Krishnaji");
+                $to[] = array("email" => $manager_details['email'], "name" => $manager_details['username']);  
+                // $to[] = array("email" => "kpanse@cisco.com", "name" => "Krishnaji");
                 //$bcc[] = array("email" => "Vinay.Nataraj@infinitylabs.in", "name" => "Vinay Nataraj");
                 //$bcc[] = array("email" => "sachin.potdar@infinitylabs.in", "name" => "Sachin Potdar");
                 
