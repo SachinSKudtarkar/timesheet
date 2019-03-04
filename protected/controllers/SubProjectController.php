@@ -470,7 +470,7 @@ class SubProjectController extends Controller {
         $empp_id = $projectArr['created_by'];
         $approvalDetails = Yii::app()->db->createCommand("select count(*) as count from tbl_access_role_master where parent_id = {$parent_id} and emp_id = {$empp_id}")->queryRow();
         
-        if(Yii::app()->session['login']['user_id'] == '3616' || Yii::app()->session['login']['user_id'] == '6' || $approvalDetails['count'] > 1){ 
+        if(Yii::app()->session['login']['user_id'] == '3616' || Yii::app()->session['login']['user_id'] == '6' || $approvalDetails['count'] > 0){ 
             $projectDetails = Yii::app()->db->createCommand("update tbl_sub_project set approval_status = {$status} where spid={$project_id} and approval_status = 2")->execute();        
             
             if($status == 1){
