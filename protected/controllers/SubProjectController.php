@@ -445,8 +445,8 @@ class SubProjectController extends Controller {
             {
 
                 $to[] = array("email" => $manager_details['email'], "name" => $manager_details['username']);  
-                $to[] = array("email" => 'ridhisha.joshi@infinitylabs.in', "name" => "ridhisha joshi");  
-                $to[] = array("email" => 'mudliyarp@hcl.com', "name" => "Prabhakar Mudliyar");  
+                // $to[] = array("email" => 'ridhisha.joshi@infinitylabs.in', "name" => "ridhisha joshi");  
+                // $to[] = array("email" => 'mudliyarp@hcl.com', "name" => "Prabhakar Mudliyar");  
             }else{
 
                 $to[] = array("email" => $manager_details['email'], "name" => $manager_details['username']);  
@@ -463,9 +463,14 @@ class SubProjectController extends Controller {
 
     public function actionupdateStatus($id)
     {
-        if(Yii::app()->session['login']['user_id'] == '3616' || Yii::app()->session['login']['user_id'] == '6'){ 
-            $status = $id[0];
-            $project_id = substr($id, 1);
+        $status = $id[0];
+        $project_id = substr($id, 1);
+        $projectArr = Yii::app()->db->createCommand("select created_by from tbl_sub_project where spid= {$project_id}")->queryRow();
+        $parent_id = Yii::app()->session['login']['user_id'];
+        $empp_id = $projectArr['created_by'];
+        $approvalDetails = Yii::app()->db->createCommand("select count(*) as count from tbl_access_role_master where parent_id = {$parent_id} and emp_id = {$empp_id}")->queryRow();
+        
+        if(Yii::app()->session['login']['user_id'] == '3616' || Yii::app()->session['login']['user_id'] == '6' || $approvalDetails['count'] > 1){ 
             $projectDetails = Yii::app()->db->createCommand("update tbl_sub_project set approval_status = {$status} where spid={$project_id} and approval_status = 2")->execute();        
             
             if($status == 1){
