@@ -114,7 +114,7 @@ $('.search-form form').submit(function(){
 		*/
 		array(
             'class'=>'CButtonColumn',
-            'template' => '{update}{delete}',
+            'template' => '{update}',
             'buttons' => array
                 ('update' => array
                     (
@@ -122,12 +122,12 @@ $('.search-form form').submit(function(){
                     'url' => 'Yii::app()->createUrl("/pidapproval/update", array("id"=>$data["pid_approval_id"]))',
                     'visible' => "CHelper::isAccess('MANAGER','update')",
                 ),
-                'delete' => array
-                    (
-                    'label' => 'Delete',
-                    'url' => 'Yii::app()->createUrl("/pidapproval/delete", array("id"=>$data["pid_approval_id"]))',
-                    'visible' => "CHelper::isAccess('MANAGER','delete')",
-                ),
+                // 'delete' => array
+                //     (
+                //     'label' => 'Delete',
+                //     'url' => 'Yii::app()->createUrl("/pidapproval/delete", array("id"=>$data["stask_id"]))',
+                //     'visible' => "CHelper::isAccess('MANAGER','delete')",
+                // ),
             ),
         ),
 	),
