@@ -40,7 +40,7 @@ $this->menu = array(
 
         <div class="mgr">
             <h1>Select Manager</h1>
-            <?php  $employeeData = Employee::model()->findAll(array('select' => "emp_id,first_name,last_name,email", 'order' => 'first_name', 'condition' => 'is_active=1 and is_password_changed="yes"'));
+            <?php  $employeeData = Employee::model()->findAll(array('select' => "emp_id,first_name,last_name,email", 'order' => 'first_name', 'condition' => 'is_active=1'));
             $emp_list = array();
             foreach ($employeeData as $key => $value) {
                 $emp_list[$value['emp_id']] = $value['first_name'] . " " . $value['last_name']." (".$value['email'].")";
