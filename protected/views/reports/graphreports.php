@@ -36,10 +36,10 @@ $cs = Yii::app()->getClientScript();
         <div class="span6" style="margin-left: 40%">
             <table class="table table-bordered text-center">
                 <tr>
-                    <th><a><h1 data-toggle="modal" data-target="#timesheetModal" class="timesheetBtn" data-loaddata="1">Project Report </h1></a>
+                    <th><a class="btn btn-primary"><h1 data-toggle="modal" data-target="#timesheetModal" class="" data-loaddata="1">Project Report </h1></a>
                         <input type="hidden" id="project_id">
                     </th>
-                    <th><a><h1 data-toggle="modal" data-target="#timesheetModal" class="timesheetBtn" data-loaddata="2">Timesheet Report </h1></a>
+                    <th><a class="btn btn-primary"><h1 data-toggle="modal" data-target="#timesheetModal" class="" data-loaddata="2">Timesheet Report </h1></a>
                        
                         <input type="hidden" id="loaddata">
                     </th>
