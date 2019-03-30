@@ -369,7 +369,7 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.stask_id";
         $condition = $_GET['DayComment'];
         $limit = '';
         if (isset($_REQUEST['DayComment'])) {
-            
+
             $day = trim($condition['day']);
             if($day){
                 $whrcondition = "DATE_FORMAT(t.day,'%Y-%m-%d') like '%{$day}%'";
@@ -402,14 +402,14 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.stask_id";
             $sql1 = "select t.id as day_id,t.day,t.comment,t.hours,CONCAT(first_name,' ',last_name) as name,sb.sub_project_name,pm.project_name,st.sub_task_name,t.logged_hrs from tbl_day_comment as t
                   INNER JOIN tbl_project_management pm ON (t.pid = pm.pid) INNER JOIN tbl_employee emp ON (emp.emp_id = t.emp_id) LEFT join tbl_sub_project sb ON (sb.spid=t.spid )left Join tbl_sub_task as st on (st.stask_id = t.stask_id)
                   $where  order by id, day DESC";
-            
+
             $search_data = Yii::app()->db->createCommand($sql1)->queryAll();
         }else{
 
             $sql1 = "select t.id as day_id,t.day,t.comment,t.hours,CONCAT(first_name,' ',last_name) as name,sb.sub_project_name,pm.project_name,st.sub_task_name,t.logged_hrs from tbl_day_comment as t
                   INNER JOIN tbl_project_management pm ON (t.pid = pm.pid) INNER JOIN tbl_employee emp ON (emp.emp_id = t.emp_id) LEFT join tbl_sub_project sb ON (sb.spid=t.spid )left Join tbl_sub_task as st on (st.stask_id = t.stask_id)
                     order by id DESC";
-                    
+
             $search_data = Yii::app()->db->createCommand($sql1)->queryAll();
             // echo '<pre>';
             // print_r($search_data);die;
@@ -642,6 +642,11 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.stask_id";
         $pidsarray = array_unique($pidsarray);
         if ($rd_day == '') {
             $rd_day = date('d/m/Y');
+        }
+
+        if(date('Y-m-d', strtotime($selected_date)) != date('Y-m-d')){
+            Yii::app()->user->setFlash('error', "Invalid Date Selected.");
+            $this->redirect(array('daycomment/index'));
         }
 
         $projectsName = array_filter($projectsName);
@@ -1084,7 +1089,7 @@ where  st.emp_id = {$userId} group by st.stask_id"; //pa.approved = 2  and
                  $query = "select * from tbl_sub_task as st inner join tbl_pid_approval as pa on (st.pid_approval_id = pa.pid_id)"
                     . " where  st.sub_project_id={$spid} and emp_id ={$userId} "; // pa.approved = 2 and
             $res = Yii::app()->db->createCommand($query)->queryAll();
-            
+
             }else{
                  $query = "select * from tbl_sub_task as st inner join tbl_pid_approval as pa on (st.pid_approval_id = pa.pid_id)"
                     . " where emp_id ={$userId} "; // pa.approved = 2 and
@@ -1121,11 +1126,11 @@ where  st.emp_id = {$userId} group by st.stask_id"; //pa.approved = 2  and
                 $hours[$val['stask_id']] = $this->getTimeToHrs($timeRem);
             }
 
-            
+
             foreach ($newData as $key => $val) {
-                
+
                 if($val['stask_id'] == $stkid && !empty($stkid)){
-                    
+
                     // echo $val['hours'].'my<br>';
                     $nn[] = $val;
                 }else{
@@ -1170,8 +1175,8 @@ where  st.emp_id = {$userId} group by st.stask_id"; //pa.approved = 2  and
                 echo json_encode($data);
             }else{
                 return $data['result'];
-            } 
-                
+            }
+
         }
        // die();
     }
@@ -1350,7 +1355,7 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.sub_project_i
         $model->user_name = $subTaskDetails['name'];
 
         // Uncomment the following line if AJAX validation is needed
-        
+
         // $this->performAjaxValidation($model);
         $logmodel = Yii::app()->db->createCommand("SELECT * FROM tbl_day_comment_approved_hrs_log where stask_id = {$model->stask_id} order by created_at desc")->queryAll();
 

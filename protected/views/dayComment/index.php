@@ -41,7 +41,7 @@ Yii::app()->clientScript->registerCssFile(
 
 <div class="info well well-large">
     <h1>Time Sheet Notice </h1>
-    <p>For multiple task add by  clicking <code>+ sign</code> ,  mention <code>shift</code> and  Then click <code>Save Button</code> to save changes, <code>You can also edit current Month task </code> 
+    <p>For multiple task add by  clicking <code>+ sign</code> ,  mention <code>shift</code> and  Then click <code>Save Button</code> to save changes, <code>You can also edit current Month task </code>
     </p>
 </div>
 
@@ -62,11 +62,11 @@ Yii::app()->clientScript->registerCssFile(
 					} else {
 						$selecting_date = date('Y-m-d');
 					}
-                                   
+
 //                                        echo $selecting_date;
-                                        
+
 //					echo CHTML::label('Select Day :', '', array('style' => 'width:80px; font-weight:bold;'));
-//				
+//
 //					for ($mondayCounter = 4; $mondayCounter >= 0; $mondayCounter--) {
 //						$da = date('d-m-Y', strtotime(" -" . $mondayCounter . "monday this week"));
 //						$mondayList[date('Y-m-d', strtotime(" -" . $mondayCounter . "monday this week"))] = $da . " to " . date('d-m-Y', strtotime("+6 day", strtotime($da)));
@@ -74,7 +74,7 @@ Yii::app()->clientScript->registerCssFile(
 //					//add 1 week additional
 //					$da = date('d-m-Y', strtotime("monday next week"));
 //					$mondayList[date('Y-m-d', strtotime("monday next week"))] = $da . " to " . date('d-m-Y', strtotime("+6 day", strtotime($da)));
-                                        
+
                                        $list=array();
                                        $date =  date('Y-m-d');
                                        $date = explode("-", $date);
@@ -87,24 +87,25 @@ Yii::app()->clientScript->registerCssFile(
                                         $prev_year = $prev_date[0];
                                         $number = cal_days_in_month(CAL_GREGORIAN,$month, $year);
                                         $prev_number = cal_days_in_month(CAL_GREGORIAN,$prev_month, $prev_year);
-                                         
+
 
                                         for($i=1; $i<=$prev_number; $i++)
                                         {
-                                            $time=mktime(12, 0, 0, $prev_month, $i, $prev_year);          
-                                            if (date('m', $time)==$prev_month)       
+                                            $time=mktime(12, 0, 0, $prev_month, $i, $prev_year);
+                                            if (date('m', $time)==$prev_month)
                                                 $list[date('Y-m-d',$time)]=date('Y-m-d', $time);
                                         }
                                         for($d=1; $d<=$number; $d++)
                                         {
-                                            $time=mktime(12, 0, 0, $month, $d, $year);          
-                                            if (date('m', $time)==$month)       
+                                            $time=mktime(12, 0, 0, $month, $d, $year);
+                                            if (date('m', $time)==$month)
                                                 $list[date('Y-m-d',$time)]=date('Y-m-d', $time);
                                         }
+                                        $list = [];
+                                        $list[] = date('Y-m-d');
 
-					echo CHtml::dropDownList('selecting_weeks', $date,$list, array('class' => 'selecting_weeks', 'empty' => 'Select Value','options' => array($selecting_date => array('selected' => true))));?>
-                    <a id="changeurl" style="display:none;border-radius: 4px;    padding: 6px 12px;font-size:14px;margin-left:10px;text-decoration:none;background: #000;color:#fff">Get Records</a>
-                    <?php 
+					echo CHtml::dropDownList('selecting_weeks', $date,$list, array('class' => 'selecting_weeks','options' => array($selecting_date => array('selected' => true))));?>
+                                        <?php
 					$btnShow = FALSE;
 					//$is_submitted = TRUE;
 //					if (strtotime($selecting_date) >= strtotime("monday this week") ) {
@@ -112,13 +113,13 @@ Yii::app()->clientScript->registerCssFile(
 //					}else if (strtotime($selecting_date) <= strtotime("monday this week") ) {
 //						$is_submitted = TRUE;
 //					}
-					
+
 					$is_submitted = false;
 					$btnShow = true;
-                                        
-                                        
+
+
 				?>
-                                                      
+
 			</div>
         </div>
         <hr style=" margin-top: 0px; margin-bottom: 3px;"/>
@@ -126,13 +127,13 @@ Yii::app()->clientScript->registerCssFile(
 
     <div class="row">
                             <div class="span"  style="margin-left:5px;">
-							<?php 
+							<?php
 					 $day_ne = preg_replace('/-/','_', $selecting_date);
 							foreach ($arrData[$day_ne] as $key=>$eachproject) {
 								$shift = $eachproject['shift'];
 							}
 
-				
+
 
 								echo CHTML::label('shift :', '', array('style' => 'width:50px;font-weight:bold; '));?>
 
@@ -148,7 +149,7 @@ Yii::app()->clientScript->registerCssFile(
     <?php
     echo "<input type='hidden' name='selected_date' value='{$selecting_date}' />";
     $img_path = Yii::app()->theme->baseUrl . "/img/add_image.png";
-    
+
 //    for ($k = 0; $k <= 6; $k++) {
 //        $generte_date = strtotime("+{$k} day", strtotime($selecting_date));
 //        $date = date("Y-m-d", $generte_date);
@@ -156,22 +157,22 @@ Yii::app()->clientScript->registerCssFile(
 //
 //		if(key_exists($date,$arrSubmitted))
 //			$is_submitted = $arrSubmitted[$date];
-   
+
                 $generte_date = strtotime($selecting_date);
 		 $date_id = date("Y_m_d", $generte_date);
-                
-               
-		
+
+
+
 		if(key_exists($date_id, $arrData)) { ?>
 				<div class="main_daycomments">
 			<?php
 			$i = 0;
-		
-		
+
+
 			foreach ($arrData[$date_id] as $key=>$eachproject) {
-				
+
 				// CHelper::debug($eachproject);
-				
+
 				$tmpcls = ($i > 0) ? '' : '';
 				$nxt = $i + 1;
 				$day = explode(" ", $eachproject['day'])[0];
@@ -187,12 +188,12 @@ Yii::app()->clientScript->registerCssFile(
 					$pid = $eachproject['pid'];
 				}
 					?>
-					
+
 				<!-- 	<div class="row hdshow_<?php //echo $date_id ."_". $i . " " . $tmpcls; ?>" id="<?php //echo $date_id ."_". $i . " " . $tmpcls; ?>" > -->
 				<div>
-                                   
+
 						<div class="row" >
-                                                   
+
 
 							<div class="span2"  style="margin-left:10px;">
 								<?php echo "<b>" . date("l", $generte_date) . "</b> <br /> (" . date("d-m-Y", $generte_date) . " )"; ?>
@@ -218,9 +219,9 @@ Yii::app()->clientScript->registerCssFile(
 							</div>
 							<div class="span1" style="margin-left:5px;">
 
-                                <?php 
+                                <?php
                                     $difference = '';
-                                    $difference = DayComment::model()->getDifference($eachproject['spid']['selected'],$eachproject['stask_id']['selected']); 
+                                    $difference = DayComment::model()->getDifference($eachproject['spid']['selected'],$eachproject['stask_id']['selected']);
                                     // print_r($difference);die;
                                 ?>
 								<?php echo CHTML::label('Time Remaining', '', array('style' => 'width:40px;font-weight:bold;margin-top:-10px ')); ?>
@@ -241,34 +242,34 @@ Yii::app()->clientScript->registerCssFile(
 	                                    	}else{
 	                                    		$hhrs = $difference['estimated'];
 	                                    	}
-	                                        $hrs = $hhrs < 23 ? $hhrs  : 23;    
+	                                        $hrs = $hhrs < 23 ? $hhrs  : 23;
 	                                    }
 
 	                                    for($h=0; $h<=$hrs; $h++) {
 											$h = (strlen($h) < 2) ? "0".$h : $h;
 											$arrHrs[$h] = $h;
 										}
-										
+
 										echo CHTML::dropDownList('hrs[]', $eachproject['hrs'], $arrHrs, array('style' => 'width:50px;  ', 'class'=>'wrkhrsClass', 'disabled' => ($is_submitted ? 'disabled' : ''), 'id' => 'wrkhrsClass' . $date_id ."_". $pid));
-									
+
 								?>
 							</div>
 							<div class="span1" style="margin-left:10px; ">
 								<?php echo CHTML::label('Minutes', '', array('style' => 'width:50px;font-weight:bold; ')); ?>
 								<?php
-									
+
 										// $hidden = '';
 										$arrMnts = array();
 										for($m=0; $m<=59; $m+=5) {
 											$m = (strlen($m) < 2) ? "0".$m : $m;
 											$arrMnts[$m] = $m;
 										}
-										// if($eachproject['remarks'] != null){	
+										// if($eachproject['remarks'] != null){
 										// 	echo '<p class="texthours">'.$eachproject['mnts'].'</p>';
 										// 	$hidden = ' hidden';
 										// }
 										echo CHTML::dropDownList('mnts[]', $eachproject['mnts'], $arrMnts, array('style' => 'width:50px;  ', 'class'=>'wrkmntClass',  'disabled' => ($is_submitted ? 'disabled' : ''), 'id' => 'wrkminsClass' . $date_id ."_". $pid));
-									
+
 								?>
 							</div>
 							<div class="span2">
@@ -287,10 +288,10 @@ Yii::app()->clientScript->registerCssFile(
 								}
 								?>
 							</div>
-						</div>	
-						
+						</div>
+
 						<hr style=" margin-top: 0px; margin-bottom: 3px;"/>
-                        
+
 					</div>
 				<?php
 				$i++;
@@ -298,8 +299,8 @@ Yii::app()->clientScript->registerCssFile(
 			?>
 			</div>
 		<?php }else {
-                    
-                    
+
+
                     ?>
 
 			<div class="main_daycomments">
@@ -307,16 +308,16 @@ Yii::app()->clientScript->registerCssFile(
 			$i = 0;
 
 
-			
+
 			foreach ($allProjects as $eachproject) {
 				$tmpcls = ($i > 0) ? '' : '';
 				$nxt = $i + 1;
 				?>
-				
+
 					<!-- <div class="row hdshow_<?php //echo $date_id ."_". $i . " " . $tmpcls; ?>"  > -->
 					<div>
 						<div class="row" >
-                                                    
+
 							<div class="span2"  style="margin-left:10px;">
 								<?php echo "<b>" . date("l", $generte_date) . "</b> <br /> (" . date("d-m-Y", $generte_date) . " )"; ?>
 								<?php echo CHTML::hiddenField('Date[]', date("Y-m-d", $generte_date), array('readonly' => 'readonly', 'style' => 'width:90px;'));
@@ -333,7 +334,7 @@ Yii::app()->clientScript->registerCssFile(
 									echo CHTML::dropDownList('SubProjectName[]', 'spid', $result, array('class'=>'sub-project','style' => 'width:150px;  ', 'prompt' => 'Please select  Project', 'disabled' => ($is_submitted ? 'disabled' : ''), 'id' => 'subproclass' . $date_id ."_". $eachproject['pid']));
 								?>
 							</div>
-							
+
 							<div class="span2"  style="margin-left:5px;">
 								<?php echo CHTML::label('Task :', '', array('style' => 'width:90px;font-weight:bold; ')); ?>
 								<?php
@@ -345,7 +346,7 @@ Yii::app()->clientScript->registerCssFile(
 								<?php echo CHTML::label('Time Remaining', '', array('style' => 'width:40px;font-weight:bold;margin-top:-10px ')); ?>
 								<?php echo CHTML::textField('rem_hrs', '', array('readonly' => 'readonly', 'class' => 'rem_hrs','style' => 'width:50px;color:#f00;','id' => 'remhrs' . $date_id ."_". $eachproject['pid']));
 								?>
-							</div>	
+							</div>
 							<div class="span1" style="margin-left:10px; ">
 								<?php echo CHTML::label('Hour', '', array('style' => 'width:50px;font-weight:bold; ')); ?>
 								<?php
@@ -472,17 +473,17 @@ Yii::app()->clientScript->registerCssFile(
 		clonned.find('#subproclass'+oldId).each(function() {
 			$(this).attr('id',$(this).attr('id').replace('subproclass'+oldId,'subproclass'+newId));
 		});
-		
+
 		clonned.find('#subtasks'+oldId).each(function() {
             $(this).attr('id',$(this).attr('id').replace('subtasks'+oldId,'subtasks'+newId));
-		      
-              
+
+
         });
 
 		clonned.find('#wrkhrs'+oldId).each(function() {
             $(this).attr('id',$(this).attr('id').replace('wrkhrs'+oldId,'wrkhrs'+newId));
 		});
-		
+
 		clonned.find('#wrkhrsClass'+oldId).each(function() {
             $(this).attr('id',$(this).attr('id').replace('wrkhrsClass'+oldId,'wrkhrsClass'+newId));
 		});
@@ -490,7 +491,7 @@ Yii::app()->clientScript->registerCssFile(
 		clonned.find('#wrkminsClass'+oldId).each(function() {
             $(this).attr('id',$(this).attr('id').replace('wrkminsClass'+oldId,'wrkminsClass'+newId));
 		});
-		
+
 
 		clonned.find('#remhrs'+oldId).each(function() {
 
@@ -513,9 +514,9 @@ Yii::app()->clientScript->registerCssFile(
 	$(document).on('change','.proclass',function(){
 		if($(this).val() != '')
        	{
-       		var thisId = $(this).attr('id');           
+       		var thisId = $(this).attr('id');
            	var sub_id=$(this).val();
-			
+
            	var nextcls = $(this).attr('nxt');
            //	var this = $(this).parent('id');
 
@@ -542,7 +543,7 @@ Yii::app()->clientScript->registerCssFile(
 							//var workhours = data.workhours;
 	                        $.each(data.result, function(key, val) {
 	                            dropDown+='<option value='+key+'>'+val+'</option>';
-								//localStorage.setItem( 'hours-'+key, workhours[key] );								
+								//localStorage.setItem( 'hours-'+key, workhours[key] );
 
 	                        });
 							//console.log(dropDown);
@@ -596,7 +597,7 @@ Yii::app()->clientScript->registerCssFile(
        {
 
            var thisId = $(this).attr('id');
-           
+
            var sub_id=$(this).val();
           //alert('subproclass'+thisId);
            $('#subproclass'+thisId).removeAttr('disabled');
@@ -642,7 +643,7 @@ Yii::app()->clientScript->registerCssFile(
          	var thisId = $(this).attr('id');
          	var stkid = $(this).data('stkid');
            var is = thisId.substr(11, 13);
-           var sub_id=$(this).val(); 
+           var sub_id=$(this).val();
            //  alert(is);
            $('#subtasks'+is).removeAttr('disabled');
            $.ajax({
@@ -661,12 +662,12 @@ Yii::app()->clientScript->registerCssFile(
 			   console.log(data);
                    if(data.status=='SUCCESS')
                    {
-                   	 
+
                         var dropDown = '<option value=>Please Select Sub Project</option>';
 						//var workhours = data.workhours;
                         $.each(data.result, function(key, val) {
                             dropDown+='<option value='+key+' hrmin='+data.workhours[key]+'>'+val+'</option>';
-							
+
 
                         });
 						 // $(this).parents('.row').find('.sub-task').html(dropDown);
@@ -681,10 +682,10 @@ Yii::app()->clientScript->registerCssFile(
 
        }
     });
-	
+
 
 	$(document).on('change', '.sub-task', function(){
-		
+
 		//console.log('here')
 		/*var hrs = 0;
 		var hrtime = 0;
@@ -701,7 +702,7 @@ Yii::app()->clientScript->registerCssFile(
 		}
 		if(hrs>24)
 		hrs=23;
-		
+
 		var optstr = '';
 		var optminstr = '';
 		for(var h=0;h<=hrs;h++){
@@ -714,13 +715,13 @@ Yii::app()->clientScript->registerCssFile(
 		$('#wrkhrsClass'+thisid[1]).html(optstr);
 		$('#wrkminsClass'+thisid[1]).html(optminstr);*/
 	});
-	
+
 	//prab
-	
+
     $(window).load(function(e){
 		// $('.sub-task').change();
-	}); 
-	
+	});
+
 	$(document).on('change', '.sub-task', function(e){
         var changeid = $(this).attr('id');
         var flag = false;
@@ -737,9 +738,9 @@ Yii::app()->clientScript->registerCssFile(
             }
             if(this.value > 0)
             {
-            	values.push(this.value);	
+            	values.push(this.value);
             }
-            
+
         });
 
         if(flag == true)
@@ -749,7 +750,7 @@ Yii::app()->clientScript->registerCssFile(
 		var thisid = $(this).attr('id').split('subtasks');
 		onChangeSubTask(thisid);
 	});
-	
+
 	function onChangeSubTask(thisid)
 	{
 		var project_id = $('#proclass'+thisid[1]).val();
@@ -767,39 +768,39 @@ Yii::app()->clientScript->registerCssFile(
 					console.log(data);
                    if(data.status==1)
                    {
-                    
+
 						var hrs = data.hours;
 						if(hrs > 24)
 							hrs=23;
-						
+
 						var mins = data.mins;
 						var mins = 59;
-						
+
 						var optstr = '';
 						var optminstr = '';
 						for(var h=00;h<=hrs;h++){
-							
+
 							if(h < 10)
 							{
 								h = '0'+h;
 							}
-							
+
 							optstr = optstr+'<option value='+h+'>'+ h +'</option>';
 						}
 						for(var m=0;m<=mins;m++){
-							
+
 							if(m < 10)
 							{
 								m = '0'+m;
 							}
-							
+
 							optminstr = optminstr+'<option value='+m+'>'+m+'</option>';
 						}
-						
+
 						$('#wrkhrsClass'+thisid[1]).html(optstr);
 						$('#wrkminsClass'+thisid[1]).html(optminstr);
 						$('#remhrs'+thisid[1]).val(data.difference);
-						 
+
                    }
                },
                error: function(XMLHttpRequest, data, errorThrown){
@@ -807,17 +808,17 @@ Yii::app()->clientScript->registerCssFile(
         });
 	}
 	$(document).on('change', '.wrkhrsClass', function(){
-		
+
 		var thisattr = $(this).attr('id');
 		var maxhrs = $('#'+thisattr+' option:last').val();
 		var thisid = $(this).attr('id').split('wrkhrsClass');
 		if($(this).val()==maxhrs && $(this).val()!=23){
-			
+
 			//console.log('asdada'+thisid);
-			$('#wrkminsClass'+thisid[1]).attr('disabled',true);	
+			$('#wrkminsClass'+thisid[1]).attr('disabled',true);
 		}
 		else{
-			$('#wrkminsClass'+thisid[1]).removeAttr('disabled');	
+			$('#wrkminsClass'+thisid[1]).removeAttr('disabled');
 		}
 	});
            $('.datepicker').datepicker({
@@ -828,17 +829,6 @@ Yii::app()->clientScript->registerCssFile(
                 },
               }).attr('readonly','readonly');
 
-
-
-	$('.selecting_weeks').change(function()
-    {
-            var data = $('.selecting_weeks').val();
-            if(data != '')
-            {
-                $('#changeurl').attr('href',BASE_URL+'/daycomment/index/selecting_date/'+data).trigger('click');
-                $('#changeurl').css('display','inline-block');
-            }
-    });
 	$(document).on('change','.sub-project111',function(){
 		var sub_prj = $(this).val();
 		var hrs;
@@ -850,9 +840,9 @@ Yii::app()->clientScript->registerCssFile(
 		}
 		console.log(hrs);
 		console.log($(this).closest('.wrkhrsClass').val(hrs));
-		
+
 	});
-        
+
 function checkLength(){
     var textbox = document.getElementById('comment2018_06_25_9');
     if(textbox.value.length <= 10 && textbox.value.length >= 10){
@@ -867,10 +857,10 @@ function checkLength(){
 
        ", CClientScript::POS_READY);
     ?>
-    
+
 <script>
  $(document).ready(function () {
-  
+
   $('#addC').click(function (e) {
             var isValid = true;
             $('.DayComment,.wrkmntClass,.sub-task,.sub-project,.proclass').each(function () {
@@ -891,7 +881,7 @@ function checkLength(){
 
             $('.wrkhrsClass').each(function () {
             	var hrsId = $(this).attr('id');
-            	
+
             	var matched = hrsId.match(/wrkhrsClass(.*)/)
             	// alert(matched[1]);
             	if($(this).val() == '00' && $('#wrkminsClass'+matched[1]).val() == '00') {
@@ -914,15 +904,15 @@ function checkLength(){
                 	$('#wrkminsClass'+matched[1]).css({
                     	"border": "",
                     	"background": ""
-                	});	                     
+                	});
 	            }
             });
-            
+
             if (isValid == false)
                 e.preventDefault();
 
         });
-        
+
         // $(document).on('change','.proclass',function(){
 //      $(function () {
 //         $('.proclass').on('click', function () {
@@ -940,14 +930,14 @@ function checkLength(){
 //             }
 //         });
 //     });
-	
+
     // $("#selecting_weeks").on('change',function(){
     //     var date = $(this).val();
     //     alert(date);
     //     // alert('asdasd');document.location.href='https://www.google.com';return false;
     //     $('#changeurl').attr('href',window.location.href+'/foo');
     //     alert(window.location.href);return false;
-    // });	
+    // });
 });
 
 
@@ -966,7 +956,7 @@ function checkLength(){
        {
 
             var spid=$(this).val();
-           
+
             $.ajax({
                url: BASE_URL+'/daycomment/GetSubPStatus',
                type: 'POST',
@@ -981,7 +971,7 @@ function checkLength(){
                success: function(data)
                {
                	    $.each(val,function(data){
-          console.log(data);     
+          console.log(data);
 });
                	//alert(data);
                    if(data.status=='UNSUCCESS')
@@ -994,4 +984,4 @@ function checkLength(){
         });
 
        }
-    });--> 
+    });-->
