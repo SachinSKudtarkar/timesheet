@@ -137,7 +137,7 @@ class SubProject extends CActiveRecord
             $criteria->compare('updated_date',$this->updated_date,true);
             $criteria->compare('is_deleted',$this->is_deleted);
             $criteria->compare('project_name',$this->project_name);
-            $criteria->order = 'created_date desc';
+            $criteria->order = 'approval_status desc';
             $criteria->join = "INNER join tbl_project_management pr ON (pr.pid=t.pid) "
                     . " LEFT JOIN tbl_employee as cEmp on pr.created_by = cEmp.emp_id "
                     . " LEFT JOIN tbl_employee as mEmp on pr.updated_by = mEmp.emp_id ";

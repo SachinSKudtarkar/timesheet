@@ -108,6 +108,26 @@ $img_path = Yii::app()->theme->baseUrl . "/img/add_image.png";
 
                 </div>
             <?php } ?>
+
+            <?php 
+
+            if(!empty($newHours)){
+                $returnTable .= '<table class="table table-bordered" id="hoursTableU" style="border:1px solid blue;">';
+                $returnTable .= '<tr>';
+                $returnTable .= '<td>Hours To Be Added(After Approval)</td>';
+                foreach ($newHours as $row) {
+                    $est_hrs = $est_hrs + $row['level_hours'];          
+
+                    
+                    $returnTable .= '<td>'.$row['task_level'].'('.$row['level_hours'].')</td>';
+                    
+                }
+                $returnTable .= '<td><strong>Total '.$est_hrs.' Hours</strong></td>';
+                $returnTable .= '</tr>';    
+                $returnTable .= '</table>';
+                echo $returnTable;
+            }
+            ?>
             
             <div class="row" id="estimationBlock">
                 <?php if (isset($estimatedArr) && count($estimatedArr) > 0) {
@@ -330,7 +350,7 @@ $img_path = Yii::app()->theme->baseUrl . "/img/add_image.png";
                     
                     $("#filedetails").html('');
                     $("#modalhrs").html('');
-                    $("#SubProject_hoursArray").val(php_script_response.hrsArr);
+                    $("#SubProject_hoursArray").val(php_script_response.finalTHours);
                     $('#modalhrs').append(php_script_response.table); 
                     $("#filedetails").append(php_script_response.table);  
                 }
