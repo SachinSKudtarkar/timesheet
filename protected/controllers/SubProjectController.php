@@ -158,11 +158,14 @@ class SubProjectController extends Controller {
 
         $excelHours = $this->getExcelHours($model);
 
+        $newHours = Yii::app()->db->createCommand("select unqid,task_level,SUM(task_est_hrs) as level_hours, (select level_id from tbl_level_master where level_name LIKE task_level) as level_id from tbl_task_temp where unqid LIKE '%{$model->unqid}%' and task_status='NEW' and approval_status = '2' group by task_level")->queryAll();
+
+
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
 
         if (isset($_POST['SubProject'])) {
-            
+                        
             $model->attributes = $_POST['SubProject'];
             $model->project_id = $_POST['sub_project_id'];
             $model->updated_date = date('Y-m-d h:i:s');
@@ -180,43 +183,23 @@ class SubProjectController extends Controller {
                     
                 }elseif($radioArray == 'M') {
                     $postHrsArr = $_POST['group-a'];
+                    foreach ($postHrsArr as $key => $value) {
+                        $tasktemp = new TaskTitle();
+                        $tasktemp->unqid = $model->unqid;
+                        $tasktemp->task_title = "This is manual upload";
+                        $tasktemp->task_description = "This is manual upload";
+                        $tasklevelarr = Yii::app()->db->createCommand("select level_name from tbl_level_master where level_id = {$value['level_id']}")->queryRow();
+                        $tasktemp->task_level = $tasklevelarr['level_name']; 
+                        $tasktemp->task_est_hrs = $value['level_hours'];
+                        $tasktemp->approval_status = '2';
+                        $tasktemp->task_status = 'NEW';
+                        $tasktemp->created_at = Yii::app()->session["login"]["user_id"];
+                        $tasktemp->created_at = date("Y-m-d h:i:s");
+                        $tasktemp->save(false);
+                    }
                 }
                 
-                $checkLogCount = Yii::app()->db->createCommand('Select rl_log_id from tbl_project_level_allocation_log where project_id=' . $id . ' order by created_at desc')->queryRow();
-            $rl_log_id = $checkLogCount['rl_log_id'] + 1;
-            foreach ($postHrsArr as $key => $val) {
-
-                if (!empty($val['level_hours'])) {
-                    $checkCount = Yii::app()->db->createCommand('Select * from tbl_project_level_allocation where project_id=' . $id . ' and level_id=' . $val['level_id'])->queryRow();
-                    if (isset($checkCount['id'])) {
-                        $modelPLA = ProjectLevelAllocation::model()->findByAttributes(array('id' => $checkCount['id']));
-                        $modelPLA->modified_by = Yii::app()->session["login"]["user_id"];
-                        $modelPLA->updated_at = date("Y-m-d h:i:s");
-                    } else {
-                        $modelPLA = new ProjectLevelAllocation;
-                        $modelPLA->created_by = Yii::app()->session["login"]["user_id"];
-                        $modelPLA->created_at = date("Y-m-d h:i:s");
-                    }
-
-                    $modelPLA->project_id = $id;
-                    $modelPLA->level_id = $val['level_id'];
-                    $modelPLA->level_hours = $val['level_hours'];
-                    $modelPLA->save(false);
-
-                    //Update recorded as log in tbl_project_level_allocation_log for every update / insert
-                    $modelPLALog = new ProjectLevelAllocationLog;
-                    $modelPLALog->project_id = $id;
-                    $modelPLALog->level_id = $val['level_id'];
-                    $modelPLALog->old_level_hours = $checkCount['level_hours'];
-                    $modelPLALog->new_level_hours = $val['level_hours'];
-                    $modelPLALog->comments = $_POST['level_comments'];
-                    $modelPLALog->rl_log_id = empty($checkLogCount) ? 0 : $rl_log_id;
-                    $modelPLALog->created_by = Yii::app()->session["login"]["user_id"];
-                    $modelPLALog->created_at = date("Y-m-d h:i:s");
-                    $modelPLALog->save(false);
-                }
-                //$importData[] = $modelST->getAttributes();
-            }
+                
             $this->sendApprovalMail($id);
             if($model->approval_status != 1)
             {
@@ -232,7 +215,8 @@ class SubProjectController extends Controller {
             'hours_label' => $hours_label,
             'estimatedArr' => $estimatedArr,
             'levels_log' => $levels_log,
-            'excelHours' => $excelHours
+            'excelHours' => $excelHours,
+            'newHours' => $newHours,
         ));
     }
 
@@ -464,6 +448,7 @@ class SubProjectController extends Controller {
     public function actionupdateStatus($id)
     {
         $status = $id[0];
+       // echo $status;die;
         $project_id = substr($id, 1);
         $projectArr = Yii::app()->db->createCommand("select created_by from tbl_sub_project where spid= {$project_id}")->queryRow();
         $parent_id = Yii::app()->session['login']['user_id'];
@@ -471,10 +456,57 @@ class SubProjectController extends Controller {
         $approvalDetails = Yii::app()->db->createCommand("select count(*) as count from tbl_access_role_master where parent_id = {$parent_id} and emp_id = {$empp_id}")->queryRow();
         
         if(Yii::app()->session['login']['user_id'] == '3616' || Yii::app()->session['login']['user_id'] == '6' || $approvalDetails['count'] > 0){ 
+            
+
+            if($status == 1)
+            {
+                $unqidarr = Yii::app()->db->createCommand("select unqid from tbl_sub_project where spid = {$project_id}")->queryRow();
+                
+                $newHours = Yii::app()->db->createCommand("select unqid,task_level,SUM(task_est_hrs) as level_hours, (select level_id from tbl_level_master where level_name LIKE task_level) as level_id from tbl_task_temp where unqid LIKE '%{$unqidarr['unqid']}%' and task_status='NEW' and approval_status = '2' group by task_level")->queryAll();
+                
+                $checkLogCount = Yii::app()->db->createCommand('Select rl_log_id from tbl_project_level_allocation_log where project_id=' . $id . ' order by rl_id desc')->queryRow();
+                $rl_log_id = $checkLogCount['rl_log_id'] + 1;
+                foreach ($newHours as $key => $val) {
+
+                    if (!empty($val['level_hours'])) {
+                        $checkCount = Yii::app()->db->createCommand('Select * from tbl_project_level_allocation where project_id=' . $project_id . ' and level_id=' . $val['level_id'])->queryRow();
+                        if (isset($checkCount['id'])) {
+                            $modelPLA = ProjectLevelAllocation::model()->findByAttributes(array('id' => $checkCount['id']));
+                            $modelPLA->modified_by = Yii::app()->session["login"]["user_id"];
+                            $modelPLA->updated_at = date("Y-m-d h:i:s");
+                            $updHours = $val['level_hours'] + $checkCount['level_hours'];
+                        } else {
+                            $modelPLA = new ProjectLevelAllocation;
+                            $modelPLA->created_by = Yii::app()->session["login"]["user_id"];
+                            $modelPLA->created_at = date("Y-m-d h:i:s");
+                            $updHours = $val['level_hours'];
+                        }
+
+                        $modelPLA->project_id = $project_id;
+                        $modelPLA->level_id = $val['level_id'];
+                        $modelPLA->level_hours = $updHours;
+                        $modelPLA->save(false);
+
+                        //Update recorded as log in tbl_project_level_allocation_log for every update / insert
+                        $modelPLALog = new ProjectLevelAllocationLog;
+                        $modelPLALog->project_id = $id;
+                        $modelPLALog->level_id = $val['level_id'];
+                        $modelPLALog->old_level_hours = $checkCount['level_hours'];
+                        $modelPLALog->new_level_hours = $updHours;
+                        $modelPLALog->comments = $_POST['level_comments'];
+                        $modelPLALog->rl_log_id = empty($checkLogCount) ? 0 : $rl_log_id;
+                        $modelPLALog->created_by = Yii::app()->session["login"]["user_id"];
+                        $modelPLALog->created_at = date("Y-m-d h:i:s");
+                        $modelPLALog->save(false);
+                    }
+                    //$importData[] = $modelST->getAttributes();
+                }
+            }
+
             $projectDetails = Yii::app()->db->createCommand("update tbl_sub_project set approval_status = {$status} where spid={$project_id} and approval_status = 2")->execute();        
             
-            if($status == 1){
-                Yii::app()->db->createCommand("UPDATE tbl_task_temp T1 LEFT JOIN tbl_sub_project T2 ON T2.unqid = T1.unqid SET T1.approval_status = '{$status}' WHERE T2.spid = {$project_id}")->execute();        
+            if($status == 1 || $status == 0){
+                Yii::app()->db->createCommand("UPDATE tbl_task_temp T1 LEFT JOIN tbl_sub_project T2 ON T2.unqid = T1.unqid SET T1.approval_status = '{$status}', T1.task_status = 'OLD' WHERE T2.spid = {$project_id} and T1.task_status = 'NEW'")->execute();        
             }
             $appstatus = $status == 1 ? 'Approved.' : 'Rejected.'; 
             
@@ -601,20 +633,35 @@ class SubProjectController extends Controller {
                 $tasktemp->unqid = $unqid;
                 $tasktemp->task_title = $value[1];
                 $tasktemp->task_description = $value[2];
-                $tasktemp->task_level = $value[3];
+                $tasktemp->task_level = $value[3]; 
                 $tasktemp->task_est_hrs = $value[4];
+                $tasktemp->approval_status = '2';
+                $tasktemp->task_status = 'NEW';
+                $taskArray[$tasktemp->task_level][] = $value[4];
                 $tasktemp->created_at = Yii::app()->session["login"]["user_id"];
-                $tasttemp->created_at = date("Y-m-d h:i:s");
+                $tasktemp->created_at = date("Y-m-d h:i:s");
                 $tasktemp->save(false);
             }
-
+            $fhoursArr =[];
+            foreach ($taskArray as $key => $value) {
+                //$taskArray[$key] = array_sum($value);
+                $hArr['unqid'] = $unqid;
+                $levelar = Yii::app()->db->createCommand("select level_id from tbl_level_master where level_name LIKE '%{$key}%'")->queryRow();
+                $hArr['level_id'] = $levelar['level_id'];
+                $hArr['task_level'] = $key;
+                $hArr['level_hours'] = array_sum($value);
+                $fhoursArr[] = $hArr;
+            
+            }
+            // echo "<pre>",print_r($fhoursArr),"</pre>"; die();
             $getHours = Yii::app()->db->createCommand("select unqid,task_level,SUM(task_est_hrs) as level_hours, (select level_id from tbl_level_master where level_name LIKE task_level) as level_id from tbl_task_temp where unqid LIKE '%{$unqid}%' group by task_level")->queryAll();
             
-        
+
+
             $returnTable .= '<table class="table table-bordered" id="hoursTableU" style="width:80%;margin-left:10%">';
             $returnTable .= '<tr>';
             $returnTable .= '<td>Total Estimated Hours</td>';
-            foreach ($getHours as $row) {
+            foreach ($fhoursArr as $row) {
                 $est_hrs = $est_hrs + $row['level_hours'];          
 
                 
@@ -644,8 +691,9 @@ class SubProjectController extends Controller {
             }
             $returnData['table'] = $returnTable;
             $returnData['hrsArr'] = json_encode($getHours);
+            $returnData['finalTHours'] = json_encode($fhoursArr);
             echo  json_encode($returnData);die;
-            //echo "<pre>",print_r($arraydata),"</pre>"; die();
+            // echo "<pre>",print_r($arraydata),"</pre>"; die();
         } else {
             echo 0;die;
         }
@@ -671,27 +719,28 @@ class SubProjectController extends Controller {
 
         $returnTable = "<h4>Since for this project, the estimation of hours were added manually and not using the excel import method, there are no reports associated with this project.</h4>";
         
-        $getHours = Yii::app()->db->createCommand("select unqid,task_level,SUM(task_est_hrs) as level_hours, (select level_id from tbl_level_master where level_name LIKE task_level) as level_id from tbl_task_temp where unqid LIKE '%{$model->unqid}%' group by task_level")->queryAll();
-        
-        if(!empty($getHours) && !empty($model->unqid))
+        $getHours = Yii::app()->db->createCommand("select unqid,task_level,SUM(task_est_hrs) as level_hours, (select level_id from tbl_level_master where level_name LIKE task_level) as level_id from tbl_task_temp where unqid LIKE '%{$model->unqid}%' and task_status= 'NEW' and approval_status != '0' group by task_level")->queryAll();
+        $returnTable='';
+        if(!empty($model->unqid))
         {
+            if(!empty($getHours)){
+                $returnTable = '<table class="table table-bordered" id="hoursTableU" style="width:80%;margin-left:10%">';
+                $returnTable .= '<tr>';
+                $returnTable .= '<td>Hours To Be Added(After Approval)</td>';
+                foreach ($getHours as $row) {
+                    $est_hrs = $est_hrs + $row['level_hours'];          
 
-            $returnTable = '<table class="table table-bordered" id="hoursTableU" style="width:80%;margin-left:10%">';
-            $returnTable .= '<tr>';
-            $returnTable .= '<td>Total Estimated Hours</td>';
-            foreach ($getHours as $row) {
-                $est_hrs = $est_hrs + $row['level_hours'];          
-
-                
-                $returnTable .= '<td>'.$row['task_level'].'('.$row['level_hours'].')</td>';
-                
+                    
+                    $returnTable .= '<td>'.$row['task_level'].'('.$row['level_hours'].')</td>';
+                    
+                }
+                $returnTable .= '<td><strong>Total '.$est_hrs.' Hours</strong></td>';
+                $returnTable .= '</tr>';    
+                $returnTable .= '</table>';
             }
-            $returnTable .= '<td><strong>Total '.$est_hrs.' Hours</strong></td>';
-            $returnTable .= '</tr>';    
-            $returnTable .= '</table>';
             $returnTable .= '<table class="table table-bordered" id="hoursTableU" style="width:99%"><tr><th colspan="5" style="text-align:center"><strong>Please check the tasks list, estimated hours for each task and total estimated hours calculated and then create the project.</strong></th></tr>';
 
-            $arraydata = Yii::app()->db->createCommand("select task_title,task_description,task_level,task_est_hrs,IF(approval_status = '0','Not Approved','Approved') as approval_status from tbl_task_temp where unqid LIKE '%{$model->unqid}%' order by id desc")->queryAll();
+            $arraydata = Yii::app()->db->createCommand("select task_title,task_description,task_level,task_est_hrs,case when approval_status = '2' then 'Not Approved' when approval_status = '1' then 'Approved' when approval_status = '0' then 'Rejected' end as approval_status from tbl_task_temp where unqid LIKE '%{$model->unqid}%' order by id desc")->queryAll();
             
             // print_r($arraydata);die;
             $returnTable .= '<tr><th>Task Title</th><th>Task Description</th><th>Task Level</th><th>Task Hours</th><th>Task Status</th></tr>';
