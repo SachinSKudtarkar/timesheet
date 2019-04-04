@@ -175,7 +175,11 @@ class SubProject extends CActiveRecord
         if (!empty($emp))
             return $emp['first_name'] . " " . $emp['last_name'];
     }
-
+	
+    public function getCreatedDate($model) {
+        return (new Datetime($model['created_date']))->format('d-m-Y');
+    }
+	
     public function getApprovalStatus($model) {
 
         $status = '<span style="color:blue"><strong>Pending</strong></span>';
