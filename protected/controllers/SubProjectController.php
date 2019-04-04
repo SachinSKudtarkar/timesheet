@@ -451,7 +451,7 @@ class SubProjectController extends Controller {
                 
                 $newHours = Yii::app()->db->createCommand("select unqid,task_level,SUM(task_est_hrs) as level_hours, (select level_id from tbl_level_master where level_name LIKE task_level) as level_id from tbl_task_temp where unqid LIKE '%{$unqidarr['unqid']}%' and task_status='NEW' and approval_status = '2' group by task_level")->queryAll();
                 
-                $checkLogCount = Yii::app()->db->createCommand('Select rl_log_id from tbl_project_level_allocation_log where project_id=' . $id . ' order by rl_id desc')->queryRow();
+                $checkLogCount = Yii::app()->db->createCommand('Select rl_log_id from tbl_project_level_allocation_log where project_id=' . $project_id . ' order by rl_id desc')->queryRow();
                 $rl_log_id = $checkLogCount['rl_log_id'] + 1;
                 foreach ($newHours as $key => $val) {
 
