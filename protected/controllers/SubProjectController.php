@@ -476,7 +476,7 @@ class SubProjectController extends Controller {
 
                         //Update recorded as log in tbl_project_level_allocation_log for every update / insert
                         $modelPLALog = new ProjectLevelAllocationLog;
-                        $modelPLALog->project_id = $id;
+                        $modelPLALog->project_id = $project_id;
                         $modelPLALog->level_id = $val['level_id'];
                         $modelPLALog->old_level_hours = $checkCount['level_hours'];
                         $modelPLALog->new_level_hours = $updHours;
