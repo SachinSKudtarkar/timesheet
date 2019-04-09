@@ -24,6 +24,7 @@ $date = date('Y-m-d');
             <th>Project Name</th>
             <th>Estimated Hours</th>
             <th>Utilized Hours</th>
+            <th>Utilized %</th>
             <th><?php echo date('Y-m-d'); ?></th>
             <th><?php echo date('Y-m-d', strtotime('-1 day', strtotime($date))); ?></th>
             <th><?php echo date('Y-m-d', strtotime('-2 day', strtotime($date))); ?></th>
@@ -38,6 +39,13 @@ $date = date('Y-m-d');
                 <td><?php echo $row['ProjectName']; ?></td>
                 <td><?php echo $row['estimated_hrs']; ?></td>
                 <td><?php echo $row['utilized_hrs']; ?></td>
+                <td>
+                    <?php 
+                        if(!empty($row['estimated_hrs']) && !empty($row['utilized_hrs']))
+                            echo sprintf('%0.2f', ($row['utilized_hrs']/$row['estimated_hrs']) * 100)."%"; 
+                    ?>
+                        
+                    </td>
                 <td><?php echo $row['today']; ?></td>
                 <td><?php echo $row['today_1']; ?></td>
                 <td><?php echo $row['today_2']; ?></td>
