@@ -39,7 +39,7 @@ class ReportsController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
-                'actions' => array('NotFilledStatus', 'StatusReport', 'AdminAll', 'timeSheetNotFilled'),
+                'actions' => array('NotFilledStatus', 'StatusReport', 'AdminAll', 'timeSheetNotFilled','WeeklyReport'),
                 'expression' => 'CHelper::isAccess("STATUS", "full_access")',
                 'users' => array('@'),
             ),
@@ -427,7 +427,7 @@ class ReportsController extends Controller {
     {
     
         $graphArr = [];$programArr = [];$nodeArr = [];
-        $query = "select sp.spid,pm.pid,sp.sub_project_name as project_name,pm.project_name as program_name,(select sum(pl.level_hours * lm.budget_per_hour) from tbl_project_level_allocation pl inner join tbl_level_master lm on lm.level_id = pl.level_id where pl.project_id = sp.spid) as total_budget  from tbl_sub_project as sp left join tbl_project_management as pm on pm.pid = sp.pid where pm.project_name != '' and sp.approval_status = 1 order by program_name";
+        $query = "select sp.spid,pm.pid,sp.sub_project_name as project_name,pm.project_name as program_name,(select sum(pl.level_hours * lm.budget_per_hour) from tbl_project_level_allocation pl inner join tbl_level_master lm on lm.level_id = pl.level_id where pl.project_id = sp.spid) as total_budget  from tbl_sub_project as sp left join tbl_project_management as pm on pm.pid = sp.pid where pm.project_name != '' and sp.approval_status != 0 order by program_name";
         
         $graphArr = Yii::app()->db->createCommand($query)->queryAll();
         $graphArr[] = array('project_name' => '%Exit%', 'program_name'=>'','total_budget'=>999);
@@ -697,5 +697,42 @@ class ReportsController extends Controller {
         echo json_encode($projectData);die;
     }
 
+    public function actionWeeklyReport()
+    {
 
+        $this->layout = 'column1';
+        $result  = Yii::app()->db->createCommand('select 
+                    (select project_name from tbl_project_management where pid = sp.pid) as ProgramName,
+                    sub_project_name as ProjectName,
+                    (select sum(level_hours) from tbl_project_level_allocation where project_id = sp.spid) as estimated_hrs,
+                    (SELECT  BIG_SEC_TO_TIME( SUM( BIG_TIME_TO_SEC( `hours` )) ) from tbl_day_comment where spid = sp.spid) as utilized_hrs,
+                    (SELECT  BIG_SEC_TO_TIME( SUM( BIG_TIME_TO_SEC( `hours` )) ) from tbl_day_comment where spid = sp.spid and day = CURDATE()) as today,
+                    (SELECT  BIG_SEC_TO_TIME( SUM( BIG_TIME_TO_SEC( `hours` )) ) from tbl_day_comment where spid = sp.spid and day = CURDATE() - 1) as today_1,
+                    (SELECT  BIG_SEC_TO_TIME( SUM( BIG_TIME_TO_SEC( `hours` )) ) from tbl_day_comment where spid = sp.spid and day = CURDATE() - 2) as today_2,
+                    (SELECT  BIG_SEC_TO_TIME( SUM( BIG_TIME_TO_SEC( `hours` )) ) from tbl_day_comment where spid = sp.spid and day = CURDATE() - 3) as today_3,
+                    (SELECT  BIG_SEC_TO_TIME( SUM( BIG_TIME_TO_SEC( `hours` )) ) from tbl_day_comment where spid = sp.spid and day = CURDATE() - 4) as today_4
+                from tbl_sub_project sp')->queryAll();
+           
+        
+        // if ($this->isExportRequest()){
+        //     $date = date('Y-m-d');
+        //     $exportResult[] =array('Program Name', 'Project Name', 'Estimated Hours', 'Utilized Hours', date('Y-m-d', strtotime('-1 day', strtotime($date))),date('Y-m-d', strtotime('-2 day', strtotime($date))),date('Y-m-d', strtotime('-3 day', strtotime($date))),date('Y-m-d', strtotime('-4 day', strtotime($date))));
+        //     $exportResult = array_merge($exportResult,$result); 
+        //     // print_r($exportResult);die;
+        //     $table_column = ("");
+        //         $this->exportCSV($exportResult, $table_column);
+        // }
+        
+        // $model = new CArrayDataProvider($result, array(
+        //     'totalItemCount' => count($result),
+        //     'pagination' => array(
+        //     'pageSize' => 10,
+        //     ),
+        // ));
+
+        $this->render('weeklyreport', array(
+            // 'model' => $model,
+            'result' => $result
+        ));
+    }
 }

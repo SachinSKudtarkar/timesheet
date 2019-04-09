@@ -267,7 +267,14 @@ $access_type = AccessRoleMaster::model()->findByAttributes(array('emp_id' => $em
                                                 'encodeLabel' => false,
                                                 'visible' => 1,
                                                 'active' => (Yii::app()->controller->id == 'Reports' && Yii::app()->controller->action->id == 'timesheetreports'),
+                                            ),
+                                            array('label' => 'Weekly Report',
+                                                'url' => array('//reports/weeklyreport'),
+                                                'encodeLabel' => false,
+                                                'visible' => (Yii::app()->session['login']['user_id'] == 3616 || Yii::app()->session['login']['user_id'] == 6) ? 1 : 0,
+                                                'active' => (Yii::app()->controller->id == 'Reports' && Yii::app()->controller->action->id == 'timesheetreports'),
                                             )
+                                            // weeklyreport
                                             // array('label' => 'All Reports',
                                             //     'url' => array('//reports/graphreports'),
                                             //     'encodeLabel' => false,
