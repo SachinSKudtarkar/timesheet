@@ -3,6 +3,17 @@
 /* @var $model ResourceAllocationProjectWork */
 /* @var $form CActiveForm */
 ?>
+<style>
+.custom-loader {
+
+    display: block!important;
+ }
+
+.custom-loader-none {
+
+    display: none!important;
+ }
+</style>
 
 <div class="form-group clearfix test-panal" style="margin-top: 20px;">
 
@@ -70,6 +81,11 @@
         $('.custom-loader').css('display','none');
         
 
+    });
+	
+	
+    $(window).load(function(){
+    	 $(".custom-loader").addClass('custom-loader-none');
     });
 </script>
 
