@@ -736,6 +736,12 @@ class ReportsController extends Controller {
             $levelArray[$lRow['level_id']]['name'] = $lRow['level_name'];
         }
 
+        $this->render('budgetreport', array(
+            // 'model' => $model,
+            'dataArr' => $dataArr, 'levelArray'=>$levelArray
+        ));
+
+
     }
 
     public function actionWeeklyReport(){

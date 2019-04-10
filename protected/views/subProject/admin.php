@@ -47,7 +47,14 @@ $this->widget('zii.widgets.grid.CGridView', array(
            //'filter' => false,
             'value' => array($model, 'getCreatedBy')
               ),
-          'created_date',
+          //'created_date',
+	    array(
+            'header'=>'Created Date',
+            'name' => 'created_date',
+            'type' => 'raw',
+            // 'filter' => false,
+            'value' => array($model, 'getCreatedDate')
+            ),
            array(
             'header'=>'Approval Status',
             'name' => 'approval_status',
