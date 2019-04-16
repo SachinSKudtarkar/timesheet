@@ -3,9 +3,9 @@ $this->breadcrumbs = array(
     'Reports ' => array('timesheetreports'),
 );
 ?>
-<h1 style="margin-bottom: 5px;">Budget Report</h1>
+<h1>Budget Report</h1>
 
-<div class="span12" style="margin-left:0px;">
+<div class="row span12"; style="padding:25px;">
 <table class="table table-bordered responsive" id="projectreports">
     <thead>
         <tr>
