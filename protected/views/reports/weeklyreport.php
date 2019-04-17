@@ -15,7 +15,7 @@ $date = date('Y-m-d');
 
 <div class="row span11" style="margin-bottom: 100px">
 
-<?php  if(Yii::app()->session['login']['user_id'] == 3616 || Yii::app()->session['login']['user_id'] == 6) { ?>
+<?php  if(Yii::app()->session['login']['user_id'] == 3616 || Yii::app()->session['login']['user_id'] == 6 || Yii::app()->session['login']['user_id'] == 13931) { ?>
     
 <table id="weeklyreport" class="display table table-bordered">
     <thead>
