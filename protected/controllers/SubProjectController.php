@@ -170,23 +170,26 @@ class SubProjectController extends Controller {
                     $postHrsArr = $_POST['group-a'];
                     // print_r($postHrsArr);die;
                     foreach ($postHrsArr as $key => $value) {
-                        $tasktemp = new TaskTitle();
-                        $tasktemp->unqid = $model->unqid;
-                        $tasktemp->task_title = "This is manual upload";
-                        $tasktemp->task_description = "This is manual upload";
-                        $tasklevelarr = Yii::app()->db->createCommand("select level_name from tbl_level_master where level_id = {$value['level_id']}")->queryRow();
-                        $tasktemp->task_level = $tasklevelarr['level_name']; 
-                        $taskleveloldhrs = Yii::app()->db->createCommand("select level_hours from tbl_project_level_allocation where level_id = {$value['level_id']} and project_id = {$id}")->queryRow();
-                        $tasktemp->task_est_hrs = $value['level_hours'];
-                        if($taskleveloldhrs['level_hours'] != '' && $taskleveloldhrs['level_hours'] > 0)
-                        {
-                            $tasktemp->task_est_hrs = abs($value['level_hours'] - $taskleveloldhrs['level_hours']);
+                        if($value['level_hours'] != ''){
+                            $tasktemp = new TaskTitle();
+                            $tasktemp->unqid = $model->unqid;
+                            $tasktemp->task_title = "This is manual upload";
+                            $tasktemp->task_description = "This is manual upload";
+                            $tasklevelarr = Yii::app()->db->createCommand("select level_name from tbl_level_master where level_id = {$value['level_id']}")->queryRow();
+                            $tasktemp->task_level = $tasklevelarr['level_name']; 
+                            $taskleveloldhrs = Yii::app()->db->createCommand("select level_hours from tbl_project_level_allocation where level_id = {$value['level_id']} and project_id = {$id}")->queryRow();
+                            $tasktemp->task_est_hrs = $value['level_hours'];
+                            if($taskleveloldhrs['level_hours'] != '' && $taskleveloldhrs['level_hours'] > 0)
+                            {
+                                $tasktemp->task_est_hrs = abs($value['level_hours'] - $taskleveloldhrs['level_hours']);
+                            }
+                            $tasktemp->approval_status = '2';
+                            $tasktemp->task_status = 'NEW';
+                            $tasktemp->created_at = Yii::app()->session["login"]["user_id"];
+                            $tasktemp->created_at = date("Y-m-d h:i:s");
+                            $tasktemp->save(false);
                         }
-                        $tasktemp->approval_status = '2';
-                        $tasktemp->task_status = 'NEW';
-                        $tasktemp->created_at = Yii::app()->session["login"]["user_id"];
-                        $tasktemp->created_at = date("Y-m-d h:i:s");
-                        $tasktemp->save(false);
+                        
                     }
                 }
                 

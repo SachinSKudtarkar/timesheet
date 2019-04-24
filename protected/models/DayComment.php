@@ -415,4 +415,102 @@ class DayComment extends CActiveRecord {
         return $difference;
 
     }
+
+    public function getUserTimesheetDetails()
+    {
+        $emp_id = Yii::app()->session['login']['user_id'];
+       
+        $tasks = Yii::app()->db->createCommand("
+            select project_name,sub_project_name,sub_task_name,st.stask_id,dc.day,dc.updated_at,
+            est_hrs,
+            BIG_SEC_TO_TIME(est_hrs*60*60) as est_time,
+            TIME_FORMAT(IF (SUM( BIG_TIME_TO_SEC( `hours` )) > 0, BIG_SEC_TO_TIME( SUM( BIG_TIME_TO_SEC( `hours` )) ), '00:00' ), '%H:%i')as utilized_hrs,
+            TIME_FORMAT(TIMEDIFF(BIG_SEC_TO_TIME(est_hrs*60*60), BIG_SEC_TO_TIME( SUM( BIG_TIME_TO_SEC( `hours` )) )), '%H:%i') as remaining_hours
+            from tbl_sub_task st
+            left join tbl_sub_project sp on sp.spid = st.sub_project_id
+            left join tbl_project_management pm on pm.pid = st.project_id
+            left join tbl_day_comment dc on dc.stask_id = st.stask_id 
+            where st.emp_id = {$emp_id} 
+            group by dc.stask_id
+            #having remaining_hours > '00:00' OR utilized_hrs = '00:00:00'
+            #order by stask_id,day desc
+            ")->queryAll();
+            // print_r($tasks);die;
+            return $tasks;
+    }
+
+    public function checkTodayUserComment($comment, $emp_id)
+    {
+        return Yii::app()->db->createCommand("select count(*) as count from tbl_day_comment where emp_id = {$emp_id} and stask_id = {$comment[0]} and id = {$comment[1]} and day = CURDATE();")->queryRow();
+    }
+
+    public function checkUserHasTask($comment, $emp_id)
+    {
+        return Yii::app()->db->createCommand("select count(*) as count from tbl_sub_task where emp_id = {$emp_id} and stask_id = {$comment[0]};")->queryRow();
+    }
+
+    public function updateUserTimesheet($comment, $emp_id, $data)
+    {
+        $updated_by = date('Y-m-d H:i:s');
+        $hours = sprintf('%02d',$data['hours']).':'.sprintf('%02d',$data['mins']).':00';
+        $update = Yii::app()->db->createCommand("update tbl_day_comment set hours = '{$hours}', comment = '{$data["comment"]} ', updated_by = {$emp_id}, updated_at = '{$updated_by}' where emp_id = {$emp_id} and stask_id = {$comment[0]} and id = {$comment[1]} and day = CURDATE();")->execute();
+
+        if($update)
+        {
+            $taskStatus['message'] = $data['task_name'].' was updated successfully';
+            $taskStatus['status'] = 'Success!';
+            return $taskStatus;
+        }else{
+            $taskStatus['message'] = $data['task_name'].' could not be updated successfully';
+            $taskStatus['status'] = 'Error!';
+            return $taskStatus;
+        }
+    }
+
+     public function insertUserTimesheet($comment, $emp_id, $data)
+    {
+        $hours = sprintf('%02d',$data['hours']).':'.sprintf('%02d',$data['mins']).':00';
+        $sub_task_details = Yii::app()->db->createCommand("select project_id,sub_project_id,stask_id from tbl_sub_task where stask_id = {$comment[0]}")->queryRow();
+        $model = new DayComment;
+        $model->day = date('Y-m-d');
+        $model->hours = $hours;
+        $model->comment = $data["comment"];
+        $model->emp_id = $emp_id;
+        $model->created_by = $emp_id;
+        $model->created_by = $emp_id;
+        $model->created_at = date('Y-m-d H:i:s');
+        $model->pid = $sub_task_details['project_id'];
+        $model->spid = $sub_task_details['sub_project_id'];
+        $model->stask_id = $comment[0];
+        $model->logged_hrs = $hours;
+        $model->is_submitted = 0;
+        $model->shift = 1;
+        $model->save();
+        if($model->save(false))
+        {
+            $taskStatus['message'] = $data['task_name'].' was updated successfully';
+            $taskStatus['status'] = 'Success!';
+            return $taskStatus;
+        }else{
+            $taskStatus['message'] = $data['task_name'].' was not be updated successfully';
+            $taskStatus['status'] = 'Error!';
+            return $taskStatus;
+        }
+    }
+
+    public function checkHoursLessThanRemain($stask_id,$today_hours)
+    {
+
+        $emp_id = Yii::app()->session['login']['user_id'];
+        
+        return Yii::app()->db->createCommand("select st.stask_id,
+           #TIME_FORMAT(TIMEDIFF(TIMEDIFF(BIG_SEC_TO_TIME(est_hrs*60*60), IF(BIG_SEC_TO_TIME( SUM( BIG_TIME_TO_SEC( `hours` )) ) <> '',BIG_SEC_TO_TIME( SUM( BIG_TIME_TO_SEC( `hours` )) ),'00:00:00')), '{$today_hours}'), '%H:%i:%s') as ssdas,
+           #IF(TIME_FORMAT(TIMEDIFF(TIMEDIFF(BIG_SEC_TO_TIME(est_hrs*60*60), IF(BIG_SEC_TO_TIME( SUM( BIG_TIME_TO_SEC( `hours` )) ) <> '',BIG_SEC_TO_TIME( SUM( BIG_TIME_TO_SEC( `hours` )) ),'00:00:00')), '{$today_hours}'), '%H:%i:%s') >= '00:00:00', true, false) as result
+            IF(TIME_FORMAT(TIMEDIFF(BIG_SEC_TO_TIME(est_hrs*60*60),ADDTIME(IF(BIG_SEC_TO_TIME( SUM( BIG_TIME_TO_SEC( `hours` )) ) <> '',BIG_SEC_TO_TIME( SUM( BIG_TIME_TO_SEC( `hours` )) ),'00:00:00'), '{$today_hours}')), '%H:%i:%s') >= '00:00:00', true, false) as result
+            from tbl_sub_task st
+            left join tbl_day_comment dc on dc.stask_id = st.stask_id 
+            where st.emp_id = {$emp_id} and st.stask_id={$stask_id} and dc.day <> CURDATE()
+            group by dc.stask_id;")->queryRow();
+
+    }
 }

@@ -38,7 +38,7 @@ class DayCommentController extends Controller {
      * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
      * using two-column layout. See 'protected/views/layouts/column2.php'.
      */
-    public $layout = '//layouts/column2';
+    public $layout = '//layouts/column1';
 
     /**
      * @return array action filters
@@ -62,7 +62,7 @@ class DayCommentController extends Controller {
                 'users' => array('@'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'addcomment', 'GetProjName', 'getIrregularEmp', 'sendReminder', 'AdminAll', 'NotFilledStatus', 'fetchSubProject', 'fetchSubTask', 'StatusReport', 'getSubPStatus', 'getEmployeeList', 'fetchRemainingHours','ApproveHours'),
+                'actions' => array('create', 'update', 'addcomment', 'GetProjName', 'getIrregularEmp', 'sendReminder', 'AdminAll', 'NotFilledStatus', 'fetchSubProject', 'fetchSubTask', 'StatusReport', 'getSubPStatus', 'getEmployeeList', 'fetchRemainingHours','ApproveHours','AddHours','fetchUserTimesheetRecords'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -1319,7 +1319,7 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.sub_project_i
 
         // $time_diff = "SELECT TIMEDIFF(BIG_SEC_TO_TIME((est_hrs*60)*60),BIG_SEC_TO_TIME( SUM( BIG_TIME_TO_SEC( `hours` ) ) )) as difference, BIG_SEC_TO_TIME((est_hrs*60)*60) as est_hrs, BIG_SEC_TO_TIME( SUM( BIG_TIME_TO_SEC( `hours` ) ) ) AS utilized_hrs  from tbl_sub_task as st inner join tbl_day_comment dc on dc.stask_id = st.stask_id where sub_project_id = {$sub_project_id} and st.stask_id = {$sub_task_id}";
         $time_diff = "SELECT BIG_SEC_TO_TIME((est_hrs*60)*60) as est_hrs, BIG_SEC_TO_TIME( SUM( BIG_TIME_TO_SEC( `hours` ) ) ) AS utilized_hrs  from tbl_sub_task as st inner join tbl_day_comment dc on dc.stask_id = st.stask_id where sub_project_id = {$sub_project_id} and st.stask_id = {$sub_task_id}";
-
+        
 
         $time_diff_hrs = Yii::app()->db->createCommand($time_diff)->queryRow();
 
@@ -1388,4 +1388,141 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.sub_project_i
 
     }
 
+    public function actionAddHours()
+    {
+        $output = [];
+        $oldvalues = [];
+        $model = new DayComment();
+
+        //If user submits current date hours for POST 
+        if (isset($_POST['timesheet']) && !empty($_POST['timesheet'])) 
+        {
+            $validate = $this->validateDetails($_POST['timesheet']);
+            
+            if(count($validate) > 0)
+            {
+                $output = $validate;
+                $oldvalues = $_POST['timesheet'];
+            }else{
+                $output = $this->saveTimesheetDetails($_POST['timesheet']);
+            }
+        }
+
+        //Fetch User's uncompleted tasks and also the time added for the current date
+        $tasksArr = $model->getUserTimesheetDetails();
+        $tasks = $this->processTimesheetDetails($tasksArr);
+        
+        $this->render('index1', array(
+            'tasks' => $tasks,
+            'output' => $output,
+            'oldvalues' => $oldvalues,
+        ));
+    }
+
+    public function processTimesheetDetails($tasks)
+    {
+        if(!empty($tasks))
+        {
+            foreach ($tasks as $key => $task) {
+                $task['today_hrs'] = '';
+                $task['today_comment'] = '';
+                $today_comments = Yii::app()->db->createCommand("select id,hours,comment from tbl_day_comment where stask_id={$task['stask_id']} and day = CURDATE()")->queryRow();
+                
+                if(!empty($today_comments))
+                {
+                    $task['dc_id'] = $today_comments['id'];
+                    $task['today_hrs'] = $today_comments['hours'];
+                    $task['today_comment'] = $today_comments['comment'];
+                }
+
+                if(!empty($task['stask_id']) && !empty($task['dc_id']))
+                {
+                    $concatID = $task['stask_id'].'_'.$task['dc_id'].'_1';
+                }else{
+                    $concatID = $task['stask_id'].'_2';
+                }
+                
+                $encodekey =  base64_encode($concatID);
+                $task['key'] = $encodekey;
+                if(!empty($today_comments) || $task['remaining_hours'] > '00:00' || $task['utilized_hrs'] == '00:00:00')
+                {
+                    $tasks[$key] = $task;
+                }else{
+                    unset($tasks[$key]);
+                }
+            }
+        }
+        return $tasks;
+    }
+
+    public function validateDetails($data)
+    {
+        $outputMessageAndStatus = [];
+        foreach ($data as $key => $value) {
+            $decodedkey = base64_decode($key);
+            $keyArr = explode("_", $decodedkey);
+            $keyArrCount = count($keyArr);
+            if(($value['hours'] == '' && $value['mins'] == '' && $value['comment'] == '') || ($value['hours'] != '' && $value['mins'] != '' && $value['comment'] != ''))
+            {
+                if($value['hours'] != '' && $value['mins'] != '' && $value['comment'] != '')
+                {
+                    $today_hours = sprintf('%02d',$value['hours']).":".sprintf('%02d',$value['mins']).":00";
+                    $isValidated = DayComment::checkHoursLessThanRemain($keyArr[0],$today_hours);
+                     
+                    if($isValidated['result'] == 0)
+                    {
+                        $outputMessageAndStatus[$keyArr[0]]['message'] = 'Please add hours less than the remaining hours for the above task.';
+                        $outputMessageAndStatus[$keyArr[0]]['status'] = 'Error!';
+                    }
+                }
+
+            }else{
+                $outputMessageAndStatus[$keyArr[0]]['message'] = 'Please fill all the required fields';
+                $outputMessageAndStatus[$keyArr[0]]['status'] = 'Error!';
+            }
+        }
+
+        return $outputMessageAndStatus;
+    }
+
+    public function saveTimesheetDetails($data)
+    {
+
+        $emp_id = Yii::app()->session['login']['user_id'];
+        foreach ($data as $key => $value) {
+            
+            if($value['hours'] != '' && $value['mins'] != '' && $value['comment'] != '')
+            {   
+                
+                $decodedkey = base64_decode($key);
+                $keyArr = explode("_", $decodedkey);
+                $keyArrCount = count($keyArr);
+
+                // If count == 3 then update the record in the timesheet else if count == 2 then insert the record
+                if($keyArrCount == 3){
+                    $userHasComment = (new DayComment)->checkTodayUserComment($keyArr, $emp_id);
+                    if($userHasComment['count'] > 0)
+                    {
+                        $outputMessageAndStatus[$keyArr[0]] = (new DayComment)->updateUserTimesheet($keyArr, $emp_id, $value);
+                    }
+                }else if($keyArrCount == 2){
+                    $userHasTask = (new DayComment)->checkUserHasTask($keyArr, $emp_id);
+                    if($userHasTask['count'] > 0)
+                    {
+                        $outputMessageAndStatus[$keyArr[0]] = (new DayComment)->insertUserTimesheet($keyArr, $emp_id, $value);
+                    }
+                } 
+            }
+        }   
+        
+        return $outputMessageAndStatus;
+    }
+
+    public function actionfetchUserTimesheetRecords()
+    {
+        $emp_id = Yii::app()->session['login']['user_id'];
+        $records = Yii::app()->db->createCommand("select TIME_FORMAT(hours,'%H:%i') as title,sub_task_name as sub_task_name,comment,DATE_FORMAT(day, '%Y-%m-%d') as tdate,DATE_FORMAT(day, '%Y-%m-%d') as start from tbl_day_comment dc inner join tbl_sub_task st on st.stask_id = dc.stask_id where dc.emp_id = {$emp_id} order by day desc")->queryAll();
+        // print_r(json_encode($records));die;
+        echo json_encode($records);die;
+    }
 }

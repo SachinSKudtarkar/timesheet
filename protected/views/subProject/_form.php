@@ -221,7 +221,7 @@ $img_path = Yii::app()->theme->baseUrl . "/img/add_image.png";
             </div>
                 <?php if (!$model->isNewRecord) { ?>
                 <div class="row span10 updhrs">
-                    <?php echo CHtml::label('Comments', ''); ?>
+                    <?php echo CHtml::label('Comments*', ''); ?>
                     <?php
                     //echo $form->textField($model,'type');
                     echo CHtml::textArea("level_comments", '', array('data-name' => 'level_comments', "name" => "data[0][comments]", "class" => "level_comments", "disabled" => false));
@@ -417,6 +417,7 @@ $img_path = Yii::app()->theme->baseUrl . "/img/add_image.png";
         getWrkHoursTotal();
     });
     function getWrkHoursTotal() {
+
         var allhrs = $("#SubProject_spid").val() > 0 ? $('#allocated_hrs').text() : 0;
         var allmnts = 0;
         var totalhrs = $("#SubProject_spid").val() > 0 ? $('#estimated_hrs').text() : 0;
@@ -463,6 +464,7 @@ $img_path = Yii::app()->theme->baseUrl . "/img/add_image.png";
         $("#update_hours").click(function () {
             $(".updhrs").toggle();
             $(".level_id_hrs").change();
+            getWrkHoursTotal();
         });
     }
 
