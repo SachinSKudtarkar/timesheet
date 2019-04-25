@@ -38,7 +38,7 @@ class DayCommentController extends Controller {
      * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
      * using two-column layout. See 'protected/views/layouts/column2.php'.
      */
-    public $layout = '//layouts/column1';
+    public $layout = '//layouts/column2';
 
     /**
      * @return array action filters
@@ -62,7 +62,7 @@ class DayCommentController extends Controller {
                 'users' => array('@'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'addcomment', 'GetProjName', 'getIrregularEmp', 'sendReminder', 'AdminAll', 'NotFilledStatus', 'fetchSubProject', 'fetchSubTask', 'StatusReport', 'getSubPStatus', 'getEmployeeList', 'fetchRemainingHours','ApproveHours','AddHours','fetchUserTimesheetRecords'),
+                'actions' => array('create', 'update', 'addcomment', 'GetProjName', 'getIrregularEmp', 'sendReminder', 'AdminAll', 'NotFilledStatus', 'fetchSubProject', 'fetchSubTask', 'StatusReport', 'getSubPStatus', 'getEmployeeList', 'fetchRemainingHours','ApproveHours','AddHours','fetchUserTimesheetRecords','addCurrentHours'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -1393,7 +1393,7 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.sub_project_i
         $output = [];
         $oldvalues = [];
         $model = new DayComment();
-
+        $this->layout = '//layouts/column1';
         //If user submits current date hours for POST 
         if (isset($_POST['timesheet']) && !empty($_POST['timesheet'])) 
         {
@@ -1441,10 +1441,10 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.sub_project_i
                 }else{
                     $concatID = $task['stask_id'].'_2';
                 }
-                
+
                 $encodekey =  base64_encode($concatID);
                 $task['key'] = $encodekey;
-                if(!empty($today_comments) || $task['remaining_hours'] > '00:00' || $task['utilized_hrs'] == '00:00:00')
+                if(!empty($today_comments) || $task['remaining_hours'] > '00:00' || $task['remaining_hours'] == '' || $task['utilized_hrs'] == '00:00:00')
                 {
                     $tasks[$key] = $task;
                 }else{
@@ -1466,10 +1466,12 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.sub_project_i
             {
                 if($value['hours'] != '' && $value['mins'] != '' && $value['comment'] != '')
                 {
+
                     $today_hours = sprintf('%02d',$value['hours']).":".sprintf('%02d',$value['mins']).":00";
+
                     $isValidated = DayComment::checkHoursLessThanRemain($keyArr[0],$today_hours);
-                     
-                    if($isValidated['result'] == 0)
+                    
+                    if(!empty($isValidated) && $isValidated['result'] == 0)
                     {
                         $outputMessageAndStatus[$keyArr[0]]['message'] = 'Please add hours less than the remaining hours for the above task.';
                         $outputMessageAndStatus[$keyArr[0]]['status'] = 'Error!';
@@ -1524,5 +1526,13 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.sub_project_i
         $records = Yii::app()->db->createCommand("select TIME_FORMAT(hours,'%H:%i') as title,sub_task_name as sub_task_name,comment,DATE_FORMAT(day, '%Y-%m-%d') as tdate,DATE_FORMAT(day, '%Y-%m-%d') as start from tbl_day_comment dc inner join tbl_sub_task st on st.stask_id = dc.stask_id where dc.emp_id = {$emp_id} order by day desc")->queryAll();
         // print_r(json_encode($records));die;
         echo json_encode($records);die;
+    }
+
+    public function actionaddCurrentHours()
+    {
+        $todayHrsArr = json_decode($_POST['todayHours']);
+        $counter = new TimesCounter($todayHrsArr);
+        echo $counter->get_total_time();
+        die;
     }
 }

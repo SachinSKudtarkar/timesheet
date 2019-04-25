@@ -166,10 +166,10 @@ Yii::app()->clientScript->registerCssFile(
 
                             ?>
                             <span><b> H </b></span> 
-                            <input name="<?php echo $hours_name;?>" type="number" min="0" 
+                            <input name="<?php echo $hours_name;?>" type="number" min="00" 
                             value="<?php echo $final_hrs; ?>" max="<?php echo $hours;?>" class="change_hrs numinput <?php echo $status_border; ?>"> 
                             <span><b> : </b></span> 
-                            <span><b> M </b></span> <input name="<?php echo $mins_name;?>" type="number" min="0" value="<?php echo $final_mins; ?>" max="<?php echo $mins;?>" class="numinput change_mins <?php echo $status_border; ?>">
+                            <span><b> M </b></span> <input name="<?php echo $mins_name;?>" type="number" min="00" value="<?php echo $final_mins; ?>" max="<?php echo $mins;?>" class="numinput change_mins <?php echo $status_border; ?>">
 
                         </td>
                         <td>
@@ -194,7 +194,7 @@ Yii::app()->clientScript->registerCssFile(
                     <tr>
                         <td><b><h4>Total Hours</h4></b></td>
                         
-                        <td colspan="4" class="text-align:right"><b><h1>19:00</h1></b></td>
+                        <td colspan="4" class="text-align:right"><b><h1 id="totalHrsTxt">00:00</h1></b></td>
                     </tr>
                     <tr>
                         <td></td>
@@ -254,18 +254,51 @@ document.addEventListener('DOMContentLoaded', function() {
     calendar.render();
 });
 
-$(".change_hrs, .change_mins").change(function(e){
-    alert($(this).val());
+$(document).ready(function(){
+    $(".change_hrs").trigger("change");
+    //$(".change_hrs, .change_mins").trigger('change');
+});
+
+$(".change_hrs, .change_mins").on('change',function(e){
+    var finalArr = [];
     var hrsarr = [];
     var minsarr = [];
     $(".change_hrs").each(function(e){
-        hrsarr.push($(this).val());
+        var hrsValue = $(this).val();
+        if(parseInt(hrsValue,10)<10)
+        {
+            hrsValue='0'+hrsValue;
+        }
+        hrsarr.push(hrsValue);
     });
     $(".change_mins").each(function(e){
-        minsarr.push($(this).val());
+        var minsValue = $(this).val();
+        if(parseInt(minsValue,10)<10)
+        {
+            minsValue='0'+minsValue;
+        }
+        minsarr.push(minsValue);
     });
-    console.log(hrsarr);
-    console.log(minsarr);
+    for(var i = 0; i < hrsarr.length; i++)
+    {
+        var hrstxt = (hrsarr[i] != '' ? hrsarr[i] : '00');
+        var minstxt = (minsarr[i] != '' ? minsarr[i] : '00');
+        finalArr.push(String(hrstxt+":"+minstxt+":00"));
+    }
+    var todayHours = JSON.stringify(finalArr);
+    // console.log(finalArr);
+    $.ajax({
+        url: "<?php echo CHelper::createUrl("daycomment/addCurrentHours"); ?>",
+        type:'POST',
+        data: {todayHours : todayHours},
+        success:function(data)
+        {
+            if(data != '')
+            {
+                $('#totalHrsTxt').text(data);
+            }
+        }
+    });
 });
 </script>
 
