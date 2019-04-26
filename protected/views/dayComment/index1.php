@@ -98,9 +98,15 @@ Yii::app()->clientScript->registerCssFile(
 //echo 'asdasd';die;
 ?>
 <div class="timesheet-main">
-    <div id='calendar'></div>
+    
+        <div id='calendar'>
+            <p style="margin:10px;"><strong>Note:</strong> The above calendar shows all the previous added hours in the timesheet. To get more details for a specific date, click on hours block <span class="label label-info">00:00</span> in the calendar above to show the details.</p>
+        </div>
+        
+    <!-- </div> -->
     <div id="tasksdiv">
         <h1 class="text-center">Add your today's timecard details</h1>
+        <p style="margin:10px;"><strong>Note:</strong> Please add hours only for which you have worked and leave the rest of the tasks as it is. Also add hours less than the remaining hours.</p>
         <form class="form" action="<?php echo Yii::app()->baseUrl; ?>/daycomment/addhours" method="post" id="addhoursfrm">
             <input type="hidden" name ="YII_CSRF_TOKEN" value="<?php echo Yii::app()->request->csrfToken; ?>"  />
             <table class="table responsive">
