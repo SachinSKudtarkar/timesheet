@@ -330,6 +330,8 @@ $img_path = Yii::app()->theme->baseUrl . "/img/add_image.png";
         });
 
         $("#uploadFileBtn").click(function(){
+            $(this).val('Processing..');
+            
             var file_data = $('#hrsExcel').prop('files')[0];   
             var form_data = new FormData();                  
             form_data.append('file', file_data);
@@ -352,7 +354,8 @@ $img_path = Yii::app()->theme->baseUrl . "/img/add_image.png";
                     $("#modalhrs").html('');
                     $("#SubProject_hoursArray").val(php_script_response.finalTHours);
                     $('#modalhrs').append(php_script_response.table); 
-                    $("#filedetails").append(php_script_response.table);  
+                    $("#filedetails").append(php_script_response.table);
+                    alert('Please close the modal and click on save button to complete the process of saving the excel data.');  
                 }
              });
         });
