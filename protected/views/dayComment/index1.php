@@ -120,12 +120,9 @@ Yii::app()->clientScript->registerCssFile(
         </div>
         
     <!-- </div> -->
-    <div id="tasksdiv">
-        <div>
-            
-            <h1 class="text-center">Add your today's timecard details</h1>
-        </div>
-        <p style="margin:10px;"><strong>Note:</strong> Please add hours only for which you have worked and leave the rest of the tasks as it is. Also add hours less than the estimated hours.</p>
+    <div id="tasksdiv">    
+        <h1 class="text-center">Add your today's timecard details</h1>
+        <p style="margin:10px;"><strong>Note:</strong><br>1) Please add hours only for which you have worked and leave the rest of the tasks as it is. <br>2) Add hours less than the estimated hours.<br>3) Use the search and pagination filters to search for the specific tasks.<br>4) After successfully adding hours you can verify the added hours for the day in the calendar (Left).</p>
         <form class="form" action="<?php echo Yii::app()->baseUrl; ?>/daycomment/addhours" method="post" id="addhoursfrm">
             <input type="hidden" name ="YII_CSRF_TOKEN" value="<?php echo Yii::app()->request->csrfToken; ?>"  />
             <table class="table responsive" id="tasksTable">
@@ -133,8 +130,8 @@ Yii::app()->clientScript->registerCssFile(
                     <tr>
                         <!-- <th>Project Name</th> -->
                         <th width="40%">Task Name</th>
-                        <th width="15%">Used / Est Hours</th>
-                        <th width="20%">Hours / Mins</th>
+                        <th width="12%">Used / Est Hours</th>
+                        <th width="23%">Hours / Mins</th>
                         <th width="25%">Comment</th>
                     </tr>
                 </thead>
