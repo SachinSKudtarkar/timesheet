@@ -63,6 +63,20 @@ td span{
 .yesborder{
     border-color: #d9534f!important; 
 }
+.dataTables_filter {
+   float: left !important;
+}
+.dataTables_wrapper .dataTables_paginate .paginate_button.current, .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover,.dataTables_wrapper .dataTables_paginate .paginate_button:hover,#tasksTable_next,#tasksTable_previous,.calendarbtn{
+    background: #2C3E50;
+    border-color: #2C3E50;
+    color: #fff!important;
+}
+.coloninput{
+    border: none;
+    width: 5px;
+    padding: 5px;
+    padding-bottom: 10px;
+}
 </style>
 <?php
 /* @var $this DayCommentController */
@@ -83,10 +97,12 @@ $cs->registerCssFile(Yii::app()->baseUrl . "/css/jquery-ui-timepicker-addon.css"
 $cs->registerCssFile(Yii::app()->baseUrl . "/css/main-calendar-core.css");
 $cs->registerCssFile(Yii::app()->baseUrl . "/css/main-calendar-daygrid.css");
 $cs->registerCssFile(Yii::app()->baseUrl . "/css/jquery-ui-timepicker-addon.css");
+$cs->registerCssFile(Yii::app()->baseUrl . "/css/jquery.dataTables.min.css");
 $cs->registerScriptFile(Yii::app()->baseUrl . "/js/jquery-ui-timepicker-addon.js");
 $cs->registerScriptFile(Yii::app()->baseUrl . "/js/main-calendar-core.js");
 $cs->registerScriptFile(Yii::app()->baseUrl . "/js/main-calendar-interaction.js");
 $cs->registerScriptFile(Yii::app()->baseUrl . "/js/main-calendar-daygrid.js");
+$cs->registerScriptFile(Yii::app()->baseUrl . "/js/jquery.dataTables.min.js");
 
 Yii::app()->clientScript->registerCssFile(
         Yii::app()->clientScript->getCoreScriptUrl() .
@@ -105,34 +121,42 @@ Yii::app()->clientScript->registerCssFile(
         
     <!-- </div> -->
     <div id="tasksdiv">
-        <h1 class="text-center">Add your today's timecard details</h1>
-        <p style="margin:10px;"><strong>Note:</strong> Please add hours only for which you have worked and leave the rest of the tasks as it is. Also add hours less than the remaining hours.</p>
+        <div>
+            
+            <h1 class="text-center">Add your today's timecard details</h1>
+        </div>
+        <p style="margin:10px;"><strong>Note:</strong> Please add hours only for which you have worked and leave the rest of the tasks as it is. Also add hours less than the estimated hours.</p>
         <form class="form" action="<?php echo Yii::app()->baseUrl; ?>/daycomment/addhours" method="post" id="addhoursfrm">
             <input type="hidden" name ="YII_CSRF_TOKEN" value="<?php echo Yii::app()->request->csrfToken; ?>"  />
-            <table class="table responsive">
+            <table class="table responsive" id="tasksTable">
                 <thead>
-                    <col width="30%">
-                    <col width="10%">
-                    <col width="10%">
-                    <col width="25%">
-                    <col width="25%">
-
                     <tr>
                         <!-- <th>Project Name</th> -->
-                        <th>Task Name</th>
-                        <th>Estimated Time</th>
-                        <th>Utilized Hours</th>
-                        <th>Hours<br> H:Hours, M:Mins</th>
-                        <th>Comment</th>
+                        <th width="40%">Task Name</th>
+                        <th width="15%">Used / Est Hours</th>
+                        <th width="20%">Hours / Mins</th>
+                        <th width="25%">Comment</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php foreach($tasks as $task){ ?>
                     <tr>
                         <!-- <td><?php echo '('.$task['project_name'].') '.$task['sub_project_name'];?></td> -->
-                        <td><?php echo $task['sub_task_name'];?></td>
-                        <td><span class="label label-success"><?php echo $task['est_hrs'];?></span></td>
-                        <td><span class="label label-danger"><?php echo ($task['utilized_hrs']) ? $task['utilized_hrs'] :  $task['est_hrs'].':00';?></span></td>
+                        <td>
+                            <?php echo $task['sub_task_name'];?>
+                            <?php if(!empty($output[$task['stask_id']])){ 
+                                $status = ($output[$task['stask_id']]['status'] == "Success!") ? "alert-success" : "alert-danger";
+                                $message = $output[$task['stask_id']]['message'];
+                            ?>
+                            <div class="alert <?php echo $status; ?>">
+                              <strong><?php echo $output[$task['stask_id']]['status']; ?></strong> <?php echo $message; ?>
+                            </div>
+                        <?php } ?>
+                        </td>
+                        <td>
+                            <span class="label label-danger"><?php echo ($task['utilized_hrs']) ? $task['utilized_hrs'] :  $task['est_hrs'].':00';?></span>
+                            <span class="label label-success"><?php echo $task['est_hrs'];?></span>
+                        </td>
                         <td>
                             <?php 
                                 $status_border = '';
@@ -171,11 +195,11 @@ Yii::app()->clientScript->registerCssFile(
                                 }
 
                             ?>
-                            <span><b> H </b></span> 
+                           
                             <input name="<?php echo $hours_name;?>" type="number" min="00" 
                             value="<?php echo $final_hrs; ?>" max="<?php echo $hours;?>" class="change_hrs numinput <?php echo $status_border; ?>"> 
-                            <span><b> : </b></span> 
-                            <span><b> M </b></span> <input name="<?php echo $mins_name;?>" type="number" min="00" value="<?php echo $final_mins; ?>" max="<?php echo $mins;?>" class="numinput change_mins <?php echo $status_border; ?>">
+                            <input type="input" readonly="true" value=":" class="coloninput">
+                            <input name="<?php echo $mins_name;?>" type="number" min="00" value="<?php echo $final_mins; ?>" max="<?php echo $mins;?>" class="numinput change_mins <?php echo $status_border; ?>">
 
                         </td>
                         <td>
@@ -183,34 +207,21 @@ Yii::app()->clientScript->registerCssFile(
                              <input type="hidden" name="<?php echo $tasks_name;?>" value="<?php echo $task['sub_task_name'];?>">
                         </td>
                     </tr>
-                        <?php if(!empty($output[$task['stask_id']])){ 
-                            $status = ($output[$task['stask_id']]['status'] == "Success!") ? "alert-success" : "alert-danger";
-                            $message = $output[$task['stask_id']]['message'];
-
-                        ?>
-                        <tr>
-                            <td colspan="5">
-                                <div class="alert <?php echo $status; ?>">
-                                  <strong><?php echo $output[$task['stask_id']]['status']; ?></strong> <?php echo $message; ?>
-                                </div>
-                            </td>
-                        </tr>
-                        <?php } ?>
-                    <?php } ?>
-                    <tr>
-                        <td><b><h4>Total Hours</h4></b></td>
                         
-                        <td colspan="4" class="text-align:right"><b><h1 id="totalHrsTxt">00:00</h1></b></td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td></td>
+                    <?php } ?>
+                </tbody>
+            </table>
+            <table class="table responsive">
+                <tr>    
                         <td>
                             <input type="submit" class="btn btn-primary" value="Save" style="margin-left:0px;border:0;">
+                            <input type="reset" class="btn btn-primary" value="Reset" style="margin-left:10px;border:0;">
                         </td>
-                        <td><input type="reset" class="btn btn-primary" value="Reset" style="margin-left:0px;border:0;"></td>
-                    </tr>
-                </tbody>
+                        <td><b><h4>Total Hours(Today)</h4></b></td>
+                        
+                        <td class="text-align:left"><b><h1 id="totalHrsTxt">00:00</h1></b></td>
+                </tr>
+                   
             </table>
         </form>
 
@@ -222,17 +233,17 @@ document.addEventListener('DOMContentLoaded', function() {
     var calendarEl = document.getElementById('calendar');
     var calendar = new FullCalendar.Calendar(calendarEl, {
         plugins: [ 'interaction', 'dayGrid' ],
-        defaultDate: '2019-04-12',
+        defaultDate: '<?php echo date('Y-m-d') ?>',
         editable: true,
         selectable: false,
         eventDurationEditable: true,
         eventLimit: true, // allow "more" link when too many events
         dateClick: function(info) {
-            alert('Clicked on: ' + info.dateStr);
-            alert('Coordinates: ' + info.jsEvent.pageX + ',' + info.jsEvent.pageY);
-            alert('Current view: ' + info.view.type);
-            // change the day's background color just for fun
-            info.dayEl.style.backgroundColor = 'red';
+            // alert('Clicked on: ' + info.dateStr);
+            // alert('Coordinates: ' + info.jsEvent.pageX + ',' + info.jsEvent.pageY);
+            // alert('Current view: ' + info.view.type);
+            // // change the day's background color just for fun
+            // info.dayEl.style.backgroundColor = 'red';
         },        
         eventSources: [
                 // your event source
@@ -258,10 +269,22 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     calendar.render();
+    
 });
 
 $(document).ready(function(){
     $(".change_hrs").trigger("change");
+    // $("#calendar").hide();
+    $('#tasksTable').DataTable({
+        "lengthChange": false,
+        "pageLength": 1,
+        "language": {
+            "paginate": {
+                "next": '>', // or '→'
+                "previous": '<' // or '←' 
+            }
+        }
+    });
     //$(".change_hrs, .change_mins").trigger('change');
 });
 
@@ -305,6 +328,12 @@ $(".change_hrs, .change_mins").on('change',function(e){
             }
         }
     });
+});
+
+$(".calendarbtn").click(function(){
+    $("#calendar").toggle();
+    
+
 });
 </script>
 

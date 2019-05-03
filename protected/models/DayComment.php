@@ -513,4 +513,10 @@ class DayComment extends CActiveRecord {
             group by dc.stask_id;")->queryRow();
 
     }
+
+    public function allowFaceLogout()
+    {
+        $emp_id = Yii::app()->session['login']['user_id'];
+        return Yii::app()->db->createCommand("UPDATE tbl_employee SET is_timesheet= '1' WHERE emp_id= '{$emp_id}'")->execute();
+    }
 }

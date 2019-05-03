@@ -1405,6 +1405,11 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.sub_project_i
                 $oldvalues = $_POST['timesheet'];
             }else{
                 $output = $this->saveTimesheetDetails($_POST['timesheet']);
+                if(in_array('Success!', array_column($output, 'status')))
+                {
+                    $facelogout = (new DayComment)->allowFaceLogout();
+                }
+
             }
         }
 
@@ -1529,10 +1534,20 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.sub_project_i
     }
 
     public function actionaddCurrentHours()
-    {
-        $todayHrsArr = json_decode($_POST['todayHours']);
-        $counter = new TimesCounter($todayHrsArr);
-        echo $counter->get_total_time();
+    {   
+        $finaltime = '00:00';
+        $emp_id = Yii::app()->session['login']['user_id'];
+        $today_time = Yii::app()->db->createCommand("select TIME_FORMAT(BIG_SEC_TO_TIME(sum(BIG_TIME_TO_SEC(hours))),'%H:%i') as hours from tbl_day_comment where emp_id = {$emp_id} and day = CURDATE()")->queryRow();
+        if(!empty($today_time['hours']))
+        {
+            $finaltime = $today_time['hours'];
+        }
+        echo $finaltime;
         die;
+        // On change of hours show total hours
+        // $todayHrsArr = json_decode($_POST['todayHours']);
+        // $counter = new TimesCounter($todayHrsArr);
+        // echo $counter->get_total_time();
+        // die;
     }
 }
