@@ -43,7 +43,7 @@
   }
   #tasksdiv table th{
     font-size: 16px;
-    padding: 20px;
+    /*padding: 20px;*/
     border-bottom: 5px solid #eee;
   }
    #tasksdiv table td{
@@ -116,30 +116,32 @@ Yii::app()->clientScript->registerCssFile(
 <div class="timesheet-main">
     
         <div id='calendar'>
-            <p style="margin:10px;"><strong>Note:</strong> The above calendar shows all the previous added hours in the timesheet. To get more details for a specific date, click on hours block <span class="label label-info">00:00</span> in the calendar above to show the details.</p>
+            <p style="margin:10px;"><strong>Note (Calendar):</strong> The above calendar shows all the previous added hours in the timesheet. To get more details for a specific date, click on hours block <span class="label label-info">00:00</span> in the calendar above to show the details.</p>
+             <p style="margin:10px;"><strong>Note (Hours Form):</strong><br>1) Please add hours only for which you have worked and leave the rest of the tasks as it is. <br>2) Add hours less than the estimated hours.<br>3) Use the search and pagination filters to search for the specific tasks.<br>4) After successfully adding hours you can verify the added hours for the day in the calendar (Left).</p>
         </div>
         
     <!-- </div> -->
     <div id="tasksdiv">    
         <h1 class="text-center">Add your today's timecard details</h1>
-        <p style="margin:10px;"><strong>Note:</strong><br>1) Please add hours only for which you have worked and leave the rest of the tasks as it is. <br>2) Add hours less than the estimated hours.<br>3) Use the search and pagination filters to search for the specific tasks.<br>4) After successfully adding hours you can verify the added hours for the day in the calendar (Left).</p>
+       
         <form class="form" action="<?php echo Yii::app()->baseUrl; ?>/daycomment/addhours" method="post" id="addhoursfrm">
             <input type="hidden" name ="YII_CSRF_TOKEN" value="<?php echo Yii::app()->request->csrfToken; ?>"  />
             <table class="table responsive" id="tasksTable">
                 <thead>
                     <tr>
                         <!-- <th>Project Name</th> -->
-                        <th width="40%">Task Name</th>
-                        <th width="12%">Used / Est Hours</th>
+                        <th width="39%">Task Name</th>
+                        <th width="15%">Used / Est Hours</th>
                         <th width="23%">Hours / Mins</th>
                         <th width="25%">Comment</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach($tasks as $task){ ?>
+                    <?php echo '<pre>';print_r($tasks);die;foreach($tasks as $task){ ?>
                     <tr>
                         <!-- <td><?php echo '('.$task['project_name'].') '.$task['sub_project_name'];?></td> -->
                         <td>
+                            <small><?php echo $task['project_name'];?> / <?php echo $task['sub_project_name'];?></small><br>
                             <?php echo $task['sub_task_name'];?>
                             <?php if(!empty($output[$task['stask_id']])){ 
                                 $status = ($output[$task['stask_id']]['status'] == "Success!") ? "alert-success" : "alert-danger";
@@ -200,7 +202,7 @@ Yii::app()->clientScript->registerCssFile(
 
                         </td>
                         <td>
-                            <textarea name="<?php echo $comment_name;?>" id="comment" class="<?php echo $status_border; ?>"><?php echo $final_comment; ?></textarea>
+                            <textarea rows="1" name="<?php echo $comment_name;?>" id="comment" class="<?php echo $status_border; ?>"><?php echo $final_comment; ?></textarea>
                              <input type="hidden" name="<?php echo $tasks_name;?>" value="<?php echo $task['sub_task_name'];?>">
                         </td>
                     </tr>
@@ -272,16 +274,16 @@ document.addEventListener('DOMContentLoaded', function() {
 $(document).ready(function(){
     $(".change_hrs").trigger("change");
     // $("#calendar").hide();
-    $('#tasksTable').DataTable({
-        "lengthChange": false,
-        "pageLength": 1,
-        "language": {
-            "paginate": {
-                "next": '>', // or '→'
-                "previous": '<' // or '←' 
-            }
-        }
-    });
+    // $('#tasksTable').DataTable({
+    //     "lengthChange": false,
+    //     "pageLength": 1,
+    //     "language": {
+    //         "paginate": {
+    //             "next": '>', // or '→'
+    //             "previous": '<' // or '←' 
+    //         }
+    //     }
+    // });
     //$(".change_hrs, .change_mins").trigger('change');
 });
 

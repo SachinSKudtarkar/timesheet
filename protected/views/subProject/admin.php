@@ -62,6 +62,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
             //'filter' => false,
             'value' => array($model, 'getApprovalStatus')
               ),
+           'status',
         array(
             'class' => 'CButtonColumn',
         ),

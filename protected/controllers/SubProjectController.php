@@ -127,6 +127,13 @@ class SubProjectController extends Controller {
      * @param integer $id the ID of the model to be updated
      */
     public function actionUpdate($id) {
+        // echo '<script>alert("Asdasd");</script>';
+        
+        if((DayComment::model()->checkCompleteStatus($id))['result'] == 1) { 
+            $model1 = $this->loadModel($id);
+            $model1->status = "Auto Completed";
+            $model1->save();
+        }
         $model = $this->loadModel($id);
         $model->estHrsradio = 'M';
         $levels = ProjectLevelAllocation::model()->findAll("project_id=$id");

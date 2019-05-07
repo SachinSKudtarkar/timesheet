@@ -85,12 +85,13 @@ for ($h = 0; $h <= 999; $h++) {
 
                 if(!empty($model->project_id))
                 {
-                    $subprojectlist = CHtml::listData(SubProject::model()->findAll(array('order' => 'sub_project_name', 'condition' => 'pid='.$model->project_id.' and is_deleted=0')), 'spid', 'sub_project_name');
+                    $subprojectlist = CHtml::listData(SubProject::model()->findAll(array('order' => 'sub_project_name', 'condition' => 'spid=123')), 'spid', 'sub_project_name');
                 }else{
                     $subprojectlist = '';
                 }
+
             ?>
-            <?php echo CHtml::dropDownList('PidApproval[sub_project_id]', 'spid', $subprojectlist, array('prompt' => 'Select Project', 'options' => array($model->sub_project_id => array('selected' => true)),'required' => 'true')); ?>
+            <?php echo CHtml::dropDownList('PidApproval[sub_project_id]', 'spid', $subprojectlist, array('prompt' => 'Select Project1', 'options' => array($model->sub_project_id => array('selected' => true)),'required' => 'true')); ?>
             <?php echo $form->error($model, 'sub_project_id'); ?>
         </div>
         <div class="row">
@@ -212,7 +213,13 @@ for ($h = 0; $h <= 999; $h++) {
         <?php echo CHtml::hiddenField('triggerexceed',0); ?>
             <?php echo $form->hiddenField($model,'pid_id'); ?>
         <?php } ?>
-        <?php echo CHtml::submitButton($model->isNewRecord ? 'Submit' : 'Update', array('id' => 'ISSUB')); ?>
+        <?php if($model->isNewRecord || (DayComment::model()->checkCompleteStatus($model->sub_project_id))['result'] == 0) { 
+            echo CHtml::submitButton($model->isNewRecord ? 'Submit' : 'Update', array('id' => 'ISSUB')); 
+        } else { ?>
+            <div class="alert alert-info"> 
+                Estimated Hours for this project has been completely utilized, hence for this reason the project status has been change to "Auto Completed" and any update of new task/ hours has been prohibited. Incase you need to add new task, you are required to create new project.
+            </div>
+        <?php } ?>
     </div>
     <?php $this->endWidget(); ?>
 </div><!-- form -->

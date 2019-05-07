@@ -519,4 +519,11 @@ class DayComment extends CActiveRecord {
         $emp_id = Yii::app()->session['login']['user_id'];
         return Yii::app()->db->createCommand("UPDATE tbl_employee SET is_timesheet= '1' WHERE emp_id= '{$emp_id}'")->execute();
     }
+
+    public function checkCompleteStatus($project_id)
+    {
+        return Yii::app()->db->createCommand("select IF(TIMEDIFF(
+        (select BIG_SEC_TO_TIME( SUM( `level_hours` ) * 60 * 60) from tbl_project_level_allocation where project_id = {$project_id}), 
+        (select IF(`hours` <> '',BIG_SEC_TO_TIME( SUM( BIG_TIME_TO_SEC( `hours` )) ), '00:00:00') from tbl_day_comment where spid = {$project_id})) <= '00:00:00', true, false) as result")->queryRow();
+    }
 }

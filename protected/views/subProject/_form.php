@@ -64,7 +64,7 @@ $img_path = Yii::app()->theme->baseUrl . "/img/add_image.png";
             <?php echo $form->labelEx($model, 'status'); ?>
             <?php
             //echo $form->textField($model,'status',array('size'=>25,'maxlength'=>25));
-            echo $form->dropDownList($model, 'status', array('Completed' => 'Completed', 'Newly Created' => 'Newly Created', 'Partially Completed' => 'Partially Completed'), array('required'=>'true','prompt' => '(Select Status)', 'class' => 'sts'));
+            echo $form->dropDownList($model, 'status', array('Completed' => 'Completed', 'Newly Created' => 'Newly Created', 'Partially Completed' => 'Partially Completed', 'Auto Completed' => 'Auto Completed'), array('required'=>'true','prompt' => '(Select Status)', 'class' => 'sts'));
             ?>
             <?php echo $form->error($model, 'status'); ?>
         </div>
@@ -80,7 +80,7 @@ $img_path = Yii::app()->theme->baseUrl . "/img/add_image.png";
         </div>
     </div>
     <div class="span5">
-        <?php if (true) { ?>
+        <?php if ($model->isNewRecord) { ?>
         <div class="row">
             <?php echo $form->labelEx($model,'estHrsradio'); ?>
             <?php echo $form->radioButtonList($model,'estHrsradio',array('E'=>'Excel Upload','M'=>'Manual'), array('onchange' => 'return hrsRadioChange(this);','class'=>'radiolabel','separator'=>'')); ?>
@@ -192,7 +192,7 @@ $img_path = Yii::app()->theme->baseUrl . "/img/add_image.png";
                     </div>
                     <?php echo CHtml::Button('Update Hours', array('id' => 'update_hours')); ?>
                 <?php }*/ ?>
-                <?php if (!$model->isNewRecord) { ?>
+                <?php if (false) { ?>
                 <?php echo CHtml::Button('Update Hours', array('id' => 'update_hours')); ?>
                 <?php } ?>
                 <div class="span10 row updhrs"><p> Allocated Level and its associated Hours to project.</p></div>
@@ -230,34 +230,40 @@ $img_path = Yii::app()->theme->baseUrl . "/img/add_image.png";
             <?php } ?>
         </div>
     </div>
-    <?php // echo $form->labelEx($model,'is_deleted'); ?>
-    <?php // echo $form->textField($model,'is_deleted'); ?>
-<?php // echo $form->error($model,'is_deleted');   ?>
 
-    <div class="row buttons span10">
-        <?php echo $form->hiddenField($model, 'spid'); ?>
-        <?php if ($model->isNewRecord) { ?>
-            <?php echo Chtml::hiddenField('unqid',uniqid()); ?>
-        <?php } ?>
-        <?php echo $form->hiddenField($model, 'hoursArray'); ?>
-    <?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save', array('id' => 'ISSUB')); ?>
-    <?php 
-        $logged_user_id = Yii::app()->session['login']['user_id'];
-        $resourcesGroup = Yii::app()->db->createCommand("select group_concat(emp_id) as resources from tbl_access_role_master where parent_id = {$logged_user_id}")->queryAll();
-        $resourcesArr = explode(',',$resourcesGroup[0]['resources']);
         
-        if(!$model->isNewRecord && (Yii::app()->session['login']['user_id'] == '6' || Yii::app()->session['login']['user_id'] == '3616' || in_array($model->created_by, $resourcesArr))  && $model->approval_status == '2') { 
-            $baseurl = Yii::app()->getBaseUrl(true);
-            $approvalLink = "{$baseurl}/subproject/updateStatus/1{$model->spid}";
-            $rejectLink = "{$baseurl}/subproject/updateStatus/0{$model->spid}"; 
+    <div class="row buttons span10">
+        <?php 
+            echo $form->hiddenField($model, 'spid'); 
+            if ($model->isNewRecord) { 
+                echo Chtml::hiddenField('unqid',uniqid()); 
+            } 
+            echo $form->hiddenField($model, 'hoursArray'); 
+            if($model->isNewRecord || (DayComment::model()->checkCompleteStatus($model->spid))['result'] == 0) { 
+                echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save', array('id' => 'ISSUB'));
 
-    ?>
-        <a href="<?php echo $approvalLink; ?>" class="abutton">Approve</a>
-        <a href="<?php echo $rejectLink; ?>" class="abutton rejectBtn" >Reject</a>
-    <?php } ?>
-        <?php if (!$model->isNewRecord) { ?>
-        <a href="#" class="abutton taskBtn" id="taskList" onclick="openTaskList();">Check Task</a>
+                $logged_user_id = Yii::app()->session['login']['user_id'];
+                $resourcesGroup = Yii::app()->db->createCommand("select group_concat(emp_id) as resources from tbl_access_role_master where parent_id = {$logged_user_id}")->queryAll();
+                $resourcesArr = explode(',',$resourcesGroup[0]['resources']);
+            
+                if(!$model->isNewRecord && (Yii::app()->session['login']['user_id'] == '6' || Yii::app()->session['login']['user_id'] == '3616' || in_array($model->created_by, $resourcesArr))  && $model->approval_status == '2') { 
+                    $baseurl = Yii::app()->getBaseUrl(true);
+                    $approvalLink = "{$baseurl}/subproject/updateStatus/1{$model->spid}";
+                    $rejectLink = "{$baseurl}/subproject/updateStatus/0{$model->spid}"; 
+
+            ?>        
+                    <a href="<?php echo $approvalLink; ?>" class="abutton">Approve</a>
+                    <a href="<?php echo $rejectLink; ?>" class="abutton rejectBtn" >Reject</a>
+            <?php } ?>
+            <?php if (!$model->isNewRecord) { ?>
+                <a href="#" class="abutton taskBtn" id="taskList" onclick="openTaskList();">Check Task</a>
+            <?php } ?>
+        <?php } else { ?>
+            <div class="alert alert-info"> 
+                Estimated Hours for this project has been completely utilized, hence for this reason the project status has been change to "Auto Completed". Incase you need to add new CR, you are required to create new project.
+            </div>
         <?php } ?>
+
     </div>
 <?php $this->endWidget(); ?>
 </div>
