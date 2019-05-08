@@ -131,10 +131,14 @@ class SubProjectController extends Controller {
         $completeStatus = DayComment::model()->checkCompleteStatus($id);
         $modelAuto = $this->loadModel($id);
 
-        if($completeStatus['result'] == 1 && $modelAuto->status != "Completed") { 
-            $modelAuto->status = "Auto Completed";
-            $modelAuto->save();
+        if($modelAuto->status != 'Completed')
+        {
+             if($completeStatus['result'] == 1) { 
+                $modelAuto->status = "Auto Completed";
+                $modelAuto->save();
+            }
         }
+       
         
         $model = $this->loadModel($id);
         $model->estHrsradio = 'M';
@@ -164,7 +168,7 @@ class SubProjectController extends Controller {
             $model->project_id = $_POST['sub_project_id'];
             $model->updated_date = date('Y-m-d h:i:s');
             $model->updated_by = Yii::app()->session['login']['user_id'];
-            $model->approval_status = 2;
+            $model->approval_status = 1;
 
             if ($model->save())
                 //$this->insertUpdateEmployee(2,$model);

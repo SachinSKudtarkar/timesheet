@@ -31,11 +31,18 @@ $img_path = Yii::app()->theme->baseUrl . "/img/add_image.png";
     ?>
 
     <p class="note">Fields with <span class="required">*</span> are required.</p>
-    <?php if(!$model->isNewRecord && $completeStatus['result'] == '1'){ ?>
-        <div class="alert alert-danger"> 
-            Estimated Hours for this project has been completely utilized, hence for this reason the project status has been changed to "Auto Completed" or "Complete". Incase you need to add new CR, you are required to create new project.
-        </div>
+    <?php if(!$model->isNewRecord){ ?>
+        <?php if(strpos($model->status, 'Completed') === true){ ?>
+            <div class="alert alert-danger"> 
+                Estimated Hours for this project has been completely utilized, hence for this reason the project status has been changed to "Auto Completed". Incase you need to add new CR, you are required to create new project.
+            </div>
+        <?php } elseif ($completeStatus['result'] == '1'){ ?>
+            <div class="alert alert-danger"> 
+                As this project was marked Completed (Project Status), adding new CR to this project as been restricted and you are required to create new project.
+            </div>
+        <?php } ?>
     <?php } ?>
+    
     <?php echo $form->errorSummary($model); ?>
     <div class="span5">
         <div class="row">
@@ -68,7 +75,7 @@ $img_path = Yii::app()->theme->baseUrl . "/img/add_image.png";
         <div class="row">
             <?php echo $form->labelEx($model, 'status'); ?>
             <?php
-            if(!$model->isNewRecord && $completeStatus['result'] == '1'){ 
+            if(!$model->isNewRecord && ($completeStatus['result'] == '1' || strpos($model->status, 'Completed') === true)){ 
                 echo $form->textField($model,'status',array('size'=>25,'maxlength'=>25,'readonly'=>true));
             }else{
                 echo $form->dropDownList($model, 'status', array('Completed' => 'Completed', 'Newly Created' => 'Newly Created', 'Partially Completed' => 'Partially Completed', 'Auto Completed' => 'Auto Completed'), array('required'=>'true','prompt' => '(Select Status)', 'class' => 'sts'));

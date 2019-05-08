@@ -718,7 +718,7 @@ group by dc.stask_id order by em.emp_id;";
     }
 
     public function actionGetPId() {
-        $query = "select spid,sub_project_name from tbl_sub_project where pid ={$_POST['pid']} and approval_status = 1 and status != 'Auto Completed'";
+        $query = "select spid,sub_project_name from tbl_sub_project where pid ={$_POST['pid']} and approval_status = 1 and (status != 'Auto Completed' or status != 'Completed')";
         $data = Yii::app()->db->createCommand($query)->queryAll();
         echo CHtml::tag('option', array('value' => ''), 'Please select Project', true);
         foreach ($data as $value => $name) {

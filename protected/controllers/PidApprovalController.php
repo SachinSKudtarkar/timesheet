@@ -165,6 +165,8 @@ class PidApprovalController extends Controller {
         
         $model = $this->loadModel($id);
         $completeStatus = DayComment::model()->checkCompleteStatus($model->sub_project_id);
+        $projectCStatus = SubProject::model()->find($model->sub_project_id)->status;
+
         $query1 = "select st.*,lm.budget_per_hour from tbl_sub_task st left join tbl_assign_resource_level lr on lr.emp_id = st.emp_id left join tbl_level_master lm on lm.level_id = lr.level_id where pid_approval_id={$id} order by st.stask_id";
         $subtask = Yii::app()->db->createCommand($query1)->queryAll();
 
@@ -238,6 +240,7 @@ class PidApprovalController extends Controller {
             'model' => $model,
             'subtask' => $subtask,
             'completeStatus' => $completeStatus,
+            'projectCStatus' => $projectCStatus,
         ));
     }
 
