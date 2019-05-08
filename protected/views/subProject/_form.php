@@ -31,6 +31,11 @@ $img_path = Yii::app()->theme->baseUrl . "/img/add_image.png";
     ?>
 
     <p class="note">Fields with <span class="required">*</span> are required.</p>
+    <?php if(!$model->isNewRecord && $completeStatus['result'] == '1'){ ?>
+        <div class="alert alert-danger"> 
+            Estimated Hours for this project has been completely utilized, hence for this reason the project status has been changed to "Auto Completed" or "Complete". Incase you need to add new CR, you are required to create new project.
+        </div>
+    <?php } ?>
     <?php echo $form->errorSummary($model); ?>
     <div class="span5">
         <div class="row">
@@ -63,8 +68,12 @@ $img_path = Yii::app()->theme->baseUrl . "/img/add_image.png";
         <div class="row">
             <?php echo $form->labelEx($model, 'status'); ?>
             <?php
-            //echo $form->textField($model,'status',array('size'=>25,'maxlength'=>25));
-            echo $form->dropDownList($model, 'status', array('Completed' => 'Completed', 'Newly Created' => 'Newly Created', 'Partially Completed' => 'Partially Completed'), array('required'=>'true','prompt' => '(Select Status)', 'class' => 'sts'));
+            if(!$model->isNewRecord && $completeStatus['result'] == '1'){ 
+                echo $form->textField($model,'status',array('size'=>25,'maxlength'=>25,'readonly'=>true));
+            }else{
+                echo $form->dropDownList($model, 'status', array('Completed' => 'Completed', 'Newly Created' => 'Newly Created', 'Partially Completed' => 'Partially Completed', 'Auto Completed' => 'Auto Completed'), array('required'=>'true','prompt' => '(Select Status)', 'class' => 'sts'));
+            } 
+            
             ?>
             <?php echo $form->error($model, 'status'); ?>
         </div>
@@ -80,7 +89,7 @@ $img_path = Yii::app()->theme->baseUrl . "/img/add_image.png";
         </div>
     </div>
     <div class="span5">
-        <?php if (true) { ?>
+        <?php if($model->isNewRecord){ ?>  
         <div class="row">
             <?php echo $form->labelEx($model,'estHrsradio'); ?>
             <?php echo $form->radioButtonList($model,'estHrsradio',array('E'=>'Excel Upload','M'=>'Manual'), array('onchange' => 'return hrsRadioChange(this);','class'=>'radiolabel','separator'=>'')); ?>
@@ -192,9 +201,9 @@ $img_path = Yii::app()->theme->baseUrl . "/img/add_image.png";
                     </div>
                     <?php echo CHtml::Button('Update Hours', array('id' => 'update_hours')); ?>
                 <?php }*/ ?>
-                <?php if (!$model->isNewRecord) { ?>
-                <?php echo CHtml::Button('Update Hours', array('id' => 'update_hours')); ?>
-                <?php } ?>
+                <!-- <?php if (!$model->isNewRecord) { ?> -->
+                <!-- <?php //echo CHtml::Button('Update Hours', array('id' => 'update_hours')); ?> -->
+                <!-- <?php } ?> -->
                 <div class="span10 row updhrs"><p> Allocated Level and its associated Hours to project.</p></div>
 
                 <div class="repeater updhrs">
@@ -240,8 +249,11 @@ $img_path = Yii::app()->theme->baseUrl . "/img/add_image.png";
             <?php echo Chtml::hiddenField('unqid',uniqid()); ?>
         <?php } ?>
         <?php echo $form->hiddenField($model, 'hoursArray'); ?>
-    <?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save', array('id' => 'ISSUB')); ?>
+    
+        <?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save', array('id' => 'ISSUB')); ?>
+
     <?php 
+        
         $logged_user_id = Yii::app()->session['login']['user_id'];
         $resourcesGroup = Yii::app()->db->createCommand("select group_concat(emp_id) as resources from tbl_access_role_master where parent_id = {$logged_user_id}")->queryAll();
         $resourcesArr = explode(',',$resourcesGroup[0]['resources']);
@@ -258,6 +270,7 @@ $img_path = Yii::app()->theme->baseUrl . "/img/add_image.png";
         <?php if (!$model->isNewRecord) { ?>
         <a href="#" class="abutton taskBtn" id="taskList" onclick="openTaskList();">Check Task</a>
         <?php } ?>
+
     </div>
 <?php $this->endWidget(); ?>
 </div>

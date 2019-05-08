@@ -50,8 +50,14 @@ for ($h = 0; $h <= 999; $h++) {
     ));
     ?>
     <p class="note">Fields with <span class="required">*</span> are required.</p>
+    <?php if(!$model->isNewRecord && $completeStatus['result'] == '1'){ ?>
+        <div class="row alert alert-danger"> 
+            Estimated Hours for this project has been completely utilized, hence for this reason the project status has been change to "Auto Completed" and any update of new task/ hours has been prohibited. Incase you need to add new task, you are required to create new project and then proceed as before.
+        </div>
+    <?php } ?>
     <?php //echo $form->errorSummary($model); ?>
     <div class="span5">
+
         <div class="row">
             <?php echo CHTML::label('Task ID', ''); ?>
             <?php
@@ -212,7 +218,9 @@ for ($h = 0; $h <= 999; $h++) {
         <?php echo CHtml::hiddenField('triggerexceed',0); ?>
             <?php echo $form->hiddenField($model,'pid_id'); ?>
         <?php } ?>
-        <?php echo CHtml::submitButton($model->isNewRecord ? 'Submit' : 'Update', array('id' => 'ISSUB')); ?>
+        <?php if($completeStatus['result'] == '0'){ ?>
+            <?php echo CHtml::submitButton($model->isNewRecord ? 'Submit' : 'Update', array('id' => 'ISSUB')); ?>
+        <?php } ?>
     </div>
     <?php $this->endWidget(); ?>
 </div><!-- form -->

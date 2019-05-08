@@ -128,12 +128,14 @@ class SubProjectController extends Controller {
      */
     public function actionUpdate($id) {
         // echo '<script>alert("Asdasd");</script>';
+        $completeStatus = DayComment::model()->checkCompleteStatus($id);
+        $modelAuto = $this->loadModel($id);
+
+        if($completeStatus['result'] == 1 && $modelAuto->status != "Completed") { 
+            $modelAuto->status = "Auto Completed";
+            $modelAuto->save();
+        }
         
-        // if((DayComment::model()->checkCompleteStatus($id))['result'] == 1) { 
-        //     $model1 = $this->loadModel($id);
-        //     $model1->status = "Auto Completed";
-        //     $model1->save();
-        // }
         $model = $this->loadModel($id);
         $model->estHrsradio = 'M';
         $levels = ProjectLevelAllocation::model()->findAll("project_id=$id");
@@ -218,6 +220,7 @@ class SubProjectController extends Controller {
             'levels_log' => $levels_log,
             'excelHours' => $excelHours,
             'newHours' => $newHours,
+            'completeStatus' => $completeStatus,
         ));
     }
 

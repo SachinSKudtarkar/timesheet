@@ -18,4 +18,4 @@ $this->menu=array(
 
 <h1>Update Task <i><?php echo $model->task_title; ?></i></h1>
 
-<?php $this->renderPartial('_form', array('model'=>$model,'subtask'=>$subtask)); ?>
+<?php $this->renderPartial('_form', array('model'=>$model, 'subtask'=>$subtask, 'completeStatus'=>$completeStatus)); ?>

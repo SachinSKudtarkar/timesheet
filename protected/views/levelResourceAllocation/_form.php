@@ -21,7 +21,7 @@
         <div class="row">
             <?php echo CHtml::label('Available Resource', ''); ?>
             <?php
-            $employeeData = Employee::model()->findAll(array('select' => "emp_id,first_name,last_name", 'order' => 'first_name', 'condition' => 'is_active=1 and is_password_changed="yes"'));
+            $employeeData = Employee::model()->findAll(array('select' => "emp_id,first_name,last_name", 'order' => 'first_name', 'condition' => 'is_active=1'));
             $emp_list = array();
             foreach ($employeeData as $key => $value) {
                 $emp_list[$value['emp_id']] = $value['first_name'] . " " . $value['last_name'];

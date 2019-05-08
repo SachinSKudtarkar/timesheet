@@ -17,4 +17,4 @@ $this->menu=array(
 
 <h1>Update Project <?php echo $model->sub_project_name; ?></h1>
 
-<?php $this->renderPartial('_form', array('model'=>$model,'levels'=>$levels,'hours_label'=>$hours_label,'levels_log'=>$levels_log, 'estimatedArr'=>$estimatedArr,'excelHours'=>$excelHours,'newHours' => $newHours)); ?>
+<?php $this->renderPartial('_form', array('model'=>$model,'levels'=>$levels,'hours_label'=>$hours_label,'levels_log'=>$levels_log, 'estimatedArr'=>$estimatedArr,'excelHours'=>$excelHours,'newHours' => $newHours, 'completeStatus' => $completeStatus)); ?>
