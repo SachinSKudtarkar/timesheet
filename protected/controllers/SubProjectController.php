@@ -131,7 +131,7 @@ class SubProjectController extends Controller {
         $completeStatus = DayComment::model()->checkCompleteStatus($id);
         $modelAuto = $this->loadModel($id);
 
-        if($modelAuto->status != 'Completed')
+        if(strpos($modelAuto->status, 'Completed') === false)
         {
              if($completeStatus['result'] == 1) { 
                 $modelAuto->status = "Auto Completed";
