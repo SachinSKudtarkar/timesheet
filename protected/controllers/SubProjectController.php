@@ -129,11 +129,11 @@ class SubProjectController extends Controller {
     public function actionUpdate($id) {
         // echo '<script>alert("Asdasd");</script>';
         
-        if((DayComment::model()->checkCompleteStatus($id))['result'] == 1) { 
-            $model1 = $this->loadModel($id);
-            $model1->status = "Auto Completed";
-            $model1->save();
-        }
+        // if((DayComment::model()->checkCompleteStatus($id))['result'] == 1) { 
+        //     $model1 = $this->loadModel($id);
+        //     $model1->status = "Auto Completed";
+        //     $model1->save();
+        // }
         $model = $this->loadModel($id);
         $model->estHrsradio = 'M';
         $levels = ProjectLevelAllocation::model()->findAll("project_id=$id");
