@@ -104,11 +104,11 @@ Yii::app()->clientScript->registerCssFile(
                                         $list = [];
 //                                         $list[] = date('Y-m-d');
 
-// 					echo CHtml::dropDownList('selecting_weeks', $date,$list, array('class' => 'selecting_weeks','options' => array($selecting_date => array('selected' => true))));?>
-                                        	                                        //days from 1st april to 7th april
-                                        	                                        //days from 1st april to 7th april
+// 					echo CHtml::dropDownList('selecting_weeks', $date,$list, array('class' => 'selecting_weeks','options' => array($selecting_date => array('selected' => true))));
+                                        	                                        
+                                        	                                        
                                         $list = (new DayComment)->Get7days();
-					echo CHtml::dropDownList('selecting_weeks', $selecting_date,$list, array('class' => 'selecting_weeks','options' => array($selecting_date => array('selected' => true))));?>							echo CHtml::dropDownList('selecting_weeks', $selecting_date,$list, array('class' => 'selecting_weeks','options' => array($selecting_date => array('selected' => true))));?>
+					echo CHtml::dropDownList('selecting_weeks', $selecting_date,$list, array('class' => 'selecting_weeks','options' => array($selecting_date => array('selected' => true))));?>
 					<a id="changeurl" style="display:none;border-radius: 4px;    padding: 6px 12px;font-size:14px;margin-left:10px;text-decoration:none;background: #000;color:#fff">Get Records</a>
 		    			<?php
 					$btnShow = FALSE;
