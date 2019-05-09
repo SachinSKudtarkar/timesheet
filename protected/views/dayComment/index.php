@@ -102,10 +102,15 @@ Yii::app()->clientScript->registerCssFile(
                                                 $list[date('Y-m-d',$time)]=date('Y-m-d', $time);
                                         }
                                         $list = [];
-                                        $list[] = date('Y-m-d');
+//                                         $list[] = date('Y-m-d');
 
-					echo CHtml::dropDownList('selecting_weeks', $date,$list, array('class' => 'selecting_weeks','options' => array($selecting_date => array('selected' => true))));?>
-                                        <?php
+// 					echo CHtml::dropDownList('selecting_weeks', $date,$list, array('class' => 'selecting_weeks','options' => array($selecting_date => array('selected' => true))));?>
+                                        	                                        //days from 1st april to 7th april
+                                        	                                        //days from 1st april to 7th april
+                                        $list = (new DayComment)->Get7days();
+					echo CHtml::dropDownList('selecting_weeks', $selecting_date,$list, array('class' => 'selecting_weeks','options' => array($selecting_date => array('selected' => true))));?>							echo CHtml::dropDownList('selecting_weeks', $selecting_date,$list, array('class' => 'selecting_weeks','options' => array($selecting_date => array('selected' => true))));?>
+					<a id="changeurl" style="display:none;border-radius: 4px;    padding: 6px 12px;font-size:14px;margin-left:10px;text-decoration:none;background: #000;color:#fff">Get Records</a>
+		    			<?php
 					$btnShow = FALSE;
 					//$is_submitted = TRUE;
 //					if (strtotime($selecting_date) >= strtotime("monday this week") ) {
@@ -411,8 +416,13 @@ Yii::app()->clientScript->registerCssFile(
 	<?php if ($btnShow) { ?>
     <div class="row">
 		<?php
-			if(!$is_submitted) {
-				echo CHtml::submitButton('Save', array('id' => 'addC', 'style' => 'margin-top:10px;'));
+// 			if(!$is_submitted) {
+// 				echo CHtml::submitButton('Save', array('id' => 'addC', 'style' => 'margin-top:10px;'));
+// 			}
+			if(in_array(date('Y-m-d', strtotime($selecting_date)), $list)){ 
+				if(!$is_submitted) {
+					echo CHtml::submitButton('Save', array('id' => 'addC', 'style' => 'margin-top:10px;'));
+				}
 			}
 //			if(!$is_submitted) {
 //			//if(!$is_submitted && ( strtotime(date('Y-m-d')) >= strtotime("saturday this week") && strtotime(date('Y-m-d')) <= strtotime("monday next week 1 pm") ) ) {
@@ -828,7 +838,17 @@ Yii::app()->clientScript->registerCssFile(
                   var date = $(this).val();
                 },
               }).attr('readonly','readonly');
-
+	
+	    $('.selecting_weeks').change(function()
+	    {
+		    var data = $('.selecting_weeks').val();
+		    if(data != '')
+		    {
+			$('#changeurl').attr('href',BASE_URL+'/daycomment/index/selecting_date/'+data).trigger('click');
+			$('#changeurl').css('display','inline-block');
+		    }
+	    });
+    
 	$(document).on('change','.sub-project111',function(){
 		var sub_prj = $(this).val();
 		var hrs;
