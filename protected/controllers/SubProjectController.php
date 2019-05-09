@@ -876,11 +876,14 @@ class SubProjectController extends Controller {
 
     public function actionDbquery()
     {
-        Yii::app()->db->createCommand("alter table tbl_task_temp modify column approval_status enum('1','0','2') default 2")->execute();   
-        Yii::app()->db->createCommand("update tbl_task_temp set approval_status = '2' where approval_status = '0'")->execute();   
-        Yii::app()->db->createCommand("alter table tbl_task_temp add column task_status enum('NEW','OLD') default 'NEW'")->execute();
-        Yii::app()->db->createCommand("update tbl_task_temp set task_status = 'NEW' where approval_status = '2'")->execute();
-        Yii::app()->db->createCommand("update tbl_task_temp set task_status = 'OLD' where approval_status = '1'")->execute();
+        
+        Yii::app()->db->createCommand("delete from tbl_project_level_allocation_log where project_id = 29 and rl_log_id >= 2")->execute();
+        echo 'done';die;
+//         Yii::app()->db->createCommand("alter table tbl_task_temp modify column approval_status enum('1','0','2') default 2")->execute();   
+//         Yii::app()->db->createCommand("update tbl_task_temp set approval_status = '2' where approval_status = '0'")->execute();   
+//         Yii::app()->db->createCommand("alter table tbl_task_temp add column task_status enum('NEW','OLD') default 'NEW'")->execute();
+//         Yii::app()->db->createCommand("update tbl_task_temp set task_status = 'NEW' where approval_status = '2'")->execute();
+//         Yii::app()->db->createCommand("update tbl_task_temp set task_status = 'OLD' where approval_status = '1'")->execute();
     }
 }
 
