@@ -526,4 +526,19 @@ class DayComment extends CActiveRecord {
         (select BIG_SEC_TO_TIME( SUM( `level_hours` ) * 60 * 60) from tbl_project_level_allocation where project_id = {$project_id}), 
         (select IF(`hours` <> '',BIG_SEC_TO_TIME( SUM( BIG_TIME_TO_SEC( `hours` )) ), '00:00:00') from tbl_day_comment where spid = {$project_id})) <= '00:00:00', true, false) as result")->queryRow();
     }
+    
+    public function Get7days()
+    {
+        $list[date('Y-m-d')] = date('Y-m-d');
+        $m= 4;
+        $de= 7;
+        $y= 2019;
+        for($i=0; $i<=6; $i++){
+            $tempdata =date('Y-m-d',mktime(0,0,0,$m,($de-$i),$y));
+            $list[$tempdata] =$tempdata; 
+            
+        }
+
+        return $list;
+    }
 }
