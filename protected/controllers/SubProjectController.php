@@ -876,8 +876,11 @@ class SubProjectController extends Controller {
 
     public function actionDbquery()
     {
+        Yii::app()->db->createCommand("INSERT INTO `tbl_project_level_allocation_log`(rl_log_id,project_id,level_id,old_level_hours,new_level_hours,comments,created_at,created_by) VALUES (2,29,1,0,24,'','2019-02-27 06:08:28',2649)")->execute(); 
+        Yii::app()->db->createCommand("INSERT INTO `tbl_project_level_allocation_log`(rl_log_id,project_id,level_id,old_level_hours,new_level_hours,comments,created_at,created_by) VALUES (2,29,3,1612,3012,'','2019-02-27 06:08:28',2649)")->execute(); 
+        Yii::app()->db->createCommand("INSERT INTO `tbl_project_level_allocation_log`(rl_log_id,project_id,level_id,old_level_hours,new_level_hours,comments,created_at,created_by) VALUES (2,29,4,712,1432,'','2019-02-27 06:08:28',2649)")->execute(); 
+//         Yii::app()->db->createCommand("delete from tbl_project_level_allocation_log where project_id = 29 and rl_log_id >= 2")->execute();
         
-        Yii::app()->db->createCommand("delete from tbl_project_level_allocation_log where project_id = 29 and rl_log_id >= 2")->execute();
         echo 'done';die;
 //         Yii::app()->db->createCommand("alter table tbl_task_temp modify column approval_status enum('1','0','2') default 2")->execute();   
 //         Yii::app()->db->createCommand("update tbl_task_temp set approval_status = '2' where approval_status = '0'")->execute();   
