@@ -34,11 +34,11 @@ $img_path = Yii::app()->theme->baseUrl . "/img/add_image.png";
     <?php if(!$model->isNewRecord){ ?>
         <?php if(strpos($model->status, 'Completed') === true){ ?>
             <div class="alert alert-danger"> 
-                Estimated Hours for this project has been completely utilized, hence for this reason the project status has been changed to "Auto Completed". Incase you need to add new CR, you are required to create new project.
+                As this project was marked Completed (Project Status), adding new CR to this project as been restricted and you are required to create new project.
             </div>
         <?php } elseif ($completeStatus['result'] == '1'){ ?>
             <div class="alert alert-danger"> 
-                As this project was marked Completed (Project Status), adding new CR to this project as been restricted and you are required to create new project.
+                Estimated Hours for this project has been completely utilized, hence for this reason the project status has been changed to "Auto Completed". Incase you need to add new CR, you are required to create new project.    
             </div>
         <?php } ?>
     <?php } ?>
