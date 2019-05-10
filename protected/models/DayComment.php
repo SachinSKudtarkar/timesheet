@@ -522,6 +522,8 @@ class DayComment extends CActiveRecord {
 
     public function checkCompleteStatus($project_id)
     {
+        return Yii::app()->db->createCommand("select IF(((select (SUM( `level_hours` ) * 60 * 60) as estimated from tbl_project_level_allocation where project_id = 7)-(select SUM( BIG_TIME_TO_SEC( `hours` )) as utilized from tbl_day_comment where spid = 7)) <= 0, true, false) as result")->queryRow();
+        
         return Yii::app()->db->createCommand("select IF(TIMEDIFF(
         (select BIG_SEC_TO_TIME( SUM( `level_hours` ) * 60 * 60) from tbl_project_level_allocation where project_id = {$project_id}), 
         (select IF(`hours` <> '',BIG_SEC_TO_TIME( SUM( BIG_TIME_TO_SEC( `hours` )) ), '00:00:00') from tbl_day_comment where spid = {$project_id})) <= '00:00:00', true, false) as result")->queryRow();
