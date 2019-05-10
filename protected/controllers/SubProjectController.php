@@ -477,7 +477,7 @@ class SubProjectController extends Controller {
                 $rl_log_id = $checkLogCount['rl_log_id'] + 1;
                 foreach ($newHours as $key => $val) {
 
-                    if (!empty($val['level_hours'])) {
+                    if (!empty($val['level_hours']) && !empty($val['level_id'])) {
                         $checkCount = Yii::app()->db->createCommand('Select * from tbl_project_level_allocation where project_id=' . $project_id . ' and level_id=' . $val['level_id'])->queryRow();
                         if (isset($checkCount['id'])) {
                             $modelPLA = ProjectLevelAllocation::model()->findByAttributes(array('id' => $checkCount['id']));
