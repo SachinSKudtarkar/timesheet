@@ -584,7 +584,7 @@ group by dc.stask_id order by em.emp_id;";
 					}, $resources));;
 
         if (!empty($resources)) {
-            $query = 'SELECT emp_id,CONCAT(first_name," ",last_name) as full_name FROM tbl_employee WHERE emp_id IN(' . $emp_ids . ') and is_active = 1 and is_password_changed="yes"';
+            $query = 'SELECT emp_id,CONCAT(first_name," ",last_name) as full_name FROM tbl_employee WHERE emp_id IN(' . $emp_ids . ') and is_active = 1';
             $empDetails = Yii::app()->db->createCommand($query)->queryAll();
             $rtrnstringarray = array();
             foreach ($empDetails as $indidetails) {
