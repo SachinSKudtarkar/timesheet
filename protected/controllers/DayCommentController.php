@@ -1451,7 +1451,10 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.sub_project_i
 
                 $encodekey =  base64_encode($concatID);
                 $task['key'] = $encodekey;
-                if(!empty($today_comments) || $task['remaining_hours'] > '00:00' || $task['remaining_hours'] == '' || $task['utilized_hrs'] == '00:00:00')
+                $utilizedFFHrs = $task['utilized_hrs'].':00';
+                $difference = Yii::app()->db->createCommand("select TIMEDIFF('{$task['est_time']}','{$utilizedFFHrs}') as remaining_hrs")->queryRow();
+
+                if(!empty($today_comments) || $difference['remaining_hrs'] > '00:00:00')
                 {
                     $tasks[$key] = $task;
                 }else{
@@ -1459,6 +1462,7 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.sub_project_i
                 }
             }
         }
+        
         return $tasks;
     }
 
@@ -1469,7 +1473,7 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.sub_project_i
             $decodedkey = base64_decode($key);
             $keyArr = explode("_", $decodedkey);
             $keyArrCount = count($keyArr);
-            if(($value['hours'] == '' && $value['mins'] == '' && $value['comment'] == '') || ($value['hours'] != '' && $value['mins'] != '' && $value['comment'] != ''))
+            if(($value['hours'] == '' && $value['comment'] == '') || ($value['hours'] != '' && $value['comment'] != ''))
             {
                 if($value['hours'] != '' && $value['mins'] != '' && $value['comment'] != '')
                 {

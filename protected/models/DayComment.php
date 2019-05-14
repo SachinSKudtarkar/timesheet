@@ -420,21 +420,33 @@ class DayComment extends CActiveRecord {
     {
         $emp_id = Yii::app()->session['login']['user_id'];
        
+        // $tasks = Yii::app()->db->createCommand("
+        //     select project_name,sub_project_name,sub_task_name,st.stask_id,dc.day,dc.updated_at,
+        //     est_hrs,
+        //     BIG_SEC_TO_TIME(est_hrs*60*60) as est_time,
+        //     TIME_FORMAT(IF (SUM( BIG_TIME_TO_SEC( `hours` )) > 0, BIG_SEC_TO_TIME( SUM( BIG_TIME_TO_SEC( `hours` )) ), '00:00' ), '%H:%i')as utilized_hrs,
+        //     TIME_FORMAT(TIMEDIFF(BIG_SEC_TO_TIME(est_hrs*60*60), BIG_SEC_TO_TIME( SUM( BIG_TIME_TO_SEC( `hours` )) )), '%H:%i') as remaining_hours
+        //     from tbl_sub_task st
+        //     left join tbl_sub_project sp on sp.spid = st.sub_project_id
+        //     left join tbl_project_management pm on pm.pid = st.project_id
+        //     left join tbl_day_comment dc on dc.stask_id = st.stask_id 
+        //     where st.emp_id = {$emp_id} 
+        //     group by dc.stask_id
+        //     #having remaining_hours > '00:00' OR utilized_hrs = '00:00:00'
+        //     #order by stask_id,day desc
+        //     ")->queryAll();
+
         $tasks = Yii::app()->db->createCommand("
-            select project_name,sub_project_name,sub_task_name,st.stask_id,dc.day,dc.updated_at,
+            select project_name,sub_project_name,sub_task_name,st.stask_id,sp.status,
             est_hrs,
             BIG_SEC_TO_TIME(est_hrs*60*60) as est_time,
-            TIME_FORMAT(IF (SUM( BIG_TIME_TO_SEC( `hours` )) > 0, BIG_SEC_TO_TIME( SUM( BIG_TIME_TO_SEC( `hours` )) ), '00:00' ), '%H:%i')as utilized_hrs,
-            TIME_FORMAT(TIMEDIFF(BIG_SEC_TO_TIME(est_hrs*60*60), BIG_SEC_TO_TIME( SUM( BIG_TIME_TO_SEC( `hours` )) )), '%H:%i') as remaining_hours
+            (select TIME_FORMAT(IF (SUM( BIG_TIME_TO_SEC( `hours` )) > 0, BIG_SEC_TO_TIME( SUM( BIG_TIME_TO_SEC( `hours` )) ), '00:00' ), '%H:%i') from tbl_day_comment where stask_id = st.stask_id) as utilized_hrs
             from tbl_sub_task st
             left join tbl_sub_project sp on sp.spid = st.sub_project_id
             left join tbl_project_management pm on pm.pid = st.project_id
-            left join tbl_day_comment dc on dc.stask_id = st.stask_id 
-            where st.emp_id = {$emp_id} 
-            group by dc.stask_id
-            #having remaining_hours > '00:00' OR utilized_hrs = '00:00:00'
-            #order by stask_id,day desc
+            where st.emp_id = {$emp_id};
             ")->queryAll();
+        
             // print_r($tasks);die;
             return $tasks;
     }

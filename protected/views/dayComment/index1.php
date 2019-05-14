@@ -77,6 +77,11 @@ td span{
     padding: 5px;
     padding-bottom: 10px;
 }
+#scrolldiv{
+    overflow-y: scroll;
+    max-height:400px;
+}
+
 </style>
 <?php
 /* @var $this DayCommentController */
@@ -123,9 +128,10 @@ Yii::app()->clientScript->registerCssFile(
     <!-- </div> -->
     <div id="tasksdiv">    
         <h1 class="text-center">Add your today's timecard details</h1>
-       
+        
         <form class="form" action="<?php echo Yii::app()->baseUrl; ?>/daycomment/addhours" method="post" id="addhoursfrm">
             <input type="hidden" name ="YII_CSRF_TOKEN" value="<?php echo Yii::app()->request->csrfToken; ?>"  />
+            <div id="scrolldiv">
             <table class="table responsive" id="tasksTable">
                 <thead>
                     <tr>
@@ -137,11 +143,12 @@ Yii::app()->clientScript->registerCssFile(
                     </tr>
                 </thead>
                 <tbody>
-                    <?php echo '<pre>';print_r($tasks);die;foreach($tasks as $task){ ?>
+                    
+                    <?php foreach($tasks as $task){ ?>
                     <tr>
                         <!-- <td><?php echo '('.$task['project_name'].') '.$task['sub_project_name'];?></td> -->
                         <td>
-                            <small><?php echo $task['project_name'];?> / <?php echo $task['sub_project_name'];?></small><br>
+                            <small style="color:#d9534f"><?php echo $task['project_name'];?> / <?php echo $task['sub_project_name'];?></small><br>
                             <?php echo $task['sub_task_name'];?>
                             <?php if(!empty($output[$task['stask_id']])){ 
                                 $status = ($output[$task['stask_id']]['status'] == "Success!") ? "alert-success" : "alert-danger";
@@ -175,7 +182,7 @@ Yii::app()->clientScript->registerCssFile(
                                 {
                                     $final_hrs = $oldvalues["'{$taskkey}'"]['hours'];
                                 }
-                                $final_mins = isset($today_hours[1]) ? $today_hours[1] : '';
+                                $final_mins = isset($today_hours[1]) ? $today_hours[1] : '0';
                                 if(isset($oldvalues["'{$taskkey}'"]['mins']) && !empty($oldvalues["'{$taskkey}'"]['mins']))
                                 {
                                     $final_mins = $oldvalues["'{$taskkey}'"]['mins'];
@@ -192,24 +199,33 @@ Yii::app()->clientScript->registerCssFile(
                                     $status_border = ($output[$task['stask_id']]['status'] == "Error!") ? "yesborder" : '';
                                     $message = $output[$task['stask_id']]['message'];
                                 }
-
+                                
                             ?>
                            
+                            <?php if(strrpos($task['status'], 'Completed') === FALSE || strrpos($task['status'], 'Auto Completed')){ ?>
                             <input name="<?php echo $hours_name;?>" type="number" min="00" 
                             value="<?php echo $final_hrs; ?>" max="<?php echo $hours;?>" class="change_hrs numinput <?php echo $status_border; ?>"> 
                             <input type="input" readonly="true" value=":" class="coloninput">
                             <input name="<?php echo $mins_name;?>" type="number" min="00" value="<?php echo $final_mins; ?>" max="<?php echo $mins;?>" class="numinput change_mins <?php echo $status_border; ?>">
-
+                            <?php }else {
+                                echo '<small>This Project is marked as Completed by Manager.</small>';
+                            } ?>
                         </td>
                         <td>
+                            <?php if(strrpos($task['status'], 'Completed') === FALSE || strrpos($task['status'], 'Auto Completed')){ ?>
                             <textarea rows="1" name="<?php echo $comment_name;?>" id="comment" class="<?php echo $status_border; ?>"><?php echo $final_comment; ?></textarea>
+                            <?php }else {
+                                echo '<small> Adding hours is restricted</small>';
+                            } ?>
                              <input type="hidden" name="<?php echo $tasks_name;?>" value="<?php echo $task['sub_task_name'];?>">
                         </td>
                     </tr>
                         
                     <?php } ?>
+                    </div>
                 </tbody>
             </table>
+            </div>
             <table class="table responsive">
                 <tr>    
                         <td>
