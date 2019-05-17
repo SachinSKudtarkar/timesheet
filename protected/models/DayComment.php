@@ -124,7 +124,7 @@ class DayComment extends CActiveRecord {
         $criteria->compare('pm.project_name', $this->project_name, true);
         $criteria->join = "INNER JOIN tbl_project_management pm ON t.pid = pm.pid LEFT join tbl_sub_project sb ON sb.spid=t.spid LEFT join tbl_sub_task as st ON st.stask_id=t.stask_id";
 
-        $criteria->order = "id,day DESC";
+        $criteria->order = "day DESC";
 
         if ($pagination) {
             return new CActiveDataProvider($this, array(
@@ -444,7 +444,7 @@ class DayComment extends CActiveRecord {
             from tbl_sub_task st
             left join tbl_sub_project sp on sp.spid = st.sub_project_id
             left join tbl_project_management pm on pm.pid = st.project_id
-            where st.emp_id = {$emp_id};
+            where st.emp_id = {$emp_id} order by st.created_at desc;
             ")->queryAll();
         
             // print_r($tasks);die;

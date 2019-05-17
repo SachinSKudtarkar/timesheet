@@ -18,7 +18,7 @@
   }
 
   #calendar {
-    width: 35%;
+    width: 33%;
     padding:10px;
     /*margin: 0 auto;*/
     background: #fff;
@@ -81,7 +81,10 @@ td span{
     overflow-y: scroll;
     max-height:400px;
 }
-
+.projectComplete{
+    color:#ccc!important;
+    text-decoration-line: line-through;
+}
 </style>
 <?php
 /* @var $this DayCommentController */
@@ -127,7 +130,7 @@ Yii::app()->clientScript->registerCssFile(
         
     <!-- </div> -->
     <div id="tasksdiv">    
-        <h1 class="text-center">Add your today's timecard details</h1>
+        <h1 class="text-center">Add your timecard for: <strong style="color:#d9534f"><?php echo date('d-m-Y');?></strong></h1>
         
         <form class="form" action="<?php echo Yii::app()->baseUrl; ?>/daycomment/addhours" method="post" id="addhoursfrm">
             <input type="hidden" name ="YII_CSRF_TOKEN" value="<?php echo Yii::app()->request->csrfToken; ?>"  />
@@ -144,11 +147,19 @@ Yii::app()->clientScript->registerCssFile(
                 </thead>
                 <tbody>
                     
-                    <?php foreach($tasks as $task){ ?>
+                    <?php foreach($tasks as $task){ 
+                        $completeColor = '';
+                        $completeBgColor = '';
+                        if(strrpos($task['status'], 'Completed') !== FALSE && strrpos($task['status'], 'Auto Completed') === FALSE){ 
+                                $completeColor = "projectComplete";
+                                $completeLabel = "labelComplete";
+                            }
+
+                    ?>
                     <tr>
                         <!-- <td><?php echo '('.$task['project_name'].') '.$task['sub_project_name'];?></td> -->
                         <td>
-                            <small style="color:#d9534f"><?php echo $task['project_name'];?> / <?php echo $task['sub_project_name'];?></small><br>
+                            <small style="color:#d9534f" class="<?= $completeColor;?>"><?php echo $task['project_name'];?> / <?php echo $task['sub_project_name'];?></small><br>
                             <?php echo $task['sub_task_name'];?>
                             <?php if(!empty($output[$task['stask_id']])){ 
                                 $status = ($output[$task['stask_id']]['status'] == "Success!") ? "alert-success" : "alert-danger";
@@ -166,6 +177,8 @@ Yii::app()->clientScript->registerCssFile(
                         <td>
                             <?php 
                                 $status_border = '';
+                                $final_hrs = 0;
+                                $final_mins = 0;
                                 $rem_arr = explode(':', $task['remaining_hours']);
                                 // $hours = $rem_arr[0] > 24 ? 24 : $rem_arr[0];
                                 $hours = 24;
@@ -177,11 +190,13 @@ Yii::app()->clientScript->registerCssFile(
                                 $mins_name = "timesheet['{$task["key"]}'][mins]";
                                 $comment_name = "timesheet['{$task["key"]}'][comment]";
                                 $taskkey = $task['key'];
-                                $final_hrs = isset($today_hours[0]) ? $today_hours[0] : '';
+                                $final_hrs = (isset($today_hours[0]) && !empty($today_hours[0]))? $today_hours[0] : '0';
+                                
                                 if(isset($oldvalues["'{$taskkey}'"]['hours']) && !empty($oldvalues["'{$taskkey}'"]['hours']))
                                 {
                                     $final_hrs = $oldvalues["'{$taskkey}'"]['hours'];
                                 }
+
                                 $final_mins = isset($today_hours[1]) ? $today_hours[1] : '0';
                                 if(isset($oldvalues["'{$taskkey}'"]['mins']) && !empty($oldvalues["'{$taskkey}'"]['mins']))
                                 {
@@ -199,24 +214,27 @@ Yii::app()->clientScript->registerCssFile(
                                     $status_border = ($output[$task['stask_id']]['status'] == "Error!") ? "yesborder" : '';
                                     $message = $output[$task['stask_id']]['message'];
                                 }
+
+                                
                                 
                             ?>
                            
-                            <?php if(strrpos($task['status'], 'Completed') === FALSE || strrpos($task['status'], 'Auto Completed')){ ?>
-                            <input name="<?php echo $hours_name;?>" type="number" min="00" 
+                           <?php if(strrpos($task['status'], 'Completed') !== FALSE && strrpos($task['status'], 'Auto Completed') === FALSE){
+                                echo '<small style="color:#d9534f">This Project is marked as Completed by Manager.</small>';
+                            } else { ?>
+                            
+                            <input name="<?php echo $hours_name;?>" type="number" min="0" 
                             value="<?php echo $final_hrs; ?>" max="<?php echo $hours;?>" class="change_hrs numinput <?php echo $status_border; ?>"> 
                             <input type="input" readonly="true" value=":" class="coloninput">
                             <input name="<?php echo $mins_name;?>" type="number" min="00" value="<?php echo $final_mins; ?>" max="<?php echo $mins;?>" class="numinput change_mins <?php echo $status_border; ?>">
-                            <?php }else {
-                                echo '<small>This Project is marked as Completed by Manager.</small>';
-                            } ?>
+                            <?php } ?>
                         </td>
                         <td>
-                            <?php if(strrpos($task['status'], 'Completed') === FALSE || strrpos($task['status'], 'Auto Completed')){ ?>
-                            <textarea rows="1" name="<?php echo $comment_name;?>" id="comment" class="<?php echo $status_border; ?>"><?php echo $final_comment; ?></textarea>
-                            <?php }else {
+                            <?php if(strrpos($task['status'], 'Completed') !== FALSE && strrpos($task['status'], 'Auto Completed') === FALSE) {
                                 echo '<small> Adding hours is restricted</small>';
-                            } ?>
+                            } else { ?>
+                                <textarea rows="1" name="<?php echo $comment_name;?>" id="comment" class="<?php echo $status_border; ?>"><?php echo $final_comment; ?></textarea>
+                            <?php } ?>
                              <input type="hidden" name="<?php echo $tasks_name;?>" value="<?php echo $task['sub_task_name'];?>">
                         </td>
                     </tr>
@@ -254,11 +272,14 @@ document.addEventListener('DOMContentLoaded', function() {
         eventDurationEditable: true,
         eventLimit: true, // allow "more" link when too many events
         dateClick: function(info) {
-            // alert('Clicked on: ' + info.dateStr);
+           // alert('Clicked on: ' + info.dateStr);
+            // $('#changeurl').attr('href',BASE_URL+'/daycomment/index/selecting_date/'+data).trigger('click');
+
             // alert('Coordinates: ' + info.jsEvent.pageX + ',' + info.jsEvent.pageY);
             // alert('Current view: ' + info.view.type);
             // // change the day's background color just for fun
-            // info.dayEl.style.backgroundColor = 'red';
+            //info.dayEl.style.backgroundColor = '#d9534f';
+             //window.location.href = BASE_URL+'/daycomment/addhours/'+info.dateStr;
         },        
         eventSources: [
                 // your event source

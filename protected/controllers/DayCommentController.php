@@ -62,7 +62,7 @@ class DayCommentController extends Controller {
                 'users' => array('@'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'addcomment', 'GetProjName', 'getIrregularEmp', 'sendReminder', 'AdminAll', 'NotFilledStatus', 'fetchSubProject', 'fetchSubTask', 'StatusReport', 'getSubPStatus', 'getEmployeeList', 'fetchRemainingHours','ApproveHours','AddHours','fetchUserTimesheetRecords','addCurrentHours'),
+                'actions' => array('create', 'update', 'addcomment', 'GetProjName', 'getIrregularEmp', 'sendReminder', 'AdminAll', 'NotFilledStatus', 'fetchSubProject', 'fetchSubTask', 'StatusReport', 'getSubPStatus', 'getEmployeeList', 'fetchRemainingHours','ApproveHours','AddHours','fetchUserTimesheetRecords','addCurrentHours','Addhourstodate'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -1390,8 +1390,18 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.sub_project_i
 
     }
 
-    public function actionAddHours()
+    public function actionAddhourstodate()
     {
+        $this->actionAddHours($_GET['date']);
+    }
+    public function actionAddHours($selected_date = '')
+    {
+        
+        if(empty($selected_date))
+        {
+            $selected_date = 'CURDATE()';
+        }
+        
         $output = [];
         $oldvalues = [];
         $model = new DayComment();
@@ -1473,13 +1483,11 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.sub_project_i
             $decodedkey = base64_decode($key);
             $keyArr = explode("_", $decodedkey);
             $keyArrCount = count($keyArr);
-            if(($value['hours'] == '' && $value['comment'] == '') || ($value['hours'] != '' && $value['comment'] != ''))
+            if(($value['hours'] > 0 || $value['mins'] > 0) && $value['comment'] != '')
             {
-                if($value['hours'] != '' && $value['mins'] != '' && $value['comment'] != '')
-                {
-
+                // if($value['hours'] != '' && $value['mins'] != '' && $value['comment'] != '')
+                // {
                     $today_hours = sprintf('%02d',$value['hours']).":".sprintf('%02d',$value['mins']).":00";
-
                     $isValidated = DayComment::checkHoursLessThanRemain($keyArr[0],$today_hours);
                     
                     if(!empty($isValidated) && $isValidated['result'] == 0)
@@ -1487,9 +1495,9 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.sub_project_i
                         $outputMessageAndStatus[$keyArr[0]]['message'] = 'Please add hours less than the remaining hours for the above task.';
                         $outputMessageAndStatus[$keyArr[0]]['status'] = 'Error!';
                     }
-                }
+                // }
 
-            }else{
+            }else if(($value['hours'] > 0 || $value['mins'] > 0) && $value['comment'] == ''){
                 $outputMessageAndStatus[$keyArr[0]]['message'] = 'Please fill all the required fields';
                 $outputMessageAndStatus[$keyArr[0]]['status'] = 'Error!';
             }
