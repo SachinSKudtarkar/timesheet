@@ -261,7 +261,7 @@ Yii::app()->clientScript->registerCssFile(
             <table class="table responsive">
                 <tr>    
                         <td>
-                            <?php if(isset($_GET['date']) && in_array($_GET['date'], $allowedDates)){ ?>
+                            <?php if(!isset($_GET['date']) || (isset($_GET['date']) && in_array($_GET['date'], $allowedDates))){ ?>
                             <input type="submit" class="btn btn-primary" value="Save" style="margin-left:0px;border:0;">
                             <input type="reset" class="btn btn-primary" value="Reset" style="margin-left:10px;border:0;">
                             <?php }else{ ?>
