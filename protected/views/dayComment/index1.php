@@ -163,10 +163,11 @@ Yii::app()->clientScript->registerCssFile(
                     <?php foreach($tasks as $task){ 
                         $completeColor = '';
                         $completeBgColor = '';
-                        if(strrpos($task['status'], 'Completed') !== FALSE && strrpos($task['status'], 'Auto Completed') === FALSE){ 
-                                $completeColor = "projectComplete";
-                                $completeLabel = "labelComplete";
-                            }
+
+                        if(strrpos($task['status'], 'Completed') !== FALSE && strrpos($task['status'], 'Auto Completed') === FALSE && strrpos($task['status'], 'Partially Completed') === FALSE){
+                            $completeColor = "projectComplete";
+                            $completeLabel = "labelComplete";
+                        }
 
                     ?>
                     <tr>
@@ -232,7 +233,7 @@ Yii::app()->clientScript->registerCssFile(
                                 
                             ?>
                            
-                           <?php if(strrpos($task['status'], 'Completed') !== FALSE && strrpos($task['status'], 'Auto Completed') === FALSE){
+                           <?php if(strrpos($task['status'], 'Completed') !== FALSE && strrpos($task['status'], 'Auto Completed') === FALSE && strrpos($task['status'], 'Partially Completed') === FALSE){
                                 echo '<small style="color:#d9534f">This Project is marked as Completed by Manager.</small>';
                             } else { ?>
                             
@@ -243,7 +244,7 @@ Yii::app()->clientScript->registerCssFile(
                             <?php } ?>
                         </td>
                         <td>
-                            <?php if(strrpos($task['status'], 'Completed') !== FALSE && strrpos($task['status'], 'Auto Completed') === FALSE) {
+                            <?php if(strrpos($task['status'], 'Completed') !== FALSE && strrpos($task['status'], 'Auto Completed') === FALSE && strrpos($task['status'], 'Partially Completed') === FALSE){
                                 echo '<small> Adding hours is restricted</small>';
                             } else { ?>
                                 <textarea rows="1" name="<?php echo $comment_name;?>" id="comment" class="<?php echo $status_border; ?>"><?php echo $final_comment; ?></textarea>
