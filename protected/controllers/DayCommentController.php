@@ -1557,7 +1557,7 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.sub_project_i
         $emp_id = Yii::app()->session['login']['user_id'];
         // select TIME_FORMAT(hours,'%H:%i') as title,sub_task_name as sub_task_name,comment,DATE_FORMAT(day, '%Y-%m-%d') as tdate,DATE_FORMAT(day, '%Y-%m-%d') as start from tbl_day_comment dc inner join tbl_sub_task st on st.stask_id = dc.stask_id where dc.emp_id = {$emp_id} order by day desc
         $records = Yii::app()->db->createCommand("select TIME_FORMAT(BIG_SEC_TO_TIME(SUM(BIG_TIME_TO_SEC(hours))), '%H:%i') as title,
-        group_concat(concat(concat(TIME_FORMAT(hours,'%H:%i'),'_',sub_task_name),'_',comment)) as task_details,DATE_FORMAT(day, '%Y-%m-%d') as tdate,DATE_FORMAT(day, '%Y-%m-%d') as start 
+        group_concat(concat(concat(TIME_FORMAT(hours,'%H:%i'),'_',sub_task_name),'_',comment) SEPARATOR '$#$') as task_details,DATE_FORMAT(day, '%Y-%m-%d') as tdate,DATE_FORMAT(day, '%Y-%m-%d') as start 
         from tbl_day_comment dc
         inner join tbl_sub_task st on st.stask_id = dc.stask_id
         where dc.emp_id = {$emp_id} group by start order by day desc")->queryAll();
@@ -1569,7 +1569,7 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.sub_project_i
         //         </blockquote>
         
         foreach ($records as $key => $value) {
-            $task_array = explode(',', $value['task_details']);
+            $task_array = explode('$#$', $value['task_details']);
             $final_string = '';
             foreach ($task_array as $task_value) {
                 $final_string .= "<tr>";
