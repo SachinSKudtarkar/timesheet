@@ -15,6 +15,7 @@
     width:100%;
     display: flex;
     margin-top: 1%;
+    font-size: 11px!important;
   }
 
   #calendar {
@@ -23,6 +24,7 @@
     /*margin: 0 auto;*/
     background: #fff;
     border:2px solid #eee;
+    font-size: 11px!important;
   }
   #tasksdiv {
     width:72%;
@@ -85,6 +87,17 @@ td span{
     color:#ccc!important;
     text-decoration-line: line-through;
 }
+.fc-today{
+    background: #d02d28!important;
+    color:#fff;
+}
+.fc-today span{
+    color:#fff;
+}
+.fc-future{
+    background: #ddd!important;
+    pointer-events: none
+}
 </style>
 <?php
 /* @var $this DayCommentController */
@@ -130,7 +143,7 @@ Yii::app()->clientScript->registerCssFile(
         
     <!-- </div> -->
     <div id="tasksdiv">    
-        <h1 class="text-center">Add your timecard for: <strong style="color:#d9534f"><?php echo date('d-m-Y');?></strong></h1>
+        <h1 class="text-center">Add your timecard for: <strong style="color:#d9534f"><?php echo $selected_date;?></strong></h1>
         
         <form class="form" action="<?php echo Yii::app()->baseUrl; ?>/daycomment/addhours" method="post" id="addhoursfrm">
             <input type="hidden" name ="YII_CSRF_TOKEN" value="<?php echo Yii::app()->request->csrfToken; ?>"  />
@@ -249,6 +262,7 @@ Yii::app()->clientScript->registerCssFile(
                         <td>
                             <input type="submit" class="btn btn-primary" value="Save" style="margin-left:0px;border:0;">
                             <input type="reset" class="btn btn-primary" value="Reset" style="margin-left:10px;border:0;">
+                            <input type="hidden" name="dvalue" value="<?php echo base64_encode($selected_date); ?>">
                         </td>
                         <td><b><h4>Total Hours(Today)</h4></b></td>
                         
@@ -272,14 +286,15 @@ document.addEventListener('DOMContentLoaded', function() {
         eventDurationEditable: true,
         eventLimit: true, // allow "more" link when too many events
         dateClick: function(info) {
-           // alert('Clicked on: ' + info.dateStr);
+            alert(Date(Date.now()).toString());
+            // alert('Clicked on: ' + info.dateStr);
             // $('#changeurl').attr('href',BASE_URL+'/daycomment/index/selecting_date/'+data).trigger('click');
 
             // alert('Coordinates: ' + info.jsEvent.pageX + ',' + info.jsEvent.pageY);
             // alert('Current view: ' + info.view.type);
             // // change the day's background color just for fun
-            //info.dayEl.style.backgroundColor = '#d9534f';
-             //window.location.href = BASE_URL+'/daycomment/addhours/'+info.dateStr;
+            info.dayEl.style.backgroundColor = '#d9534f';
+            window.location.href = BASE_URL+'/daycomment/addhours?date='+info.dateStr;
         },        
         eventSources: [
                 // your event source
@@ -293,12 +308,13 @@ document.addEventListener('DOMContentLoaded', function() {
             ],
         eventClick:  function(event, jsEvent, view) {
             //set the values and open the modal
-            //console.log(event);
+            console.log(event.event);
             $('#modalTitle').html("Timesheet Details for day: "+ event.event.extendedProps.tdate);
-            $('#modalBody p#stn').html("<strong>Task Name: </strong>" + event.event.extendedProps.sub_task_name);
-            $('#modalBody p#hrsp').html("<strong>Hours Added: </strong>" + event.event.title);
-            $('#modalBody small').html("<strong>Comment: </strong>" + event.event.extendedProps.comment);
+            // $('#modalBody p#stn').html("<strong>Task Name: </strong>" + event.event.extendedProps.sub_task_name);
+            // $('#modalBody p#hrsp').html("<strong>Hours Added: </strong>" + event.event.title);
+            // $('#modalBody small').html("<strong>Comment: </strong>" + event.event.extendedProps.comment);
             //$('#eventUrl').attr('href',event.url);
+            $('#modalBody ').html(event.event.extendedProps.task_details);
             $('#fullCalModal').modal();
         }
        // events:user_records_json
@@ -380,11 +396,22 @@ $(".calendarbtn").click(function(){
                 <h4 id="modalTitle" class="modal-title"></h4>
             </div>
             <div id="modalBody" class="modal-body">
-                <blockquote>
+                <!-- <blockquote>
                   <p id="stn"></p>
                   <p id="hrsp"></p>
                   <small></small>
-                </blockquote>
+                </blockquote> -->
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Task Name</th>
+                            <th>Hours</th>
+                            <th>Comment</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

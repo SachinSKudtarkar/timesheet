@@ -418,6 +418,7 @@ class DayComment extends CActiveRecord {
 
     public function getUserTimesheetDetails()
     {
+        
         $emp_id = Yii::app()->session['login']['user_id'];
        
         // $tasks = Yii::app()->db->createCommand("
@@ -451,9 +452,9 @@ class DayComment extends CActiveRecord {
             return $tasks;
     }
 
-    public function checkTodayUserComment($comment, $emp_id)
+    public function checkTodayUserComment($comment, $emp_id, $selected_date)
     {
-        return Yii::app()->db->createCommand("select count(*) as count from tbl_day_comment where emp_id = {$emp_id} and stask_id = {$comment[0]} and id = {$comment[1]} and day = CURDATE();")->queryRow();
+        return Yii::app()->db->createCommand("select count(*) as count from tbl_day_comment where emp_id = {$emp_id} and stask_id = {$comment[0]} and id = {$comment[1]} and day = '{$selected_date}';")->queryRow();
     }
 
     public function checkUserHasTask($comment, $emp_id)
@@ -461,11 +462,11 @@ class DayComment extends CActiveRecord {
         return Yii::app()->db->createCommand("select count(*) as count from tbl_sub_task where emp_id = {$emp_id} and stask_id = {$comment[0]};")->queryRow();
     }
 
-    public function updateUserTimesheet($comment, $emp_id, $data)
+    public function updateUserTimesheet($comment, $emp_id, $data, $selected_date)
     {
         $updated_by = date('Y-m-d H:i:s');
         $hours = sprintf('%02d',$data['hours']).':'.sprintf('%02d',$data['mins']).':00';
-        $update = Yii::app()->db->createCommand("update tbl_day_comment set hours = '{$hours}', comment = '{$data["comment"]} ', updated_by = {$emp_id}, updated_at = '{$updated_by}' where emp_id = {$emp_id} and stask_id = {$comment[0]} and id = {$comment[1]} and day = CURDATE();")->execute();
+        $update = Yii::app()->db->createCommand("update tbl_day_comment set hours = '{$hours}', comment = '{$data["comment"]} ', updated_by = {$emp_id}, updated_at = '{$updated_by}' where emp_id = {$emp_id} and stask_id = {$comment[0]} and id = {$comment[1]} and day = '{$selected_date}';")->execute();
 
         if($update)
         {
@@ -504,24 +505,30 @@ class DayComment extends CActiveRecord {
             $taskStatus['status'] = 'Success!';
             return $taskStatus;
         }else{
-            $taskStatus['message'] = $data['task_name'].' was not be updated successfully';
+            $taskStatus['message'] = $data['task_name'].' was not updated successfully';
             $taskStatus['status'] = 'Error!';
             return $taskStatus;
         }
     }
 
-    public function checkHoursLessThanRemain($stask_id,$today_hours)
+    public function checkHoursLessThanRemain($stask_id,$today_hours,$selected_date)
     {
 
         $emp_id = Yii::app()->session['login']['user_id'];
+        //To check if any hours is already added for the subtask so that to remove the condition of current day
+        $checkIfCommentPresent = Yii::app()->db->createCommand("select count(*) as count from tbl_day_comment where stask_id = {$stask_id}")->queryRow();
+        
+        $checkDay = '';
+        if($checkIfCommentPresent['count'] > 0)
+        {
+            $checkDay = "and dc.day <> '{$selected_date}'"; 
+        }
         
         return Yii::app()->db->createCommand("select st.stask_id,
-           #TIME_FORMAT(TIMEDIFF(TIMEDIFF(BIG_SEC_TO_TIME(est_hrs*60*60), IF(BIG_SEC_TO_TIME( SUM( BIG_TIME_TO_SEC( `hours` )) ) <> '',BIG_SEC_TO_TIME( SUM( BIG_TIME_TO_SEC( `hours` )) ),'00:00:00')), '{$today_hours}'), '%H:%i:%s') as ssdas,
-           #IF(TIME_FORMAT(TIMEDIFF(TIMEDIFF(BIG_SEC_TO_TIME(est_hrs*60*60), IF(BIG_SEC_TO_TIME( SUM( BIG_TIME_TO_SEC( `hours` )) ) <> '',BIG_SEC_TO_TIME( SUM( BIG_TIME_TO_SEC( `hours` )) ),'00:00:00')), '{$today_hours}'), '%H:%i:%s') >= '00:00:00', true, false) as result
             IF(TIME_FORMAT(TIMEDIFF(BIG_SEC_TO_TIME(est_hrs*60*60),ADDTIME(IF(BIG_SEC_TO_TIME( SUM( BIG_TIME_TO_SEC( `hours` )) ) <> '',BIG_SEC_TO_TIME( SUM( BIG_TIME_TO_SEC( `hours` )) ),'00:00:00'), '{$today_hours}')), '%H:%i:%s') >= '00:00:00', true, false) as result
             from tbl_sub_task st
             left join tbl_day_comment dc on dc.stask_id = st.stask_id 
-            where st.emp_id = {$emp_id} and st.stask_id={$stask_id} and dc.day <> CURDATE()
+            where st.emp_id = {$emp_id} and st.stask_id={$stask_id} {$checkDay}
             group by dc.stask_id;")->queryRow();
 
     }

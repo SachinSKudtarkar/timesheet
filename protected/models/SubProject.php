@@ -139,8 +139,8 @@ class SubProject extends CActiveRecord
             $criteria->compare('project_name',$this->project_name);
             $criteria->order = 'approval_status desc';
             $criteria->join = "INNER join tbl_project_management pr ON (pr.pid=t.pid) "
-                    . " LEFT JOIN tbl_employee as cEmp on pr.created_by = cEmp.emp_id "
-                    . " LEFT JOIN tbl_employee as mEmp on pr.updated_by = mEmp.emp_id ";
+                    . " LEFT JOIN tbl_employee as cEmp on t.created_by = cEmp.emp_id "
+                    . " LEFT JOIN tbl_employee as mEmp on t.updated_by = mEmp.emp_id ";
 //                $criteria->join = "INNER join tbl_project_management pr ON (pr.pid=t.pid)"
 //                        . "INNER join tbl_pid_approval as pa ON (t.spid = pa.sub_project_id) ";
             return new CActiveDataProvider($this, array(
