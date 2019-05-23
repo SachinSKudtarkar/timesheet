@@ -324,11 +324,13 @@ document.addEventListener('DOMContentLoaded', function() {
             //set the values and open the modal
             console.log(event.event);
             $('#modalTitle').html("Timesheet Details for day: "+ event.event.extendedProps.tdate);
+            
+            
             // $('#modalBody p#stn').html("<strong>Task Name: </strong>" + event.event.extendedProps.sub_task_name);
             // $('#modalBody p#hrsp').html("<strong>Hours Added: </strong>" + event.event.title);
             // $('#modalBody small').html("<strong>Comment: </strong>" + event.event.extendedProps.comment);
             //$('#eventUrl').attr('href',event.url);
-            $('#modalBody ').html(event.event.extendedProps.task_details);
+            $('#modalBody tbody').html(event.event.extendedProps.task_details);
             $('#fullCalModal').modal();
         }
        // events:user_records_json

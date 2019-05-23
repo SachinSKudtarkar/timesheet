@@ -1572,20 +1572,20 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.sub_project_i
             $task_array = explode(',', $value['task_details']);
             $final_string = '';
             foreach ($task_array as $task_value) {
-                // $final_string .= "<tr>";
-                // $task_single_array = explode('_', $task_value);
-
-                // $final_string .= "<td>".$task_single_array[1]."</td>";
-                // $final_string .= "<td>".$task_single_array[0]."</td>";
-                // $final_string .= "<td>".$task_single_array[2]."</td>";
-                // $final_string .= "</tr>";
-                 $final_string .= "<blockquote>";
+                $final_string .= "<tr>";
                 $task_single_array = explode('_', $task_value);
 
-                $final_string .= "<p id='stn'><strong>Task Name: </strong>".$task_single_array[1]."</p>";
-                $final_string .= "<p id='hrsp'><strong>Hours Added: </strong>".$task_single_array[0]."</p>";
-                $final_string .= "<small><strong>Comment: </strong>".$task_single_array[2]."</small>";
-                $final_string .= "</blockquote>";
+                $final_string .= "<td>".$task_single_array[1]."</td>";
+                $final_string .= "<td>".$task_single_array[0]."</td>";
+                $final_string .= "<td>".$task_single_array[2]."</td>";
+                $final_string .= "</tr>";
+                //  $final_string .= "<blockquote>";
+                
+
+                // $final_string .= "<p id='stn'><strong>Task Name: </strong>".$task_single_array[1]."</p>";
+                // $final_string .= "<p id='hrsp'><strong>Hours Added: </strong>".$task_single_array[0]."</p>";
+                // $final_string .= "<small><strong>Comment: </strong>".$task_single_array[2]."</small>";
+                // $final_string .= "</blockquote>";
             }
             
             $records[$key]['task_details'] = $final_string;
