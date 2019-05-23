@@ -1393,7 +1393,7 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.sub_project_i
 
     public function actionAddHours()
     {
-
+        $allowedDates = array('2019-04-01','2019-04-02','2019-04-03','2019-04-04','2019-04-05','2019-04-06','2019-04-07',date('Y-m-d'));
         $selected_date = date('Y-m-d');
         if(isset($_GET['date']) && !empty($_GET['date']))
         {
@@ -1440,6 +1440,7 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.sub_project_i
             'tasks' => $tasks,
             'output' => $output,
             'oldvalues' => $oldvalues,
+            'allowedDates' => $allowedDates,
             'selected_date' => date('d-m-Y',strtotime($selected_date))
         ));
     }

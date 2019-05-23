@@ -260,8 +260,14 @@ Yii::app()->clientScript->registerCssFile(
             <table class="table responsive">
                 <tr>    
                         <td>
+                            <?php if(isset($_GET['date']) && in_array($_GET['date'], $allowedDates)){ ?>
                             <input type="submit" class="btn btn-primary" value="Save" style="margin-left:0px;border:0;">
                             <input type="reset" class="btn btn-primary" value="Reset" style="margin-left:10px;border:0;">
+                            <?php }else{ ?>
+                                <p><strong>Adding Hours is restricted for this date.</strong></p>
+                                <p> Allowed Dates: <?php echo implode(',',$allowedDates); ?></p>
+                            <?php } ?>
+                            <p>
                             <input type="hidden" name="dvalue" value="<?php echo base64_encode($selected_date); ?>">
                         </td>
                         <td><b><h4>Total Hours(Today)</h4></b></td>
@@ -286,7 +292,14 @@ document.addEventListener('DOMContentLoaded', function() {
         eventDurationEditable: true,
         eventLimit: true, // allow "more" link when too many events
         dateClick: function(info) {
-            alert(Date(Date.now()).toString());
+            console.log(info);
+            
+            if((info.dayEl.className).indexOf('fc-future') != -1){
+                alert('Adding hours for the future days is restriced');
+                return false;
+            }
+            
+            //alert(Date(Date.now()).toString());
             // alert('Clicked on: ' + info.dateStr);
             // $('#changeurl').attr('href',BASE_URL+'/daycomment/index/selecting_date/'+data).trigger('click');
 
