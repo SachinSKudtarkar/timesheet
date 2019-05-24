@@ -98,6 +98,12 @@ td span{
     background: #ddd!important;
     pointer-events: none
 }
+#fullCalModal{
+    width: 700px;
+}
+#fullCalModal table{
+    width: 98%;
+}
 </style>
 <?php
 /* @var $this DayCommentController */
@@ -288,7 +294,7 @@ document.addEventListener('DOMContentLoaded', function() {
     var calendar = new FullCalendar.Calendar(calendarEl, {
         plugins: [ 'interaction', 'dayGrid' ],
         defaultDate: '<?php echo date('Y-m-d') ?>',
-        editable: true,
+        editable: false,
         selectable: false,
         eventDurationEditable: true,
         eventLimit: true, // allow "more" link when too many events
@@ -297,6 +303,11 @@ document.addEventListener('DOMContentLoaded', function() {
             
             if((info.dayEl.className).indexOf('fc-future') != -1){
                 alert('Adding hours for the future days is restriced');
+                return false;
+            }
+
+            if((info.dayEl.className).indexOf('fc-past') != -1){
+                alert('Adding hours for the past days is restriced');
                 return false;
             }
             
@@ -308,7 +319,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // alert('Current view: ' + info.view.type);
             // // change the day's background color just for fun
             info.dayEl.style.backgroundColor = '#d9534f';
-            window.location.href = BASE_URL+'/daycomment/addhours?date='+info.dateStr;
+            //window.location.href = BASE_URL+'/daycomment/addhours?date='+info.dateStr;
         },        
         eventSources: [
                 // your event source
@@ -325,7 +336,7 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log(event.event);
             $('#modalTitle').html("Timesheet Details for day: "+ event.event.extendedProps.tdate);
             
-            
+
             // $('#modalBody p#stn').html("<strong>Task Name: </strong>" + event.event.extendedProps.sub_task_name);
             // $('#modalBody p#hrsp').html("<strong>Hours Added: </strong>" + event.event.title);
             // $('#modalBody small').html("<strong>Comment: </strong>" + event.event.extendedProps.comment);
@@ -420,9 +431,9 @@ $(".calendarbtn").click(function(){
                 <table class="table table-bordered">
                     <thead>
                         <tr>
-                            <th>Task Name</th>
-                            <th>Hours</th>
-                            <th>Comment</th>
+                            <th width="40%">Task Name</th>
+                            <th width="20%">Hours</th>
+                            <th width="40%">Comment</th>
                         </tr>
                     </thead>
                     <tbody>
