@@ -55,13 +55,14 @@ $this->widget('zii.widgets.grid.CGridView', array(
             // 'filter' => false,
             'value' => array($model, 'getCreatedDate')
             ),
-           array(
-            'header'=>'Approval Status',
-            'name' => 'approval_status',
-            'type' => 'raw',
-            //'filter' => false,
-            'value' => array($model, 'getApprovalStatus')
-              ),
+	    array(
+                    'name' => 'approval_status',
+                    'header' => "Approval Status",
+                    'value' => array($model, 'getApprovalStatus'),
+                    'type' => 'raw',
+                    'filter' => array('2' => "Pending", '1' => "Approved", "0" => "Rejected"),
+                    'htmlOptions' => array('style' => "text-align:center;"),
+            ),
            'status',
         array(
             'class' => 'CButtonColumn',
