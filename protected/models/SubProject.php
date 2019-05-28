@@ -61,7 +61,7 @@ class SubProject extends CActiveRecord
                     array('total_hr_estimation_hour', 'numerical' ),
                     // The following rule is used by search().
                     // @todo Please remove those attributes that should not be searched. estimated_end_date, total_hr_estimation_hour,estimated_start_date,
-                    array('spid, pid, project_id, sub_project_name, sub_project_description, requester, estimated_end_date, total_hr_estimation_hour, ,estimated_start_date , created_by, created_date, updated_by, updated_date,project_name,approval_status', 'safe', 'on'=>'search'),
+                    array('spid, pid, project_id, sub_project_name, sub_project_description, requester, estimated_end_date, total_hr_estimation_hour, ,estimated_start_date , created_by, created_date, updated_by, updated_date,project_name,approval_status,status', 'safe', 'on'=>'search'),
             );
     }
 
@@ -122,7 +122,7 @@ class SubProject extends CActiveRecord
             $criteria=new CDbCriteria;
 //                $criteria->select = "t.*,pr.project_name,t.spid as taskId ";//t.spid as taskId
             $criteria->compare('spid',$this->spid);
-            $criteria->compare('project_id',$this->project_id);
+            $criteria->compare('t.project_id',$this->project_id);
             $criteria->compare('pr.project_name',$this->pid, true);
             $criteria->compare('sub_project_name',$this->sub_project_name,true);
             $criteria->compare('sub_project_description',$this->sub_project_description,true);
@@ -133,7 +133,8 @@ class SubProject extends CActiveRecord
             $criteria->compare('concat(cEmp.first_name, " ", cEmp.last_name)',$this->created_by, true);
             $criteria->compare('created_date',$this->created_date,true);
             $criteria->compare('concat(mEmp.first_name, " ", mEmp.last_name)',$this->updated_by, true);
-            $criteria->compare('approval_status',$this->approval_status);
+            $criteria->compare('t.approval_status',$this->approval_status,true);
+            $criteria->compare('t.status',$this->status, true);
             $criteria->compare('updated_date',$this->updated_date,true);
             $criteria->compare('is_deleted',$this->is_deleted);
             $criteria->compare('project_name',$this->project_name);
@@ -183,7 +184,7 @@ class SubProject extends CActiveRecord
     public function getApprovalStatus($model) {
 
         $status = '<span style="color:blue"><strong>Pending</strong></span>';
-        // print_r($model->approval_status);die;
+        
         if($model->approval_status == 0)
         {
             $status = '<span style="color:#f00"><strong>Rejected</strong></span>';

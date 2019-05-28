@@ -15,6 +15,7 @@ $cs = Yii::app()->getClientScript();
 $baseUrl = Yii::app()->baseUrl;
 $cs->registerScriptFile($baseUrl . '/js/custom_add_more_4k.js?28032017');
 $img_path = Yii::app()->theme->baseUrl . "/img/add_image.png";
+$model_status_first = substr($model->status, 0, 1);
 ?>
 
 <div class="form">
@@ -32,11 +33,11 @@ $img_path = Yii::app()->theme->baseUrl . "/img/add_image.png";
 
     <p class="note">Fields with <span class="required">*</span> are required.</p>
     <?php if(!$model->isNewRecord){ ?>
-        <?php if(strpos($model->status, 'Completed') === true){ ?>
+        <?php if($model_status_first == 'C'){ ?>
             <div class="alert alert-danger"> 
                 As this project was marked Completed (Project Status), adding new CR to this project as been restricted and you are required to create new project.
             </div>
-        <?php } elseif ($completeStatus['result'] == '1'){ ?>
+        <?php } elseif ($completeStatus['result'] == '1' || $model_status_first == 'A'){ ?>
             <div class="alert alert-danger"> 
                 Estimated Hours for this project has been completely utilized, hence for this reason the project status has been changed to "Auto Completed". Incase you need to add new CR, you are required to create new project.    
             </div>
@@ -96,7 +97,7 @@ $img_path = Yii::app()->theme->baseUrl . "/img/add_image.png";
         </div>
     </div>
     <div class="span5">
-        <?php if($model->isNewRecord){ ?>  
+        <?php if($model_status_first != 'C' && $model_status_first != 'A'){ ?>  
         <div class="row">
             <?php echo $form->labelEx($model,'estHrsradio'); ?>
             <?php echo $form->radioButtonList($model,'estHrsradio',array('E'=>'Excel Upload','M'=>'Manual'), array('onchange' => 'return hrsRadioChange(this);','class'=>'radiolabel','separator'=>'')); ?>
@@ -208,9 +209,9 @@ $img_path = Yii::app()->theme->baseUrl . "/img/add_image.png";
                     </div>
                     <?php echo CHtml::Button('Update Hours', array('id' => 'update_hours')); ?>
                 <?php }*/ ?>
-                <!-- <?php if (!$model->isNewRecord) { ?> -->
-                <!-- <?php //echo CHtml::Button('Update Hours', array('id' => 'update_hours')); ?> -->
-                <!-- <?php } ?> -->
+                <?php if (!$model->isNewRecord && $model_status_first != 'C' && $model_status_first != 'A') {  ?>
+                <?php echo CHtml::Button('Update Hours', array('id' => 'update_hours')); ?>
+                <?php } ?>
                 <div class="span10 row updhrs"><p> Allocated Level and its associated Hours to project.</p></div>
 
                 <div class="repeater updhrs">
@@ -397,8 +398,6 @@ $img_path = Yii::app()->theme->baseUrl . "/img/add_image.png";
         $('.manualEst').hide();
         if($(element).val() == 'E')
         {
-            
-
             $('.manualEst').hide();
             $("#excelModal").modal('show');
             $("#excelModal").css('z-index',$('.modal-backdrop').css('z-index') + 1);

@@ -169,6 +169,18 @@ class SubProjectController extends Controller {
             $model->updated_date = date('Y-m-d h:i:s');
             $model->updated_by = Yii::app()->session['login']['user_id'];
             $model->approval_status = 1;
+            
+            if(isset($_POST['SubProject']['hoursArray']) && !empty($_POST['SubProject']['hoursArray']))
+            {
+                
+                $model->approval_status = 2;
+            }
+            if(isset($_POST['group-a']) && !empty($_POST['group-a'][0]['level_hours']))
+            {
+                
+                $model->approval_status = 2;
+            }
+            
 
             if ($model->save())
                 //$this->insertUpdateEmployee(2,$model);
