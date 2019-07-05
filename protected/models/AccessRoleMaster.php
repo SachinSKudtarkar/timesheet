@@ -196,7 +196,7 @@ foreach ($list as $key => $emp_id) {
 
     public function get_manager_list(){
        return $rawData = Yii::app()->db->createCommand("select first_name,last_name,em.emp_id,email from tbl_access_role_master as arm inner join tbl_employee as em on (arm.emp_id = em.emp_id and arm.is_active =1)
-            where arm.access_type = 1 and em.is_active=1 and is_password_changed = 'yes' ")->queryAll();
+            where arm.access_type = 1 and em.is_active=1")->queryAll();
 
 
     }
