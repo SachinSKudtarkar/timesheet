@@ -107,7 +107,9 @@ Yii::app()->clientScript->registerCssFile(
 // 					echo CHtml::dropDownList('selecting_weeks', $date,$list, array('class' => 'selecting_weeks','options' => array($selecting_date => array('selected' => true))));
                                         	                                        
                                         	                                        
-                                        $list = (new DayComment)->Get7days();
+                                        // $list = (new DayComment)->Get7days();
+                                        $list = (new DayComment)->getDatesFromRange('2019-07-01', date('Y-m-d'));
+                                    
 					echo CHtml::dropDownList('selecting_weeks', $selecting_date,$list, array('class' => 'selecting_weeks','options' => array($selecting_date => array('selected' => true))));?>
 					<a id="changeurl" style="display:none;border-radius: 4px;    padding: 6px 12px;font-size:14px;margin-left:10px;text-decoration:none;background: #000;color:#fff">Get Records</a>
 		    			<?php
@@ -419,6 +421,7 @@ Yii::app()->clientScript->registerCssFile(
 // 			if(!$is_submitted) {
 // 				echo CHtml::submitButton('Save', array('id' => 'addC', 'style' => 'margin-top:10px;'));
 // 			}
+		// var_dump($list);
 			if(in_array(date('Y-m-d', strtotime($selecting_date)), $list)){ 
 				if(!$is_submitted) {
 					echo CHtml::submitButton('Save', array('id' => 'addC', 'style' => 'margin-top:10px;'));

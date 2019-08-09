@@ -644,7 +644,8 @@ where st.project_id = {$pid} and st.emp_id = {$userId} group by st.stask_id";
             $rd_day = date('d/m/Y');
         }
 
-        $list = (new DayComment)->Get7days();
+        // $list = (new DayComment)->Get7days();
+        $list = (new DayComment)->getDatesFromRange('2019-07-01', date('Y-m-d'));
 //         if(date('Y-m-d', strtotime($selected_date)) != date('Y-m-d')){
         if(!in_array(date('Y-m-d', strtotime($selected_date)), $list)){ 
             Yii::app()->user->setFlash('error', "Invalid Date Selected.");
