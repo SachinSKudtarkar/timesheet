@@ -108,7 +108,7 @@ Yii::app()->clientScript->registerCssFile(
                                         	                                        
                                         	                                        
                                         // $list = (new DayComment)->Get7days();
-                                        $list = (new DayComment)->getDatesFromRange('2019-07-01', date('Y-m-d'));
+                                        $list = (new DayComment)->getDatesFromRange('2019-09-01', date('Y-m-d'));
                                     
 					echo CHtml::dropDownList('selecting_weeks', $selecting_date,$list, array('class' => 'selecting_weeks','options' => array($selecting_date => array('selected' => true))));?>
 					<a id="changeurl" style="display:none;border-radius: 4px;    padding: 6px 12px;font-size:14px;margin-left:10px;text-decoration:none;background: #000;color:#fff">Get Records</a>
